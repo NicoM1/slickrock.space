@@ -20,7 +20,7 @@ class RouteHandler implements abe.IRoute {
 		
 	@:get('/')
 	function index() {
-		response.send('Hello World!');
+		response.send('Hello World!' );
 	}
 
 	@:get('/user/:id')
