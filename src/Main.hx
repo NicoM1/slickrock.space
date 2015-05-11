@@ -6,7 +6,8 @@ class Main {
 	public static function main() {
 		var app = new App();
 		app.router.register(new RouteHandler());
-		app.http(9998); // running on port 9998
+		var port = js.Node.process.env.get('PORT');
+		app.http(port != null? Std.parseInt(port) : 9998); // running on port 9998
 	}
 }
 
