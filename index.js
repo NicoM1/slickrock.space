@@ -226,6 +226,9 @@ RouteHandler.prototype = {
 	}
 	,chat: function(request,response,next) {
 		var page = "";
+		page += "<script>";
+		page += "setTimeout(function() { window.location.href = window.location.href; }, 3000);";
+		page += "</script>";
 		var _g1 = 0;
 		var _g = this.messages.length;
 		while(_g1 < _g) {

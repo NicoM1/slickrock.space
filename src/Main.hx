@@ -69,6 +69,9 @@ class RouteHandler implements abe.IRoute {
 	@:get('/chat')
 	function chat() {
 		var page = '';
+		page += '<script>';
+		page += 'setTimeout(function() { window.location.href = window.location.href; }, 3000);';
+		page += '</script>';
 		for (i in 0...messages.length) {
 			page += '<div>';
 			page += messages[i];
