@@ -6,6 +6,7 @@ import js.Node;
 import js.node.Fs;
 
 class Main {
+
 	public static var db: Array<String> = [];
 	
 	static var textDB: String = '';
