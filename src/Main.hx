@@ -58,9 +58,6 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/')
 	function index() {
-		for (i in 0...100) {
-			messages.push('test');
-		}
 		response.send('Hello World!' );
 	}
 	

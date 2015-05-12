@@ -218,11 +218,6 @@ RouteHandler.__interfaces__ = [abe_IRoute];
 RouteHandler.prototype = {
 	messages: null
 	,index: function(request,response,next) {
-		var _g = 0;
-		while(_g < 100) {
-			var i = _g++;
-			this.messages.push("test");
-		}
 		response.send("Hello World!");
 	}
 	,post: function(message,request,response,next) {
