@@ -159,7 +159,7 @@ var Main = function() {
 		var processor1 = new abe_core_ArgumentProcessor(filters1,[{ name : "message", optional : false, type : "String", sources : ["params"]}]);
 		var process1 = new RouteHandler_$post_$RouteProcess({ message : null},instance,processor1);
 		var uses1 = [];
-		router.registerMethod("/chat/post/:message","get",process1,uses1,[]);
+		router.registerMethod("/chat/:message","get",process1,uses1,[]);
 		var filters2 = new abe_core_ArgumentsFilter();
 		var processor2 = new abe_core_ArgumentProcessor(filters2,[]);
 		var process2 = new RouteHandler_$chat_$RouteProcess({ },instance,processor2);
@@ -222,7 +222,7 @@ RouteHandler.prototype = {
 	}
 	,post: function(message,request,response,next) {
 		this.messages.push(message);
-		response.redirect(null,"http://google.com");
+		response.redirect(302,"../");
 	}
 	,chat: function(request,response,next) {
 		var page = "";

@@ -60,10 +60,10 @@ class RouteHandler implements abe.IRoute {
 		response.send('Hello World!' );
 	}
 	
-	@:get('/chat/post/:message')
+	@:get('/chat/:message')
 	function post(message: String) {
 		messages.push(message);
-		response.redirect('http://google.com');
+		response.redirect(302, '../');
 	}
 	
 	@:get('/chat')
