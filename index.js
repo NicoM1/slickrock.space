@@ -145,9 +145,8 @@ Lambda.has = function(it,elt) {
 	}
 	return false;
 };
-var Main = function() { };
-Main.__name__ = ["Main"];
-Main.main = function() {
+var Main = function() {
+	var _g = this;
 	var app = new abe_App();
 	(function(instance,parent) {
 		var router = parent.mount("/");
@@ -157,42 +156,93 @@ Main.main = function() {
 		var uses = [];
 		router.registerMethod("/","get",$process,uses,[]);
 		var filters1 = new abe_core_ArgumentsFilter();
-		var processor1 = new abe_core_ArgumentProcessor(filters1,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
-		var process1 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor1);
+		var processor1 = new abe_core_ArgumentProcessor(filters1,[{ name : "message", optional : false, type : "String", sources : ["params"]}]);
+		var process1 = new RouteHandler_$post_$RouteProcess({ message : null},instance,processor1);
 		var uses1 = [];
-		router.registerMethod("/user/:id","get",process1,uses1,[]);
+		router.registerMethod("/chat/post/:message","get",process1,uses1,[]);
 		var filters2 = new abe_core_ArgumentsFilter();
-		var processor2 = new abe_core_ArgumentProcessor(filters2,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
-		var process2 = new RouteHandler_$createUser_$RouteProcess({ id : null},instance,processor2);
+		var processor2 = new abe_core_ArgumentProcessor(filters2,[]);
+		var process2 = new RouteHandler_$chat_$RouteProcess({ },instance,processor2);
 		var uses2 = [];
-		router.registerMethod("/user/create/:id","get",process2,uses2,[]);
+		router.registerMethod("/chat","get",process2,uses2,[]);
+		var filters3 = new abe_core_ArgumentsFilter();
+		var processor3 = new abe_core_ArgumentProcessor(filters3,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
+		var process3 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor3);
+		var uses3 = [];
+		router.registerMethod("/user/:id","get",process3,uses3,[]);
+		var filters4 = new abe_core_ArgumentsFilter();
+		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
+		var process4 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor4);
+		var uses4 = [];
+		router.registerMethod("/user/create/:name","get",process4,uses4,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
 	var this1 = process.env;
 	port = this1.PORT;
 	app.http(port != null?Std.parseInt(port):9998);
+	js_node_Fs.readFile("db/db.db",{ encoding : "utf8"},function(err,data) {
+		if(err == null) _g._parseDB(data); else console.log(err);
+	});
+};
+Main.__name__ = ["Main"];
+Main.saveUser = function(name) {
+	Main.textDB += "\n" + name;
+	js_node_Fs.writeFile("db/db.db",Main.textDB,{ },function(err) {
+		if(err != null) console.log(err);
+	});
+};
+Main.main = function() {
+	new Main();
+};
+Main.prototype = {
+	_parseDB: function(data) {
+		Main.textDB = data;
+		Main.db = data.split("\n");
+		var _g1 = 0;
+		var _g = Main.db.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(Main.db[i].indexOf("\r") != -1) Main.db[i] = Main.db[i].substring(0,Main.db[i].indexOf("\r"));
+		}
+	}
+	,__class__: Main
 };
 var abe_IRoute = function() { };
 abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
-	this.users = ["juan","frances"];
+	this.messages = [];
 };
 RouteHandler.__name__ = ["RouteHandler"];
 RouteHandler.__interfaces__ = [abe_IRoute];
 RouteHandler.prototype = {
-	users: null
+	messages: null
 	,index: function(request,response,next) {
 		response.send("Hello World!");
 	}
-	,getUser: function(id,request,response,next) {
-		if(this.users.length > id) response.send(this.users[id]); else response.send("Error: no user with that ID.");
+	,post: function(message,request,response,next) {
+		this.messages.push(message);
+		response.redirect(null,"http://google.com");
 	}
-	,createUser: function(id,request,response,next) {
-		if(this.users[id] == null) {
-			this.users[id] = "NEW USER";
-			response.send(this.users[id] + ": created.");
-		} else response.send("Error: user with that ID already exists.");
+	,chat: function(request,response,next) {
+		var page = "";
+		var _g1 = 0;
+		var _g = this.messages.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			page += "<div>";
+			page += this.messages[i];
+			page += "</div>";
+		}
+		response.send(page);
+	}
+	,getUser: function(id,request,response,next) {
+		if(Main.db.length > id) response.send(Main.db[id]); else response.send("Error: no user with that ID.");
+	}
+	,createUser: function(name,request,response,next) {
+		Main.db.push(name);
+		response.send(name + ": created.");
+		Main.saveUser(Main.db[Main.db.length - 1]);
 	}
 	,toString: function() {
 		return "RouteHandler";
@@ -268,6 +318,17 @@ abe_core_RouteProcess.prototype = {
 	}
 	,__class__: abe_core_RouteProcess
 };
+var RouteHandler_$chat_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$chat_$RouteProcess.__name__ = ["RouteHandler_chat_RouteProcess"];
+RouteHandler_$chat_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$chat_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.chat(request,response,next);
+	}
+	,__class__: RouteHandler_$chat_$RouteProcess
+});
 var RouteHandler_$createUser_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
 };
@@ -275,7 +336,7 @@ RouteHandler_$createUser_$RouteProcess.__name__ = ["RouteHandler_createUser_Rout
 RouteHandler_$createUser_$RouteProcess.__super__ = abe_core_RouteProcess;
 RouteHandler_$createUser_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
 	execute: function(request,response,next) {
-		this.instance.createUser(this.args.id,request,response,next);
+		this.instance.createUser(this.args.name,request,response,next);
 	}
 	,__class__: RouteHandler_$createUser_$RouteProcess
 });
@@ -300,6 +361,17 @@ RouteHandler_$index_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prot
 		this.instance.index(request,response,next);
 	}
 	,__class__: RouteHandler_$index_$RouteProcess
+});
+var RouteHandler_$post_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$post_$RouteProcess.__name__ = ["RouteHandler_post_RouteProcess"];
+RouteHandler_$post_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$post_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.post(this.args.message,request,response,next);
+	}
+	,__class__: RouteHandler_$post_$RouteProcess
 });
 var Std = function() { };
 Std.__name__ = ["Std"];
@@ -441,10 +513,7 @@ Type["typeof"] = function(v) {
 	}
 };
 var abe_App = function(options) {
-	var t;
-	var _0 = options;
-	if(null == _0) t = null; else t = _0;
-	if(t != null) options = t; else options = { };
+	if(null != options) options = options; else options = { };
 	this.express = express_Express();
 	if(options.strictRoute) this.express.set("strict route",true);
 	if(options.caseSensitiveRouting) this.express.set("case sensitive routing",true);
@@ -1113,6 +1182,7 @@ js_Boot.__isNativeObj = function(o) {
 js_Boot.__resolveNativeClass = function(name) {
 	if(typeof window != "undefined") return window[name]; else return global[name];
 };
+var js_node_Fs = require("fs");
 var js_node_Http = require("http");
 var js_node_Https = require("https");
 var npm_QS = require("qs");
@@ -2280,8 +2350,6 @@ var thx_Nil = { __ename__ : ["thx","Nil"], __constructs__ : ["nil"] };
 thx_Nil.nil = ["nil",0];
 thx_Nil.nil.toString = $estr;
 thx_Nil.nil.__enum__ = thx_Nil;
-var thx_Nulls = function() { };
-thx_Nulls.__name__ = ["thx","Nulls"];
 var thx_Objects = function() { };
 thx_Objects.__name__ = ["thx","Objects"];
 thx_Objects.isEmpty = function(o) {
@@ -3924,6 +3992,8 @@ if(typeof(scope.performance.now) == "undefined") {
 	};
 	scope.performance.now = now;
 }
+Main.db = [];
+Main.textDB = "";
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
 abe_core_ArgumentsFilter.globalFilters = (function() {
 	var filters = [];
