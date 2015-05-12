@@ -57,6 +57,9 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/')
 	function index() {
+		for (i in 0...100) {
+			messages.push('test');
+		}
 		response.send('Hello World!' );
 	}
 	
@@ -70,13 +73,17 @@ class RouteHandler implements abe.IRoute {
 	function chat() {
 		var page = '';
 		page += '<script>';
+		page += 'window.onload=toBottom;';
+		page += 'function toBottom() {	window.scrollTo(0, document.body.scrollHeight); }';
 		page += 'setTimeout(function() { window.location.href = window.location.href; }, 3000);';
 		page += '</script>';
+		page += '<body>';
 		for (i in 0...messages.length) {
 			page += '<div>';
 			page += messages[i];
 			page += '</div>';
 		}
+		page += '</body>';
 		response.send(page);
 	}
 

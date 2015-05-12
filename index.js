@@ -218,6 +218,11 @@ RouteHandler.__interfaces__ = [abe_IRoute];
 RouteHandler.prototype = {
 	messages: null
 	,index: function(request,response,next) {
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			this.messages.push("test");
+		}
 		response.send("Hello World!");
 	}
 	,post: function(message,request,response,next) {
@@ -227,8 +232,11 @@ RouteHandler.prototype = {
 	,chat: function(request,response,next) {
 		var page = "";
 		page += "<script>";
+		page += "window.onload=toBottom;";
+		page += "function toBottom() {\twindow.scrollTo(0, document.body.scrollHeight); }";
 		page += "setTimeout(function() { window.location.href = window.location.href; }, 3000);";
 		page += "</script>";
+		page += "<body>";
 		var _g1 = 0;
 		var _g = this.messages.length;
 		while(_g1 < _g) {
@@ -237,6 +245,7 @@ RouteHandler.prototype = {
 			page += this.messages[i];
 			page += "</div>";
 		}
+		page += "</body>";
 		response.send(page);
 	}
 	,getUser: function(id,request,response,next) {
