@@ -53,6 +53,7 @@ class Main {
 
 class RouteHandler implements abe.IRoute {
 	var messages: Array<String> = [
+	'Chat by adding "/this is my message" to the url and pressing enter.'
 	];
 	
 	@:get('/')
@@ -75,7 +76,8 @@ class RouteHandler implements abe.IRoute {
 		page += '<script>';
 		page += 'window.onload=toBottom;';
 		page += 'function toBottom() {	window.scrollTo(0, document.body.scrollHeight); }';
-		page += 'setTimeout(function() { window.location.href = window.location.href; }, 3000);';
+		page += 'function reload() {  if(window.innerHeight + window.scrollY >= document.body.offsetHeight) {window.location.href = window.location.href;} else { setTimeout(function() { reload(); }, 3000); } }';
+		page += 'setTimeout(function() { reload(); }, 3000);';
 		page += '</script>';
 		page += '<body>';
 		for (i in 0...messages.length) {
