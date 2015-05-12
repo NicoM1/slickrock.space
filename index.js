@@ -222,7 +222,7 @@ RouteHandler.prototype = {
 	}
 	,post: function(message,request,response,next) {
 		this.messages.push(message);
-		response.redirect(302,"../");
+		response.redirect(302,"../chat");
 	}
 	,chat: function(request,response,next) {
 		var page = "";
