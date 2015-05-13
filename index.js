@@ -213,6 +213,9 @@ Main.prototype = {
 var abe_IRoute = function() { };
 abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
+	this.italicBB = new EReg("\\[i\\](.*?)\\[/i\\]","i");
+	this.boldBB = new EReg("\\[b\\](.*?)\\[/b\\]","i");
+	this.imgBB = new EReg("\\[img\\](.*?)\\[/img\\]","i");
 };
 RouteHandler.__name__ = ["RouteHandler"];
 RouteHandler.__interfaces__ = [abe_IRoute];
@@ -240,14 +243,36 @@ RouteHandler.prototype = {
 		var _g = Main.messages.length;
 		while(_g1 < _g) {
 			var i = _g1++;
-			var message = Main.messages[i];
-			message = StringTools.replace(message,"\n"," ");
+			var message = this._parseMessage(Main.messages[i]);
 			page += "<div>";
-			page += StringTools.htmlEscape(message);
+			page += message;
 			page += "</div>";
 		}
 		page += "</body>";
 		response.send(page);
+	}
+	,imgBB: null
+	,boldBB: null
+	,italicBB: null
+	,_parseMessage: function(raw) {
+		var parsed = StringTools.replace(raw,"\n"," ");
+		parsed = StringTools.htmlEscape(parsed);
+		while(this.imgBB.match(parsed)) {
+			var imgPath = this.imgBB.matched(1);
+			var imgTag = "<img src=" + imgPath + "></img>";
+			parsed = this.imgBB.replace(parsed,imgTag);
+		}
+		while(this.boldBB.match(parsed)) {
+			var text = this.boldBB.matched(1);
+			var strongTag = "<strong>" + text + "</strong>";
+			parsed = this.boldBB.replace(parsed,strongTag);
+		}
+		while(this.italicBB.match(parsed)) {
+			var text1 = this.italicBB.matched(1);
+			var emTag = "<em>" + text1 + "</em>";
+			parsed = this.italicBB.replace(parsed,emTag);
+		}
+		return parsed;
 	}
 	,getUser: function(id,request,response,next) {
 		if(Main.db.length > id) response.send(Main.db[id]); else response.send("Error: no user with that ID.");
