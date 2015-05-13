@@ -238,7 +238,7 @@ RouteHandler.prototype = {
 		while(_g1 < _g) {
 			var i = _g1++;
 			page += "<div>";
-			page += this.messages[i];
+			page += StringTools.htmlEscape(this.messages[i]);
 			page += "</div>";
 		}
 		page += "</body>";
@@ -408,6 +408,10 @@ StringBuf.prototype = {
 };
 var StringTools = function() { };
 StringTools.__name__ = ["StringTools"];
+StringTools.htmlEscape = function(s,quotes) {
+	s = s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+	if(quotes) return s.split("\"").join("&quot;").split("'").join("&#039;"); else return s;
+};
 StringTools.startsWith = function(s,start) {
 	return s.length >= start.length && HxOverrides.substr(s,0,start.length) == start;
 };
@@ -873,6 +877,7 @@ haxe_StackItem.LocalFunction = function(v) { var $x = ["LocalFunction",4,v]; $x.
 var haxe_CallStack = function() { };
 haxe_CallStack.__name__ = ["haxe","CallStack"];
 haxe_CallStack.getStack = function(e) {
+	if(e == null) return [];
 	var oldValue = Error.prepareStackTrace;
 	Error.prepareStackTrace = function(error,callsites) {
 		var stack = [];
@@ -1047,6 +1052,7 @@ haxe_ds_StringMap.prototype = {
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
 	this.val = val;
+	this.message = String(val);
 	if(Error.captureStackTrace) Error.captureStackTrace(this,js__$Boot_HaxeError);
 };
 js__$Boot_HaxeError.__name__ = ["js","_Boot","HaxeError"];
@@ -1188,7 +1194,7 @@ js_Boot.__isNativeObj = function(o) {
 	return js_Boot.__nativeClassName(o) != null;
 };
 js_Boot.__resolveNativeClass = function(name) {
-	if(typeof window != "undefined") return window[name]; else return global[name];
+	return (Function("return typeof " + name + " != \"undefined\" ? " + name + " : null"))();
 };
 var js_node_Fs = require("fs");
 var js_node_Http = require("http");

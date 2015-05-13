@@ -5,6 +5,8 @@ import abe.App;
 import js.Node;
 import js.node.Fs;
 
+using StringTools;
+
 class Main {
 	public static var db: Array<String> = [];
 	
@@ -79,7 +81,7 @@ class RouteHandler implements abe.IRoute {
 		page += '<body>';
 		for (i in 0...messages.length) {
 			page += '<div>';
-			page += messages[i];
+			page += messages[i].htmlEscape();
 			page += '</div>';
 		}
 		page += '</body>';
