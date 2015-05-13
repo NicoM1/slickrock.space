@@ -8,6 +8,7 @@ import js.node.Fs;
 using StringTools;
 
 class Main {
+
 	public static var db: Array<String> = [];
 	
 	static var textDB: String = '';
