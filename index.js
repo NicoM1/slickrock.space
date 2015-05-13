@@ -184,6 +184,9 @@ var Main = function() {
 	js_node_Fs.readFile("db/db.db",{ encoding : "utf8"},function(err,data) {
 		if(err == null) _g._parseDB(data); else console.log(err);
 	});
+	js_node_Fs.readFile("db/messages.db",{ encoding : "utf8"},function(err1,data1) {
+		if(err1 == null) _g._parseMessages(data1); else console.log(err1);
+	});
 };
 Main.__name__ = ["Main"];
 Main.saveUser = function(name) {
@@ -197,31 +200,31 @@ Main.main = function() {
 };
 Main.prototype = {
 	_parseDB: function(data) {
+		StringTools.replace(data,"\r\n","\n");
 		Main.textDB = data;
 		Main.db = data.split("\n");
-		var _g1 = 0;
-		var _g = Main.db.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			if(Main.db[i].indexOf("\r") != -1) Main.db[i] = Main.db[i].substring(0,Main.db[i].indexOf("\r"));
-		}
+	}
+	,_parseMessages: function(data) {
+		StringTools.replace(data,"\r\n","\n");
+		Main.messages = data.split("\n");
 	}
 	,__class__: Main
 };
 var abe_IRoute = function() { };
 abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
-	this.messages = ["Chat by adding \"/this is my message\" to the url and pressing enter."];
 };
 RouteHandler.__name__ = ["RouteHandler"];
 RouteHandler.__interfaces__ = [abe_IRoute];
 RouteHandler.prototype = {
-	messages: null
-	,index: function(request,response,next) {
+	index: function(request,response,next) {
 		response.send("Hello World!");
 	}
 	,post: function(message,request,response,next) {
-		this.messages.push(message);
+		Main.messages.push(message);
+		js_node_Fs.writeFile("db/messages.db",Main.messages.join("\n"),{ },function(err) {
+			if(err != null) console.log(err);
+		});
 		response.redirect(302,"../chat");
 	}
 	,chat: function(request,response,next) {
@@ -234,11 +237,13 @@ RouteHandler.prototype = {
 		page += "</script>";
 		page += "<body>";
 		var _g1 = 0;
-		var _g = this.messages.length;
+		var _g = Main.messages.length;
 		while(_g1 < _g) {
 			var i = _g1++;
+			var message = Main.messages[i];
+			message = StringTools.replace(message,"\n"," ");
 			page += "<div>";
-			page += StringTools.htmlEscape(this.messages[i]);
+			page += StringTools.htmlEscape(message);
 			page += "</div>";
 		}
 		page += "</body>";
@@ -4008,6 +4013,7 @@ if(typeof(scope.performance.now) == "undefined") {
 }
 Main.db = [];
 Main.textDB = "";
+Main.messages = ["Chat by adding \"/this is my message\" to the url and pressing enter."];
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
 abe_core_ArgumentsFilter.globalFilters = (function() {
 	var filters = [];

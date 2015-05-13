@@ -12,6 +12,10 @@ class Main {
 	public static var db: Array<String> = [];
 	
 	static var textDB: String = '';
+	
+	public static var messages: Array<String> = [
+		'Chat by adding "/this is my message" to the url and pressing enter.'
+	];
 		
 	function new() {
 		var app = new App();
@@ -27,17 +31,26 @@ class Main {
 				trace(err);
 			}
 		});
+		Fs.readFile('db/messages.db', { encoding: 'utf8' }, function(err, data) {
+			if (err == null) {
+				_parseMessages(data);
+			}
+			else {
+				trace(err);
+			}
+		});
 	}
 	
 	
 	function _parseDB(data: String) {
+		data.replace('\r\n', '\n');
 		textDB = data;
 		db = data.split('\n');
-		for (i in 0...db.length) {
-			if (db[i].indexOf('\r') != -1) {
-				db[i] = db[i].substring(0, db[i].indexOf('\r'));
-			}
-		}
+	}
+	
+	function _parseMessages(data: String) {
+		data.replace('\r\n', '\n');
+		messages = data.split('\n');
 	}
 	
 	public static function saveUser(name: String) {
@@ -55,9 +68,6 @@ class Main {
 }
 
 class RouteHandler implements abe.IRoute {
-	var messages: Array<String> = [
-	'Chat by adding "/this is my message" to the url and pressing enter.'
-	];
 	
 	@:get('/')
 	function index() {
@@ -66,7 +76,12 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/chat/:message')
 	function post(message: String) {
-		messages.push(message);
+		Main.messages.push(message);
+		Fs.writeFile('db/messages.db', Main.messages.join('\n'), { }, function(err) {
+			if(err != null) {
+				trace(err);
+			}
+		});
 		response.redirect(302, '../chat');
 	}
 	
@@ -80,9 +95,11 @@ class RouteHandler implements abe.IRoute {
 		page += 'setTimeout(function() { reload(); }, 3000);';
 		page += '</script>';
 		page += '<body>';
-		for (i in 0...messages.length) {
+		for (i in 0...Main.messages.length) {
+			var message = Main.messages[i];
+			message = message.replace('\n', ' ');
 			page += '<div>';
-			page += messages[i].htmlEscape();
+			page += message.htmlEscape();
 			page += '</div>';
 		}
 		page += '</body>';
