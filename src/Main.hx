@@ -105,6 +105,34 @@ class RouteHandler implements abe.IRoute {
 		response.send(page);
 	}
 	
+	@:get('/client')
+	function client() {
+		var page: String = '';
+		page += '<script>';
+		page += 'var curMessage;';
+		page += 'function httpGet(theUrl) {
+					var xmlHttp = new XMLHttpRequest();
+					xmlHttp.open( "GET", theUrl, false );
+					xmlHttp.send( null );
+					return xmlHttp.responseText;
+				}';
+		page += 'function enterpressalert(e, textarea) {
+					var code = (e.keyCode ? e.keyCode : e.which);
+					if(code == 13) { //Enter keycode
+						httpGet(\'http://localhost:9998/chat/\'+curMessage);
+					var i = document.getElementsByTagName("textarea")[0].value = ""; 
+					}
+				}';
+		page += 'function inputChanged(event) { curMessage = encodeURIComponent(event.target.value);}';
+		page += '</script>';
+		page += '<body style="margin:0px;padding:0px;">';
+		page += '<iframe src="http://localhost:9998/chat" width=\'100%\' height=\'90%\' style="border:0px;"></iframe>';
+		page += '<textarea oninput=\'inputChanged(event)\' onKeyPress="enterpressalert(event, this)" style="width: 100%; height: 10%;">';
+		page += '</textarea>';
+		page += '</body>';
+		response.send(page);
+	}
+	
 	var imgBB: EReg = ~/\[img\](.*?)\[\/img\]/i;
 	var boldBB: EReg = ~/\[b\](.*?)\[\/b\]/i;
 	var italicBB: EReg = ~/\[i\](.*?)\[\/i\]/i;

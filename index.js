@@ -166,15 +166,20 @@ var Main = function() {
 		var uses2 = [];
 		router.registerMethod("/chat","get",process2,uses2,[]);
 		var filters3 = new abe_core_ArgumentsFilter();
-		var processor3 = new abe_core_ArgumentProcessor(filters3,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
-		var process3 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor3);
+		var processor3 = new abe_core_ArgumentProcessor(filters3,[]);
+		var process3 = new RouteHandler_$client_$RouteProcess({ },instance,processor3);
 		var uses3 = [];
-		router.registerMethod("/user/:id","get",process3,uses3,[]);
+		router.registerMethod("/client","get",process3,uses3,[]);
 		var filters4 = new abe_core_ArgumentsFilter();
-		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
-		var process4 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor4);
+		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
+		var process4 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor4);
 		var uses4 = [];
-		router.registerMethod("/user/create/:name","get",process4,uses4,[]);
+		router.registerMethod("/user/:id","get",process4,uses4,[]);
+		var filters5 = new abe_core_ArgumentsFilter();
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
+		var process5 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor5);
+		var uses5 = [];
+		router.registerMethod("/user/create/:name","get",process5,uses5,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -248,6 +253,21 @@ RouteHandler.prototype = {
 			page += message;
 			page += "</div>";
 		}
+		page += "</body>";
+		response.send(page);
+	}
+	,client: function(request,response,next) {
+		var page = "";
+		page += "<script>";
+		page += "var curMessage;";
+		page += "function httpGet(theUrl) {\r\n\t\t\t\t\tvar xmlHttp = new XMLHttpRequest();\r\n\t\t\t\t\txmlHttp.open( \"GET\", theUrl, false );\r\n\t\t\t\t\txmlHttp.send( null );\r\n\t\t\t\t\treturn xmlHttp.responseText;\r\n\t\t\t\t}";
+		page += "function enterpressalert(e, textarea) {\r\n\t\t\t\t\tvar code = (e.keyCode ? e.keyCode : e.which);\r\n\t\t\t\t\tif(code == 13) { //Enter keycode\r\n\t\t\t\t\t\thttpGet('http://localhost:9998/chat/'+curMessage);\r\n\t\t\t\t\tvar i = document.getElementsByTagName(\"textarea\")[0].value = \"\"; \r\n\t\t\t\t\t}\r\n\t\t\t\t}";
+		page += "function inputChanged(event) { curMessage = encodeURIComponent(event.target.value);}";
+		page += "</script>";
+		page += "<body style=\"margin:0px;padding:0px;\">";
+		page += "<iframe src=\"http://localhost:9998/chat\" width='100%' height='90%' style=\"border:0px;\"></iframe>";
+		page += "<textarea oninput='inputChanged(event)' onKeyPress=\"enterpressalert(event, this)\" style=\"width: 100%; height: 10%;\">";
+		page += "</textarea>";
 		page += "</body>";
 		response.send(page);
 	}
@@ -366,6 +386,17 @@ RouteHandler_$chat_$RouteProcess.prototype = $extend(abe_core_RouteProcess.proto
 		this.instance.chat(request,response,next);
 	}
 	,__class__: RouteHandler_$chat_$RouteProcess
+});
+var RouteHandler_$client_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$client_$RouteProcess.__name__ = ["RouteHandler_client_RouteProcess"];
+RouteHandler_$client_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$client_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.client(request,response,next);
+	}
+	,__class__: RouteHandler_$client_$RouteProcess
 });
 var RouteHandler_$createUser_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
