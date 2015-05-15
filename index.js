@@ -261,11 +261,11 @@ RouteHandler.prototype = {
 		page += "<script>";
 		page += "var curMessage;";
 		page += "function httpGet(theUrl) {\r\n\t\t\t\t\tvar xmlHttp = new XMLHttpRequest();\r\n\t\t\t\t\txmlHttp.open( \"GET\", theUrl, false );\r\n\t\t\t\t\txmlHttp.send( null );\r\n\t\t\t\t\treturn xmlHttp.responseText;\r\n\t\t\t\t}";
-		page += "function enterpressalert(e, textarea) {\r\n\t\t\t\t\tvar code = (e.keyCode ? e.keyCode : e.which);\r\n\t\t\t\t\tif(code == 13) { //Enter keycode\r\n\t\t\t\t\t\thttpGet('http://localhost:9998/chat/'+curMessage);\r\n\t\t\t\t\tvar i = document.getElementsByTagName(\"textarea\")[0].value = \"\"; \r\n\t\t\t\t\t}\r\n\t\t\t\t}";
+		page += "function enterpressalert(e, textarea) {\r\n\t\t\t\t\tvar code = (e.keyCode ? e.keyCode : e.which);\r\n\t\t\t\t\tif(code == 13) { //Enter keycode\r\n\t\t\t\t\t\thttpGet('http://aqueous-basin-8995.herokuapp.com/chat/'+curMessage);\r\n\t\t\t\t\tvar i = document.getElementsByTagName(\"textarea\")[0].value = \"\"; \r\n\t\t\t\t\t}\r\n\t\t\t\t}";
 		page += "function inputChanged(event) { curMessage = encodeURIComponent(event.target.value);}";
 		page += "</script>";
 		page += "<body style=\"margin:0px;padding:0px;\">";
-		page += "<iframe src=\"http://localhost:9998/chat\" width='100%' height='90%' style=\"border:0px;\"></iframe>";
+		page += "<iframe src=\"http://aqueous-basin-8995.herokuapp.com/chat\" width='100%' height='90%' style=\"border:0px;\"></iframe>";
 		page += "<textarea oninput='inputChanged(event)' onKeyPress=\"enterpressalert(event, this)\" style=\"width: 100%; height: 10%;\">";
 		page += "</textarea>";
 		page += "</body>";
