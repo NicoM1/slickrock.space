@@ -119,14 +119,14 @@ class RouteHandler implements abe.IRoute {
 		page += 'function enterpressalert(e, textarea) {
 					var code = (e.keyCode ? e.keyCode : e.which);
 					if(code == 13) { //Enter keycode
-						httpGet(\'http://aqueous-basin-8995.herokuapp.com/chat/\'+curMessage);
+						httpGet(\'https://aqueous-basin-8995.herokuapp.com/chat/\'+curMessage);
 					var i = document.getElementsByTagName("textarea")[0].value = ""; 
 					}
 				}';
 		page += 'function inputChanged(event) { curMessage = encodeURIComponent(event.target.value);}';
 		page += '</script>';
 		page += '<body style="margin:0px;padding:0px;">';
-		page += '<iframe src="http://aqueous-basin-8995.herokuapp.com/chat" width=\'100%\' height=\'90%\' style="border:0px;"></iframe>';
+		page += '<iframe src="https://aqueous-basin-8995.herokuapp.com/chat" width=\'100%\' height=\'90%\' style="border:0px;"></iframe>';
 		page += '<textarea oninput=\'inputChanged(event)\' onKeyPress="enterpressalert(event, this)" style="width: 100%; height: 10%;">';
 		page += '</textarea>';
 		page += '</body>';
