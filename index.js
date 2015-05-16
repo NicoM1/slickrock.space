@@ -252,9 +252,9 @@ RouteHandler.prototype = {
 	}
 	,api: function(lastID,request,response,next) {
 		var messages = { newMessages : false, messages : [], lastID : Main.messages.length - 1};
-		if(lastID < Main.messages.length) {
+		if(lastID < Main.messages.length - 1) {
 			messages.newMessages = true;
-			var _g1 = lastID;
+			var _g1 = lastID + 1;
 			var _g = Main.messages.length;
 			while(_g1 < _g) {
 				var i = _g1++;

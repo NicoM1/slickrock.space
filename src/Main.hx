@@ -96,9 +96,9 @@ class RouteHandler implements abe.IRoute {
 			lastID: Main.messages.length - 1
 		};
 		
-		if (lastID < Main.messages.length) {
+		if (lastID < Main.messages.length - 1) {
 			messages.newMessages = true;
-			for (i in lastID...Main.messages.length) {
+			for (i in (lastID + 1)...Main.messages.length) {
 				messages.messages.push(Main.messages[i]);
 			}
 		}
