@@ -88,12 +88,11 @@ Main.prototype = {
 			var p = _g1[_g];
 			++_g;
 			var bbParsed = this._parseMessage(p);
-			console.log(bbParsed);
 			var message;
 			var _this = window.document;
 			message = _this.createElement("div");
 			message.innerHTML = bbParsed;
-			window.document.body.appendChild(message);
+			window.document.getElementById("messages").appendChild(message);
 		}
 		this.lastIndex = parsed.lastID;
 	}

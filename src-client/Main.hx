@@ -1,4 +1,4 @@
-package;
+package ;
 
 import haxe.Timer;
 import js.Lib;
@@ -38,7 +38,7 @@ class Main
 			var bbParsed = _parseMessage(p);
 			var message = Browser.document.createDivElement();
 			message.innerHTML = bbParsed;
-			Browser.document.body.appendChild(message);
+			Browser.document.getElementById('messages').appendChild(message);
 		}
 		lastIndex = parsed.lastID;
 	}
