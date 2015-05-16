@@ -88,6 +88,7 @@ class RouteHandler implements abe.IRoute {
 	}
 	
 	@:get('/api/:lastID')
+	@:post('/api/:lastID')
 	function api(lastID: Int) {
 		var messages = {
 			newMessages: false,

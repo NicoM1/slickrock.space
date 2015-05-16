@@ -50,7 +50,7 @@ _$List_ListIterator.prototype = {
 };
 var Main = function() { };
 Main.main = function() {
-	var http = new haxe_Http("http://localhost:9998/api/0");
+	var http = new haxe_Http("https://aqueous-basin-8995.herokuapp.com/api/0");
 	http.async = true;
 	http.onData = function(data) {
 		console.log(data);
@@ -58,7 +58,7 @@ Main.main = function() {
 	http.onError = function(error) {
 		console.log(error);
 	};
-	http.request(true);
+	http.request();
 };
 var haxe_Http = function(url) {
 	this.url = url;

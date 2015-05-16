@@ -13,7 +13,7 @@ class Main
 	
 	static function main() 
 	{
-		var http: Http = new Http('http://localhost:9998/api/0');
+		var http: Http = new Http('https://aqueous-basin-8995.herokuapp.com/api/0');
 		http.async = true;
 		http.onData = function(data) { trace(data); }
 		http.onError = function(error) { trace(error); }
