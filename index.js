@@ -176,25 +176,30 @@ var Main = function() {
 		var uses4 = [];
 		router.registerMethod("/chat","get",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
-		var processor5 = new abe_core_ArgumentProcessor(filters5,[]);
-		var process5 = new RouteHandler_$client_$RouteProcess({ },instance,processor5);
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "path", optional : false, type : "String", sources : ["params"]}]);
+		var process5 = new RouteHandler_$bin_$RouteProcess({ path : null},instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/client","get",process5,uses5,[]);
+		router.registerMethod("/bin/:path","get",process5,uses5,[]);
 		var filters6 = new abe_core_ArgumentsFilter();
 		var processor6 = new abe_core_ArgumentProcessor(filters6,[]);
-		var process6 = new RouteHandler_$test_$RouteProcess({ },instance,processor6);
+		var process6 = new RouteHandler_$client_$RouteProcess({ },instance,processor6);
 		var uses6 = [];
-		router.registerMethod("/test","get",process6,uses6,[]);
+		router.registerMethod("/client","get",process6,uses6,[]);
 		var filters7 = new abe_core_ArgumentsFilter();
-		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
-		var process7 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor7);
+		var processor7 = new abe_core_ArgumentProcessor(filters7,[]);
+		var process7 = new RouteHandler_$test_$RouteProcess({ },instance,processor7);
 		var uses7 = [];
-		router.registerMethod("/user/:id","get",process7,uses7,[]);
+		router.registerMethod("/test","get",process7,uses7,[]);
 		var filters8 = new abe_core_ArgumentsFilter();
-		var processor8 = new abe_core_ArgumentProcessor(filters8,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
-		var process8 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor8);
+		var processor8 = new abe_core_ArgumentProcessor(filters8,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
+		var process8 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor8);
 		var uses8 = [];
-		router.registerMethod("/user/create/:name","get",process8,uses8,[]);
+		router.registerMethod("/user/:id","get",process8,uses8,[]);
+		var filters9 = new abe_core_ArgumentsFilter();
+		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
+		var process9 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor9);
+		var uses9 = [];
+		router.registerMethod("/user/create/:name","get",process9,uses9,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -266,6 +271,11 @@ RouteHandler.prototype = {
 	}
 	,chat: function(request,response,next) {
 		this._serveHtml("bin/index.html",function(e,d) {
+			if(e == null) response.send(d);
+		});
+	}
+	,bin: function(path,request,response,next) {
+		this._serveHtml("bin/" + path,function(e,d) {
 			if(e == null) response.send(d);
 		});
 	}
@@ -407,6 +417,17 @@ RouteHandler_$api_$RouteProcess.prototype = $extend(abe_core_RouteProcess.protot
 		this.instance.api(this.args.lastID,request,response,next);
 	}
 	,__class__: RouteHandler_$api_$RouteProcess
+});
+var RouteHandler_$bin_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$bin_$RouteProcess.__name__ = ["RouteHandler_bin_RouteProcess"];
+RouteHandler_$bin_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$bin_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.bin(this.args.path,request,response,next);
+	}
+	,__class__: RouteHandler_$bin_$RouteProcess
 });
 var RouteHandler_$chat_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);

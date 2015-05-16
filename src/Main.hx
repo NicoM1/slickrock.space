@@ -133,6 +133,15 @@ class RouteHandler implements abe.IRoute {
 		});
 	}
 	
+	@:get('/bin/:path')
+	function bin(path: String) {
+		_serveHtml('bin/'+path, function(e, d) {
+			if (e == null) {
+				response.send(d);
+			}
+		});
+	}
+	
 	@:get('/client')
 	function client() {
 		var page: String = '';
