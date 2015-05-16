@@ -265,26 +265,9 @@ RouteHandler.prototype = {
 		response.send(messages);
 	}
 	,chat: function(request,response,next) {
-		var page = "";
-		page += "<script>";
-		page += "window.onload=toBottom;";
-		page += "function toBottom() {\twindow.scrollTo(0, document.body.scrollHeight); }";
-		page += "function reload() {  if(window.innerHeight + window.scrollY >= document.body.offsetHeight) {window.location.href = window.location.href;} else { setTimeout(function() { reload(); }, 3000); } }";
-		page += "setTimeout(function() { reload(); }, 3000);";
-		page += "</script>";
-		page += "<body>";
-		var _g1 = 0;
-		var _g = Main.messages.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var message = this._parseMessage(Main.messages[i]);
-			page += "<div>";
-			page += message;
-			page += "</div>";
-		}
-		page += "</body>";
-		response.setHeader("Access-Control-Allow-Origin","*");
-		response.send(page);
+		this._serveHtml("bin/index.html",function(e,d) {
+			if(e == null) response.send(d);
+		});
 	}
 	,client: function(request,response,next) {
 		var page = "";

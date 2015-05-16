@@ -49,7 +49,7 @@ _$List_ListIterator.prototype = {
 	}
 };
 var Main = function() {
-	this.lastIndex = 0;
+	this.lastIndex = -1;
 	this.basePath = "https://aqueous-basin-8995.herokuapp.com/api/";
 	this.http = new haxe_Http(this.basePath + this.lastIndex);
 	this.http.async = true;

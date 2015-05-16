@@ -14,7 +14,7 @@ import haxe.Json;
 class Main 
 {
 	var basePath: String = 'https://aqueous-basin-8995.herokuapp.com/api/';
-	var lastIndex: Int = 0;
+	var lastIndex: Int = -1;
 	
 	var http: Http;
 	

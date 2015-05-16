@@ -108,7 +108,7 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/chat')
 	function chat() {
-		var page = '';
+		/*var page = '';
 		page += '<script>';
 		page += 'window.onload=toBottom;';
 		page += 'function toBottom() {	window.scrollTo(0, document.body.scrollHeight); }';
@@ -124,7 +124,13 @@ class RouteHandler implements abe.IRoute {
 		}
 		page += '</body>';
 		response.setHeader('Access-Control-Allow-Origin', '*');
-		response.send(page);
+		response.send(page);*/
+		
+		_serveHtml('bin/index.html', function(e, d) {
+			if (e == null) {
+				response.send(d);
+			}
+		});
 	}
 	
 	@:get('/client')
