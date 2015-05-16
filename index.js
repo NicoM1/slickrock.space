@@ -161,25 +161,35 @@ var Main = function() {
 		var uses1 = [];
 		router.registerMethod("/chat/:message","get",process1,uses1,[]);
 		var filters2 = new abe_core_ArgumentsFilter();
-		var processor2 = new abe_core_ArgumentProcessor(filters2,[]);
-		var process2 = new RouteHandler_$chat_$RouteProcess({ },instance,processor2);
+		var processor2 = new abe_core_ArgumentProcessor(filters2,[{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process2 = new RouteHandler_$api_$RouteProcess({ lastID : null},instance,processor2);
 		var uses2 = [];
-		router.registerMethod("/chat","get",process2,uses2,[]);
+		router.registerMethod("/api/:lastID","get",process2,uses2,[]);
 		var filters3 = new abe_core_ArgumentsFilter();
 		var processor3 = new abe_core_ArgumentProcessor(filters3,[]);
-		var process3 = new RouteHandler_$client_$RouteProcess({ },instance,processor3);
+		var process3 = new RouteHandler_$chat_$RouteProcess({ },instance,processor3);
 		var uses3 = [];
-		router.registerMethod("/client","get",process3,uses3,[]);
+		router.registerMethod("/chat","get",process3,uses3,[]);
 		var filters4 = new abe_core_ArgumentsFilter();
-		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
-		var process4 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor4);
+		var processor4 = new abe_core_ArgumentProcessor(filters4,[]);
+		var process4 = new RouteHandler_$client_$RouteProcess({ },instance,processor4);
 		var uses4 = [];
-		router.registerMethod("/user/:id","get",process4,uses4,[]);
+		router.registerMethod("/client","get",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
-		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
-		var process5 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor5);
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[]);
+		var process5 = new RouteHandler_$test_$RouteProcess({ },instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/user/create/:name","get",process5,uses5,[]);
+		router.registerMethod("/test","get",process5,uses5,[]);
+		var filters6 = new abe_core_ArgumentsFilter();
+		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
+		var process6 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor6);
+		var uses6 = [];
+		router.registerMethod("/user/:id","get",process6,uses6,[]);
+		var filters7 = new abe_core_ArgumentsFilter();
+		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
+		var process7 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor7);
+		var uses7 = [];
+		router.registerMethod("/user/create/:name","get",process7,uses7,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -235,6 +245,20 @@ RouteHandler.prototype = {
 		});
 		response.redirect(302,"../chat");
 	}
+	,api: function(lastID,request,response,next) {
+		var messages = { newMessages : false, messages : [], lastID : Main.messages.length - 1};
+		if(lastID < Main.messages.length - 1) {
+			messages.newMessages = true;
+			var _g1 = lastID;
+			var _g = Main.messages.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				messages.messages.push(Main.messages[i]);
+			}
+		}
+		response.setHeader("Access-Control-Allow-Origin","*");
+		response.send(messages);
+	}
 	,chat: function(request,response,next) {
 		var page = "";
 		page += "<script>";
@@ -254,6 +278,7 @@ RouteHandler.prototype = {
 			page += "</div>";
 		}
 		page += "</body>";
+		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send(page);
 	}
 	,client: function(request,response,next) {
@@ -270,6 +295,11 @@ RouteHandler.prototype = {
 		page += "</textarea>";
 		page += "</body>";
 		response.send(page);
+	}
+	,test: function(request,response,next) {
+		this._serveHtml("db/backup.html",function(e,d) {
+			if(e == null) response.send(d);
+		});
 	}
 	,imgBB: null
 	,boldBB: null
@@ -301,6 +331,9 @@ RouteHandler.prototype = {
 		Main.db.push(name);
 		response.send(name + ": created.");
 		Main.saveUser(Main.db[Main.db.length - 1]);
+	}
+	,_serveHtml: function(path,handler) {
+		js_node_Fs.readFile(path,{ encoding : "utf8"},handler);
 	}
 	,toString: function() {
 		return "RouteHandler";
@@ -376,6 +409,17 @@ abe_core_RouteProcess.prototype = {
 	}
 	,__class__: abe_core_RouteProcess
 };
+var RouteHandler_$api_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$api_$RouteProcess.__name__ = ["RouteHandler_api_RouteProcess"];
+RouteHandler_$api_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$api_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.api(this.args.lastID,request,response,next);
+	}
+	,__class__: RouteHandler_$api_$RouteProcess
+});
 var RouteHandler_$chat_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
 };
@@ -441,6 +485,17 @@ RouteHandler_$post_$RouteProcess.prototype = $extend(abe_core_RouteProcess.proto
 		this.instance.post(this.args.message,request,response,next);
 	}
 	,__class__: RouteHandler_$post_$RouteProcess
+});
+var RouteHandler_$test_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$test_$RouteProcess.__name__ = ["RouteHandler_test_RouteProcess"];
+RouteHandler_$test_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$test_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.test(request,response,next);
+	}
+	,__class__: RouteHandler_$test_$RouteProcess
 });
 var Std = function() { };
 Std.__name__ = ["Std"];

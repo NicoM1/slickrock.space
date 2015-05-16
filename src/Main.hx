@@ -1,9 +1,11 @@
 package;
 
 import abe.App;
+import haxe.Json;
 
 import js.Node;
 import js.node.Fs;
+import js.Error;
 
 using StringTools;
 
@@ -85,6 +87,24 @@ class RouteHandler implements abe.IRoute {
 		response.redirect(302, '../chat');
 	}
 	
+	@:get('/api/:lastID')
+	function api(lastID: Int) {
+		var messages = {
+			newMessages: false,
+			messages: new Array<String>(),
+			lastID: Main.messages.length - 1
+		};
+		
+		if (lastID < Main.messages.length - 1) {
+			messages.newMessages = true;
+			for (i in lastID...Main.messages.length) {
+				messages.messages.push(Main.messages[i]);
+			}
+		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send(messages);
+	}
+	
 	@:get('/chat')
 	function chat() {
 		var page = '';
@@ -102,6 +122,7 @@ class RouteHandler implements abe.IRoute {
 			page += '</div>';
 		}
 		page += '</body>';
+		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send(page);
 	}
 	
@@ -131,6 +152,15 @@ class RouteHandler implements abe.IRoute {
 		page += '</textarea>';
 		page += '</body>';
 		response.send(page);
+	}
+	
+	@:get('/test')
+	function test() { 
+		_serveHtml('db/backup.html', function(e, d) {
+			if (e == null) {
+				response.send(d);
+			}
+		});
 	}
 	
 	var imgBB: EReg = ~/\[img\](.*?)\[\/img\]/i;
@@ -174,5 +204,9 @@ class RouteHandler implements abe.IRoute {
 		Main.db.push(name);
 		response.send(name + ': created.');
 		Main.saveUser(Main.db[Main.db.length - 1]);
+	}
+	
+	function _serveHtml(path: String, handler: Error->String->Void) {
+		Fs.readFile(path, { encoding: 'utf8' }, handler);
 	}
 }
