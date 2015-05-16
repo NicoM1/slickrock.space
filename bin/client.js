@@ -16,6 +16,12 @@ EReg.prototype = {
 		this.r.s = s;
 		return this.r.m != null;
 	}
+	,matched: function(n) {
+		if(this.r.m != null && n >= 0 && n < this.r.m.length) return this.r.m[n]; else throw new js__$Boot_HaxeError("EReg::matched");
+	}
+	,replace: function(s,by) {
+		return s.replace(this.r,by);
+	}
 };
 var Lambda = function() { };
 Lambda.exists = function(it,f) {
@@ -49,6 +55,9 @@ _$List_ListIterator.prototype = {
 	}
 };
 var Main = function() {
+	this.italicBB = new EReg("\\[i\\](.*?)\\[/i\\]","i");
+	this.boldBB = new EReg("\\[b\\](.*?)\\[/b\\]","i");
+	this.imgBB = new EReg("\\[img\\](.*?)\\[/img\\]","i");
 	this.lastIndex = -1;
 	this.basePath = "https://aqueous-basin-8995.herokuapp.com/api/";
 	this.http = new haxe_Http(this.basePath + this.lastIndex);
@@ -78,14 +87,44 @@ Main.prototype = {
 		while(_g < _g1.length) {
 			var p = _g1[_g];
 			++_g;
+			var bbParsed = this._parseMessage(p);
+			console.log(bbParsed);
 			var message;
 			var _this = window.document;
 			message = _this.createElement("div");
-			message.innerHTML = p;
+			message.innerHTML = bbParsed;
 			window.document.body.appendChild(message);
 		}
 		this.lastIndex = parsed.lastID;
 	}
+	,_parseMessage: function(raw) {
+		var parsed = StringTools.replace(raw,"\n"," ");
+		parsed = StringTools.htmlEscape(parsed);
+		while(this.imgBB.match(parsed)) {
+			var imgPath = this.imgBB.matched(1);
+			var imgTag = "<img src=" + imgPath + "></img>";
+			parsed = this.imgBB.replace(parsed,imgTag);
+		}
+		while(this.boldBB.match(parsed)) {
+			var text = this.boldBB.matched(1);
+			var strongTag = "<strong>" + text + "</strong>";
+			parsed = this.boldBB.replace(parsed,strongTag);
+		}
+		while(this.italicBB.match(parsed)) {
+			var text1 = this.italicBB.matched(1);
+			var emTag = "<em>" + text1 + "</em>";
+			parsed = this.italicBB.replace(parsed,emTag);
+		}
+		return parsed;
+	}
+};
+var StringTools = function() { };
+StringTools.htmlEscape = function(s,quotes) {
+	s = s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+	if(quotes) return s.split("\"").join("&quot;").split("'").join("&#039;"); else return s;
+};
+StringTools.replace = function(s,sub,by) {
+	return s.split(sub).join(by);
 };
 var haxe_Http = function(url) {
 	this.url = url;

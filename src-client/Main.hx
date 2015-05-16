@@ -6,10 +6,7 @@ import js.Browser;
 import haxe.Http;
 import haxe.Json;
 
-/**
- * ...
- * @author NicoM1
- */
+using StringTools;
 
 class Main 
 {
@@ -38,11 +35,38 @@ class Main
 	function _parseMessages(data) {
 		var parsed: MessageData = Json.parse(data);
 		for (p in parsed.messages) {
+			var bbParsed = _parseMessage(p);
 			var message = Browser.document.createDivElement();
-			message.innerHTML = p;
+			message.innerHTML = bbParsed;
 			Browser.document.body.appendChild(message);
 		}
 		lastIndex = parsed.lastID;
+	}
+	
+	var imgBB: EReg = ~/\[img\](.*?)\[\/img\]/i;
+	var boldBB: EReg = ~/\[b\](.*?)\[\/b\]/i;
+	var italicBB: EReg = ~/\[i\](.*?)\[\/i\]/i;
+	
+	function _parseMessage(raw: String): String {
+		var parsed: String = raw.replace('\n', ' ');
+		parsed = parsed.htmlEscape();
+		while (imgBB.match(parsed)) {
+			var imgPath = imgBB.matched(1);
+			var imgTag = '<img src=$imgPath></img>';
+			parsed = imgBB.replace(parsed, imgTag);
+		}
+		while (boldBB.match(parsed)) {
+			var text = boldBB.matched(1);
+			var strongTag = '<strong>$text</strong>';
+			parsed = boldBB.replace(parsed, strongTag);
+		}
+		while (italicBB.match(parsed)) {
+			var text = italicBB.matched(1);
+			var emTag = '<em>$text</em>';
+			parsed = italicBB.replace(parsed, emTag);
+		}
+		return parsed;
+		//
 	}
 	
 	static function main() {
