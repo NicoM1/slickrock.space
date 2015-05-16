@@ -48,17 +48,44 @@ _$List_ListIterator.prototype = {
 		return this.val;
 	}
 };
-var Main = function() { };
-Main.main = function() {
-	var http = new haxe_Http("https://aqueous-basin-8995.herokuapp.com/api/0");
-	http.async = true;
-	http.onData = function(data) {
-		console.log(data);
-	};
-	http.onError = function(error) {
+var Main = function() {
+	this.lastIndex = 0;
+	this.basePath = "https://aqueous-basin-8995.herokuapp.com/api/";
+	this.http = new haxe_Http(this.basePath + this.lastIndex);
+	this.http.async = true;
+	this.http.onData = $bind(this,this._parseMessages);
+	this.http.onError = function(error) {
 		console.log(error);
 	};
-	http.request();
+	this._loop();
+};
+Main.main = function() {
+	new Main();
+};
+Main.prototype = {
+	_loop: function() {
+		var _g = this;
+		haxe_Timer.delay(function() {
+			_g.http.url = _g.basePath + _g.lastIndex;
+			_g.http.request(true);
+			_g._loop();
+		},1000);
+	}
+	,_parseMessages: function(data) {
+		var parsed = JSON.parse(data);
+		var _g = 0;
+		var _g1 = parsed.messages;
+		while(_g < _g1.length) {
+			var p = _g1[_g];
+			++_g;
+			var message;
+			var _this = window.document;
+			message = _this.createElement("div");
+			message.innerHTML = p;
+			window.document.body.appendChild(message);
+		}
+		this.lastIndex = parsed.lastID;
+	}
 };
 var haxe_Http = function(url) {
 	this.url = url;
@@ -165,6 +192,29 @@ haxe_Http.prototype = {
 	,onStatus: function(status) {
 	}
 };
+var haxe_Timer = function(time_ms) {
+	var me = this;
+	this.id = setInterval(function() {
+		me.run();
+	},time_ms);
+};
+haxe_Timer.delay = function(f,time_ms) {
+	var t = new haxe_Timer(time_ms);
+	t.run = function() {
+		t.stop();
+		f();
+	};
+	return t;
+};
+haxe_Timer.prototype = {
+	stop: function() {
+		if(this.id == null) return;
+		clearInterval(this.id);
+		this.id = null;
+	}
+	,run: function() {
+	}
+};
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
 	this.val = val;
@@ -180,5 +230,7 @@ js_Browser.createXMLHttpRequest = function() {
 	if(typeof ActiveXObject != "undefined") return new ActiveXObject("Microsoft.XMLHTTP");
 	throw new js__$Boot_HaxeError("Unable to create XMLHttpRequest object.");
 };
+var $_, $fid = 0;
+function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}});
