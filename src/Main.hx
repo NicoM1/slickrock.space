@@ -139,6 +139,12 @@ class RouteHandler implements abe.IRoute {
 	function bin(path: String) {
 		_serveHtml('bin/'+path, function(e, d) {
 			if (e == null) {
+				switch(path.substr(path.lastIndexOf('.') + 1)) {
+					case 'js':
+						response.type('application/javascript');
+					case 'css':
+						response.type('text/css');
+				}
 				response.send(d);
 			}
 		});

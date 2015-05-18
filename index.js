@@ -278,7 +278,20 @@ RouteHandler.prototype = {
 	}
 	,bin: function(path,request,response,next) {
 		this._serveHtml("bin/" + path,function(e,d) {
-			if(e == null) response.send(d);
+			if(e == null) {
+				var _g;
+				var pos = path.lastIndexOf(".") + 1;
+				_g = HxOverrides.substr(path,pos,null);
+				switch(_g) {
+				case "js":
+					response.type("application/javascript");
+					break;
+				case "css":
+					response.type("text/css");
+					break;
+				}
+				response.send(d);
+			}
 		});
 	}
 	,client: function(request,response,next) {
