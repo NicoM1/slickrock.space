@@ -25,6 +25,7 @@ class Main {
 	function new() {
 		var app = new App();
 		app.router.register(new RouteHandler());
+		app.router.serve('/bin/', '/bin/');
 		var port = Node.process.env.get('PORT');
 		app.http(port != null? Std.parseInt(port) : 9998);
 		
@@ -90,6 +91,17 @@ class RouteHandler implements abe.IRoute {
 		response.redirect(302, '../chat');
 	}
 	
+	/*@:get('/chat/:message/:id')
+	function post(message: String, id: Int) {
+		Main.messages.push(message);
+		Fs.writeFile('db/messages.db', Main.messages.join('\n'), { }, function(err) {
+			if(err != null) {
+				trace(err);
+			}
+		});
+		response.redirect(302, '../chat');
+	}*/
+	
 	@:get('/api/:lastID')
 	@:post('/api/:lastID')
 	function api(lastID: Int) {
@@ -135,7 +147,7 @@ class RouteHandler implements abe.IRoute {
 		});
 	}
 	
-	@:get('/bin/:path')
+	/*@:get('/bin/:path')
 	function bin(path: String) {
 		_serveHtml('bin/'+path, function(e, d) {
 			if (e == null) {
@@ -149,9 +161,9 @@ class RouteHandler implements abe.IRoute {
 				response.send(d);
 			}
 		});
-	}
+	}*/
 	
-	@:get('/client')
+	/*@:get('/client')
 	function client() {
 		var page: String = '';
 		page += '<script>';
@@ -177,7 +189,7 @@ class RouteHandler implements abe.IRoute {
 		page += '</textarea>';
 		page += '</body>';
 		response.send(page);
-	}
+	}*/
 	
 	@:get('/test')
 	function test() { 

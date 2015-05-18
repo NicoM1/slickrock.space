@@ -176,32 +176,23 @@ var Main = function() {
 		var uses4 = [];
 		router.registerMethod("/chat","get",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
-		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "path", optional : false, type : "String", sources : ["params"]}]);
-		var process5 = new RouteHandler_$bin_$RouteProcess({ path : null},instance,processor5);
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[]);
+		var process5 = new RouteHandler_$test_$RouteProcess({ },instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/bin/:path","get",process5,uses5,[]);
+		router.registerMethod("/test","get",process5,uses5,[]);
 		var filters6 = new abe_core_ArgumentsFilter();
-		var processor6 = new abe_core_ArgumentProcessor(filters6,[]);
-		var process6 = new RouteHandler_$client_$RouteProcess({ },instance,processor6);
+		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
+		var process6 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor6);
 		var uses6 = [];
-		router.registerMethod("/client","get",process6,uses6,[]);
+		router.registerMethod("/user/:id","get",process6,uses6,[]);
 		var filters7 = new abe_core_ArgumentsFilter();
-		var processor7 = new abe_core_ArgumentProcessor(filters7,[]);
-		var process7 = new RouteHandler_$test_$RouteProcess({ },instance,processor7);
+		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
+		var process7 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor7);
 		var uses7 = [];
-		router.registerMethod("/test","get",process7,uses7,[]);
-		var filters8 = new abe_core_ArgumentsFilter();
-		var processor8 = new abe_core_ArgumentProcessor(filters8,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
-		var process8 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor8);
-		var uses8 = [];
-		router.registerMethod("/user/:id","get",process8,uses8,[]);
-		var filters9 = new abe_core_ArgumentsFilter();
-		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
-		var process9 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor9);
-		var uses9 = [];
-		router.registerMethod("/user/create/:name","get",process9,uses9,[]);
+		router.registerMethod("/user/create/:name","get",process7,uses7,[]);
 		return router;
 	})(new RouteHandler(),app.router);
+	app.router.serve("/bin/","/bin/");
 	var port;
 	var this1 = process.env;
 	port = this1.PORT;
@@ -275,39 +266,6 @@ RouteHandler.prototype = {
 				response.send(d);
 			}
 		});
-	}
-	,bin: function(path,request,response,next) {
-		this._serveHtml("bin/" + path,function(e,d) {
-			if(e == null) {
-				var _g;
-				var pos = path.lastIndexOf(".") + 1;
-				_g = HxOverrides.substr(path,pos,null);
-				switch(_g) {
-				case "js":
-					response.setHeader("content-type","application/javascript");
-					break;
-				case "css":
-					response.setHeader("content-type","text/css");
-					break;
-				}
-				response.send(d);
-			}
-		});
-	}
-	,client: function(request,response,next) {
-		var page = "";
-		page += "<script>";
-		page += "var curMessage;";
-		page += "function httpGet(theUrl) {\r\n\t\t\t\t\tvar xmlHttp = new XMLHttpRequest();\r\n\t\t\t\t\txmlHttp.open( \"GET\", theUrl, false );\r\n\t\t\t\t\txmlHttp.send( null );\r\n\t\t\t\t\treturn xmlHttp.responseText;\r\n\t\t\t\t}";
-		page += "function enterpressalert(e, textarea) {\r\n\t\t\t\t\tvar code = (e.keyCode ? e.keyCode : e.which);\r\n\t\t\t\t\tif(code == 13) { //Enter keycode\r\n\t\t\t\t\t\thttpGet('https://aqueous-basin-8995.herokuapp.com/chat/'+curMessage);\r\n\t\t\t\t\tvar i = document.getElementsByTagName(\"textarea\")[0].value = \"\"; \r\n\t\t\t\t\t}\r\n\t\t\t\t}";
-		page += "function inputChanged(event) { curMessage = encodeURIComponent(event.target.value);}";
-		page += "</script>";
-		page += "<body style=\"margin:0px;padding:0px;\">";
-		page += "<iframe src=\"https://aqueous-basin-8995.herokuapp.com/chat\" width='100%' height='90%' style=\"border:0px;\"></iframe>";
-		page += "<textarea oninput='inputChanged(event)' onKeyPress=\"enterpressalert(event, this)\" style=\"width: 100%; height: 10%;\">";
-		page += "</textarea>";
-		page += "</body>";
-		response.send(page);
 	}
 	,test: function(request,response,next) {
 		this._serveHtml("db/backup.html",function(e,d) {
@@ -433,17 +391,6 @@ RouteHandler_$api_$RouteProcess.prototype = $extend(abe_core_RouteProcess.protot
 	}
 	,__class__: RouteHandler_$api_$RouteProcess
 });
-var RouteHandler_$bin_$RouteProcess = function(args,instance,argumentProcessor) {
-	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
-};
-RouteHandler_$bin_$RouteProcess.__name__ = ["RouteHandler_bin_RouteProcess"];
-RouteHandler_$bin_$RouteProcess.__super__ = abe_core_RouteProcess;
-RouteHandler_$bin_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
-	execute: function(request,response,next) {
-		this.instance.bin(this.args.path,request,response,next);
-	}
-	,__class__: RouteHandler_$bin_$RouteProcess
-});
 var RouteHandler_$chat_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
 };
@@ -454,17 +401,6 @@ RouteHandler_$chat_$RouteProcess.prototype = $extend(abe_core_RouteProcess.proto
 		this.instance.chat(request,response,next);
 	}
 	,__class__: RouteHandler_$chat_$RouteProcess
-});
-var RouteHandler_$client_$RouteProcess = function(args,instance,argumentProcessor) {
-	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
-};
-RouteHandler_$client_$RouteProcess.__name__ = ["RouteHandler_client_RouteProcess"];
-RouteHandler_$client_$RouteProcess.__super__ = abe_core_RouteProcess;
-RouteHandler_$client_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
-	execute: function(request,response,next) {
-		this.instance.client(request,response,next);
-	}
-	,__class__: RouteHandler_$client_$RouteProcess
 });
 var RouteHandler_$createUser_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
