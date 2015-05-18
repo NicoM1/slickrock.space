@@ -24,7 +24,6 @@ class Main {
 		
 	function new() {
 		var app = new App();
-		app.express.use('/bin', Express.serveStatic('/bin'));
 		app.router.register(new RouteHandler());
 		var port = Node.process.env.get('PORT');
 		app.http(port != null? Std.parseInt(port) : 9998);
@@ -136,14 +135,14 @@ class RouteHandler implements abe.IRoute {
 		});
 	}
 	
-	/*@:get('/bin/:path')
+	@:get('/bin/:path')
 	function bin(path: String) {
 		_serveHtml('bin/'+path, function(e, d) {
 			if (e == null) {
 				response.send(d);
 			}
 		});
-	}*/
+	}
 	
 	@:get('/client')
 	function client() {
