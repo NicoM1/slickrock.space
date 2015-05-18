@@ -7,8 +7,11 @@ import js.Node;
 import js.node.Fs;
 import js.Error;
 
+import express.Express;
+
 using StringTools;
 
+@:use(Express.Express.serveStatic('/bin'))
 class Main {
 
 	public static var db: Array<String> = [];
@@ -132,14 +135,14 @@ class RouteHandler implements abe.IRoute {
 		});
 	}
 	
-	@:get('/bin/:path')
+	/*@:get('/bin/:path')
 	function bin(path: String) {
 		_serveHtml('bin/'+path, function(e, d) {
 			if (e == null) {
 				response.send(d);
 			}
 		});
-	}
+	}*/
 	
 	@:get('/client')
 	function client() {
