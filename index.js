@@ -283,10 +283,10 @@ RouteHandler.prototype = {
 				var pos = path.lastIndexOf(".") + 1;
 				_g = HxOverrides.substr(path,pos,null);
 				switch(_g) {
-				case "js":
+				case "s":
 					response.setHeader("content-type","application/javascript");
 					break;
-				case "css":
+				case "cs":
 					response.setHeader("content-type","text/css");
 					break;
 				default:

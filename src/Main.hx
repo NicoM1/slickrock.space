@@ -140,9 +140,9 @@ class RouteHandler implements abe.IRoute {
 		_serveHtml('bin/'+path, function(e, d) {
 			if (e == null) {
 				switch(path.substr(path.lastIndexOf('.') + 1)) {
-					case 'js':
+					case 's':
 						response.setHeader('content-type', 'application/javascript');
-					case 'css':
+					case 'cs':
 						response.setHeader('content-type', 'text/css');
 					default:
 						trace(path.substr(path.lastIndexOf('.') + 1));
