@@ -11,7 +11,7 @@ import express.Express;
 
 using StringTools;
 
-@:use(Express.Express.serveStatic('/bin'))
+@:use(Express.Express.serveStatic('/bin/'))
 class Main {
 
 	public static var db: Array<String> = [];
