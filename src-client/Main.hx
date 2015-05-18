@@ -1,6 +1,8 @@
 package ;
 
 import haxe.Timer;
+import js.html.DivElement;
+import js.html.Element;
 import js.html.InputElement;
 import js.Lib;
 import js.Browser;
@@ -21,6 +23,7 @@ class Main
 	var http: Http;
 	
 	var chatbox: InputElement;
+	var messages: DivElement;
 	
 	function new() {
 		http = new Http(basePath + lastIndex);
@@ -35,6 +38,8 @@ class Main
 	
 	function _windowLoaded() {
 		chatbox = cast Browser.document.getElementById('chatbox');
+		messages = cast Browser.document.getElementById('messages');
+		
 		chatbox.onkeypress = _checkKeyPress;
 	}
 	
@@ -66,9 +71,21 @@ class Main
 			var bbParsed = _parseMessage(p);
 			var message = Browser.document.createDivElement();
 			message.innerHTML = bbParsed;
-			Browser.document.getElementById('messages').appendChild(message);
+			
+			messages.appendChild(_makeSpan());
+			messages.appendChild(message);
 		}
 		lastIndex = parsed.lastID;
+	}
+	
+	function _makeSpan(?pointer: Bool = false): Element {
+		var span = Browser.document.createSpanElement();
+		if (pointer) {
+			span.innerHTML = '>';
+		}
+		span.innerHTML += '\t';
+		
+		return span;
 	}
 	
 	var imgBB: EReg = ~/\[img\](.*?)\[\/img\]/i;

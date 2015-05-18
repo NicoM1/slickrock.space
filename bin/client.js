@@ -75,6 +75,7 @@ Main.main = function() {
 Main.prototype = {
 	_windowLoaded: function() {
 		this.chatbox = window.document.getElementById("chatbox");
+		this.messages = window.document.getElementById("messages");
 		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
 	}
 	,_checkKeyPress: function(e) {
@@ -110,9 +111,19 @@ Main.prototype = {
 			var _this = window.document;
 			message = _this.createElement("div");
 			message.innerHTML = bbParsed;
-			window.document.getElementById("messages").appendChild(message);
+			this.messages.appendChild(this._makeSpan());
+			this.messages.appendChild(message);
 		}
 		this.lastIndex = parsed.lastID;
+	}
+	,_makeSpan: function(pointer) {
+		if(pointer == null) pointer = false;
+		var span;
+		var _this = window.document;
+		span = _this.createElement("span");
+		if(pointer) span.innerHTML = ">";
+		span.innerHTML += "\t";
+		return span;
 	}
 	,_parseMessage: function(raw) {
 		var parsed = StringTools.replace(raw,"\n"," ");
