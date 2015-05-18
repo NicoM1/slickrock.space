@@ -196,7 +196,7 @@ var Main = function() {
 	var this1 = process.env;
 	port = this1.PORT;
 	app.http(port != null?Std.parseInt(port):9998);
-	app.router.serve("/","/bin");
+	app.router.serve("/","bin");
 	js_node_Fs.readFile("db/db.db",{ encoding : "utf8"},function(err,data) {
 		if(err == null) _g._parseDB(data); else console.log(err);
 	});
