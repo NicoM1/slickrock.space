@@ -39,21 +39,25 @@ class Main
 	}
 	
 	function _checkKeyPress(e) {
-		trace(e);
 		var code = (e.keyCode != null ? e.keyCode : e.which);
 		if (code == 13) { //ENTER
 			http.url = basePath + 'chat/' + chatbox.value.urlEncode();
 			http.request();
+			_update();
 			chatbox.value = '';
 		}
 	}
 	
 	function _loop() {
 		Timer.delay(function() {
-			http.url = basePath + 'api/' + lastIndex;
-			http.request(true);
+			_update();
 			_loop();
 		}, 1000);
+	}
+	
+	function _update() {
+		http.url = basePath + 'api/' + lastIndex;
+		http.request(true);
 	}
 	
 	function _parseMessages(data) {
