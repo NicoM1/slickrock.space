@@ -283,20 +283,20 @@ RouteHandler.prototype = {
 				var pos = path.lastIndexOf(".") + 1;
 				_g = HxOverrides.substr(path,pos,null);
 				switch(_g) {
-				case "s":
+				case "js":
 					response.setHeader("content-type","application/javascript");
 					break;
-				case "cs":
+				case "css":
 					response.setHeader("content-type","text/css");
 					break;
 				default:
-					console.log((function($this) {
-						var $r;
-						var pos1 = path.lastIndexOf(".") + 1;
-						$r = HxOverrides.substr(path,pos1,null);
-						return $r;
-					}(this)));
 				}
+				console.log((function($this) {
+					var $r;
+					var pos1 = path.lastIndexOf(".") + 1;
+					$r = HxOverrides.substr(path,pos1,null);
+					return $r;
+				}(this)));
 				response.send(d);
 			}
 		});
