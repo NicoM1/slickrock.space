@@ -184,6 +184,11 @@ var Main = function() {
 		var process6 = new RouteHandler_$chat_$RouteProcess({ },instance,processor6);
 		var uses6 = [];
 		router.registerMethod("/chat","get",process6,uses6,[]);
+		var filters7 = new abe_core_ArgumentsFilter();
+		var processor7 = new abe_core_ArgumentProcessor(filters7,[]);
+		var process7 = new RouteHandler_$chat1_$RouteProcess({ },instance,processor7);
+		var uses7 = [];
+		router.registerMethod("/chat/","get",process7,uses7,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -239,6 +244,14 @@ RouteHandler.prototype = {
 		response.send(messages);
 	}
 	,chat: function(request,response,next) {
+		this._serveHtml("bin/index.html",function(e,d) {
+			if(e == null) {
+				response.setHeader("Access-Control-Allow-Origin","*");
+				response.send(d);
+			}
+		});
+	}
+	,chat1: function(request,response,next) {
 		this._serveHtml("bin/index.html",function(e,d) {
 			if(e == null) {
 				response.setHeader("Access-Control-Allow-Origin","*");
@@ -356,6 +369,17 @@ RouteHandler_$api_$RouteProcess.prototype = $extend(abe_core_RouteProcess.protot
 		this.instance.api(this.args.lastID,request,response,next);
 	}
 	,__class__: RouteHandler_$api_$RouteProcess
+});
+var RouteHandler_$chat1_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$chat1_$RouteProcess.__name__ = ["RouteHandler_chat1_RouteProcess"];
+RouteHandler_$chat1_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$chat1_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.chat1(request,response,next);
+	}
+	,__class__: RouteHandler_$chat1_$RouteProcess
 });
 var RouteHandler_$chat_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
