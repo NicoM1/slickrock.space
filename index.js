@@ -270,7 +270,10 @@ RouteHandler.prototype = {
 	}
 	,chat: function(request,response,next) {
 		this._serveHtml("bin/index.html",function(e,d) {
-			if(e == null) response.send(d);
+			if(e == null) {
+				response.setHeader("Access-Control-Allow-Origin","*");
+				response.send(d);
+			}
 		});
 	}
 	,bin: function(path,request,response,next) {
