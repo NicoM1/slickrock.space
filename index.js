@@ -252,12 +252,7 @@ RouteHandler.prototype = {
 		});
 	}
 	,chat1: function(request,response,next) {
-		this._serveHtml("bin/index.html",function(e,d) {
-			if(e == null) {
-				response.setHeader("Access-Control-Allow-Origin","*");
-				response.send(d);
-			}
-		});
+		response.redirect("../");
 	}
 	,imgBB: null
 	,boldBB: null
