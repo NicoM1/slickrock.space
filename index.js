@@ -148,6 +148,7 @@ Lambda.has = function(it,elt) {
 var Main = function() {
 	var _g = this;
 	var app = new abe_App();
+	app.express["use"]("/bin",express_Express["static"]("/bin",null));
 	(function(instance,parent) {
 		var router = parent.mount("/");
 		var filters = new abe_core_ArgumentsFilter();

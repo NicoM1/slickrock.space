@@ -1,6 +1,7 @@
 package;
 
 import abe.App;
+import express.Middleware;
 import haxe.Json;
 
 import js.Node;
@@ -11,7 +12,6 @@ import express.Express;
 
 using StringTools;
 
-@:use(Express.Express.serveStatic('/bin/'))
 class Main {
 
 	public static var db: Array<String> = [];
@@ -24,6 +24,7 @@ class Main {
 		
 	function new() {
 		var app = new App();
+		app.express.use('/bin', Express.serveStatic('/bin'));
 		app.router.register(new RouteHandler());
 		var port = Node.process.env.get('PORT');
 		app.http(port != null? Std.parseInt(port) : 9998);
