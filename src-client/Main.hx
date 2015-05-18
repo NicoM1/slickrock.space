@@ -37,9 +37,11 @@ class Main
 		var userHttp = new Http(basePath + 'api/getuser/');
 		userHttp.onData = function(data) {
 			id = Std.parseInt(data);
+			trace(id);
 		};
 		userHttp.onError = function(error) {
 			id = -1;
+			trace(id);
 		}
 		userHttp.request(true);
 

@@ -77,9 +77,11 @@ var Main = function() {
 	var userHttp = new haxe_Http(this.basePath + "api/getuser/");
 	userHttp.onData = function(data) {
 		_g.id = Std.parseInt(data);
+		console.log(_g.id);
 	};
 	userHttp.onError = function(error1) {
 		_g.id = -1;
+		console.log(_g.id);
 	};
 	userHttp.request(true);
 	window.onload = $bind(this,this._windowLoaded);
