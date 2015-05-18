@@ -147,8 +147,8 @@ class RouteHandler implements abe.IRoute {
 					default:
 						
 				}
-				trace(path.substr(path.lastIndexOf('.') + 1));
-				response.send(d);
+				response.send(path.substr(path.lastIndexOf('.') + 1));
+				//response.send(d);
 			}
 		});
 	}

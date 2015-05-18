@@ -291,13 +291,12 @@ RouteHandler.prototype = {
 					break;
 				default:
 				}
-				console.log((function($this) {
+				response.send((function($this) {
 					var $r;
 					var pos1 = path.lastIndexOf(".") + 1;
 					$r = HxOverrides.substr(path,pos1,null);
 					return $r;
 				}(this)));
-				response.send(d);
 			}
 		});
 	}
