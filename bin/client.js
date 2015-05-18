@@ -133,7 +133,7 @@ Main.prototype = {
 			if(p.id == -1 || p.id != this.lastUserID) differentUser = true;
 			this.messages.appendChild(this._makeSpan(differentUser));
 			this.messages.appendChild(message);
-			this.messages.scrollTop = this.messages.scrollHeight;
+			window.scrollTo(0,window.document.body.scrollHeight);
 			this.lastUserID = p.id;
 		}
 		this.lastIndex = parsed.lastID;

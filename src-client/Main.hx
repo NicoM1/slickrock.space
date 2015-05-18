@@ -93,7 +93,7 @@ class Main
 			messages.appendChild(_makeSpan(differentUser));
 			messages.appendChild(message);
 			
-			messages.scrollTop = messages.scrollHeight;
+			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
 			
 			lastUserID = p.id;
 		}
