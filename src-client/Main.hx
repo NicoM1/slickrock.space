@@ -61,7 +61,7 @@ class Main
 		var code = (e.keyCode != null ? e.keyCode : e.which);
 		if (code == 13) { //ENTER
 			http.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
-			http.request();
+			http.request(true);
 			_update();
 			chatbox.value = '';
 		}

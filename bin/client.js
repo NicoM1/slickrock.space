@@ -101,7 +101,7 @@ Main.prototype = {
 		if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		if(code == 13) {
 			this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
-			this.http.request();
+			this.http.request(true);
 			this._update();
 			this.chatbox.value = "";
 		}
