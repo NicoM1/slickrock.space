@@ -146,7 +146,6 @@ Lambda.has = function(it,elt) {
 	return false;
 };
 var Main = function() {
-	var _g = this;
 	var app = new abe_App();
 	(function(instance,parent) {
 		var router = parent.mount("/");
@@ -187,9 +186,6 @@ var Main = function() {
 	port = this1.PORT;
 	app.http(port != null?Std.parseInt(port):9998);
 	app.router.serve("/","./bin");
-	js_node_Fs.readFile("db/messages.db",{ encoding : "utf8"},function(err,data) {
-		if(err == null) _g._parseMessages(data); else console.log(err);
-	});
 };
 Main.__name__ = ["Main"];
 Main.main = function() {

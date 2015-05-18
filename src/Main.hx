@@ -30,14 +30,14 @@ class Main {
 		
 		app.router.serve('/', './bin');
 
-		Fs.readFile('db/messages.db', { encoding: 'utf8' }, function(err, data) {
+		/*Fs.readFile('db/messages.db', { encoding: 'utf8' }, function(err, data) {
 			if (err == null) {
 				_parseMessages(data);
 			}
 			else {
 				trace(err);
 			}
-		});
+		});*/
 	}
 	
 	function _parseMessages(data: String) {
