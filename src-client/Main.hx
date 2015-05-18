@@ -19,6 +19,7 @@ class Main
 	var basePath: String = 'https://localhost:9998/api/';
 	#end
 	var lastIndex: Int = -1;
+	var lastUserID: Int = -2;
 	
 	var http: Http;
 	
@@ -67,12 +68,16 @@ class Main
 	
 	function _parseMessages(data) {
 		var parsed: MessageData = Json.parse(data);
-		for (p in parsed.messages) {
-			var bbParsed = _parseMessage(p);
+		for (p in parsed.messages.messages) {
+			var bbParsed = _parseMessage(p.text);
 			var message = Browser.document.createDivElement();
 			message.innerHTML = bbParsed;
 			
-			messages.appendChild(_makeSpan(true));
+			var differentUser = false;
+			if (p.id == -1 || p.id != lastUserID) {
+				differentUser = true;
+			}
+			messages.appendChild(_makeSpan(differentUser));
 			messages.appendChild(message);
 		}
 		lastIndex = parsed.lastID;

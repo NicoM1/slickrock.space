@@ -58,6 +58,7 @@ var Main = function() {
 	this.italicBB = new EReg("\\[i\\](.*?)\\[/i\\]","i");
 	this.boldBB = new EReg("\\[b\\](.*?)\\[/b\\]","i");
 	this.imgBB = new EReg("\\[img\\](.*?)\\[/img\\]","i");
+	this.lastUserID = -2;
 	this.lastIndex = -1;
 	this.basePath = "https://aqueous-basin-8995.herokuapp.com/";
 	this.http = new haxe_Http(this.basePath + this.lastIndex);
@@ -102,16 +103,18 @@ Main.prototype = {
 	,_parseMessages: function(data) {
 		var parsed = JSON.parse(data);
 		var _g = 0;
-		var _g1 = parsed.messages;
+		var _g1 = parsed.messages.messages;
 		while(_g < _g1.length) {
 			var p = _g1[_g];
 			++_g;
-			var bbParsed = this._parseMessage(p);
+			var bbParsed = this._parseMessage(p.text);
 			var message;
 			var _this = window.document;
 			message = _this.createElement("div");
 			message.innerHTML = bbParsed;
-			this.messages.appendChild(this._makeSpan(true));
+			var differentUser = false;
+			if(p.id == -1 || p.id != this.lastUserID) differentUser = true;
+			this.messages.appendChild(this._makeSpan(differentUser));
 			this.messages.appendChild(message);
 		}
 		this.lastIndex = parsed.lastID;

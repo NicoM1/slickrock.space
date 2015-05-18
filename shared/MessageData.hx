@@ -1,6 +1,6 @@
 package	;
 
 typedef MessageData = {
-	messages: Array<String>,
+	messages: MessageList,
 	lastID: Int
 }

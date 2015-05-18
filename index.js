@@ -161,35 +161,25 @@ var Main = function() {
 		var uses1 = [];
 		router.registerMethod("/chat/:message","get",process1,uses1,[]);
 		var filters2 = new abe_core_ArgumentsFilter();
-		var processor2 = new abe_core_ArgumentProcessor(filters2,[{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
-		var process2 = new RouteHandler_$api_$RouteProcess({ lastID : null},instance,processor2);
+		var processor2 = new abe_core_ArgumentProcessor(filters2,[{ name : "message", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
+		var process2 = new RouteHandler_$postWithID_$RouteProcess({ message : null, id : null},instance,processor2);
 		var uses2 = [];
-		router.registerMethod("/api/:lastID","get",process2,uses2,[]);
+		router.registerMethod("/chat/:message/:id","post",process2,uses2,[]);
 		var filters3 = new abe_core_ArgumentsFilter();
 		var processor3 = new abe_core_ArgumentProcessor(filters3,[{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
 		var process3 = new RouteHandler_$api_$RouteProcess({ lastID : null},instance,processor3);
 		var uses3 = [];
-		router.registerMethod("/api/:lastID","post",process3,uses3,[]);
+		router.registerMethod("/api/:lastID","get",process3,uses3,[]);
 		var filters4 = new abe_core_ArgumentsFilter();
-		var processor4 = new abe_core_ArgumentProcessor(filters4,[]);
-		var process4 = new RouteHandler_$chat_$RouteProcess({ },instance,processor4);
+		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process4 = new RouteHandler_$api_$RouteProcess({ lastID : null},instance,processor4);
 		var uses4 = [];
-		router.registerMethod("/chat","get",process4,uses4,[]);
+		router.registerMethod("/api/:lastID","post",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
 		var processor5 = new abe_core_ArgumentProcessor(filters5,[]);
-		var process5 = new RouteHandler_$test_$RouteProcess({ },instance,processor5);
+		var process5 = new RouteHandler_$chat_$RouteProcess({ },instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/test","get",process5,uses5,[]);
-		var filters6 = new abe_core_ArgumentsFilter();
-		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
-		var process6 = new RouteHandler_$getUser_$RouteProcess({ id : null},instance,processor6);
-		var uses6 = [];
-		router.registerMethod("/user/:id","get",process6,uses6,[]);
-		var filters7 = new abe_core_ArgumentsFilter();
-		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "name", optional : false, type : "String", sources : ["params"]}]);
-		var process7 = new RouteHandler_$createUser_$RouteProcess({ name : null},instance,processor7);
-		var uses7 = [];
-		router.registerMethod("/user/create/:name","get",process7,uses7,[]);
+		router.registerMethod("/chat","get",process5,uses5,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -197,32 +187,17 @@ var Main = function() {
 	port = this1.PORT;
 	app.http(port != null?Std.parseInt(port):9998);
 	app.router.serve("/","./bin");
-	js_node_Fs.readFile("db/db.db",{ encoding : "utf8"},function(err,data) {
-		if(err == null) _g._parseDB(data); else console.log(err);
-	});
-	js_node_Fs.readFile("db/messages.db",{ encoding : "utf8"},function(err1,data1) {
-		if(err1 == null) _g._parseMessages(data1); else console.log(err1);
+	js_node_Fs.readFile("db/messages.db",{ encoding : "utf8"},function(err,data) {
+		if(err == null) _g._parseMessages(data); else console.log(err);
 	});
 };
 Main.__name__ = ["Main"];
-Main.saveUser = function(name) {
-	Main.textDB += "\n" + name;
-	js_node_Fs.writeFile("db/db.db",Main.textDB,{ },function(err) {
-		if(err != null) console.log(err);
-	});
-};
 Main.main = function() {
 	new Main();
 };
 Main.prototype = {
-	_parseDB: function(data) {
-		StringTools.replace(data,"\r\n","\n");
-		Main.textDB = data;
-		Main.db = data.split("\n");
-	}
-	,_parseMessages: function(data) {
-		StringTools.replace(data,"\r\n","\n");
-		Main.messages = data.split("\n");
+	_parseMessages: function(data) {
+		Main.messages = JSON.parse(data);
 	}
 	,__class__: Main
 };
@@ -240,20 +215,20 @@ RouteHandler.prototype = {
 		response.send("Hello World!");
 	}
 	,post: function(message,request,response,next) {
-		Main.messages.push(message);
-		js_node_Fs.writeFile("db/messages.db",Main.messages.join("\n"),{ },function(err) {
-			if(err != null) console.log(err);
-		});
+		Main.messages.messages.push({ text : message, id : -1});
 		response.redirect(302,"../chat");
 	}
+	,postWithID: function(message,id,request,response,next) {
+		Main.messages.messages.push({ text : message, id : id});
+	}
 	,api: function(lastID,request,response,next) {
-		var messages = { messages : [], lastID : Main.messages.length - 1};
-		if(lastID < Main.messages.length - 1) {
+		var messages = { messages : { messages : []}, lastID : Main.messages.messages.length - 1};
+		if(lastID < Main.messages.messages.length - 1) {
 			var _g1 = lastID + 1;
-			var _g = Main.messages.length;
+			var _g = Main.messages.messages.length;
 			while(_g1 < _g) {
 				var i = _g1++;
-				messages.messages.push(Main.messages[i]);
+				messages.messages.messages.push(Main.messages.messages[i]);
 			}
 		}
 		response.setHeader("Access-Control-Allow-Origin","*");
@@ -265,11 +240,6 @@ RouteHandler.prototype = {
 				response.setHeader("Access-Control-Allow-Origin","*");
 				response.send(d);
 			}
-		});
-	}
-	,test: function(request,response,next) {
-		this._serveHtml("db/backup.html",function(e,d) {
-			if(e == null) response.send(d);
 		});
 	}
 	,imgBB: null
@@ -294,14 +264,6 @@ RouteHandler.prototype = {
 			parsed = this.italicBB.replace(parsed,emTag);
 		}
 		return parsed;
-	}
-	,getUser: function(id,request,response,next) {
-		if(Main.db.length > id) response.send(Main.db[id]); else response.send("Error: no user with that ID.");
-	}
-	,createUser: function(name,request,response,next) {
-		Main.db.push(name);
-		response.send(name + ": created.");
-		Main.saveUser(Main.db[Main.db.length - 1]);
 	}
 	,_serveHtml: function(path,handler) {
 		js_node_Fs.readFile(path,{ encoding : "utf8"},handler);
@@ -402,28 +364,6 @@ RouteHandler_$chat_$RouteProcess.prototype = $extend(abe_core_RouteProcess.proto
 	}
 	,__class__: RouteHandler_$chat_$RouteProcess
 });
-var RouteHandler_$createUser_$RouteProcess = function(args,instance,argumentProcessor) {
-	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
-};
-RouteHandler_$createUser_$RouteProcess.__name__ = ["RouteHandler_createUser_RouteProcess"];
-RouteHandler_$createUser_$RouteProcess.__super__ = abe_core_RouteProcess;
-RouteHandler_$createUser_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
-	execute: function(request,response,next) {
-		this.instance.createUser(this.args.name,request,response,next);
-	}
-	,__class__: RouteHandler_$createUser_$RouteProcess
-});
-var RouteHandler_$getUser_$RouteProcess = function(args,instance,argumentProcessor) {
-	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
-};
-RouteHandler_$getUser_$RouteProcess.__name__ = ["RouteHandler_getUser_RouteProcess"];
-RouteHandler_$getUser_$RouteProcess.__super__ = abe_core_RouteProcess;
-RouteHandler_$getUser_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
-	execute: function(request,response,next) {
-		this.instance.getUser(this.args.id,request,response,next);
-	}
-	,__class__: RouteHandler_$getUser_$RouteProcess
-});
 var RouteHandler_$index_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
 };
@@ -435,6 +375,17 @@ RouteHandler_$index_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prot
 	}
 	,__class__: RouteHandler_$index_$RouteProcess
 });
+var RouteHandler_$postWithID_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$postWithID_$RouteProcess.__name__ = ["RouteHandler_postWithID_RouteProcess"];
+RouteHandler_$postWithID_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$postWithID_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.postWithID(this.args.message,this.args.id,request,response,next);
+	}
+	,__class__: RouteHandler_$postWithID_$RouteProcess
+});
 var RouteHandler_$post_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
 };
@@ -445,17 +396,6 @@ RouteHandler_$post_$RouteProcess.prototype = $extend(abe_core_RouteProcess.proto
 		this.instance.post(this.args.message,request,response,next);
 	}
 	,__class__: RouteHandler_$post_$RouteProcess
-});
-var RouteHandler_$test_$RouteProcess = function(args,instance,argumentProcessor) {
-	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
-};
-RouteHandler_$test_$RouteProcess.__name__ = ["RouteHandler_test_RouteProcess"];
-RouteHandler_$test_$RouteProcess.__super__ = abe_core_RouteProcess;
-RouteHandler_$test_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
-	execute: function(request,response,next) {
-		this.instance.test(request,response,next);
-	}
-	,__class__: RouteHandler_$test_$RouteProcess
 });
 var Std = function() { };
 Std.__name__ = ["Std"];
@@ -4284,7 +4224,7 @@ if(typeof(scope.performance.now) == "undefined") {
 }
 Main.db = [];
 Main.textDB = "";
-Main.messages = ["Chat by adding \"/this is my message\" to the url and pressing enter."];
+Main.messages = { messages : []};
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
 abe_core_ArgumentsFilter.globalFilters = (function() {
 	var filters = [];
