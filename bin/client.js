@@ -78,22 +78,25 @@ Main.prototype = {
 		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
 	}
 	,_checkKeyPress: function(e) {
-		console.log(e);
 		var code;
 		if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		if(code == 13) {
 			this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value);
 			this.http.request();
+			this._update();
 			this.chatbox.value = "";
 		}
 	}
 	,_loop: function() {
 		var _g = this;
 		haxe_Timer.delay(function() {
-			_g.http.url = _g.basePath + "api/" + _g.lastIndex;
-			_g.http.request(true);
+			_g._update();
 			_g._loop();
 		},1000);
+	}
+	,_update: function() {
+		this.http.url = this.basePath + "api/" + this.lastIndex;
+		this.http.request(true);
 	}
 	,_parseMessages: function(data) {
 		var parsed = JSON.parse(data);
