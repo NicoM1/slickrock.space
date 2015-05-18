@@ -43,7 +43,7 @@ class Main
 		var code = (e.keyCode != null ? e.keyCode : e.which);
 		if (code == 13) { //ENTER
 			http.url = basePath + 'chat/' + chatbox.value.urlEncode();
-			http.request(true);
+			http.request();
 			chatbox.value = '';
 		}
 	}
@@ -51,7 +51,7 @@ class Main
 	function _loop() {
 		Timer.delay(function() {
 			http.url = basePath + 'api/' + lastIndex;
-			http.request();
+			http.request(true);
 			_loop();
 		}, 1000);
 	}

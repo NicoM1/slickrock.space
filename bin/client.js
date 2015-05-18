@@ -83,7 +83,7 @@ Main.prototype = {
 		if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		if(code == 13) {
 			this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value);
-			this.http.request(true);
+			this.http.request();
 			this.chatbox.value = "";
 		}
 	}
@@ -91,7 +91,7 @@ Main.prototype = {
 		var _g = this;
 		haxe_Timer.delay(function() {
 			_g.http.url = _g.basePath + "api/" + _g.lastIndex;
-			_g.http.request();
+			_g.http.request(true);
 			_g._loop();
 		},1000);
 	}
