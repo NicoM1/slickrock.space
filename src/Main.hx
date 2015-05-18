@@ -28,7 +28,7 @@ class Main {
 		var port = Node.process.env.get('PORT');
 		app.http(port != null? Std.parseInt(port) : 9998);
 		
-		app.router.serve('', '/bin/');
+		app.router.serve('/', '/bin');
 		
 		Fs.readFile('db/db.db', { encoding: 'utf8' }, function(err, data) {
 			if (err == null) {
