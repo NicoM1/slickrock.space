@@ -92,6 +92,9 @@ class Main
 			}
 			messages.appendChild(_makeSpan(differentUser));
 			messages.appendChild(message);
+			
+			messages.scrollTop = messages.scrollHeight;
+			
 			lastUserID = p.id;
 		}
 		lastIndex = parsed.lastID;
