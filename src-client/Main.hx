@@ -69,10 +69,10 @@ class Main
 		var parsed: MessageData = Json.parse(data);
 		for (p in parsed.messages) {
 			var bbParsed = _parseMessage(p);
-			var message = Browser.document.createSpanElement();
+			var message = Browser.document.createDivElement();
 			message.innerHTML = bbParsed;
 			
-			messages.appendChild(_makeSpan());
+			messages.appendChild(_makeSpan(true));
 			messages.appendChild(message);
 		}
 		lastIndex = parsed.lastID;

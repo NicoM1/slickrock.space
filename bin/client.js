@@ -109,9 +109,9 @@ Main.prototype = {
 			var bbParsed = this._parseMessage(p);
 			var message;
 			var _this = window.document;
-			message = _this.createElement("span");
+			message = _this.createElement("div");
 			message.innerHTML = bbParsed;
-			this.messages.appendChild(this._makeSpan());
+			this.messages.appendChild(this._makeSpan(true));
 			this.messages.appendChild(message);
 		}
 		this.lastIndex = parsed.lastID;
