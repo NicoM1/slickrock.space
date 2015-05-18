@@ -141,9 +141,9 @@ class RouteHandler implements abe.IRoute {
 			if (e == null) {
 				switch(path.substr(path.lastIndexOf('.') + 1)) {
 					case 'js':
-						response.type('application/javascript');
+						response.setHeader('content-type', 'application/javascript');
 					case 'css':
-						response.type('text/css');
+						response.setHeader('content-type', 'text/css');
 				}
 				response.send(d);
 			}
