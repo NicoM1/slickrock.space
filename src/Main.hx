@@ -25,9 +25,10 @@ class Main {
 	function new() {
 		var app = new App();
 		app.router.register(new RouteHandler());
-		app.router.serve('/bin/', '/bin/');
 		var port = Node.process.env.get('PORT');
 		app.http(port != null? Std.parseInt(port) : 9998);
+		
+		app.router.serve('/bin/', '/bin/');
 		
 		Fs.readFile('db/db.db', { encoding: 'utf8' }, function(err, data) {
 			if (err == null) {
