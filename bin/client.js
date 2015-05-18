@@ -109,7 +109,7 @@ Main.prototype = {
 			var bbParsed = this._parseMessage(p);
 			var message;
 			var _this = window.document;
-			message = _this.createElement("div");
+			message = _this.createElement("span");
 			message.innerHTML = bbParsed;
 			this.messages.appendChild(this._makeSpan());
 			this.messages.appendChild(message);

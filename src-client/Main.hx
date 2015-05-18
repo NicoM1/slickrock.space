@@ -69,7 +69,7 @@ class Main
 		var parsed: MessageData = Json.parse(data);
 		for (p in parsed.messages) {
 			var bbParsed = _parseMessage(p);
-			var message = Browser.document.createDivElement();
+			var message = Browser.document.createSpanElement();
 			message.innerHTML = bbParsed;
 			
 			messages.appendChild(_makeSpan());
