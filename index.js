@@ -256,9 +256,8 @@ RouteHandler.prototype = {
 		response.redirect(302,"../chat");
 	}
 	,api: function(lastID,request,response,next) {
-		var messages = { newMessages : false, messages : [], lastID : Main.messages.length - 1};
+		var messages = { messages : [], lastID : Main.messages.length - 1};
 		if(lastID < Main.messages.length - 1) {
-			messages.newMessages = true;
 			var _g1 = lastID + 1;
 			var _g = Main.messages.length;
 			while(_g1 < _g) {
@@ -508,6 +507,9 @@ RouteHandler_$test_$RouteProcess.prototype = $extend(abe_core_RouteProcess.proto
 });
 var Std = function() { };
 Std.__name__ = ["Std"];
+Std.instance = function(value,c) {
+	if((value instanceof c)) return value; else return null;
+};
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
 };
@@ -1372,6 +1374,14 @@ thx_Arrays.contains = function(array,element,eq) {
 		return false;
 	}
 };
+thx_Arrays.containsAny = function(array,elements,eq) {
+	var $it0 = $iterator(elements)();
+	while( $it0.hasNext() ) {
+		var el = $it0.next();
+		if(thx_Arrays.contains(array,el,eq)) return true;
+	}
+	return false;
+};
 thx_Arrays.cross = function(a,b) {
 	var r = [];
 	var _g = 0;
@@ -1602,6 +1612,21 @@ thx_Arrays.shuffle = function(a) {
 	}
 	return array;
 };
+thx_Arrays.split = function(array,parts) {
+	var len = Math.ceil(array.length / parts);
+	return thx_Arrays.splitBy(array,len);
+};
+thx_Arrays.splitBy = function(array,len) {
+	var res = [];
+	len = thx_Ints.min(len,array.length);
+	var _g1 = 0;
+	var _g = Math.ceil(array.length / len);
+	while(_g1 < _g) {
+		var p = _g1++;
+		res.push(array.slice(p * len,(p + 1) * len));
+	}
+	return res;
+};
 thx_Arrays.take = function(arr,n) {
 	return arr.slice(0,n);
 };
@@ -1624,46 +1649,6 @@ thx_Arrays.rotate = function(arr) {
 		}
 	}
 	return result;
-};
-thx_Arrays.zip = function(array1,array2) {
-	var length = thx_Ints.min(array1.length,array2.length);
-	var array = [];
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		array.push({ _0 : array1[i], _1 : array2[i]});
-	}
-	return array;
-};
-thx_Arrays.zip3 = function(array1,array2,array3) {
-	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length]);
-	var array = [];
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		array.push({ _0 : array1[i], _1 : array2[i], _2 : array3[i]});
-	}
-	return array;
-};
-thx_Arrays.zip4 = function(array1,array2,array3,array4) {
-	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length,array4.length]);
-	var array = [];
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		array.push({ _0 : array1[i], _1 : array2[i], _2 : array3[i], _3 : array4[i]});
-	}
-	return array;
-};
-thx_Arrays.zip5 = function(array1,array2,array3,array4,array5) {
-	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length,array4.length,array5.length]);
-	var array = [];
-	var _g = 0;
-	while(_g < length) {
-		var i = _g++;
-		array.push({ _0 : array1[i], _1 : array2[i], _2 : array3[i], _3 : array4[i], _4 : array5[i]});
-	}
-	return array;
 };
 thx_Arrays.unzip = function(array) {
 	var a1 = [];
@@ -1712,6 +1697,46 @@ thx_Arrays.unzip5 = function(array) {
 		a5.push(t._4);
 	});
 	return { _0 : a1, _1 : a2, _2 : a3, _3 : a4, _4 : a5};
+};
+thx_Arrays.zip = function(array1,array2) {
+	var length = thx_Ints.min(array1.length,array2.length);
+	var array = [];
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		array.push({ _0 : array1[i], _1 : array2[i]});
+	}
+	return array;
+};
+thx_Arrays.zip3 = function(array1,array2,array3) {
+	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length]);
+	var array = [];
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		array.push({ _0 : array1[i], _1 : array2[i], _2 : array3[i]});
+	}
+	return array;
+};
+thx_Arrays.zip4 = function(array1,array2,array3,array4) {
+	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length,array4.length]);
+	var array = [];
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		array.push({ _0 : array1[i], _1 : array2[i], _2 : array3[i], _3 : array4[i]});
+	}
+	return array;
+};
+thx_Arrays.zip5 = function(array1,array2,array3,array4,array5) {
+	var length = thx_ArrayInts.min([array1.length,array2.length,array3.length,array4.length,array5.length]);
+	var array = [];
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		array.push({ _0 : array1[i], _1 : array2[i], _2 : array3[i], _3 : array4[i], _4 : array5[i]});
+	}
+	return array;
 };
 var thx_ArrayFloats = function() { };
 thx_ArrayFloats.__name__ = ["thx","ArrayFloats"];
@@ -2373,6 +2398,30 @@ thx_Iterables.reducei = function(it,callback,initial) {
 thx_Iterables.toArray = function(it) {
 	return thx_Iterators.toArray($iterator(it)());
 };
+thx_Iterables.unzip = function(it) {
+	return thx_Iterators.unzip($iterator(it)());
+};
+thx_Iterables.unzip3 = function(it) {
+	return thx_Iterators.unzip3($iterator(it)());
+};
+thx_Iterables.unzip4 = function(it) {
+	return thx_Iterators.unzip4($iterator(it)());
+};
+thx_Iterables.unzip5 = function(it) {
+	return thx_Iterators.unzip5($iterator(it)());
+};
+thx_Iterables.zip = function(it1,it2) {
+	return thx_Iterators.zip($iterator(it1)(),$iterator(it2)());
+};
+thx_Iterables.zip3 = function(it1,it2,it3) {
+	return thx_Iterators.zip3($iterator(it1)(),$iterator(it2)(),$iterator(it3)());
+};
+thx_Iterables.zip4 = function(it1,it2,it3,it4) {
+	return thx_Iterators.zip4($iterator(it1)(),$iterator(it2)(),$iterator(it3)(),$iterator(it4)());
+};
+thx_Iterables.zip5 = function(it1,it2,it3,it4,it5) {
+	return thx_Iterators.zip5($iterator(it1)(),$iterator(it2)(),$iterator(it3)(),$iterator(it4)(),$iterator(it5)());
+};
 var thx_Iterators = function() { };
 thx_Iterators.__name__ = ["thx","Iterators"];
 thx_Iterators.all = function(it,predicate) {
@@ -2464,6 +2513,104 @@ thx_Iterators.toArray = function(it) {
 	}
 	return items;
 };
+thx_Iterators.unzip = function(it) {
+	var a1 = [];
+	var a2 = [];
+	thx_Iterators.map(it,function(t) {
+		a1.push(t._0);
+		a2.push(t._1);
+	});
+	return { _0 : a1, _1 : a2};
+};
+thx_Iterators.unzip3 = function(it) {
+	var a1 = [];
+	var a2 = [];
+	var a3 = [];
+	thx_Iterators.map(it,function(t) {
+		a1.push(t._0);
+		a2.push(t._1);
+		a3.push(t._2);
+	});
+	return { _0 : a1, _1 : a2, _2 : a3};
+};
+thx_Iterators.unzip4 = function(it) {
+	var a1 = [];
+	var a2 = [];
+	var a3 = [];
+	var a4 = [];
+	thx_Iterators.map(it,function(t) {
+		a1.push(t._0);
+		a2.push(t._1);
+		a3.push(t._2);
+		a4.push(t._3);
+	});
+	return { _0 : a1, _1 : a2, _2 : a3, _3 : a4};
+};
+thx_Iterators.unzip5 = function(it) {
+	var a1 = [];
+	var a2 = [];
+	var a3 = [];
+	var a4 = [];
+	var a5 = [];
+	thx_Iterators.map(it,function(t) {
+		a1.push(t._0);
+		a2.push(t._1);
+		a3.push(t._2);
+		a4.push(t._3);
+		a5.push(t._4);
+	});
+	return { _0 : a1, _1 : a2, _2 : a3, _3 : a4, _4 : a5};
+};
+thx_Iterators.zip = function(it1,it2) {
+	var array = [];
+	while(it1.hasNext() && it2.hasNext()) array.push((function($this) {
+		var $r;
+		var _0 = it1.next();
+		var _1 = it2.next();
+		$r = { _0 : _0, _1 : _1};
+		return $r;
+	}(this)));
+	return array;
+};
+thx_Iterators.zip3 = function(it1,it2,it3) {
+	var array = [];
+	while(it1.hasNext() && it2.hasNext() && it3.hasNext()) array.push((function($this) {
+		var $r;
+		var _0 = it1.next();
+		var _1 = it2.next();
+		var _2 = it3.next();
+		$r = { _0 : _0, _1 : _1, _2 : _2};
+		return $r;
+	}(this)));
+	return array;
+};
+thx_Iterators.zip4 = function(it1,it2,it3,it4) {
+	var array = [];
+	while(it1.hasNext() && it2.hasNext() && it3.hasNext() && it4.hasNext()) array.push((function($this) {
+		var $r;
+		var _0 = it1.next();
+		var _1 = it2.next();
+		var _2 = it3.next();
+		var _3 = it4.next();
+		$r = { _0 : _0, _1 : _1, _2 : _2, _3 : _3};
+		return $r;
+	}(this)));
+	return array;
+};
+thx_Iterators.zip5 = function(it1,it2,it3,it4,it5) {
+	var array = [];
+	while(it1.hasNext() && it2.hasNext() && it3.hasNext() && it4.hasNext() && it5.hasNext()) array.push((function($this) {
+		var $r;
+		var _0 = it1.next();
+		var _1 = it2.next();
+		var _2 = it3.next();
+		var _3 = it4.next();
+		var _4 = it5.next();
+		$r = { _0 : _0, _1 : _1, _2 : _2, _3 : _3, _4 : _4};
+		return $r;
+	}(this)));
+	return array;
+};
 var thx_Maps = function() { };
 thx_Maps.__name__ = ["thx","Maps"];
 thx_Maps.tuples = function(map) {
@@ -2551,6 +2698,51 @@ thx_Objects.tuples = function(o) {
 		var _1 = Reflect.field(o,key);
 		return { _0 : key, _1 : _1};
 	});
+};
+thx_Objects.getPath = function(o,path) {
+	var paths = path.split(".");
+	var current = o;
+	var _g = 0;
+	while(_g < paths.length) {
+		var currentPath = paths[_g];
+		++_g;
+		if(thx_Strings.DIGITS.match(currentPath)) {
+			var index = Std.parseInt(currentPath);
+			var arr = Std.instance(current,Array);
+			if(null == arr) return null;
+			current = arr[index];
+		} else if(Object.prototype.hasOwnProperty.call(current,currentPath)) current = Reflect.field(current,currentPath); else return null;
+	}
+	return current;
+};
+thx_Objects.setPath = function(o,path,val) {
+	var paths = path.split(".");
+	var current = o;
+	var _g1 = 0;
+	var _g = paths.length - 1;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var currentPath = paths[i];
+		var nextPath = paths[i + 1];
+		if(thx_Strings.DIGITS.match(currentPath)) {
+			var index = Std.parseInt(currentPath);
+			if(current[index] == null) {
+				if(thx_Strings.DIGITS.match(nextPath)) current[index] = []; else current[index] = { };
+			}
+			current = current[index];
+		} else {
+			if(!Object.prototype.hasOwnProperty.call(current,currentPath)) {
+				if(thx_Strings.DIGITS.match(nextPath)) current[currentPath] = []; else current[currentPath] = { };
+			}
+			current = Reflect.field(current,currentPath);
+		}
+	}
+	var p = paths[paths.length - 1];
+	if(thx_Strings.DIGITS.match(p)) {
+		var index1 = Std.parseInt(p);
+		current[index1] = val;
+	} else current[p] = val;
+	return o;
 };
 var thx_Options = function() { };
 thx_Options.__name__ = ["thx","Options"];
@@ -2704,6 +2896,13 @@ thx_Strings.compare = function(a,b) {
 };
 thx_Strings.contains = function(s,test) {
 	return s.indexOf(test) >= 0;
+};
+thx_Strings.containsAny = function(s,tests) {
+	return thx_Arrays.any(tests,(function(f,s1) {
+		return function(a1) {
+			return f(s1,a1);
+		};
+	})(thx_Strings.contains,s));
 };
 thx_Strings.dasherize = function(s) {
 	return StringTools.replace(s,"_","-");
@@ -4164,11 +4363,11 @@ thx_Floats.pattern_parse = new EReg("^(\\+|-)?\\d+(\\.\\d+)?(e-?\\d+)?$","");
 thx_Ints.pattern_parse = new EReg("^[+-]?(\\d+|0x[0-9A-F]+)$","i");
 thx_Ints.BASE = "0123456789abcdefghijklmnopqrstuvwxyz";
 thx_Strings.UCWORDS = new EReg("[^a-zA-Z]([a-z])","g");
-thx_Strings.UCWORDSWS = new EReg("\\s[a-z]","g");
+thx_Strings.UCWORDSWS = new EReg("[ \t\r\n][a-z]","g");
 thx_Strings.ALPHANUM = new EReg("^[a-z0-9]+$","i");
 thx_Strings.DIGITS = new EReg("^[0-9]+$","");
-thx_Strings.STRIPTAGS = new EReg("</?[a-z]+[^>]*?/?>","gi");
-thx_Strings.WSG = new EReg("\\s+","g");
+thx_Strings.STRIPTAGS = new EReg("</?[a-z]+[^>]*>","gi");
+thx_Strings.WSG = new EReg("[ \t\r\n]+","g");
 thx_Strings.SPLIT_LINES = new EReg("\r\n|\n\r|\n|\r","g");
 thx_Timer.FRAME_RATE = Math.round(16.666666666666668);
 thx_promise__$Promise_Promise_$Impl_$.nil = thx_promise__$Promise_Promise_$Impl_$.value(thx_Nil.nil);

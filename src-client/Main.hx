@@ -10,7 +10,11 @@ using StringTools;
 
 class Main 
 {
+	#if !debug
 	var basePath: String = 'https://aqueous-basin-8995.herokuapp.com/api/';
+	#else 
+	var basePath: String = 'https://localhost:9998/api/';
+	#end
 	var lastIndex: Int = -1;
 	
 	var http: Http;

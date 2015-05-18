@@ -90,14 +90,12 @@ class RouteHandler implements abe.IRoute {
 	@:get('/api/:lastID')
 	@:post('/api/:lastID')
 	function api(lastID: Int) {
-		var messages = {
-			newMessages: false,
+		var messages: MessageData = {
 			messages: new Array<String>(),
 			lastID: Main.messages.length - 1
 		};
 		
 		if (lastID < Main.messages.length - 1) {
-			messages.newMessages = true;
 			for (i in (lastID + 1)...Main.messages.length) {
 				messages.messages.push(Main.messages[i]);
 			}
