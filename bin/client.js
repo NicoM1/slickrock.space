@@ -23,6 +23,12 @@ EReg.prototype = {
 		return s.replace(this.r,by);
 	}
 };
+var HxOverrides = function() { };
+HxOverrides.cca = function(s,index) {
+	var x = s.charCodeAt(index);
+	if(x != x) return undefined;
+	return x;
+};
 var Lambda = function() { };
 Lambda.exists = function(it,f) {
 	var $it0 = it.iterator();
@@ -61,12 +67,21 @@ var Main = function() {
 	this.lastUserID = -2;
 	this.lastIndex = -1;
 	this.basePath = "https://aqueous-basin-8995.herokuapp.com/";
+	var _g = this;
 	this.http = new haxe_Http(this.basePath + this.lastIndex);
 	this.http.async = true;
 	this.http.onData = $bind(this,this._parseMessages);
 	this.http.onError = function(error) {
 		console.log(error);
 	};
+	var userHttp = new haxe_Http(this.basePath + "api/getuser/");
+	userHttp.onData = function(data) {
+		_g.id = Std.parseInt(data);
+	};
+	userHttp.onError = function(error1) {
+		_g.id = -1;
+	};
+	userHttp.request(true);
 	window.onload = $bind(this,this._windowLoaded);
 	this._loop();
 };
@@ -83,7 +98,7 @@ Main.prototype = {
 		var code;
 		if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		if(code == 13) {
-			this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value);
+			this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
 			this.http.request();
 			this._update();
 			this.chatbox.value = "";
@@ -116,6 +131,7 @@ Main.prototype = {
 			if(p.id == -1 || p.id != this.lastUserID) differentUser = true;
 			this.messages.appendChild(this._makeSpan(differentUser));
 			this.messages.appendChild(message);
+			this.lastUserID = p.id;
 		}
 		this.lastIndex = parsed.lastID;
 	}
@@ -148,6 +164,13 @@ Main.prototype = {
 		}
 		return parsed;
 	}
+};
+var Std = function() { };
+Std.parseInt = function(x) {
+	var v = parseInt(x,10);
+	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
+	if(isNaN(v)) return null;
+	return v;
 };
 var StringTools = function() { };
 StringTools.htmlEscape = function(s,quotes) {

@@ -21,6 +21,8 @@ class Main {
 	public static var messages: MessageList = {
 		messages: new Array<Message>()
 	};
+	
+	public static var highestUser: Int = 0;
 		
 	function new() {
 		var app = new App();
@@ -75,6 +77,11 @@ class RouteHandler implements abe.IRoute {
 				trace(err);
 			}
 		});*/
+	}
+	
+	@:post('/api/getuser/') 
+	function getUser() {
+		response.send(Std.string(++Main.highestUser));
 	}
 	
 	@:get('/api/:lastID')

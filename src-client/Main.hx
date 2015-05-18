@@ -26,11 +26,22 @@ class Main
 	var chatbox: InputElement;
 	var messages: DivElement;
 	
+	var id: Int;
+	
 	function new() {
 		http = new Http(basePath + lastIndex);
 		http.async = true;
 		http.onData = _parseMessages;
 		http.onError = function(error) { trace(error); }
+		
+		var userHttp = new Http(basePath + 'api/getuser/');
+		userHttp.onData = function(data) {
+			id = Std.parseInt(data);
+		};
+		userHttp.onError = function(error) {
+			id = -1;
+		}
+		userHttp.request(true);
 
 		Browser.window.onload = _windowLoaded;
 		
@@ -47,7 +58,7 @@ class Main
 	function _checkKeyPress(e) {
 		var code = (e.keyCode != null ? e.keyCode : e.which);
 		if (code == 13) { //ENTER
-			http.url = basePath + 'chat/' + chatbox.value.urlEncode();
+			http.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
 			http.request();
 			_update();
 			chatbox.value = '';
@@ -79,6 +90,7 @@ class Main
 			}
 			messages.appendChild(_makeSpan(differentUser));
 			messages.appendChild(message);
+			lastUserID = p.id;
 		}
 		lastIndex = parsed.lastID;
 	}
