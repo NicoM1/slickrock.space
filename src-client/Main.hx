@@ -1,6 +1,7 @@
 package ;
 
 import haxe.Timer;
+import js.html.InputElement;
 import js.Lib;
 import js.Browser;
 import haxe.Http;
@@ -11,7 +12,7 @@ using StringTools;
 class Main 
 {
 	#if !debug
-	var basePath: String = 'https://aqueous-basin-8995.herokuapp.com/api/';
+	var basePath: String = 'https://aqueous-basin-8995.herokuapp.com/';
 	#else 
 	var basePath: String = 'https://localhost:9998/api/';
 	#end
@@ -19,19 +20,38 @@ class Main
 	
 	var http: Http;
 	
+	var chatbox: InputElement;
+	
 	function new() {
 		http = new Http(basePath + lastIndex);
 		http.async = true;
 		http.onData = _parseMessages;
 		http.onError = function(error) { trace(error); }
 
+		Browser.window.onload = _windowLoaded;
+		
 		_loop();
+	}
+	
+	function _windowLoaded() {
+		chatbox = cast Browser.document.getElementById('chatbox');
+		chatbox.onkeypress = _checkKeyPress;
+	}
+	
+	function _checkKeyPress(e) {
+		trace(e);
+		var code = (e.keyCode != null ? e.keyCode : e.which);
+		if (code == 13) { //ENTER
+			http.url = basePath + 'chat/' + chatbox.value.urlEncode();
+			http.request(true);
+			chatbox.value = '';
+		}
 	}
 	
 	function _loop() {
 		Timer.delay(function() {
-			http.url = basePath + lastIndex;
-			http.request(true);
+			http.url = basePath + 'api/' + lastIndex;
+			http.request();
 			_loop();
 		}, 1000);
 	}

@@ -126,6 +126,7 @@ class RouteHandler implements abe.IRoute {
 		
 		_serveHtml('bin/index.html', function(e, d) {
 			if (e == null) {
+				response.setHeader('Access-Control-Allow-Origin', '*');
 				response.send(d);
 			}
 		});

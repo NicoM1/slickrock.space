@@ -59,24 +59,39 @@ var Main = function() {
 	this.boldBB = new EReg("\\[b\\](.*?)\\[/b\\]","i");
 	this.imgBB = new EReg("\\[img\\](.*?)\\[/img\\]","i");
 	this.lastIndex = -1;
-	this.basePath = "https://aqueous-basin-8995.herokuapp.com/api/";
+	this.basePath = "https://aqueous-basin-8995.herokuapp.com/";
 	this.http = new haxe_Http(this.basePath + this.lastIndex);
 	this.http.async = true;
 	this.http.onData = $bind(this,this._parseMessages);
 	this.http.onError = function(error) {
 		console.log(error);
 	};
+	window.onload = $bind(this,this._windowLoaded);
 	this._loop();
 };
 Main.main = function() {
 	new Main();
 };
 Main.prototype = {
-	_loop: function() {
+	_windowLoaded: function() {
+		this.chatbox = window.document.getElementById("chatbox");
+		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
+	}
+	,_checkKeyPress: function(e) {
+		console.log(e);
+		var code;
+		if(e.keyCode != null) code = e.keyCode; else code = e.which;
+		if(code == 13) {
+			this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value);
+			this.http.request(true);
+			this.chatbox.value = "";
+		}
+	}
+	,_loop: function() {
 		var _g = this;
 		haxe_Timer.delay(function() {
-			_g.http.url = _g.basePath + _g.lastIndex;
-			_g.http.request(true);
+			_g.http.url = _g.basePath + "api/" + _g.lastIndex;
+			_g.http.request();
 			_g._loop();
 		},1000);
 	}
