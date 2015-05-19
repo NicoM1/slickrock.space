@@ -219,13 +219,16 @@ RouteHandler.prototype = {
 	}
 	,post: function(message,request,response,next) {
 		Main.messages.messages.push({ text : message, id : -1});
+		response.setHeader("Access-Control-Allow-Origin","*");
 		response.redirect(302,"../chat");
 	}
 	,postWithID: function(message,id,request,response,next) {
 		Main.messages.messages.push({ text : message, id : id});
+		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("maybe it just needs a response");
 	}
 	,getUser: function(request,response,next) {
+		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send(Std.string(++Main.highestUser));
 	}
 	,api: function(lastID,request,response,next) {

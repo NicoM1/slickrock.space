@@ -72,6 +72,7 @@ class RouteHandler implements abe.IRoute {
 				trace(err);
 			}
 		});*/
+		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.redirect(302, '../chat');
 	}
 	
@@ -79,11 +80,13 @@ class RouteHandler implements abe.IRoute {
 	function postWithID(message: String, id: Int) {
 		Main.messages.messages.push( { text: message, id: id } );
 		
+		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('maybe it just needs a response');
 	}
 	
 	@:post('/api/getuser/') 
 	function getUser() {
+		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send(Std.string(++Main.highestUser));
 	}
 	
