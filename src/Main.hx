@@ -55,7 +55,12 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/')
 	function index() {
-		response.send('Hello World!' );
+		_serveHtml('bin/index.html', function(e, d) {
+			if (e == null) {
+				response.setHeader('Access-Control-Allow-Origin', '*');
+				response.send(d);
+			}
+		});
 	}
 	
 	@:get('/chat/:message')

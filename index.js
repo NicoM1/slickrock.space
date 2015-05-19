@@ -210,7 +210,12 @@ RouteHandler.__name__ = ["RouteHandler"];
 RouteHandler.__interfaces__ = [abe_IRoute];
 RouteHandler.prototype = {
 	index: function(request,response,next) {
-		response.send("Hello World!");
+		this._serveHtml("bin/index.html",function(e,d) {
+			if(e == null) {
+				response.setHeader("Access-Control-Allow-Origin","*");
+				response.send(d);
+			}
+		});
 	}
 	,post: function(message,request,response,next) {
 		Main.messages.messages.push({ text : message, id : -1});
