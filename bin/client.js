@@ -64,6 +64,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*)(.*?)(?:\\[/b\\]|\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*\\*)(.*?)(?:\\[/i\\]|\\*\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.focussed = true;
 	this.requestInProgress = false;
 	this.lastUserID = -2;
 	this.lastIndex = -1;
@@ -87,6 +88,13 @@ var Main = function() {
 	};
 	userHttp.request(true);
 	window.onload = $bind(this,this._windowLoaded);
+	window.onfocus = function() {
+		_g.focussed = true;
+		window.document.title = "aqueous-basin.";
+	};
+	window.onblur = function() {
+		_g.focussed = false;
+	};
 	this._loop();
 };
 Main.main = function() {
@@ -139,6 +147,7 @@ Main.prototype = {
 			this.messages.appendChild(this._makeSpan(differentUser));
 			this.messages.appendChild(message);
 			window.scrollTo(0,window.document.body.scrollHeight);
+			if(!this.focussed) window.document.title = "# aqueous-basin.";
 			this.lastUserID = p.id;
 		}
 		this.lastIndex = parsed.lastID;

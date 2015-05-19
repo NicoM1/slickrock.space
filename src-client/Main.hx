@@ -30,6 +30,8 @@ class Main
 	
 	var requestInProgress: Bool = false;
 	
+	var focussed: Bool = true;
+	
 	function new() {
 		http = new Http(basePath + lastIndex);
 		http.async = true;
@@ -48,6 +50,15 @@ class Main
 		userHttp.request(true);
 
 		Browser.window.onload = _windowLoaded;
+		
+		Browser.window.onfocus = function() {
+			focussed = true;
+			Browser.document.title = 'aqueous-basin.';
+		};
+		
+		Browser.window.onblur = function() {
+			focussed = false;
+		};
 		
 		_loop();
 	}
@@ -100,6 +111,10 @@ class Main
 			messages.appendChild(message);
 			
 			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+			
+			if (!focussed) {
+				Browser.document.title = '# aqueous-basin.';
+			}
 			
 			lastUserID = p.id;
 		}
