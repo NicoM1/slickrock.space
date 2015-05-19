@@ -77,6 +77,7 @@ class Main
 	}
 	
 	function _update() {
+		if (requestInProgress) return;
 		http.url = basePath + 'api/' + lastIndex;
 		requestInProgress = true;
 		http.request(true);

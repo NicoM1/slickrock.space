@@ -116,6 +116,7 @@ Main.prototype = {
 		},1000);
 	}
 	,_update: function() {
+		if(this.requestInProgress) return;
 		this.http.url = this.basePath + "api/" + this.lastIndex;
 		this.requestInProgress = true;
 		this.http.request(true);
