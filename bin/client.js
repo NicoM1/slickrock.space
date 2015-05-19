@@ -61,7 +61,7 @@ _$List_ListIterator.prototype = {
 	}
 };
 var Main = function() {
-	this.boldBB = new EReg("(?:\\[b\\]|\\*)(.*?)\\(?:[/b\\]|\\*)","i");
+	this.boldBB = new EReg("(?:\\[b\\]|\\*)(.*?)(?:\\[/b\\]|\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*\\*)(.*?)(?:\\[/i\\]|\\*\\*)","i");
 	this.imgBB = new EReg("\\[img\\](.*?)\\[/img\\]","i");
 	this.lastUserID = -2;
