@@ -106,6 +106,7 @@ class RouteHandler implements abe.IRoute {
 			}
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.setHeader('Content-Type', 'application/json');
 		response.send(messages);
 	}
 	
