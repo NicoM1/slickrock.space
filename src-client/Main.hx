@@ -14,7 +14,7 @@ using StringTools;
 class Main 
 {
 	#if !debug
-	var basePath: String = 'https://aqueous-basin-8995.herokuapp.com/';
+	var basePath: String = 'https://aqueous-basin.herokuapp.com/';
 	#else 
 	var basePath: String = 'https://localhost:9998/api/';
 	#end
