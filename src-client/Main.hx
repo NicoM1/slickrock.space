@@ -111,8 +111,8 @@ class Main
 	}
 	
 	var imgBB: EReg = ~/\[img\](.*?)\[\/img\]/i;
-	var boldBB: EReg = ~/\[b\](.*?)\[\/b\]/i;
-	var italicBB: EReg = ~/\[i\](.*?)\[\/i\]/i;
+	var italicBB: EReg = ~/(?:\[i\]|\*\*)(.*?)(?:\[\/i\]|\*\*)/i;
+	var boldBB: EReg = ~/(?:\[b\]|\*)(.*?)\(?:[\/b\]|\*)/i;
 	
 	function _parseMessage(raw: String): String {
 		var parsed: String = raw.replace('\n', ' ');
@@ -122,18 +122,17 @@ class Main
 			var imgTag = '<img src=$imgPath></img>';
 			parsed = imgBB.replace(parsed, imgTag);
 		}
-		while (boldBB.match(parsed)) {
-			var text = boldBB.matched(1);
-			var strongTag = '<strong>$text</strong>';
-			parsed = boldBB.replace(parsed, strongTag);
-		}
 		while (italicBB.match(parsed)) {
 			var text = italicBB.matched(1);
 			var emTag = '<em>$text</em>';
 			parsed = italicBB.replace(parsed, emTag);
 		}
+		while (boldBB.match(parsed)) {
+			var text = boldBB.matched(1);
+			var strongTag = '<strong>$text</strong>';
+			parsed = boldBB.replace(parsed, strongTag);
+		}
 		return parsed;
-		//
 	}
 	
 	static function main() {
