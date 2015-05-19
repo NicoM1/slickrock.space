@@ -105,6 +105,7 @@ Main.prototype = {
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
 		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
+		this.chatbox.focus();
 	}
 	,_checkKeyPress: function(e) {
 		var code;

@@ -68,6 +68,7 @@ class Main
 		messages = cast Browser.document.getElementById('messages');
 		
 		chatbox.onkeypress = _checkKeyPress;
+		chatbox.focus();
 	}
 	
 	function _checkKeyPress(e) {
