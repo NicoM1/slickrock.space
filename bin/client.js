@@ -85,6 +85,7 @@ var Main = function() {
 	userHttp.onError = function(error1) {
 		_g.id = -1;
 		console.log(_g.id);
+		console.log(error1);
 	};
 	userHttp.request(true);
 	window.onload = $bind(this,this._windowLoaded);

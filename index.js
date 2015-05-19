@@ -223,6 +223,7 @@ RouteHandler.prototype = {
 	}
 	,postWithID: function(message,id,request,response,next) {
 		Main.messages.messages.push({ text : message, id : id});
+		response.send("maybe it just needs a response");
 	}
 	,getUser: function(request,response,next) {
 		response.send(Std.string(++Main.highestUser));

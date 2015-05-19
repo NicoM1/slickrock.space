@@ -65,7 +65,8 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/chat/:message')
 	function post(message: String) {
-		Main.messages.messages.push({text: message, id: -1});
+		Main.messages.messages.push( { text: message, id: -1 } );
+		
 		/*Fs.writeFile('db/messages.db', Json.stringify(Main.messages), { }, function(err) {
 			if(err != null) {
 				trace(err);
@@ -76,12 +77,9 @@ class RouteHandler implements abe.IRoute {
 	
 	@:post('/chat/:message/:id')
 	function postWithID(message: String, id: Int) {
-		Main.messages.messages.push({text: message, id: id});
-		/*Fs.writeFile('db/messages.db', Json.stringify(Main.messages), { }, function(err) {
-			if(err != null) {
-				trace(err);
-			}
-		});*/
+		Main.messages.messages.push( { text: message, id: id } );
+		
+		response.send('maybe it just needs a response');
 	}
 	
 	@:post('/api/getuser/') 

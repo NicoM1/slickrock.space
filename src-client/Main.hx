@@ -46,6 +46,7 @@ class Main
 		userHttp.onError = function(error) {
 			id = -1;
 			trace(id);
+			trace(error);
 		}
 		userHttp.request(true);
 
