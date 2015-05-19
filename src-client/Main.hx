@@ -110,7 +110,7 @@ class Main
 		return span;
 	}
 	
-	var imgBB: EReg = ~/\[img\](.*?)\[\/img\]/i;
+	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
 	var italicBB: EReg = ~/(?:\[i\]|\*\*)(.*?)(?:\[\/i\]|\*\*)/i;
 	var boldBB: EReg = ~/(?:\[b\]|\*)(.*?)(?:\[\/b\]|\*)/i;
 	
