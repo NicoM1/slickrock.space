@@ -184,11 +184,6 @@ var Main = function() {
 		var process6 = new RouteHandler_$chat_$RouteProcess({ },instance,processor6);
 		var uses6 = [];
 		router.registerMethod("/chat","get",process6,uses6,[]);
-		var filters7 = new abe_core_ArgumentsFilter();
-		var processor7 = new abe_core_ArgumentProcessor(filters7,[]);
-		var process7 = new RouteHandler_$chat1_$RouteProcess({ },instance,processor7);
-		var uses7 = [];
-		router.registerMethod("/chat/","get",process7,uses7,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -210,9 +205,6 @@ Main.prototype = {
 var abe_IRoute = function() { };
 abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
-	this.italicBB = new EReg("\\[i\\](.*?)\\[/i\\]","i");
-	this.boldBB = new EReg("\\[b\\](.*?)\\[/b\\]","i");
-	this.imgBB = new EReg("\\[img\\](.*?)\\[/img\\]","i");
 };
 RouteHandler.__name__ = ["RouteHandler"];
 RouteHandler.__interfaces__ = [abe_IRoute];
@@ -250,32 +242,6 @@ RouteHandler.prototype = {
 				response.send(d);
 			}
 		});
-	}
-	,chat1: function(request,response,next) {
-		response.redirect("../");
-	}
-	,imgBB: null
-	,boldBB: null
-	,italicBB: null
-	,_parseMessage: function(raw) {
-		var parsed = StringTools.replace(raw,"\n"," ");
-		parsed = StringTools.htmlEscape(parsed);
-		while(this.imgBB.match(parsed)) {
-			var imgPath = this.imgBB.matched(1);
-			var imgTag = "<img src=" + imgPath + "></img>";
-			parsed = this.imgBB.replace(parsed,imgTag);
-		}
-		while(this.boldBB.match(parsed)) {
-			var text = this.boldBB.matched(1);
-			var strongTag = "<strong>" + text + "</strong>";
-			parsed = this.boldBB.replace(parsed,strongTag);
-		}
-		while(this.italicBB.match(parsed)) {
-			var text1 = this.italicBB.matched(1);
-			var emTag = "<em>" + text1 + "</em>";
-			parsed = this.italicBB.replace(parsed,emTag);
-		}
-		return parsed;
 	}
 	,_serveHtml: function(path,handler) {
 		js_node_Fs.readFile(path,{ encoding : "utf8"},handler);
@@ -365,17 +331,6 @@ RouteHandler_$api_$RouteProcess.prototype = $extend(abe_core_RouteProcess.protot
 	}
 	,__class__: RouteHandler_$api_$RouteProcess
 });
-var RouteHandler_$chat1_$RouteProcess = function(args,instance,argumentProcessor) {
-	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
-};
-RouteHandler_$chat1_$RouteProcess.__name__ = ["RouteHandler_chat1_RouteProcess"];
-RouteHandler_$chat1_$RouteProcess.__super__ = abe_core_RouteProcess;
-RouteHandler_$chat1_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
-	execute: function(request,response,next) {
-		this.instance.chat1(request,response,next);
-	}
-	,__class__: RouteHandler_$chat1_$RouteProcess
-});
 var RouteHandler_$chat_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
 };
@@ -461,10 +416,6 @@ StringBuf.prototype = {
 };
 var StringTools = function() { };
 StringTools.__name__ = ["StringTools"];
-StringTools.htmlEscape = function(s,quotes) {
-	s = s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
-	if(quotes) return s.split("\"").join("&quot;").split("'").join("&#039;"); else return s;
-};
 StringTools.startsWith = function(s,start) {
 	return s.length >= start.length && HxOverrides.substr(s,0,start.length) == start;
 };
