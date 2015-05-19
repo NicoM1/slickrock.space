@@ -112,11 +112,6 @@ class RouteHandler implements abe.IRoute {
 			}
 		});
 	}
-	
-	@:get('/chat/')
-	function chat1() {
-		response.redirect('../');
-	}
 
 	var imgBB: EReg = ~/\[img\](.*?)\[\/img\]/i;
 	var boldBB: EReg = ~/\[b\](.*?)\[\/b\]/i;
