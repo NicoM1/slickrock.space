@@ -64,6 +64,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*)(.*?)(?:\\[/b\\]|\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*\\*)(.*?)(?:\\[/i\\]|\\*\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.requestInProgress = false;
 	this.lastUserID = -2;
 	this.lastIndex = -1;
 	this.basePath = "https://aqueous-basin-8995.herokuapp.com/";
@@ -73,6 +74,7 @@ var Main = function() {
 	this.http.onData = $bind(this,this._parseMessages);
 	this.http.onError = function(error) {
 		console.log(error);
+		_g.requestInProgress = false;
 	};
 	var userHttp = new haxe_Http(this.basePath + "api/getuser/");
 	userHttp.onData = function(data) {
@@ -115,9 +117,11 @@ Main.prototype = {
 	}
 	,_update: function() {
 		this.http.url = this.basePath + "api/" + this.lastIndex;
+		this.requestInProgress = true;
 		this.http.request(true);
 	}
 	,_parseMessages: function(data) {
+		this.requestInProgress = false;
 		var parsed = JSON.parse(data);
 		var _g = 0;
 		var _g1 = parsed.messages.messages;

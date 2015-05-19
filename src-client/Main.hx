@@ -28,11 +28,13 @@ class Main
 	
 	var id: Int;
 	
+	var requestInProgress: Bool = false;
+	
 	function new() {
 		http = new Http(basePath + lastIndex);
 		http.async = true;
 		http.onData = _parseMessages;
-		http.onError = function(error) { trace(error); }
+		http.onError = function(error) { trace(error); requestInProgress = false; }
 		
 		var userHttp = new Http(basePath + 'api/getuser/');
 		userHttp.onData = function(data) {
@@ -76,10 +78,13 @@ class Main
 	
 	function _update() {
 		http.url = basePath + 'api/' + lastIndex;
+		requestInProgress = true;
 		http.request(true);
 	}
 	
 	function _parseMessages(data) {
+		requestInProgress = false;
+		
 		var parsed: MessageData = Json.parse(data);
 		for (p in parsed.messages.messages) {
 			var bbParsed = _parseMessage(p.text);
