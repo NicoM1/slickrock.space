@@ -62,8 +62,8 @@ _$List_ListIterator.prototype = {
 };
 var Main = function() {
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
-	this.boldBB = new EReg("(?:\\[b\\]|\\*)(.*?)(?:\\[/b\\]|\\*)","i");
-	this.italicBB = new EReg("(?:\\[i\\]|\\*\\*)(.*?)(?:\\[/i\\]|\\*\\*)","i");
+	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
+	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
 	this.focussed = true;
 	this.requestInProgress = false;
@@ -173,15 +173,15 @@ Main.prototype = {
 			var imgTag = "<img src=" + imgPath + "></img>";
 			parsed = this.imgBB.replace(parsed,imgTag);
 		}
-		while(this.italicBB.match(parsed)) {
-			var text = this.italicBB.matched(1);
-			var emTag = "<em>" + text + "</em>";
-			parsed = this.italicBB.replace(parsed,emTag);
-		}
 		while(this.boldBB.match(parsed)) {
-			var text1 = this.boldBB.matched(1);
-			var strongTag = "<strong>" + text1 + "</strong>";
+			var text = this.boldBB.matched(1);
+			var strongTag = "<strong>" + text + "</strong>";
 			parsed = this.boldBB.replace(parsed,strongTag);
+		}
+		while(this.italicBB.match(parsed)) {
+			var text1 = this.italicBB.matched(1);
+			var emTag = "<em>" + text1 + "</em>";
+			parsed = this.italicBB.replace(parsed,emTag);
 		}
 		while(this.codeBB.match(parsed)) {
 			var text2 = this.codeBB.matched(1);
