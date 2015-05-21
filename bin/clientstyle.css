@@ -13,9 +13,14 @@ div {
 	margin: 5px;
 }
 
+.messageitem {
+	margin-left: 25px;
+}
+
 span {
 	float: left;
-	white-space: pre;
+	width: 0;
+	height: 0;
 }
 
 #chatbox {

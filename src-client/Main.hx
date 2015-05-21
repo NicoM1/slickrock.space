@@ -104,6 +104,7 @@ class Main
 			var bbParsed = _parseMessage(p.text);
 			var message = Browser.document.createDivElement();
 			message.innerHTML = bbParsed;
+			message.className = 'messageitem';
 			
 			var differentUser = false;
 			if (p.id == -1 || p.id != lastUserID) {

@@ -144,6 +144,7 @@ Main.prototype = {
 			var _this = window.document;
 			message = _this.createElement("div");
 			message.innerHTML = bbParsed;
+			message.className = "messageitem";
 			var differentUser = false;
 			if(p.id == -1 || p.id != this.lastUserID) differentUser = true;
 			this.messages.appendChild(this._makeSpan(differentUser));
