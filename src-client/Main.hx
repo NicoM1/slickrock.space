@@ -137,6 +137,7 @@ class Main
 	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
 	var italicBB: EReg = ~/(?:\[i\]|\*\*)(.*?)(?:\[\/i\]|\*\*)/i;
 	var boldBB: EReg = ~/(?:\[b\]|\*)(.*?)(?:\[\/b\]|\*)/i;
+	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	
 	function _parseMessage(raw: String): String {
 		var parsed: String = raw.replace('\n', ' ');
@@ -155,6 +156,11 @@ class Main
 			var text = boldBB.matched(1);
 			var strongTag = '<strong>$text</strong>';
 			parsed = boldBB.replace(parsed, strongTag);
+		}
+		while (codeBB.match(parsed)) {
+			var text = codeBB.matched(1);
+			var preTag = '<pre>$text</pre>';
+			parsed = codeBB.replace(parsed, preTag);
 		}
 		return parsed;
 	}

@@ -61,6 +61,7 @@ _$List_ListIterator.prototype = {
 	}
 };
 var Main = function() {
+	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*)(.*?)(?:\\[/b\\]|\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*\\*)(.*?)(?:\\[/i\\]|\\*\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
@@ -181,6 +182,11 @@ Main.prototype = {
 			var text1 = this.boldBB.matched(1);
 			var strongTag = "<strong>" + text1 + "</strong>";
 			parsed = this.boldBB.replace(parsed,strongTag);
+		}
+		while(this.codeBB.match(parsed)) {
+			var text2 = this.codeBB.matched(1);
+			var preTag = "<pre>" + text2 + "</pre>";
+			parsed = this.codeBB.replace(parsed,preTag);
 		}
 		return parsed;
 	}
