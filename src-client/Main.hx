@@ -32,11 +32,17 @@ class Main
 	
 	var focussed: Bool = true;
 	
+	var lastMessage: String = '';
+	
 	function new() {
 		http = new Http(basePath + lastIndex);
 		http.async = true;
 		http.onData = _parseMessages;
-		http.onError = function(error) { trace(error); requestInProgress = false; }
+		http.onError = function(error) { 
+			trace(error); 
+			requestInProgress = false; 
+			chatbox.value = lastMessage; 
+		}
 		
 		var userHttp = new Http(basePath + 'api/getuser/');
 		userHttp.onData = function(data) {
@@ -76,6 +82,7 @@ class Main
 		var code = (e.keyCode != null ? e.keyCode : e.which);
 		if (code == 13) { //ENTER
 			http.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
+			lastMessage = chatbox.value;
 			http.request(true);
 			_update();
 			chatbox.value = '';

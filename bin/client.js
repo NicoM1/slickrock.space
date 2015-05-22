@@ -65,6 +65,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.lastMessage = "";
 	this.focussed = true;
 	this.requestInProgress = false;
 	this.lastUserID = -2;
@@ -77,6 +78,7 @@ var Main = function() {
 	this.http.onError = function(error) {
 		console.log(error);
 		_g.requestInProgress = false;
+		_g.chatbox.value = _g.lastMessage;
 	};
 	var userHttp = new haxe_Http(this.basePath + "api/getuser/");
 	userHttp.onData = function(data) {
@@ -114,6 +116,7 @@ Main.prototype = {
 		if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		if(code == 13) {
 			this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
+			this.lastMessage = this.chatbox.value;
 			this.http.request(true);
 			this._update();
 			this.chatbox.value = "";
