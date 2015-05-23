@@ -2,5 +2,5 @@
 div{margin:5px;}
 .messageitem{margin-left:25px;}
 span{float:left;width:0;height:0;}
-#chatbox{position:fixed;bottom:0px;left:0px;width:700px;max-width:97%;margin:0px;padding-left:4px;padding-bottom:4px;font-size:110%;color:#ecf0f1;background-color:#1e1e1e;border-left:none;border-right:solid;border-top:solid;border-bottom:none;border-top-right-radius:6px;border-color:#2b2b2b;}
+#chatbox{position:fixed;bottom:0px;left:0px;width:97%;margin:0px;padding-left:4px;padding-bottom:4px;font-size:110%;color:#ecf0f1;background-color:#1e1e1e;border-left:none;border-right:solid;border-top:solid;border-bottom:none;border-top-right-radius:6px;border-color:#2b2b2b;}
 #chatbox:active,#chatbox:focus{outline:0;border-color:#252525;}

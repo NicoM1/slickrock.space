@@ -10,6 +10,8 @@ import js.Browser;
 import haxe.Http;
 import haxe.Json;
 
+import thx.color.Rgb;
+
 using StringTools;
 
 class Main 
@@ -121,7 +123,7 @@ class Main
 			if (p.id == -1 || p.id != lastUserID) {
 				differentUser = true;
 			}
-			messages.appendChild(_makeSpan(differentUser));
+			messages.appendChild(_makeSpan(differentUser, p.id));
 			messages.appendChild(message);
 			
 			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
@@ -136,10 +138,12 @@ class Main
 		lastIndex = parsed.lastID;
 	}
 	
-	function _makeSpan(?pointer: Bool = false): Element {
+	function _makeSpan(?pointer: Bool = false, ?id: Int): Element {
 		var span = Browser.document.createSpanElement();
 		if (pointer) {
 			span.innerHTML = '>';
+			var rgb: Rgb = Rgb.create(id * 10 + 50, id * 10 + 50, id * 10 + 50);
+			span.style.color = '#' + rgb.hex(6);
 		}
 		span.innerHTML += '\t';
 		
