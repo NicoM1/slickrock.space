@@ -1,6 +1,7 @@
 package ;
 
 import haxe.Timer;
+import js.html.AudioElement;
 import js.html.DivElement;
 import js.html.Element;
 import js.html.InputElement;
@@ -25,6 +26,8 @@ class Main
 	
 	var chatbox: InputElement;
 	var messages: DivElement;
+	
+	var messageSound: AudioElement;
 	
 	var id: Int;
 	
@@ -73,6 +76,7 @@ class Main
 	function _windowLoaded() {
 		chatbox = cast Browser.document.getElementById('chatbox');
 		messages = cast Browser.document.getElementById('messages');
+		messageSound = cast Browser.document.getElementById('messagesound');
 		
 		chatbox.onkeypress = _checkKeyPress;
 		chatbox.focus();
@@ -124,6 +128,7 @@ class Main
 			
 			if (!focussed) {
 				Browser.document.title = '# aqueous-basin.';
+				messageSound.play();
 			}
 			
 			lastUserID = p.id;

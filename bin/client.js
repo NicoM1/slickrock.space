@@ -108,6 +108,7 @@ Main.prototype = {
 	_windowLoaded: function() {
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
+		this.messageSound = window.document.getElementById("messagesound");
 		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 	}
@@ -154,7 +155,10 @@ Main.prototype = {
 			this.messages.appendChild(this._makeSpan(differentUser));
 			this.messages.appendChild(message);
 			window.scrollTo(0,window.document.body.scrollHeight);
-			if(!this.focussed) window.document.title = "# aqueous-basin.";
+			if(!this.focussed) {
+				window.document.title = "# aqueous-basin.";
+				this.messageSound.play();
+			}
 			this.lastUserID = p.id;
 		}
 		this.lastIndex = parsed.lastID;
