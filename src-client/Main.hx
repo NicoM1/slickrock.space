@@ -9,8 +9,11 @@ import js.Lib;
 import js.Browser;
 import haxe.Http;
 import haxe.Json;
+import js.html.Notification;
+import js.html.NotificationPermission;
 
 import thx.color.Rgb;
+import thx.math.random.PseudoRandom;
 
 using StringTools;
 
@@ -38,6 +41,8 @@ class Main
 	var focussed: Bool = true;
 	
 	var lastMessage: String = '';
+	
+	var first: Bool = true;
 	
 	function new() {
 		http = new Http(basePath + lastIndex);
@@ -80,8 +85,26 @@ class Main
 		messages = cast Browser.document.getElementById('messages');
 		messageSound = cast Browser.document.getElementById('messagesound');
 		
+		messages.onclick = _testNotification;
+		
 		chatbox.onkeypress = _checkKeyPress;
 		chatbox.focus();
+	}
+	
+	function _testNotification() {
+		if (Notification.permission == NotificationPermission.DEFAULT_) {
+			Notification.requestPermission(function(permission) {
+				if (permission == NotificationPermission.GRANTED) {
+					var notification = new Notification('test');
+				}
+			});
+		}
+	}
+	
+	function _sendNotification(text: String) {
+		if (Notification.permission == NotificationPermission.GRANTED) {
+			new Notification(text);
+		}
 	}
 	
 	function _checkKeyPress(e) {
@@ -128,22 +151,27 @@ class Main
 			
 			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
 			
-			if (!focussed) {
+			if (!focussed && !first) {
 				Browser.document.title = '# aqueous-basin.';
 				messageSound.play();
+				_sendNotification(message.innerText);
 			}
 			
 			lastUserID = p.id;
 		}
 		lastIndex = parsed.lastID;
+		first = false;
 	}
 	
 	function _makeSpan(?pointer: Bool = false, ?id: Int): Element {
 		var span = Browser.document.createSpanElement();
 		if (pointer) {
 			span.innerHTML = '>';
-			var rgb: Rgb = Rgb.create(id * 10 + 50, id * 10 + 50, id * 10 + 50);
+			var value = new Random(id * 12189234).int(100, 255);
+			trace(value);
+			var rgb: Rgb = Rgb.create(value, value, value);
 			span.style.color = '#' + rgb.hex(6);
+			trace(rgb.hex(6));
 		}
 		span.innerHTML += '\t';
 		

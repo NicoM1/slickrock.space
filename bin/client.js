@@ -146,6 +146,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.first = true;
 	this.lastMessage = "";
 	this.focussed = true;
 	this.requestInProgress = false;
@@ -191,8 +192,19 @@ Main.prototype = {
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
 		this.messageSound = window.document.getElementById("messagesound");
+		this.messages.onclick = $bind(this,this._testNotification);
 		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
+	}
+	,_testNotification: function() {
+		if(Notification.permission == "default") Notification.requestPermission(function(permission) {
+			if(permission == "granted") {
+				var notification = new Notification("test");
+			}
+		});
+	}
+	,_sendNotification: function(text) {
+		if(Notification.permission == "granted") new Notification(text);
 	}
 	,_checkKeyPress: function(e) {
 		var code;
@@ -237,13 +249,15 @@ Main.prototype = {
 			this.messages.appendChild(this._makeSpan(differentUser,p.id));
 			this.messages.appendChild(message);
 			window.scrollTo(0,window.document.body.scrollHeight);
-			if(!this.focussed) {
+			if(!this.focussed && !this.first) {
 				window.document.title = "# aqueous-basin.";
 				this.messageSound.play();
+				this._sendNotification(message.innerText);
 			}
 			this.lastUserID = p.id;
 		}
 		this.lastIndex = parsed.lastID;
+		this.first = false;
 	}
 	,_makeSpan: function(pointer,id) {
 		if(pointer == null) pointer = false;
@@ -252,8 +266,11 @@ Main.prototype = {
 		span = _this.createElement("span");
 		if(pointer) {
 			span.innerHTML = ">";
-			var rgb = thx_color__$Rgb_Rgb_$Impl_$.create(id * 10 + 50,id * 10 + 50,id * 10 + 50);
+			var value = new Random(id * 12189234)["int"](100,255);
+			console.log(value);
+			var rgb = thx_color__$Rgb_Rgb_$Impl_$.create(value,value,value);
 			span.style.color = "#" + StringTools.hex(rgb,6);
+			console.log(StringTools.hex(rgb,6));
 		}
 		span.innerHTML += "\t";
 		return span;
@@ -286,6 +303,52 @@ Main.prototype = {
 	,__class__: Main
 };
 Math.__name__ = true;
+var Random = function(_initial_seed) {
+	this.initial = this.seed = _initial_seed;
+	this.seed = this.initial;
+};
+Random.__name__ = true;
+Random.prototype = {
+	get: function() {
+		return (this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233;
+	}
+	,'float': function(min,max) {
+		if(max == null) {
+			max = min;
+			min = 0;
+		}
+		return ((this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233) * (max - min) + min;
+	}
+	,'int': function(min,max) {
+		if(max == null) {
+			max = min;
+			min = 0;
+		}
+		return Math.floor(this["float"](min,max));
+	}
+	,bool: function(chance) {
+		if(chance == null) chance = 0.5;
+		return (this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233 < chance;
+	}
+	,sign: function(chance) {
+		if(chance == null) chance = 0.5;
+		if((this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233 < chance) return 1; else return -1;
+	}
+	,bit: function(chance) {
+		if(chance == null) chance = 0.5;
+		if((this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233 < chance) return 1; else return 0;
+	}
+	,reset: function() {
+		var s = this.seed;
+		this.initial = this.seed = s;
+		this.initial;
+	}
+	,set_initial: function(_initial) {
+		this.initial = this.seed = _initial;
+		return this.initial;
+	}
+	,__class__: Random
+};
 var Std = function() { };
 Std.__name__ = true;
 Std.string = function(s) {
@@ -4063,6 +4126,20 @@ thx_error_NullArgument.__super__ = thx_Error;
 thx_error_NullArgument.prototype = $extend(thx_Error.prototype,{
 	__class__: thx_error_NullArgument
 });
+var thx_math_random_PseudoRandom = function(seed) {
+	if(seed == null) seed = 1;
+	this.seed = seed;
+};
+thx_math_random_PseudoRandom.__name__ = true;
+thx_math_random_PseudoRandom.prototype = {
+	'int': function() {
+		return (this.seed = this.seed * 48271.0 % 2147483647.0 | 0) & 1073741823;
+	}
+	,'float': function() {
+		return this["int"]() / 1073741823.0;
+	}
+	,__class__: thx_math_random_PseudoRandom
+};
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
