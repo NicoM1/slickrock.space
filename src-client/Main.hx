@@ -44,6 +44,8 @@ class Main
 	
 	var first: Bool = true;
 	
+	var notifications: Array<Notification> = new Array<Notification>();
+	
 	function new() {
 		http = new Http(basePath + lastIndex);
 		http.async = true;
@@ -71,6 +73,7 @@ class Main
 		Browser.window.onfocus = function() {
 			focussed = true;
 			Browser.document.title = 'aqueous-basin.';
+			_clearNotifications();
 		};
 		
 		Browser.window.onblur = function() {
@@ -78,6 +81,13 @@ class Main
 		};
 		
 		_loop();
+	}
+	
+	function _clearNotifications() {
+		for (n in notifications) {
+			n.close();
+		}
+		notifications = new Array<Notification>();
 	}
 	
 	function _windowLoaded() {
@@ -104,7 +114,7 @@ class Main
 	
 	function _sendNotification(text: String) {
 		if (Notification.permission == NotificationPermission.GRANTED) {
-			new Notification(text);
+			notifications.push(new Notification(text));
 		}
 	}
 	

@@ -146,6 +146,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.notifications = [];
 	this.first = true;
 	this.lastMessage = "";
 	this.focussed = true;
@@ -177,6 +178,7 @@ var Main = function() {
 	window.onfocus = function() {
 		_g.focussed = true;
 		window.document.title = "aqueous-basin.";
+		_g._clearNotifications();
 	};
 	window.onblur = function() {
 		_g.focussed = false;
@@ -188,7 +190,17 @@ Main.main = function() {
 	new Main();
 };
 Main.prototype = {
-	_windowLoaded: function() {
+	_clearNotifications: function() {
+		var _g = 0;
+		var _g1 = this.notifications;
+		while(_g < _g1.length) {
+			var n = _g1[_g];
+			++_g;
+			n.close();
+		}
+		this.notifications = [];
+	}
+	,_windowLoaded: function() {
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
 		this.messageSound = window.document.getElementById("messagesound");
@@ -199,13 +211,10 @@ Main.prototype = {
 	,_testNotification: function() {
 		console.log("attempting notification");
 		if(Notification.permission == "default") Notification.requestPermission(function(permission) {
-			if(permission == "granted") {
-				var notification = new Notification("test");
-			}
 		});
 	}
 	,_sendNotification: function(text) {
-		if(Notification.permission == "granted") new Notification(text);
+		if(Notification.permission == "granted") this.notifications.push(new Notification(text));
 	}
 	,_checkKeyPress: function(e) {
 		var code;
