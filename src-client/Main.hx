@@ -190,8 +190,8 @@ class Main
 		if (pointer) {
 			span.innerHTML = '>';
 			var hue = new Random(id * 12189234).float(0, 360);
-			var sat = new Random(id * 12189234).float(0.4, 0.6);
-			var light = new Random(id * 12189234).float(0.4, 0.6);
+			var sat = new Random(id * 12189234).float(0.3, 0.5);
+			var light = new Random(id * 12189234).float(0.3, 0.5);
 			var hsl: Hsl = Hsl.create(hue, sat, light);
 			span.style.color = '#' + hsl.hex(6);
 			trace(hsl.hex(6));
