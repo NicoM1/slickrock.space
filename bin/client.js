@@ -180,6 +180,7 @@ var Main = function() {
 		_g.focussed = true;
 		window.document.title = "aqueous-basin.";
 		_g._clearNotifications();
+		_g.numNotifications = 0;
 	};
 	window.onblur = function() {
 		_g.focussed = false;
@@ -199,7 +200,6 @@ Main.prototype = {
 			++_g;
 			n.close();
 		}
-		this.numNotifications = 0;
 		this.notifications = [];
 	}
 	,_windowLoaded: function() {
@@ -217,7 +217,10 @@ Main.prototype = {
 	}
 	,_sendNotification: function(text) {
 		if(Notification.permission == "granted") {
-			if(this.numNotifications <= 1) this.notifications.push(new Notification(text)); else this.notifications.push(new Notification("" + this.numNotifications + " new messages."));
+			if(this.numNotifications <= 1) this.notifications.push(new Notification(text)); else {
+				this._clearNotifications();
+				this.notifications.push(new Notification("" + this.numNotifications + " new messages."));
+			}
 		}
 	}
 	,_checkKeyPress: function(e) {

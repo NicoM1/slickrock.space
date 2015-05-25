@@ -76,6 +76,7 @@ class Main
 			focussed = true;
 			Browser.document.title = 'aqueous-basin.';
 			_clearNotifications();
+			numNotifications = 0;
 		};
 		
 		Browser.window.onblur = function() {
@@ -89,7 +90,6 @@ class Main
 		for (n in notifications) {
 			n.close();
 		}
-		numNotifications = 0;
 		notifications = new Array<Notification>();
 	}
 	
@@ -121,6 +121,7 @@ class Main
 				notifications.push(new Notification(text));
 			}
 			else {
+				_clearNotifications();
 				notifications.push(new Notification('$numNotifications new messages.'));
 			}
 		}
