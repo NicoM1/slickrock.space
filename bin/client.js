@@ -284,11 +284,12 @@ Main.prototype = {
 		span = _this.createElement("span");
 		if(pointer) {
 			span.innerHTML = ">";
-			var value = new Random(id * 12189234)["int"](100,255);
-			console.log(value);
-			var rgb = thx_color__$Rgb_Rgb_$Impl_$.create(value,value,value);
-			span.style.color = "#" + StringTools.hex(rgb,6);
-			console.log(StringTools.hex(rgb,6));
+			var hue = new Random(id * 12189234)["float"](0,360);
+			var sat = new Random(id * 12189234)["float"](0.4,0.6);
+			var light = new Random(id * 12189234)["float"](0.4,0.6);
+			var hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
+			span.style.color = "#" + StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6);
+			console.log(StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6));
 		}
 		span.innerHTML += "\t";
 		return span;

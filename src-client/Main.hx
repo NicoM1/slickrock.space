@@ -13,6 +13,7 @@ import js.html.Notification;
 import js.html.NotificationPermission;
 
 import thx.color.Rgb;
+import thx.color.Hsl;
 import thx.math.random.PseudoRandom;
 
 using StringTools;
@@ -188,11 +189,12 @@ class Main
 		var span = Browser.document.createSpanElement();
 		if (pointer) {
 			span.innerHTML = '>';
-			var value = new Random(id * 12189234).int(100, 255);
-			trace(value);
-			var rgb: Rgb = Rgb.create(value, value, value);
-			span.style.color = '#' + rgb.hex(6);
-			trace(rgb.hex(6));
+			var hue = new Random(id * 12189234).float(0, 360);
+			var sat = new Random(id * 12189234).float(0.4, 0.6);
+			var light = new Random(id * 12189234).float(0.4, 0.6);
+			var hsl: Hsl = Hsl.create(hue, sat, light);
+			span.style.color = '#' + hsl.hex(6);
+			trace(hsl.hex(6));
 		}
 		span.innerHTML += '\t';
 		
