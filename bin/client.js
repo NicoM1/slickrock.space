@@ -146,6 +146,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.numNotifications = 0;
 	this.notifications = [];
 	this.first = true;
 	this.lastMessage = "";
@@ -198,6 +199,7 @@ Main.prototype = {
 			++_g;
 			n.close();
 		}
+		this.numNotifications = 0;
 		this.notifications = [];
 	}
 	,_windowLoaded: function() {
@@ -214,7 +216,9 @@ Main.prototype = {
 		});
 	}
 	,_sendNotification: function(text) {
-		if(Notification.permission == "granted") this.notifications.push(new Notification(text));
+		if(Notification.permission == "granted") {
+			if(this.numNotifications <= 1) this.notifications.push(new Notification(text)); else this.notifications.push(new Notification("" + this.numNotifications + " new messages."));
+		}
 	}
 	,_checkKeyPress: function(e) {
 		var code;
@@ -262,6 +266,7 @@ Main.prototype = {
 			if(!this.focussed && !this.first) {
 				window.document.title = "# aqueous-basin.";
 				this.messageSound.play();
+				this.numNotifications++;
 				this._sendNotification(message.innerText);
 			}
 			this.lastUserID = p.id;

@@ -46,6 +46,8 @@ class Main
 	
 	var notifications: Array<Notification> = new Array<Notification>();
 	
+	var numNotifications: Int = 0;
+	
 	function new() {
 		http = new Http(basePath + lastIndex);
 		http.async = true;
@@ -87,6 +89,7 @@ class Main
 		for (n in notifications) {
 			n.close();
 		}
+		numNotifications = 0;
 		notifications = new Array<Notification>();
 	}
 	
@@ -114,7 +117,12 @@ class Main
 	
 	function _sendNotification(text: String) {
 		if (Notification.permission == NotificationPermission.GRANTED) {
-			notifications.push(new Notification(text));
+			if(numNotifications <= 1) {
+				notifications.push(new Notification(text));
+			}
+			else {
+				notifications.push(new Notification('$numNotifications new messages.'));
+			}
 		}
 	}
 	
@@ -165,6 +173,7 @@ class Main
 			if (!focussed && !first) {
 				Browser.document.title = '# aqueous-basin.';
 				messageSound.play();
+				numNotifications++;
 				_sendNotification(message.innerText);
 			}
 			
