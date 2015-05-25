@@ -85,13 +85,14 @@ class Main
 		messages = cast Browser.document.getElementById('messages');
 		messageSound = cast Browser.document.getElementById('messagesound');
 		
-		messages.onclick = _testNotification;
+		chatbox.onclick = _testNotification;
 		
 		chatbox.onkeypress = _checkKeyPress;
 		chatbox.focus();
 	}
 	
 	function _testNotification() {
+		trace('attempting notification');
 		if (Notification.permission == NotificationPermission.DEFAULT_) {
 			Notification.requestPermission(function(permission) {
 				if (permission == NotificationPermission.GRANTED) {

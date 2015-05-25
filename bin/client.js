@@ -192,11 +192,12 @@ Main.prototype = {
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
 		this.messageSound = window.document.getElementById("messagesound");
-		this.messages.onclick = $bind(this,this._testNotification);
+		this.chatbox.onclick = $bind(this,this._testNotification);
 		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 	}
 	,_testNotification: function() {
+		console.log("attempting notification");
 		if(Notification.permission == "default") Notification.requestPermission(function(permission) {
 			if(permission == "granted") {
 				var notification = new Notification("test");
