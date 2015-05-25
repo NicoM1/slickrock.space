@@ -95,9 +95,9 @@ class Main
 		trace('attempting notification');
 		if (Notification.permission == NotificationPermission.DEFAULT_) {
 			Notification.requestPermission(function(permission) {
-				if (permission == NotificationPermission.GRANTED) {
+				/*if (permission == NotificationPermission.GRANTED) {
 					var notification = new Notification('test');
-				}
+				}*/
 			});
 		}
 	}
