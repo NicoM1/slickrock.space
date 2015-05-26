@@ -257,7 +257,6 @@ Main.prototype = {
 		this.http.request(true);
 	}
 	,_parseMessages: function(data) {
-		this.requestInProgress = false;
 		var parsed = JSON.parse(data);
 		var _g = 0;
 		var _g1 = parsed.messages.messages;
@@ -285,6 +284,7 @@ Main.prototype = {
 		}
 		this.lastIndex = parsed.lastID;
 		this.first = false;
+		this.requestInProgress = false;
 	}
 	,_makeSpan: function(pointer,id) {
 		if(pointer == null) pointer = false;

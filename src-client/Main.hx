@@ -161,9 +161,7 @@ class Main
 		http.request(true);
 	}
 	
-	function _parseMessages(data) {
-		requestInProgress = false;
-		
+	function _parseMessages(data) {		
 		var parsed: MessageData = Json.parse(data);
 		for (p in parsed.messages.messages) {
 			var bbParsed = _parseMessage(p.text);
@@ -191,6 +189,7 @@ class Main
 		}
 		lastIndex = parsed.lastID;
 		first = false;
+		requestInProgress = false;
 	}
 	
 	function _makeSpan(?pointer: Bool = false, ?id: Int): Element {
