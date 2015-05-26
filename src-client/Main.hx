@@ -30,7 +30,8 @@ class Main
 	var lastIndex: Int = -1;
 	var lastUserID: Int = -2;
 	
-	var http: Http;
+	var getHttp: Http;
+	var postHttp: Http;
 	
 	var chatbox: InputElement;
 	var messages: DivElement;
@@ -52,10 +53,17 @@ class Main
 	var numNotifications: Int = 0;
 	
 	function new() {
-		http = new Http(basePath + lastIndex);
-		http.async = true;
-		http.onData = _parseMessages;
-		http.onError = function(error) { 
+		getHttp = new Http(basePath + lastIndex);
+		getHttp.async = true;
+		getHttp.onData = _parseMessages;
+		getHttp.onError = function(error) { 
+			trace(error); 
+			requestInProgress = false; 
+		}
+		
+		postHttp = new Http(basePath);
+		postHttp.async = true;
+		postHttp.onError = function(error) { 
 			trace(error); 
 			requestInProgress = false; 
 			chatbox.value = lastMessage; 
@@ -108,7 +116,6 @@ class Main
 	}
 	
 	function _testNotification() {
-		trace('attempting notification');
 		if (Notification.permission == NotificationPermission.DEFAULT_) {
 			Notification.requestPermission(function(permission) {});
 		}
@@ -135,9 +142,9 @@ class Main
 		var code = (e.keyCode != null ? e.keyCode : e.which);
 		if (code == 13) { //ENTER
 			if(chatbox.value != '/new') {
-				http.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
+				postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
 				lastMessage = chatbox.value;
-				http.request(true);
+				postHttp.request(true);
 				_update();
 			}
 			else {
@@ -156,9 +163,9 @@ class Main
 	
 	function _update() {
 		if (requestInProgress) return;
-		http.url = basePath + 'api/' + lastIndex;
+		getHttp.url = basePath + 'api/' + lastIndex;
 		requestInProgress = true;
-		http.request(true);
+		getHttp.request(true);
 	}
 	
 	function _parseMessages(data) {		
@@ -201,7 +208,6 @@ class Main
 			var light = new Random(id * 12189234).float(0.3, 0.5);
 			var hsl: Hsl = Hsl.create(hue, sat, light);
 			span.style.color = '#' + hsl.hex(6);
-			trace(hsl.hex(6));
 		}
 		span.innerHTML += '\t';
 		

@@ -164,11 +164,17 @@ var Main = function() {
 	this.lastIndex = -1;
 	this.basePath = "https://aqueous-basin.herokuapp.com/";
 	var _g = this;
-	this.http = new haxe_Http(this.basePath + this.lastIndex);
-	this.http.async = true;
-	this.http.onData = $bind(this,this._parseMessages);
-	this.http.onError = function(error) {
+	this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
+	this.getHttp.async = true;
+	this.getHttp.onData = $bind(this,this._parseMessages);
+	this.getHttp.onError = function(error) {
 		console.log(error);
+		_g.requestInProgress = false;
+	};
+	this.postHttp = new haxe_Http(this.basePath);
+	this.postHttp.async = true;
+	this.postHttp.onError = function(error1) {
+		console.log(error1);
 		_g.requestInProgress = false;
 		_g.chatbox.value = _g.lastMessage;
 	};
@@ -213,7 +219,6 @@ Main.prototype = {
 		this.chatbox.focus();
 	}
 	,_testNotification: function() {
-		console.log("attempting notification");
 		if(Notification.permission == "default") Notification.requestPermission(function(permission) {
 		});
 	}
@@ -235,9 +240,9 @@ Main.prototype = {
 		if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		if(code == 13) {
 			if(this.chatbox.value != "/new") {
-				this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
+				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
 				this.lastMessage = this.chatbox.value;
-				this.http.request(true);
+				this.postHttp.request(true);
 				this._update();
 			} else this._generateID();
 			this.chatbox.value = "";
@@ -252,9 +257,9 @@ Main.prototype = {
 	}
 	,_update: function() {
 		if(this.requestInProgress) return;
-		this.http.url = this.basePath + "api/" + this.lastIndex;
+		this.getHttp.url = this.basePath + "api/" + this.lastIndex;
 		this.requestInProgress = true;
-		this.http.request(true);
+		this.getHttp.request(true);
 	}
 	,_parseMessages: function(data) {
 		var parsed = JSON.parse(data);
@@ -298,7 +303,6 @@ Main.prototype = {
 			var light = new Random(id * 12189234)["float"](0.3,0.5);
 			var hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
 			span.style.color = "#" + StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6);
-			console.log(StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6));
 		}
 		span.innerHTML += "\t";
 		return span;
