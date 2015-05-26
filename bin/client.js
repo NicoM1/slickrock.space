@@ -219,10 +219,15 @@ Main.prototype = {
 	}
 	,_sendNotification: function(text) {
 		if(Notification.permission == "granted") {
-			if(this.numNotifications <= 1) this.notifications.push(new Notification(text)); else {
+			var options = { };
+			options.body = "aqueous-basin.";
+			if(this.numNotifications <= 1) this.notifications.push(new Notification(text,options)); else {
 				this._clearNotifications();
-				this.notifications.push(new Notification("" + this.numNotifications + " new messages."));
+				this.notifications.push(new Notification("" + this.numNotifications + " new messages.",options));
 			}
+			this.notifications[this.notifications.length - 1].onclick = function() {
+				window.focus();
+			};
 		}
 	}
 	,_checkKeyPress: function(e) {

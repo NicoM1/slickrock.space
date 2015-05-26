@@ -12,6 +12,7 @@ import haxe.Http;
 import haxe.Json;
 import js.html.Notification;
 import js.html.NotificationPermission;
+import js.html.NotificationOptions;
 
 import thx.color.Rgb;
 import thx.color.Hsl;
@@ -115,13 +116,18 @@ class Main
 	
 	function _sendNotification(text: String) {
 		if (Notification.permission == NotificationPermission.GRANTED) {
-			if(numNotifications <= 1) {
-				notifications.push(new Notification(text));
+			var options: NotificationOptions = { };
+			options.body = 'aqueous-basin.';
+			if (numNotifications <= 1) {
+				notifications.push(new Notification(text, options));
 			}
 			else {
 				_clearNotifications();
-				notifications.push(new Notification('$numNotifications new messages.'));
+				notifications.push(new Notification('$numNotifications new messages.', options));
 			}
+			notifications[notifications.length - 1].onclick = function(){ 
+				Browser.window.focus();
+			};
 		}
 	}
 	
