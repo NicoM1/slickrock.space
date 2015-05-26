@@ -6,6 +6,14 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var DateTools = function() { };
+DateTools.__name__ = true;
+DateTools.delta = function(d,t) {
+	var t1 = d.getTime() + t;
+	var d1 = new Date();
+	d1.setTime(t1);
+	return d1;
+};
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
@@ -164,17 +172,7 @@ var Main = function() {
 		_g.requestInProgress = false;
 		_g.chatbox.value = _g.lastMessage;
 	};
-	var userHttp = new haxe_Http(this.basePath + "api/getuser/");
-	userHttp.onData = function(data) {
-		_g.id = Std.parseInt(data);
-		console.log(_g.id);
-	};
-	userHttp.onError = function(error1) {
-		_g.id = -1;
-		console.log(_g.id);
-		console.log(error1);
-	};
-	userHttp.request(true);
+	if(!js_Cookie.exists("id")) this._generateID(); else this.id = Std.parseInt(js_Cookie.get("id"));
 	window.onload = $bind(this,this._windowLoaded);
 	window.onfocus = function() {
 		_g.focussed = true;
@@ -192,7 +190,11 @@ Main.main = function() {
 	new Main();
 };
 Main.prototype = {
-	_clearNotifications: function() {
+	_generateID: function() {
+		this.id = new Random(Math.random() * 16777215)["int"](0,16777215);
+		js_Cookie.set("id",Std.string(this.id),315360000);
+	}
+	,_clearNotifications: function() {
 		var _g = 0;
 		var _g1 = this.notifications;
 		while(_g < _g1.length) {
@@ -227,10 +229,12 @@ Main.prototype = {
 		var code;
 		if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		if(code == 13) {
-			this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
-			this.lastMessage = this.chatbox.value;
-			this.http.request(true);
-			this._update();
+			if(this.chatbox.value != "/new") {
+				this.http.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
+				this.lastMessage = this.chatbox.value;
+				this.http.request(true);
+				this._update();
+			} else this._generateID();
 			this.chatbox.value = "";
 		}
 	}
@@ -711,6 +715,10 @@ haxe_ds_StringMap.prototype = {
 		if(__map_reserved[key] != null) return this.getReserved(key);
 		return this.h[key];
 	}
+	,exists: function(key) {
+		if(__map_reserved[key] != null) return this.existsReserved(key);
+		return this.h.hasOwnProperty(key);
+	}
 	,setReserved: function(key,value) {
 		if(this.rh == null) this.rh = { };
 		this.rh["$" + key] = value;
@@ -876,6 +884,38 @@ js_Browser.createXMLHttpRequest = function() {
 	if(typeof XMLHttpRequest != "undefined") return new XMLHttpRequest();
 	if(typeof ActiveXObject != "undefined") return new ActiveXObject("Microsoft.XMLHTTP");
 	throw new js__$Boot_HaxeError("Unable to create XMLHttpRequest object.");
+};
+var js_Cookie = function() { };
+js_Cookie.__name__ = true;
+js_Cookie.set = function(name,value,expireDelay,path,domain) {
+	var s = name + "=" + encodeURIComponent(value);
+	if(expireDelay != null) {
+		var d = DateTools.delta(new Date(),expireDelay * 1000);
+		s += ";expires=" + d.toGMTString();
+	}
+	if(path != null) s += ";path=" + path;
+	if(domain != null) s += ";domain=" + domain;
+	window.document.cookie = s;
+};
+js_Cookie.all = function() {
+	var h = new haxe_ds_StringMap();
+	var a = window.document.cookie.split(";");
+	var _g = 0;
+	while(_g < a.length) {
+		var e = a[_g];
+		++_g;
+		e = StringTools.ltrim(e);
+		var t = e.split("=");
+		if(t.length < 2) continue;
+		h.set(t[0],decodeURIComponent(t[1].split("+").join(" ")));
+	}
+	return h;
+};
+js_Cookie.get = function(name) {
+	return js_Cookie.all().get(name);
+};
+js_Cookie.exists = function(name) {
+	return js_Cookie.all().exists(name);
 };
 var thx_Arrays = function() { };
 thx_Arrays.__name__ = true;
@@ -4168,6 +4208,8 @@ if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 String.prototype.__class__ = String;
 String.__name__ = true;
 Array.__name__ = true;
+Date.prototype.__class__ = Date;
+Date.__name__ = ["Date"];
 var Int = { __name__ : ["Int"]};
 var Dynamic = { __name__ : ["Dynamic"]};
 var Float = Number;

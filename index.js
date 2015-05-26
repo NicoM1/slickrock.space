@@ -165,25 +165,20 @@ var Main = function() {
 		var uses2 = [];
 		router.registerMethod("/chat/:message/:id","post",process2,uses2,[]);
 		var filters3 = new abe_core_ArgumentsFilter();
-		var processor3 = new abe_core_ArgumentProcessor(filters3,[]);
-		var process3 = new RouteHandler_$getUser_$RouteProcess({ },instance,processor3);
+		var processor3 = new abe_core_ArgumentProcessor(filters3,[{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process3 = new RouteHandler_$api_$RouteProcess({ lastID : null},instance,processor3);
 		var uses3 = [];
-		router.registerMethod("/api/getuser/","post",process3,uses3,[]);
+		router.registerMethod("/api/:lastID","get",process3,uses3,[]);
 		var filters4 = new abe_core_ArgumentsFilter();
 		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
 		var process4 = new RouteHandler_$api_$RouteProcess({ lastID : null},instance,processor4);
 		var uses4 = [];
-		router.registerMethod("/api/:lastID","get",process4,uses4,[]);
+		router.registerMethod("/api/:lastID","post",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
-		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
-		var process5 = new RouteHandler_$api_$RouteProcess({ lastID : null},instance,processor5);
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[]);
+		var process5 = new RouteHandler_$chat_$RouteProcess({ },instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/api/:lastID","post",process5,uses5,[]);
-		var filters6 = new abe_core_ArgumentsFilter();
-		var processor6 = new abe_core_ArgumentProcessor(filters6,[]);
-		var process6 = new RouteHandler_$chat_$RouteProcess({ },instance,processor6);
-		var uses6 = [];
-		router.registerMethod("/chat","get",process6,uses6,[]);
+		router.registerMethod("/chat","get",process5,uses5,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -226,10 +221,6 @@ RouteHandler.prototype = {
 		Main.messages.messages.push({ text : message, id : id});
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("maybe it just needs a response");
-	}
-	,getUser: function(request,response,next) {
-		response.setHeader("Access-Control-Allow-Origin","*");
-		response.send(Std.string(++Main.highestUser));
 	}
 	,api: function(lastID,request,response,next) {
 		var messages = { messages : { messages : []}, lastID : Main.messages.messages.length - 1};
@@ -351,17 +342,6 @@ RouteHandler_$chat_$RouteProcess.prototype = $extend(abe_core_RouteProcess.proto
 		this.instance.chat(request,response,next);
 	}
 	,__class__: RouteHandler_$chat_$RouteProcess
-});
-var RouteHandler_$getUser_$RouteProcess = function(args,instance,argumentProcessor) {
-	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
-};
-RouteHandler_$getUser_$RouteProcess.__name__ = ["RouteHandler_getUser_RouteProcess"];
-RouteHandler_$getUser_$RouteProcess.__super__ = abe_core_RouteProcess;
-RouteHandler_$getUser_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
-	execute: function(request,response,next) {
-		this.instance.getUser(request,response,next);
-	}
-	,__class__: RouteHandler_$getUser_$RouteProcess
 });
 var RouteHandler_$index_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);

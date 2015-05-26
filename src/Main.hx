@@ -85,12 +85,6 @@ class RouteHandler implements abe.IRoute {
 		response.send('maybe it just needs a response');
 	}
 	
-	@:post('/api/getuser/') 
-	function getUser() {
-		response.setHeader('Access-Control-Allow-Origin', '*');
-		response.send(Std.string(++Main.highestUser));
-	}
-	
 	@:get('/api/:lastID')
 	@:post('/api/:lastID')
 	function api(lastID: Int) {

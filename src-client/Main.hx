@@ -1,6 +1,7 @@
 package ;
 
 import haxe.Timer;
+import js.Cookie;
 import js.html.AudioElement;
 import js.html.DivElement;
 import js.html.Element;
@@ -59,17 +60,12 @@ class Main
 			chatbox.value = lastMessage; 
 		}
 		
-		var userHttp = new Http(basePath + 'api/getuser/');
-		userHttp.onData = function(data) {
-			id = Std.parseInt(data);
-			trace(id);
-		};
-		userHttp.onError = function(error) {
-			id = -1;
-			trace(id);
-			trace(error);
+		if(!Cookie.exists('id')) {
+			_generateID();
 		}
-		userHttp.request(true);
+		else {
+			id = Std.parseInt(Cookie.get('id'));
+		}
 
 		Browser.window.onload = _windowLoaded;
 		
@@ -85,6 +81,11 @@ class Main
 		};
 		
 		_loop();
+	}
+	
+	function _generateID() {
+		id = new Random(Math.random() * 0xFFFFFF).int(0, 0xFFFFFF);
+		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
 	}
 	
 	function _clearNotifications() {
@@ -108,11 +109,7 @@ class Main
 	function _testNotification() {
 		trace('attempting notification');
 		if (Notification.permission == NotificationPermission.DEFAULT_) {
-			Notification.requestPermission(function(permission) {
-				/*if (permission == NotificationPermission.GRANTED) {
-					var notification = new Notification('test');
-				}*/
-			});
+			Notification.requestPermission(function(permission) {});
 		}
 	}
 	
@@ -131,10 +128,15 @@ class Main
 	function _checkKeyPress(e) {
 		var code = (e.keyCode != null ? e.keyCode : e.which);
 		if (code == 13) { //ENTER
-			http.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
-			lastMessage = chatbox.value;
-			http.request(true);
-			_update();
+			if(chatbox.value != '/new') {
+				http.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
+				lastMessage = chatbox.value;
+				http.request(true);
+				_update();
+			}
+			else {
+				_generateID();
+			}
 			chatbox.value = '';
 		}
 	}
