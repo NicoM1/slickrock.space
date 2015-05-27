@@ -273,23 +273,24 @@ Main.prototype = {
 	}
 	,_addMessage: function(msg,id) {
 		var message;
-		var start = "";
 		var differentUser = false;
 		if(id == null || id == -1 || id != this.lastUserID) differentUser = true;
 		if(differentUser) {
 			var _this = window.document;
-			message = _this.createElement("p");
+			message = _this.createElement("div");
+			message.className = "messageblock";
 			this.lastParagraph = message;
 			this.messages.appendChild(this._makeSpan(differentUser,id));
 			this.messages.appendChild(message);
-		} else {
-			message = this.lastParagraph;
-			start = "\n";
-		}
-		message.innerHTML += start + msg;
-		message.className = "messageitem";
+		} else message = this.lastParagraph;
+		var messageItem;
+		var _this1 = window.document;
+		messageItem = _this1.createElement("div");
+		messageItem.className = "messageitem";
+		messageItem.innerHTML = msg;
+		message.appendChild(messageItem);
 		window.scrollTo(0,window.document.body.scrollHeight);
-		return message;
+		return messageItem;
 	}
 	,_loop: function() {
 		var _g = this;

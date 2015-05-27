@@ -55,7 +55,7 @@ class Main
 	
 	var commands: Map<String, Array<String> -> Void> = new Map();
 	
-	var lastParagraph: ParagraphElement;
+	var lastParagraph: DivElement;
 	
 	function new() {
 		_buildCommands();
@@ -190,9 +190,8 @@ class Main
 		}
 	}
 	
-	function _addMessage(msg: String, ?id: Int): ParagraphElement {
-		var message: ParagraphElement;
-		var start: String = '';
+	function _addMessage(msg: String, ?id: Int): DivElement {
+		var message: DivElement;
 		
 		var differentUser = false;
 		if (id == null || id == -1 || id != lastUserID ) {
@@ -200,7 +199,8 @@ class Main
 		}
 		
 		if (differentUser) {
-			message = Browser.document.createParagraphElement();
+			message = Browser.document.createDivElement();
+			message.className = 'messageblock';
 			lastParagraph = message;
 					
 			messages.appendChild(_makeSpan(differentUser, id));
@@ -208,14 +208,18 @@ class Main
 		}
 		else {
 			message = lastParagraph;
-			start = '\n';
 		}
-		message.innerHTML += start + msg;
-		message.className = 'messageitem';
+		
+		var messageItem: DivElement = Browser.document.createDivElement();
+		messageItem.className = 'messageitem';
+		
+		messageItem.innerHTML = msg;
+		
+		message.appendChild(messageItem);
 		
 		Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
 		
-		return message;
+		return messageItem;
 	}
 	
 	function _loop() {
