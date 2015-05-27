@@ -273,14 +273,21 @@ Main.prototype = {
 	}
 	,_addMessage: function(msg,id) {
 		var message;
-		var _this = window.document;
-		message = _this.createElement("div");
-		message.innerHTML = msg;
-		message.className = "messageitem";
+		var start = "";
 		var differentUser = false;
 		if(id == null || id == -1 || id != this.lastUserID) differentUser = true;
-		this.messages.appendChild(this._makeSpan(differentUser,id));
-		this.messages.appendChild(message);
+		if(differentUser) {
+			var _this = window.document;
+			message = _this.createElement("p");
+			this.lastParagraph = message;
+			this.messages.appendChild(this._makeSpan(differentUser,id));
+			this.messages.appendChild(message);
+		} else {
+			message = this.lastParagraph;
+			start = "\n";
+		}
+		message.innerHTML += start + msg;
+		message.className = "messageitem";
 		window.scrollTo(0,window.document.body.scrollHeight);
 		return message;
 	}

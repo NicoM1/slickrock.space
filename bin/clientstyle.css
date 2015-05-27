@@ -13,6 +13,11 @@ div {
 	margin: 5px;
 }
 
+p {
+	margin: 5px;
+	white-space: pre-line;
+}
+
 .messageitem {
 	margin-left: 25px;
 }

@@ -6,6 +6,7 @@ import js.html.AudioElement;
 import js.html.DivElement;
 import js.html.Element;
 import js.html.InputElement;
+import js.html.ParagraphElement;
 import js.Lib;
 import js.Browser;
 import haxe.Http;
@@ -53,6 +54,8 @@ class Main
 	var numNotifications: Int = 0;
 	
 	var commands: Map<String, Array<String> -> Void> = new Map();
+	
+	var lastParagraph: ParagraphElement;
 	
 	function new() {
 		_buildCommands();
@@ -187,17 +190,28 @@ class Main
 		}
 	}
 	
-	function _addMessage(msg: String, ?id: Int): DivElement {
-		var message = Browser.document.createDivElement();
-		message.innerHTML = msg;
-		message.className = 'messageitem';
+	function _addMessage(msg: String, ?id: Int): ParagraphElement {
+		var message: ParagraphElement;
+		var start: String = '';
 		
 		var differentUser = false;
 		if (id == null || id == -1 || id != lastUserID ) {
 			differentUser = true;
 		}
-		messages.appendChild(_makeSpan(differentUser, id));
-		messages.appendChild(message);
+		
+		if (differentUser) {
+			message = Browser.document.createParagraphElement();
+			lastParagraph = message;
+					
+			messages.appendChild(_makeSpan(differentUser, id));
+			messages.appendChild(message);
+		}
+		else {
+			message = lastParagraph;
+			start = '\n';
+		}
+		message.innerHTML += start + msg;
+		message.className = 'messageitem';
 		
 		Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
 		
