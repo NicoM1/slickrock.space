@@ -204,7 +204,6 @@ Main.prototype = {
 	,_generateID: function($arguments) {
 		this.id = new Random(Math.random() * 16777215)["int"](0,16777215);
 		js_Cookie.set("id",Std.string(this.id),315360000);
-		console.log($arguments);
 	}
 	,_clearNotifications: function() {
 		var _g = 0;
@@ -311,7 +310,7 @@ Main.prototype = {
 				window.document.title = "# aqueous-basin.";
 				this.messageSound.play();
 				this.numNotifications++;
-				this._sendNotification(message.innerText);
+				this._sendNotification(message.innerText != null?message.innerText:message.textContent);
 			}
 			this.lastUserID = p.id;
 		}

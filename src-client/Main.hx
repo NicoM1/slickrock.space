@@ -229,7 +229,7 @@ class Main
 				Browser.document.title = '# aqueous-basin.';
 				messageSound.play();
 				numNotifications++;
-				_sendNotification(message.innerText);
+				_sendNotification(message.innerText != null? message.innerText : message.textContent);
 			}
 			
 			lastUserID = p.id;
