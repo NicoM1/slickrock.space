@@ -52,7 +52,11 @@ class Main
 	
 	var numNotifications: Int = 0;
 	
+	var commands: Map<String, Array<String> -> Void> = new Map();
+	
 	function new() {
+		_buildCommands();
+		
 		getHttp = new Http(basePath + lastIndex);
 		getHttp.async = true;
 		getHttp.onData = _parseMessages;
@@ -92,7 +96,11 @@ class Main
 		_loop();
 	}
 	
-	function _generateID() {
+	function _buildCommands() {
+		commands.set('new', _generateID);
+	}
+	
+	function _generateID(?arguments: Array<String>) {
 		id = new Random(Math.random() * 0xFFFFFF).int(0, 0xFFFFFF);
 		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
 	}
@@ -141,17 +149,59 @@ class Main
 	function _checkKeyPress(e) {
 		var code = (e.keyCode != null ? e.keyCode : e.which);
 		if (code == 13) { //ENTER
-			if(chatbox.value != '/new') {
+			if(chatbox.value.charAt(0) == '/') {
+				_parseCommand(chatbox.value.substr(1));
+			}
+			else {
 				postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
 				lastMessage = chatbox.value;
 				postHttp.request(true);
 				_update();
 			}
-			else {
-				_generateID();
-			}
 			chatbox.value = '';
 		}
+	}
+	
+	function _parseCommand(commandString: String) {
+		var firstSpace = commandString.indexOf(' ');
+		var command: String;
+		if (firstSpace != -1) {
+			command = commandString.substring(0, firstSpace).trim();
+			var args: Array<String> = commandString.substring(firstSpace).trim().split(' ');
+			for (i in 0...args.length) {
+				args[i] = args[i].trim();
+			}
+			_callCommand(command, args);
+		}
+		else {
+			_callCommand(commandString.trim());
+		}
+	}
+	
+	function _callCommand(command: String, ?args: Array<String>) {
+		if(commands.exists(command)) {
+			commands.get(command)(args);
+		}
+		else {
+			_addMessage('Unrecognized command.');
+		}
+	}
+	
+	function _addMessage(msg: String, ?id: Int): DivElement {
+		var message = Browser.document.createDivElement();
+		message.innerHTML = msg;
+		message.className = 'messageitem';
+		
+		var differentUser = false;
+		if (id == null || id == -1 || id != lastUserID ) {
+			differentUser = true;
+		}
+		messages.appendChild(_makeSpan(differentUser, id));
+		messages.appendChild(message);
+		
+		Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+		
+		return message;
 	}
 	
 	function _loop() {
@@ -172,18 +222,8 @@ class Main
 		var parsed: MessageData = Json.parse(data);
 		for (p in parsed.messages.messages) {
 			var bbParsed = _parseMessage(p.text);
-			var message = Browser.document.createDivElement();
-			message.innerHTML = bbParsed;
-			message.className = 'messageitem';
 			
-			var differentUser = false;
-			if (p.id == -1 || p.id != lastUserID) {
-				differentUser = true;
-			}
-			messages.appendChild(_makeSpan(differentUser, p.id));
-			messages.appendChild(message);
-			
-			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+			var message = _addMessage(bbParsed, p.id);
 			
 			if (!focussed && !first) {
 				Browser.document.title = '# aqueous-basin.';
@@ -203,10 +243,16 @@ class Main
 		var span = Browser.document.createSpanElement();
 		if (pointer) {
 			span.innerHTML = '>';
-			var hue = new Random(id * 12189234).float(0, 360);
-			var sat = new Random(id * 12189234).float(0.3, 0.5);
-			var light = new Random(id * 12189234).float(0.3, 0.5);
-			var hsl: Hsl = Hsl.create(hue, sat, light);
+			var hsl: Hsl;
+			if(id != null && id != -1) {
+				var hue = new Random(id * 12189234).float(0, 360);
+				var sat = new Random(id * 12189234).float(0.3, 0.5);
+				var light = new Random(id * 12189234).float(0.3, 0.5);
+				hsl = Hsl.create(hue, sat, light);
+			}
+			else {
+				hsl = Hsl.create(0, 1, 1);
+			}
 			span.style.color = '#' + hsl.hex(6);
 		}
 		span.innerHTML += '\t';

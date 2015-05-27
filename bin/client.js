@@ -154,6 +154,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
 	this.notifications = [];
 	this.first = true;
@@ -164,6 +165,7 @@ var Main = function() {
 	this.lastIndex = -1;
 	this.basePath = "https://aqueous-basin.herokuapp.com/";
 	var _g = this;
+	this._buildCommands();
 	this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
 	this.getHttp.async = true;
 	this.getHttp.onData = $bind(this,this._parseMessages);
@@ -196,9 +198,13 @@ Main.main = function() {
 	new Main();
 };
 Main.prototype = {
-	_generateID: function() {
+	_buildCommands: function() {
+		this.commands.set("new",$bind(this,this._generateID));
+	}
+	,_generateID: function($arguments) {
 		this.id = new Random(Math.random() * 16777215)["int"](0,16777215);
 		js_Cookie.set("id",Std.string(this.id),315360000);
+		console.log($arguments);
 	}
 	,_clearNotifications: function() {
 		var _g = 0;
@@ -239,14 +245,45 @@ Main.prototype = {
 		var code;
 		if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		if(code == 13) {
-			if(this.chatbox.value != "/new") {
+			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
 				this.lastMessage = this.chatbox.value;
 				this.postHttp.request(true);
 				this._update();
-			} else this._generateID();
+			}
 			this.chatbox.value = "";
 		}
+	}
+	,_parseCommand: function(commandString) {
+		var firstSpace = commandString.indexOf(" ");
+		var command;
+		if(firstSpace != -1) {
+			command = StringTools.trim(commandString.substring(0,firstSpace));
+			var args = StringTools.trim(commandString.substring(firstSpace)).split(" ");
+			var _g1 = 0;
+			var _g = args.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				args[i] = StringTools.trim(args[i]);
+			}
+			this._callCommand(command,args);
+		} else this._callCommand(StringTools.trim(commandString));
+	}
+	,_callCommand: function(command,args) {
+		if(this.commands.exists(command)) this.commands.get(command)(args); else this._addMessage("Unrecognized command.");
+	}
+	,_addMessage: function(msg,id) {
+		var message;
+		var _this = window.document;
+		message = _this.createElement("div");
+		message.innerHTML = msg;
+		message.className = "messageitem";
+		var differentUser = false;
+		if(id == null || id == -1 || id != this.lastUserID) differentUser = true;
+		this.messages.appendChild(this._makeSpan(differentUser,id));
+		this.messages.appendChild(message);
+		window.scrollTo(0,window.document.body.scrollHeight);
+		return message;
 	}
 	,_loop: function() {
 		var _g = this;
@@ -269,16 +306,7 @@ Main.prototype = {
 			var p = _g1[_g];
 			++_g;
 			var bbParsed = this._parseMessage(p.text);
-			var message;
-			var _this = window.document;
-			message = _this.createElement("div");
-			message.innerHTML = bbParsed;
-			message.className = "messageitem";
-			var differentUser = false;
-			if(p.id == -1 || p.id != this.lastUserID) differentUser = true;
-			this.messages.appendChild(this._makeSpan(differentUser,p.id));
-			this.messages.appendChild(message);
-			window.scrollTo(0,window.document.body.scrollHeight);
+			var message = this._addMessage(bbParsed,p.id);
 			if(!this.focussed && !this.first) {
 				window.document.title = "# aqueous-basin.";
 				this.messageSound.play();
@@ -298,10 +326,13 @@ Main.prototype = {
 		span = _this.createElement("span");
 		if(pointer) {
 			span.innerHTML = ">";
-			var hue = new Random(id * 12189234)["float"](0,360);
-			var sat = new Random(id * 12189234)["float"](0.3,0.5);
-			var light = new Random(id * 12189234)["float"](0.3,0.5);
-			var hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
+			var hsl;
+			if(id != null && id != -1) {
+				var hue = new Random(id * 12189234)["float"](0,360);
+				var sat = new Random(id * 12189234)["float"](0.3,0.5);
+				var light = new Random(id * 12189234)["float"](0.3,0.5);
+				hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
+			} else hsl = thx_color__$Hsl_Hsl_$Impl_$.create(0,1,1);
 			span.style.color = "#" + StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6);
 		}
 		span.innerHTML += "\t";
