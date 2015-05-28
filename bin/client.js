@@ -368,7 +368,6 @@ Main.prototype = {
 		var hsl;
 		if(id != null && id != -1) {
 			var hue = new Random(id * 12189234)["float"](0,360);
-			console.log(hue);
 			var sat = new Random(id * 12189234)["float"](0.3,0.5);
 			var light = new Random(id * 12189234)["float"](0.3,0.5);
 			hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);

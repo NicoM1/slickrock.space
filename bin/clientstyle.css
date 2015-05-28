@@ -55,15 +55,13 @@ span {
 	color: #ecf0f1;
 	background-color: #1e1e1e;
 	
-	border-left: none;
-	border-right: solid;
-	border-top: solid;
-	border-bottom: none;
-	border-top-right-radius: 6px;
-	border-color: #2b2b2b;
+	border: none;
 }
 
 #chatbox:active, #chatbox:focus {
 	outline: 0;
-	border-color: #252525;
+	border-width: 2px;
+	border-right: solid;
+	border-top: solid;
+	border-top-right-radius: 6px;
 }
