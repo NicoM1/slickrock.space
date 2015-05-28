@@ -76,13 +76,6 @@ class Main
 			requestInProgress = false; 
 			chatbox.value = lastMessage; 
 		}
-		
-		if(!Cookie.exists('id')) {
-			_generateID();
-		}
-		else {
-			id = Std.parseInt(Cookie.get('id'));
-		}
 
 		Browser.window.onload = _windowLoaded;
 		
@@ -107,6 +100,7 @@ class Main
 	function _generateID(?arguments: Array<String>) {
 		id = new Random(Math.random() * 0xFFFFFF).int(0, 0xFFFFFF);
 		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
+		chatbox.style.borderColor = _generateColorFromID(id, true);
 	}
 	
 	function _clearNotifications() {
@@ -125,6 +119,14 @@ class Main
 		
 		chatbox.onkeypress = _checkKeyPress;
 		chatbox.focus();
+		
+		if(!Cookie.exists('id')) {
+			_generateID();
+		}
+		else {
+			id = Std.parseInt(Cookie.get('id'));
+			chatbox.style.borderColor = _generateColorFromID(id, true);
+		}
 	}
 	
 	function _testNotification() {
@@ -280,21 +282,31 @@ class Main
 		var span = Browser.document.createSpanElement();
 		if (pointer) {
 			span.innerHTML = '>';
-			var hsl: Hsl;
-			if(id != null && id != -1) {
-				var hue = new Random(id * 12189234).float(0, 360);
-				var sat = new Random(id * 12189234).float(0.3, 0.5);
-				var light = new Random(id * 12189234).float(0.3, 0.5);
-				hsl = Hsl.create(hue, sat, light);
-			}
-			else {
-				hsl = Hsl.create(0, 1, 1);
-			}
-			span.style.color = '#' + hsl.hex(6);
+			
+			span.style.color = _generateColorFromID(id);
 		}
 		span.innerHTML += '\t';
 		
 		return span;
+	}
+	
+	function _generateColorFromID(?id: Int, ?dark: Bool = false): String {
+		var hsl: Hsl;
+		if(id != null && id != -1) {
+			var hue = new Random(id * 12189234).float(0, 360);
+			var sat = new Random(id * 12189234).float(0.3, 0.5);
+			var light = new Random(id * 12189234).float(0.3, 0.5);
+			hsl = Hsl.create(hue, sat, light);
+			
+			if (dark) {
+				hsl = hsl.darker(0.5);
+			}
+		}
+		else {
+			hsl = Hsl.create(0, 1, 1);
+		}
+		
+		return '#' + hsl.hex(6);
 	}
 	
 	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;

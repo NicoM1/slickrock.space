@@ -180,7 +180,6 @@ var Main = function() {
 		_g.requestInProgress = false;
 		_g.chatbox.value = _g.lastMessage;
 	};
-	if(!js_Cookie.exists("id")) this._generateID(); else this.id = Std.parseInt(js_Cookie.get("id"));
 	window.onload = $bind(this,this._windowLoaded);
 	window.onfocus = function() {
 		_g.focussed = true;
@@ -204,6 +203,7 @@ Main.prototype = {
 	,_generateID: function($arguments) {
 		this.id = new Random(Math.random() * 16777215)["int"](0,16777215);
 		js_Cookie.set("id",Std.string(this.id),315360000);
+		this.chatbox.style.borderColor = this._generateColorFromID(this.id,true);
 	}
 	,_clearNotifications: function() {
 		var _g = 0;
@@ -222,6 +222,10 @@ Main.prototype = {
 		this.chatbox.onclick = $bind(this,this._testNotification);
 		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
+		if(!js_Cookie.exists("id")) this._generateID(); else {
+			this.id = Std.parseInt(js_Cookie.get("id"));
+			this.chatbox.style.borderColor = this._generateColorFromID(this.id,true);
+		}
 	}
 	,_testNotification: function() {
 		if(Notification.permission == "default") Notification.requestPermission(function(permission) {
@@ -354,17 +358,23 @@ Main.prototype = {
 		span = _this.createElement("span");
 		if(pointer) {
 			span.innerHTML = ">";
-			var hsl;
-			if(id != null && id != -1) {
-				var hue = new Random(id * 12189234)["float"](0,360);
-				var sat = new Random(id * 12189234)["float"](0.3,0.5);
-				var light = new Random(id * 12189234)["float"](0.3,0.5);
-				hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
-			} else hsl = thx_color__$Hsl_Hsl_$Impl_$.create(0,1,1);
-			span.style.color = "#" + StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6);
+			span.style.color = this._generateColorFromID(id);
 		}
 		span.innerHTML += "\t";
 		return span;
+	}
+	,_generateColorFromID: function(id,dark) {
+		if(dark == null) dark = false;
+		var hsl;
+		if(id != null && id != -1) {
+			var hue = new Random(id * 12189234)["float"](0,360);
+			console.log(hue);
+			var sat = new Random(id * 12189234)["float"](0.3,0.5);
+			var light = new Random(id * 12189234)["float"](0.3,0.5);
+			hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
+			if(dark) hsl = thx_color__$Hsl_Hsl_$Impl_$.darker(hsl,0.5);
+		} else hsl = thx_color__$Hsl_Hsl_$Impl_$.create(0,1,1);
+		return "#" + StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6);
 	}
 	,_parseMessage: function(raw) {
 		var parsed = StringTools.replace(raw,"\n"," ");
