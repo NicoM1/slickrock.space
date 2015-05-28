@@ -236,7 +236,7 @@ class Main
 		if (requestInProgress) {
 			ticker++;
 			if (ticker > 5) {
-				Browser.location.reload(true);
+				//Browser.location.reload(true);
 			}
 			return;
 		}

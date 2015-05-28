@@ -306,7 +306,8 @@ Main.prototype = {
 	,_update: function() {
 		if(this.requestInProgress) {
 			this.ticker++;
-			if(this.ticker > 5) window.location.reload(true);
+			if(this.ticker > 5) {
+			}
 			return;
 		}
 		this.ticker = 0;
