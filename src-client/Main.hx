@@ -5,6 +5,7 @@ import js.Cookie;
 import js.html.AudioElement;
 import js.html.DivElement;
 import js.html.Element;
+import js.html.ImageElement;
 import js.html.InputElement;
 import js.html.ParagraphElement;
 import js.Lib;
@@ -254,7 +255,18 @@ class Main
 		}
 		lastIndex = parsed.lastID;
 		first = false;
+		
+		for (i in Browser.document.getElementsByClassName('imgmessage')) {
+			var image: ImageElement = cast i;
+			i.onclick = _openImageInNewTab.bind(image.src);
+		}
+		
 		requestInProgress = false;
+	}
+	
+	function _openImageInNewTab(src: String) {
+		var win = Browser.window.open(src, '_blank');
+		win.focus();
 	}
 	
 	function _makeSpan(?pointer: Bool = false, ?id: Int): Element {
@@ -288,7 +300,7 @@ class Main
 		parsed = parsed.htmlEscape();
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
-			var imgTag = '<img src=$imgPath></img>';
+			var imgTag = '<img src=$imgPath class="imgmessage"></img>';
 			parsed = imgBB.replace(parsed, imgTag);
 		}
 		while (boldBB.match(parsed)) {

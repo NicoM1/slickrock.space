@@ -18,6 +18,11 @@ p {
 	white-space: pre-line;
 }
 
+img {
+	max-width: 100%;
+	cursor: pointer;
+}
+
 .messageitem {
 	margin-left: 25px;
 }
