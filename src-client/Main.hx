@@ -66,7 +66,7 @@ class Main
 		getHttp.onData = _parseMessages;
 		getHttp.onError = function(error) { 
 			trace(error); 
-			//requestInProgress = false; 
+			requestInProgress = false; 
 		}
 		
 		postHttp = new Http(basePath);
@@ -74,7 +74,7 @@ class Main
 		postHttp.onError = function(error) { 
 			trace(error); 
 			requestInProgress = false; 
-			chatbox.value = lastMessage; 
+			//chatbox.value = lastMessage; 
 		}
 
 		Browser.window.onload = _windowLoaded;
@@ -231,16 +231,11 @@ class Main
 			_loop();
 		}, 1000);
 	}
-	var ticker: Int = 0;
+
 	function _update() {
 		if (requestInProgress) {
-			ticker++;
-			if (ticker > 5) {
-				//Browser.location.reload(true);
-			}
 			return;
 		}
-		ticker = 0;
 		getHttp.url = basePath + 'api/' + lastIndex;
 		requestInProgress = true;
 		getHttp.request(true);
@@ -265,10 +260,10 @@ class Main
 		lastIndex = parsed.lastID;
 		first = false;
 		
-		for (i in Browser.document.getElementsByClassName('imgmessage')) {
+		/*for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
 			i.onclick = _openImageInNewTab.bind(image.src);
-		}
+		}*/
 		
 		requestInProgress = false;
 	}
@@ -319,7 +314,7 @@ class Main
 		parsed = parsed.htmlEscape();
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
-			var imgTag = '<img src=$imgPath class="imgmessage"></img>';
+			var imgTag = '<a href="$imgPath" data-lightbox="$imgPath"><img src="$imgPath" class="imgmessage"></img></a>';
 			parsed = imgBB.replace(parsed, imgTag);
 		}
 		while (boldBB.match(parsed)) {

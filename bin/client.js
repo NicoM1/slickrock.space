@@ -154,7 +154,6 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
-	this.ticker = 0;
 	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
 	this.notifications = [];
@@ -172,13 +171,13 @@ var Main = function() {
 	this.getHttp.onData = $bind(this,this._parseMessages);
 	this.getHttp.onError = function(error) {
 		console.log(error);
+		_g.requestInProgress = false;
 	};
 	this.postHttp = new haxe_Http(this.basePath);
 	this.postHttp.async = true;
 	this.postHttp.onError = function(error1) {
 		console.log(error1);
 		_g.requestInProgress = false;
-		_g.chatbox.value = _g.lastMessage;
 	};
 	window.onload = $bind(this,this._windowLoaded);
 	window.onfocus = function() {
@@ -304,13 +303,7 @@ Main.prototype = {
 		},1000);
 	}
 	,_update: function() {
-		if(this.requestInProgress) {
-			this.ticker++;
-			if(this.ticker > 5) {
-			}
-			return;
-		}
-		this.ticker = 0;
+		if(this.requestInProgress) return;
 		this.getHttp.url = this.basePath + "api/" + this.lastIndex;
 		this.requestInProgress = true;
 		this.getHttp.request(true);
@@ -334,18 +327,6 @@ Main.prototype = {
 		}
 		this.lastIndex = parsed.lastID;
 		this.first = false;
-		var _g2 = 0;
-		var _g11 = window.document.getElementsByClassName("imgmessage");
-		while(_g2 < _g11.length) {
-			var i = _g11[_g2];
-			++_g2;
-			var image = i;
-			i.onclick = (function(f,a1) {
-				return function() {
-					f(a1);
-				};
-			})($bind(this,this._openImageInNewTab),image.src);
-		}
 		this.requestInProgress = false;
 	}
 	,_openImageInNewTab: function(src) {
@@ -381,7 +362,7 @@ Main.prototype = {
 		parsed = StringTools.htmlEscape(parsed);
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
-			var imgTag = "<img src=" + imgPath + " class=\"imgmessage\"></img>";
+			var imgTag = "<a href=\"" + imgPath + "\" data-lightbox=\"" + imgPath + "\"><img src=\"" + imgPath + "\" class=\"imgmessage\"></img></a>";
 			parsed = this.imgBB.replace(parsed,imgTag);
 		}
 		while(this.boldBB.match(parsed)) {
