@@ -66,7 +66,7 @@ class Main
 		getHttp.onData = _parseMessages;
 		getHttp.onError = function(error) { 
 			trace(error); 
-			requestInProgress = false; 
+			//requestInProgress = false; 
 		}
 		
 		postHttp = new Http(basePath);
@@ -229,9 +229,16 @@ class Main
 			_loop();
 		}, 1000);
 	}
-	
+	var ticker: Int = 0;
 	function _update() {
-		if (requestInProgress) return;
+		if (requestInProgress) {
+			ticker++;
+			if (ticker > 5) {
+				Browser.location.reload(true);
+			}
+			return;
+		}
+		ticker = 0;
 		getHttp.url = basePath + 'api/' + lastIndex;
 		requestInProgress = true;
 		getHttp.request(true);

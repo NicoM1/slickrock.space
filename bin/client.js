@@ -154,6 +154,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.ticker = 0;
 	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
 	this.notifications = [];
@@ -171,7 +172,6 @@ var Main = function() {
 	this.getHttp.onData = $bind(this,this._parseMessages);
 	this.getHttp.onError = function(error) {
 		console.log(error);
-		_g.requestInProgress = false;
 	};
 	this.postHttp = new haxe_Http(this.basePath);
 	this.postHttp.async = true;
@@ -300,7 +300,12 @@ Main.prototype = {
 		},1000);
 	}
 	,_update: function() {
-		if(this.requestInProgress) return;
+		if(this.requestInProgress) {
+			this.ticker++;
+			if(this.ticker > 5) window.location.reload(true);
+			return;
+		}
+		this.ticker = 0;
 		this.getHttp.url = this.basePath + "api/" + this.lastIndex;
 		this.requestInProgress = true;
 		this.getHttp.request(true);
