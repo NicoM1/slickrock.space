@@ -260,10 +260,10 @@ class Main
 		lastIndex = parsed.lastID;
 		first = false;
 		
-		/*for (i in Browser.document.getElementsByClassName('imgmessage')) {
+		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
 			i.onclick = _openImageInNewTab.bind(image.src);
-		}*/
+		}
 		
 		requestInProgress = false;
 	}
@@ -314,7 +314,7 @@ class Main
 		parsed = parsed.htmlEscape();
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
-			var imgTag = '<a href="$imgPath" data-lightbox="$imgPath"><img src="$imgPath" class="imgmessage"></img></a>';
+			var imgTag = '<img src="$imgPath" class="imgmessage"></img>';
 			parsed = imgBB.replace(parsed, imgTag);
 		}
 		while (boldBB.match(parsed)) {

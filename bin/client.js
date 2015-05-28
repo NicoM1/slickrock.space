@@ -327,6 +327,18 @@ Main.prototype = {
 		}
 		this.lastIndex = parsed.lastID;
 		this.first = false;
+		var _g2 = 0;
+		var _g11 = window.document.getElementsByClassName("imgmessage");
+		while(_g2 < _g11.length) {
+			var i = _g11[_g2];
+			++_g2;
+			var image = i;
+			i.onclick = (function(f,a1) {
+				return function() {
+					f(a1);
+				};
+			})($bind(this,this._openImageInNewTab),image.src);
+		}
 		this.requestInProgress = false;
 	}
 	,_openImageInNewTab: function(src) {
@@ -362,7 +374,7 @@ Main.prototype = {
 		parsed = StringTools.htmlEscape(parsed);
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
-			var imgTag = "<a href=\"" + imgPath + "\" data-lightbox=\"" + imgPath + "\"><img src=\"" + imgPath + "\" class=\"imgmessage\"></img></a>";
+			var imgTag = "<img src=\"" + imgPath + "\" class=\"imgmessage\"></img>";
 			parsed = this.imgBB.replace(parsed,imgTag);
 		}
 		while(this.boldBB.match(parsed)) {
