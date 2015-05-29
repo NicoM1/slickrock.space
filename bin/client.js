@@ -251,6 +251,7 @@ Main.prototype = {
 		this.commands.set("revivify",$bind(this,this._generateID));
 		this.commands.set("impersonate",$bind(this,this._setIDCommand));
 		this.commands.set("oneself",$bind(this,this._printID));
+		this.commands.set("existent",$bind(this,this._printRoom));
 		this.commands.set("survey",$bind(this,this._changeRoom));
 		this.commands.set("",$bind(this,this._help));
 	}
@@ -290,6 +291,9 @@ Main.prototype = {
 	,_printID: function($arguments) {
 		this._addMessage("*Currently impersonating*: " + this.id);
 	}
+	,_printRoom: function($arguments) {
+		this._addMessage("*Currently in*: " + this.room);
+	}
 	,_help: function($arguments) {
 		this._addMessage("**/revivify**");
 		this._addMessage("regenerate your ID, giving you a new color.");
@@ -297,6 +301,8 @@ Main.prototype = {
 		this._addMessage("print your current ID.");
 		this._addMessage("**/impersonate** *ID*");
 		this._addMessage("set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).");
+		this._addMessage("**/existent**");
+		this._addMessage("print the chat room you are currently in.");
 		this._addMessage("**/survey** *ROOM*");
 		this._addMessage("move to a different chat room.");
 	}
