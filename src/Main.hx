@@ -44,7 +44,7 @@ class RouteHandler implements abe.IRoute {
 			if (e == null) {
 				var withRoom: String = '';
 				var startBody = d.indexOf('head') + 6;
-				withRoom = d.substring(0, startBody) + '\n\t<script>var room = ""</script>\n' + d.substr(startBody + 1);
+				withRoom = d.substring(0, startBody) + '\n\t<script>var room = "base"</script>\n' + d.substr(startBody + 1);
 				response.setHeader('Access-Control-Allow-Origin', '*');
 				response.send(withRoom);
 			}
