@@ -71,9 +71,11 @@ span {
 #helpbox {
 	position: fixed;
 	margin: 0px;
-	padding:0px;
 	padding-left: 5px;
+	padding-top: 5px;
 	padding-bottom: 5px;
+	padding-right: 5px;
+
 	bottom: 31px;
 	width: 70%;
 	background-color: #1e1e1e;
@@ -90,7 +92,8 @@ span {
 
 li {
 	margin: 0px;
-	margin-bottom: 5px;
+	padding-top: 1px;
+	padding-bottom: 1px;
 }
 
 .description {
@@ -99,6 +102,7 @@ li {
 
 .selected {
 	background-color: hsl(282, 45.9%, 25.7%);
+	border-radius: 4px;
 }
 
 ::-webkit-scrollbar { 
