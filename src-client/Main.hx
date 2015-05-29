@@ -135,7 +135,7 @@ class Main
 	function _sendNotification(text: String) {
 		if (Notification.permission == NotificationPermission.GRANTED) {
 			var options: NotificationOptions = { };
-			options.body = 'aqueous-basin.';
+			options.body = 'aqueous-basin/$room';
 			if (numNotifications <= 1) {
 				notifications.push(new Notification(text, options));
 			}

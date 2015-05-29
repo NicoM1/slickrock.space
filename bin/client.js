@@ -227,7 +227,7 @@ Main.prototype = {
 	,_sendNotification: function(text) {
 		if(Notification.permission == "granted") {
 			var options = { };
-			options.body = "aqueous-basin.";
+			options.body = "aqueous-basin/" + this.room;
 			if(this.numNotifications <= 1) this.notifications.push(new Notification(text,options)); else {
 				this._clearNotifications();
 				this.notifications.push(new Notification("" + this.numNotifications + " new messages.",options));
