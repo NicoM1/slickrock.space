@@ -7,7 +7,7 @@ img{max-width:100%;cursor:pointer;}
 span{float:left;width:0;height:0;}
 #chatbox{position:fixed;bottom:0px;left:0px;width:97%;height:23px;margin:0px;padding-left:4px;padding-bottom:4px;font-size:110%;color:#ecf0f1;background-color:#1e1e1e;border:none;}
 #chatbox:active,#chatbox:focus{outline:0;border-width:2px;border-right:solid;border-top:solid;border-top-right-radius:6px;}
-#helpbox{position:fixed;margin:0px;padding-left:5px;padding-top:5px;padding-bottom:5px;padding-right:5px;bottom:31px;width:70%;background-color:#1e1e1e;display:none;border-width:2px;border-right:solid;border-top:solid;border-top-right-radius:6px;border-color:#252525;list-style-type:none;}
+#helpbox{position:fixed;margin:0px;padding-left:5px;padding-top:5px;padding-bottom:5px;padding-right:5px;max-height:80%;overflow:scroll;bottom:31px;width:70%;background-color:#1e1e1e;display:none;border-width:2px;border-right:solid;border-top:solid;border-top-right-radius:6px;border-color:#252525;list-style-type:none;}
 li{margin:0px;padding-top:1px;padding-bottom:1px;}
 .description{margin-bottom:20px;}
 .selected{background-color:hsl(282,45.9%,25.7%);border-radius:4px;}
