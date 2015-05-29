@@ -7,7 +7,9 @@ import js.html.DivElement;
 import js.html.Element;
 import js.html.ImageElement;
 import js.html.InputElement;
+import js.html.LIElement;
 import js.html.ParagraphElement;
+import js.html.UListElement;
 import js.Lib;
 import js.Browser;
 import haxe.Http;
@@ -34,6 +36,7 @@ class Main
 	var postHttp: Http;
 	
 	var chatbox: InputElement;
+	var helpbox: UListElement;
 	var messages: DivElement;
 	var messageSound: AudioElement;
 	var lastParagraph: DivElement;
@@ -88,11 +91,11 @@ class Main
 	function _windowLoaded() {
 		chatbox = cast Browser.document.getElementById('chatbox');
 		messages = cast Browser.document.getElementById('messages');
+		helpbox = cast Browser.document.getElementById('helpbox');
 		messageSound = cast Browser.document.getElementById('messagesound');
 		
 		chatbox.onclick = _getNotificationPermission;
-		
-		chatbox.onkeypress = _checkKeyPress;
+		chatbox.onkeyup = _checkKeyPress;
 		chatbox.focus();
 		
 		if(!Cookie.exists('id')) {
@@ -103,7 +106,6 @@ class Main
 		}
 	}
 	
-		
 	function _loop() {
 		Timer.delay(function() {
 			_update();
@@ -317,6 +319,50 @@ class Main
 	//{ message posting
 	function _checkKeyPress(e) {
 		var code = (e.keyCode != null ? e.keyCode : e.which);
+		
+		var selected: Bool = false;
+		if (chatbox.value.charAt(0) == '/') {
+			helpbox.style.display = 'block';
+			
+			for (c in helpbox.children) {
+				var li: LIElement = cast c;
+								
+				var command = li.getAttribute('data-command');
+				if (li.classList.contains('selected')) {
+					var replacement = '/' + command + ' ';
+					if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code == 13 && chatbox.value.length < replacement.length) {
+						chatbox.value = replacement;
+					}
+				}
+				
+				var sub = chatbox.value.substr(1);
+				var trimmed: Bool = false;
+				if (sub.indexOf(' ') != -1) {
+					trimmed = true;
+					sub = sub.substring(0, sub.indexOf(' '));
+				}
+
+				var end: Int = (!trimmed? sub.length : command.length);
+				
+				if (command.substr(0, end) != sub) {
+					li.style.display = 'none';
+				}
+				else {
+					li.style.display = 'list-item';
+					if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
+						li.classList.add('selected');
+						selected = true;
+					}
+					else {
+						li.classList.remove('selected');
+					}
+				}
+			}
+		}
+		else {
+			helpbox.style.display = 'none';
+		}
+
 		if (code == 13) { //ENTER
 			if(chatbox.value.charAt(0) == '/') {
 				_parseCommand(chatbox.value.substr(1));
@@ -328,7 +374,9 @@ class Main
 				_update();
 			}
 			chatbox.value = '';
+			helpbox.style.display = 'none';
 		}
+		
 	}
 	//}
 	

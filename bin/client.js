@@ -199,9 +199,10 @@ Main.prototype = {
 	_windowLoaded: function() {
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
+		this.helpbox = window.document.getElementById("helpbox");
 		this.messageSound = window.document.getElementById("messagesound");
 		this.chatbox.onclick = $bind(this,this._getNotificationPermission);
-		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
+		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
 	}
@@ -374,6 +375,37 @@ Main.prototype = {
 	,_checkKeyPress: function(e) {
 		var code;
 		if(e.keyCode != null) code = e.keyCode; else code = e.which;
+		var selected = false;
+		if(this.chatbox.value.charAt(0) == "/") {
+			this.helpbox.style.display = "block";
+			var _g = 0;
+			var _g1 = this.helpbox.children;
+			while(_g < _g1.length) {
+				var c = _g1[_g];
+				++_g;
+				var li = c;
+				var command = li.getAttribute("data-command");
+				if(li.classList.contains("selected")) {
+					var replacement = "/" + command + " ";
+					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code == 13 && this.chatbox.value.length < replacement.length) this.chatbox.value = replacement;
+				}
+				var sub = HxOverrides.substr(this.chatbox.value,1,null);
+				var trimmed = false;
+				if(sub.indexOf(" ") != -1) {
+					trimmed = true;
+					sub = sub.substring(0,sub.indexOf(" "));
+				}
+				var end;
+				if(!trimmed) end = sub.length; else end = command.length;
+				if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
+					li.style.display = "list-item";
+					if(!selected && sub.length > 0) {
+						li.classList.add("selected");
+						selected = true;
+					} else li.classList.remove("selected");
+				}
+			}
+		} else this.helpbox.style.display = "none";
 		if(code == 13) {
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
@@ -382,6 +414,7 @@ Main.prototype = {
 				this._update();
 			}
 			this.chatbox.value = "";
+			this.helpbox.style.display = "none";
 		}
 	}
 	,_openImageInNewTab: function(src) {
