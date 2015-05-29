@@ -24,11 +24,9 @@ using StringTools;
 
 class Main 
 {
-	#if !debug
 	var basePath: String = 'https://aqueous-basin.herokuapp.com/';
-	#else 
-	var basePath: String = 'https://localhost:9998/api/';
-	#end
+	var id: Int;
+
 	var lastIndex: Int = -1;
 	var lastUserID: Int = -2;
 	
@@ -37,26 +35,19 @@ class Main
 	
 	var chatbox: InputElement;
 	var messages: DivElement;
-	
 	var messageSound: AudioElement;
-	
-	var id: Int;
+	var lastParagraph: DivElement;
 	
 	var requestInProgress: Bool = false;
-	
+	var first: Bool = true;
 	var focussed: Bool = true;
 	
-	var lastMessage: String = '';
-	
-	var first: Bool = true;
-	
 	var notifications: Array<Notification> = new Array<Notification>();
-	
 	var numNotifications: Int = 0;
 	
 	var commands: Map<String, Array<String> -> Void> = new Map();
 	
-	var lastParagraph: DivElement;
+	var lastMessage: String = '';
 	
 	function new() {
 		_buildCommands();
@@ -92,30 +83,14 @@ class Main
 		
 		_loop();
 	}
-	
-	function _buildCommands() {
-		commands.set('new', _generateID);
-	}
-	
-	function _generateID(?arguments: Array<String>) {
-		id = new Random(Math.random() * 0xFFFFFF).int(0, 0xFFFFFF);
-		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
-		chatbox.style.borderColor = _generateColorFromID(id, true);
-	}
-	
-	function _clearNotifications() {
-		for (n in notifications) {
-			n.close();
-		}
-		notifications = new Array<Notification>();
-	}
-	
+		
+	//{ startup and message loop
 	function _windowLoaded() {
 		chatbox = cast Browser.document.getElementById('chatbox');
 		messages = cast Browser.document.getElementById('messages');
 		messageSound = cast Browser.document.getElementById('messagesound');
 		
-		chatbox.onclick = _testNotification;
+		chatbox.onclick = _getNotificationPermission;
 		
 		chatbox.onkeypress = _checkKeyPress;
 		chatbox.focus();
@@ -124,12 +99,30 @@ class Main
 			_generateID();
 		}
 		else {
-			id = Std.parseInt(Cookie.get('id'));
-			chatbox.style.borderColor = _generateColorFromID(id, true);
+			_setID(Std.parseInt(Cookie.get('id')));
 		}
 	}
 	
-	function _testNotification() {
+		
+	function _loop() {
+		Timer.delay(function() {
+			_update();
+			_loop();
+		}, 1000);
+	}
+
+	function _update() {
+		if (requestInProgress) {
+			return;
+		}
+		getHttp.url = basePath + 'api/' + lastIndex;
+		requestInProgress = true;
+		getHttp.request(true);
+	}
+	//}
+	
+	//{ notifications
+	function _getNotificationPermission() {
 		if (Notification.permission == NotificationPermission.DEFAULT_) {
 			Notification.requestPermission(function(permission) {});
 		}
@@ -152,20 +145,20 @@ class Main
 		}
 	}
 	
-	function _checkKeyPress(e) {
-		var code = (e.keyCode != null ? e.keyCode : e.which);
-		if (code == 13) { //ENTER
-			if(chatbox.value.charAt(0) == '/') {
-				_parseCommand(chatbox.value.substr(1));
-			}
-			else {
-				postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
-				lastMessage = chatbox.value;
-				postHttp.request(true);
-				_update();
-			}
-			chatbox.value = '';
+	function _clearNotifications() {
+		for (n in notifications) {
+			n.close();
 		}
+		notifications = new Array<Notification>();
+	}
+	//}
+		
+	//{ commands
+	function _buildCommands() {
+		commands.set('revivify', _generateID);
+		commands.set('impersonate', _setIDCommand);
+		commands.set('oneself', _printID);
+		commands.set('', _help);
 	}
 	
 	function _parseCommand(commandString: String) {
@@ -189,11 +182,75 @@ class Main
 			commands.get(command)(args);
 		}
 		else {
-			_addMessage('Unrecognized command.');
+			_addMessage('Unrecognized command, did you mean one of these?');
+			_help();
+		}
+	}
+	//}
+	
+	//{ command functions
+	function _generateID(?arguments: Array<String>) {
+		_setID(new Random(Math.random() * 0xFFFFFF).int(0, 0xFFFFFF));
+	}
+	
+	function _setIDCommand(arguments: Array<String>) {
+		if (arguments != null && arguments[0] != null && arguments[0] != '') {
+			var newID = Std.parseInt(arguments[0]);
+			if (newID != null) {
+				_setID(newID);
+			}
+			else {
+				_addMessage('Could not parse argument: *ID*');
+			}
+		}
+		else {
+			_addMessage('**/impersonate** requires argument: *ID*');
 		}
 	}
 	
+	function _printID(?arguments: Array<String>) {
+		_addMessage('*Currently impersonating*: $id');
+	}
+	
+	function _help(?arguments: Array<String>) {
+		_addMessage('**/revivify**');
+		_addMessage('regenerate your ID, giving you a new color.');
+		_addMessage('**/oneself**');
+		_addMessage('print your current ID.');
+		_addMessage('**/impersonate** *ID*');
+		_addMessage('set your ID explicitly, allows you to have all your devices share ID, or steal someone else\'s;).');
+	}
+	//}
+	
+	//{ messages
+	function _parseMessages(data) {		
+		var parsed: MessageData = Json.parse(data);
+		for (p in parsed.messages.messages) {		
+			var message = _addMessage(p.text, p.id);
+			
+			if (!focussed && !first) {
+				Browser.document.title = '# aqueous-basin.';
+				messageSound.play();
+				numNotifications++;
+				_sendNotification(message.innerText != null? message.innerText : message.textContent);
+			}
+			
+			lastUserID = p.id;
+		}
+		lastIndex = parsed.lastID;
+		first = false;
+		
+		for (i in Browser.document.getElementsByClassName('imgmessage')) {
+			var image: ImageElement = cast i;
+			i.onclick = _openImageInNewTab.bind(image.src);
+		}
+		
+		requestInProgress = false;
+	}
+	
 	function _addMessage(msg: String, ?id: Int): DivElement {
+		msg = _parseMessage(msg);
+		
 		var message: DivElement;
 		
 		var differentUser = false;
@@ -225,49 +282,57 @@ class Main
 		return messageItem;
 	}
 	
-	function _loop() {
-		Timer.delay(function() {
-			_update();
-			_loop();
-		}, 1000);
+	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
+	var italicBB: EReg = ~/(?:\[i\]|\*)(.*?)(?:\[\/i\]|\*)/i;
+	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
+	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
+	
+	function _parseMessage(raw: String): String {
+		var parsed: String = raw.replace('\n', ' ');
+		parsed = parsed.htmlEscape();
+		while (imgBB.match(parsed)) {
+			var imgPath = imgBB.matched(1);
+			var imgTag = '<img src="$imgPath" class="imgmessage"></img>';
+			parsed = imgBB.replace(parsed, imgTag);
+		}
+		while (boldBB.match(parsed)) {
+			var text = boldBB.matched(1);
+			var strongTag = '<strong>$text</strong>';
+			parsed = boldBB.replace(parsed, strongTag);
+		}
+		while (italicBB.match(parsed)) {
+			var text = italicBB.matched(1);
+			var emTag = '<em>$text</em>';
+			parsed = italicBB.replace(parsed, emTag);
+		}
+		while (codeBB.match(parsed)) {
+			var text = codeBB.matched(1);
+			var preTag = '<pre>$text</pre>';
+			parsed = codeBB.replace(parsed, preTag);
+		}
+		return parsed;
 	}
+	//}
 
-	function _update() {
-		if (requestInProgress) {
-			return;
-		}
-		getHttp.url = basePath + 'api/' + lastIndex;
-		requestInProgress = true;
-		getHttp.request(true);
-	}
-	
-	function _parseMessages(data) {		
-		var parsed: MessageData = Json.parse(data);
-		for (p in parsed.messages.messages) {
-			var bbParsed = _parseMessage(p.text);
-			
-			var message = _addMessage(bbParsed, p.id);
-			
-			if (!focussed && !first) {
-				Browser.document.title = '# aqueous-basin.';
-				messageSound.play();
-				numNotifications++;
-				_sendNotification(message.innerText != null? message.innerText : message.textContent);
+	//{ message posting
+	function _checkKeyPress(e) {
+		var code = (e.keyCode != null ? e.keyCode : e.which);
+		if (code == 13) { //ENTER
+			if(chatbox.value.charAt(0) == '/') {
+				_parseCommand(chatbox.value.substr(1));
 			}
-			
-			lastUserID = p.id;
+			else {
+				postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
+				lastMessage = chatbox.value;
+				postHttp.request(true);
+				_update();
+			}
+			chatbox.value = '';
 		}
-		lastIndex = parsed.lastID;
-		first = false;
-		
-		for (i in Browser.document.getElementsByClassName('imgmessage')) {
-			var image: ImageElement = cast i;
-			i.onclick = _openImageInNewTab.bind(image.src);
-		}
-		
-		requestInProgress = false;
 	}
+	//}
 	
+	//{ util
 	function _openImageInNewTab(src: String) {
 		var win = Browser.window.open(src, '_blank');
 		win.focus();
@@ -304,36 +369,12 @@ class Main
 		return '#' + hsl.hex(6);
 	}
 	
-	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
-	var italicBB: EReg = ~/(?:\[i\]|\*)(.*?)(?:\[\/i\]|\*)/i;
-	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
-	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
-	
-	function _parseMessage(raw: String): String {
-		var parsed: String = raw.replace('\n', ' ');
-		parsed = parsed.htmlEscape();
-		while (imgBB.match(parsed)) {
-			var imgPath = imgBB.matched(1);
-			var imgTag = '<img src="$imgPath" class="imgmessage"></img>';
-			parsed = imgBB.replace(parsed, imgTag);
-		}
-		while (boldBB.match(parsed)) {
-			var text = boldBB.matched(1);
-			var strongTag = '<strong>$text</strong>';
-			parsed = boldBB.replace(parsed, strongTag);
-		}
-		while (italicBB.match(parsed)) {
-			var text = italicBB.matched(1);
-			var emTag = '<em>$text</em>';
-			parsed = italicBB.replace(parsed, emTag);
-		}
-		while (codeBB.match(parsed)) {
-			var text = codeBB.matched(1);
-			var preTag = '<pre>$text</pre>';
-			parsed = codeBB.replace(parsed, preTag);
-		}
-		return parsed;
+	function _setID(id_: Int) {
+		id = id_;
+		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
+		chatbox.style.borderColor = _generateColorFromID(id, true);
 	}
+	//}
 	
 	static function main() {
 		new Main();

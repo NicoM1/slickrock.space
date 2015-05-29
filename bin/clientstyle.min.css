@@ -5,6 +5,6 @@ img{max-width:100%;cursor:pointer;}
 .messageitem{margin-left:25px;}
 .messageblock{height:100%;margin:0px;margin-bottom:15px;padding:0px;}
 span{float:left;width:0;height:0;}
-#chatbox{position:fixed;bottom:0px;left:0px;width:97%;margin:0px;padding-left:4px;padding-bottom:4px;font-size:110%;color:#ecf0f1;background-color:#1e1e1e;border:none;}
+#chatbox{position:fixed;bottom:0px;left:0px;width:97%;height:23px;margin:0px;padding-left:4px;padding-bottom:4px;font-size:110%;color:#ecf0f1;background-color:#1e1e1e;border:none;}
 #chatbox:active,#chatbox:focus{outline:0;border-width:2px;border-right:solid;border-top:solid;border-top-right-radius:6px;}
 ::-webkit-scrollbar{display:none;}

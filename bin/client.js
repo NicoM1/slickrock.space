@@ -154,12 +154,12 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.lastMessage = "";
 	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
 	this.notifications = [];
-	this.first = true;
-	this.lastMessage = "";
 	this.focussed = true;
+	this.first = true;
 	this.requestInProgress = false;
 	this.lastUserID = -2;
 	this.lastIndex = -1;
@@ -196,37 +196,29 @@ Main.main = function() {
 	new Main();
 };
 Main.prototype = {
-	_buildCommands: function() {
-		this.commands.set("new",$bind(this,this._generateID));
-	}
-	,_generateID: function($arguments) {
-		this.id = new Random(Math.random() * 16777215)["int"](0,16777215);
-		js_Cookie.set("id",Std.string(this.id),315360000);
-		this.chatbox.style.borderColor = this._generateColorFromID(this.id,true);
-	}
-	,_clearNotifications: function() {
-		var _g = 0;
-		var _g1 = this.notifications;
-		while(_g < _g1.length) {
-			var n = _g1[_g];
-			++_g;
-			n.close();
-		}
-		this.notifications = [];
-	}
-	,_windowLoaded: function() {
+	_windowLoaded: function() {
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
 		this.messageSound = window.document.getElementById("messagesound");
-		this.chatbox.onclick = $bind(this,this._testNotification);
+		this.chatbox.onclick = $bind(this,this._getNotificationPermission);
 		this.chatbox.onkeypress = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
-		if(!js_Cookie.exists("id")) this._generateID(); else {
-			this.id = Std.parseInt(js_Cookie.get("id"));
-			this.chatbox.style.borderColor = this._generateColorFromID(this.id,true);
-		}
+		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
 	}
-	,_testNotification: function() {
+	,_loop: function() {
+		var _g = this;
+		haxe_Timer.delay(function() {
+			_g._update();
+			_g._loop();
+		},1000);
+	}
+	,_update: function() {
+		if(this.requestInProgress) return;
+		this.getHttp.url = this.basePath + "api/" + this.lastIndex;
+		this.requestInProgress = true;
+		this.getHttp.request(true);
+	}
+	,_getNotificationPermission: function() {
 		if(Notification.permission == "default") Notification.requestPermission(function(permission) {
 		});
 	}
@@ -243,18 +235,21 @@ Main.prototype = {
 			};
 		}
 	}
-	,_checkKeyPress: function(e) {
-		var code;
-		if(e.keyCode != null) code = e.keyCode; else code = e.which;
-		if(code == 13) {
-			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
-				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
-				this.lastMessage = this.chatbox.value;
-				this.postHttp.request(true);
-				this._update();
-			}
-			this.chatbox.value = "";
+	,_clearNotifications: function() {
+		var _g = 0;
+		var _g1 = this.notifications;
+		while(_g < _g1.length) {
+			var n = _g1[_g];
+			++_g;
+			n.close();
 		}
+		this.notifications = [];
+	}
+	,_buildCommands: function() {
+		this.commands.set("revivify",$bind(this,this._generateID));
+		this.commands.set("impersonate",$bind(this,this._setIDCommand));
+		this.commands.set("oneself",$bind(this,this._printID));
+		this.commands.set("",$bind(this,this._help));
 	}
 	,_parseCommand: function(commandString) {
 		var firstSpace = commandString.indexOf(" ");
@@ -272,41 +267,30 @@ Main.prototype = {
 		} else this._callCommand(StringTools.trim(commandString));
 	}
 	,_callCommand: function(command,args) {
-		if(this.commands.exists(command)) this.commands.get(command)(args); else this._addMessage("Unrecognized command.");
+		if(this.commands.exists(command)) this.commands.get(command)(args); else {
+			this._addMessage("Unrecognized command, did you mean one of these?");
+			this._help();
+		}
 	}
-	,_addMessage: function(msg,id) {
-		var message;
-		var differentUser = false;
-		if(id == null || id == -1 || id != this.lastUserID) differentUser = true;
-		if(differentUser) {
-			var _this = window.document;
-			message = _this.createElement("div");
-			message.className = "messageblock";
-			this.lastParagraph = message;
-			this.messages.appendChild(this._makeSpan(differentUser,id));
-			this.messages.appendChild(message);
-		} else message = this.lastParagraph;
-		var messageItem;
-		var _this1 = window.document;
-		messageItem = _this1.createElement("div");
-		messageItem.className = "messageitem";
-		messageItem.innerHTML = msg;
-		message.appendChild(messageItem);
-		window.scrollTo(0,window.document.body.scrollHeight);
-		return messageItem;
+	,_generateID: function($arguments) {
+		this._setID(new Random(Math.random() * 16777215)["int"](0,16777215));
 	}
-	,_loop: function() {
-		var _g = this;
-		haxe_Timer.delay(function() {
-			_g._update();
-			_g._loop();
-		},1000);
+	,_setIDCommand: function($arguments) {
+		if($arguments != null && $arguments[0] != null && $arguments[0] != "") {
+			var newID = Std.parseInt($arguments[0]);
+			if(newID != null) this._setID(newID); else this._addMessage("Could not parse argument: *ID*");
+		} else this._addMessage("**/impersonate** requires argument: *ID*");
 	}
-	,_update: function() {
-		if(this.requestInProgress) return;
-		this.getHttp.url = this.basePath + "api/" + this.lastIndex;
-		this.requestInProgress = true;
-		this.getHttp.request(true);
+	,_printID: function($arguments) {
+		this._addMessage("*Currently impersonating*: " + this.id);
+	}
+	,_help: function($arguments) {
+		this._addMessage("**/revivify**");
+		this._addMessage("regenerate your ID, giving you a new color.");
+		this._addMessage("**/oneself**");
+		this._addMessage("print your current ID.");
+		this._addMessage("**/impersonate** *ID*");
+		this._addMessage("set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).");
 	}
 	,_parseMessages: function(data) {
 		var parsed = JSON.parse(data);
@@ -315,8 +299,7 @@ Main.prototype = {
 		while(_g < _g1.length) {
 			var p = _g1[_g];
 			++_g;
-			var bbParsed = this._parseMessage(p.text);
-			var message = this._addMessage(bbParsed,p.id);
+			var message = this._addMessage(p.text,p.id);
 			if(!this.focussed && !this.first) {
 				window.document.title = "# aqueous-basin.";
 				this.messageSound.play();
@@ -340,6 +323,66 @@ Main.prototype = {
 			})($bind(this,this._openImageInNewTab),image.src);
 		}
 		this.requestInProgress = false;
+	}
+	,_addMessage: function(msg,id) {
+		msg = this._parseMessage(msg);
+		var message;
+		var differentUser = false;
+		if(id == null || id == -1 || id != this.lastUserID) differentUser = true;
+		if(differentUser) {
+			var _this = window.document;
+			message = _this.createElement("div");
+			message.className = "messageblock";
+			this.lastParagraph = message;
+			this.messages.appendChild(this._makeSpan(differentUser,id));
+			this.messages.appendChild(message);
+		} else message = this.lastParagraph;
+		var messageItem;
+		var _this1 = window.document;
+		messageItem = _this1.createElement("div");
+		messageItem.className = "messageitem";
+		messageItem.innerHTML = msg;
+		message.appendChild(messageItem);
+		window.scrollTo(0,window.document.body.scrollHeight);
+		return messageItem;
+	}
+	,_parseMessage: function(raw) {
+		var parsed = StringTools.replace(raw,"\n"," ");
+		parsed = StringTools.htmlEscape(parsed);
+		while(this.imgBB.match(parsed)) {
+			var imgPath = this.imgBB.matched(1);
+			var imgTag = "<img src=\"" + imgPath + "\" class=\"imgmessage\"></img>";
+			parsed = this.imgBB.replace(parsed,imgTag);
+		}
+		while(this.boldBB.match(parsed)) {
+			var text = this.boldBB.matched(1);
+			var strongTag = "<strong>" + text + "</strong>";
+			parsed = this.boldBB.replace(parsed,strongTag);
+		}
+		while(this.italicBB.match(parsed)) {
+			var text1 = this.italicBB.matched(1);
+			var emTag = "<em>" + text1 + "</em>";
+			parsed = this.italicBB.replace(parsed,emTag);
+		}
+		while(this.codeBB.match(parsed)) {
+			var text2 = this.codeBB.matched(1);
+			var preTag = "<pre>" + text2 + "</pre>";
+			parsed = this.codeBB.replace(parsed,preTag);
+		}
+		return parsed;
+	}
+	,_checkKeyPress: function(e) {
+		var code;
+		if(e.keyCode != null) code = e.keyCode; else code = e.which;
+		if(code == 13) {
+			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
+				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
+				this.lastMessage = this.chatbox.value;
+				this.postHttp.request(true);
+				this._update();
+			}
+			this.chatbox.value = "";
+		}
 	}
 	,_openImageInNewTab: function(src) {
 		var win = window.open(src,"_blank");
@@ -369,30 +412,10 @@ Main.prototype = {
 		} else hsl = thx_color__$Hsl_Hsl_$Impl_$.create(0,1,1);
 		return "#" + StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6);
 	}
-	,_parseMessage: function(raw) {
-		var parsed = StringTools.replace(raw,"\n"," ");
-		parsed = StringTools.htmlEscape(parsed);
-		while(this.imgBB.match(parsed)) {
-			var imgPath = this.imgBB.matched(1);
-			var imgTag = "<img src=\"" + imgPath + "\" class=\"imgmessage\"></img>";
-			parsed = this.imgBB.replace(parsed,imgTag);
-		}
-		while(this.boldBB.match(parsed)) {
-			var text = this.boldBB.matched(1);
-			var strongTag = "<strong>" + text + "</strong>";
-			parsed = this.boldBB.replace(parsed,strongTag);
-		}
-		while(this.italicBB.match(parsed)) {
-			var text1 = this.italicBB.matched(1);
-			var emTag = "<em>" + text1 + "</em>";
-			parsed = this.italicBB.replace(parsed,emTag);
-		}
-		while(this.codeBB.match(parsed)) {
-			var text2 = this.codeBB.matched(1);
-			var preTag = "<pre>" + text2 + "</pre>";
-			parsed = this.codeBB.replace(parsed,preTag);
-		}
-		return parsed;
+	,_setID: function(id_) {
+		this.id = id_;
+		js_Cookie.set("id",Std.string(this.id),315360000);
+		this.chatbox.style.borderColor = this._generateColorFromID(this.id,true);
 	}
 	,__class__: Main
 };
