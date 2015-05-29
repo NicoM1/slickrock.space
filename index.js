@@ -200,8 +200,11 @@ RouteHandler.prototype = {
 	index: function(request,response,next) {
 		this._serveHtml("bin/index.html",function(e,d) {
 			if(e == null) {
+				var withRoom = "";
+				var startBody = d.indexOf("head") + 6;
+				withRoom = d.substring(0,startBody) + "\n\t<script>var room = \"\"</script>\n" + HxOverrides.substr(d,startBody + 1,null);
 				response.setHeader("Access-Control-Allow-Origin","*");
-				response.send(d);
+				response.send(withRoom);
 			}
 		});
 	}
