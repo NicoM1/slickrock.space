@@ -46,7 +46,7 @@ span {
 	bottom: 0px;
 	left: 0px;
 
-	width: 97%;
+	width: calc(100% - 10px);
 	height: 23px;
 	margin: 0px;
 	padding-left: 4px;
