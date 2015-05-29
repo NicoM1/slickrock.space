@@ -165,6 +165,7 @@ var Main = function() {
 	this.lastIndex = -1;
 	this.basePath = "https://aqueous-basin.herokuapp.com/";
 	var _g = this;
+	this.room = window.room;
 	this._buildCommands();
 	this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
 	this.getHttp.async = true;
@@ -215,7 +216,7 @@ Main.prototype = {
 	}
 	,_update: function() {
 		if(this.requestInProgress) return;
-		this.getHttp.url = this.basePath + "api/" + this.lastIndex;
+		this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex;
 		this.requestInProgress = true;
 		this.getHttp.request(true);
 	}
@@ -408,7 +409,7 @@ Main.prototype = {
 		} else this.helpbox.style.display = "none";
 		if(code == 13) {
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
-				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.id;
+				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id;
 				this.lastMessage = this.chatbox.value;
 				this.postHttp.request(true);
 				this._update();

@@ -26,6 +26,7 @@ using StringTools;
 
 class Main 
 {
+	var room: String;
 	var basePath: String = 'https://aqueous-basin.herokuapp.com/';
 	var id: Int;
 
@@ -53,6 +54,7 @@ class Main
 	var lastMessage: String = '';
 	
 	function new() {
+		room = untyped window.room;
 		_buildCommands();
 		
 		getHttp = new Http(basePath + lastIndex);
@@ -117,7 +119,7 @@ class Main
 		if (requestInProgress) {
 			return;
 		}
-		getHttp.url = basePath + 'api/' + lastIndex;
+		getHttp.url = basePath + 'api/' + room + '/' + lastIndex;
 		requestInProgress = true;
 		getHttp.request(true);
 	}
@@ -368,7 +370,7 @@ class Main
 				_parseCommand(chatbox.value.substr(1));
 			}
 			else {
-				postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + id;
+				postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + id;
 				lastMessage = chatbox.value;
 				postHttp.request(true);
 				_update();
