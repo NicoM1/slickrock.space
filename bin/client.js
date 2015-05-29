@@ -251,6 +251,7 @@ Main.prototype = {
 		this.commands.set("revivify",$bind(this,this._generateID));
 		this.commands.set("impersonate",$bind(this,this._setIDCommand));
 		this.commands.set("oneself",$bind(this,this._printID));
+		this.commands.set("survey",$bind(this,this._changeRoom));
 		this.commands.set("",$bind(this,this._help));
 	}
 	,_parseCommand: function(commandString) {
@@ -283,6 +284,9 @@ Main.prototype = {
 			if(newID != null) this._setID(newID); else this._addMessage("Could not parse argument: *ID*");
 		} else this._addMessage("**/impersonate** requires argument: *ID*");
 	}
+	,_changeRoom: function($arguments) {
+		if($arguments != null && $arguments[0] != null && $arguments[0] != "") window.location.replace($arguments[0]); else this._addMessage("**/survey** requires argument: *ROOM*");
+	}
 	,_printID: function($arguments) {
 		this._addMessage("*Currently impersonating*: " + this.id);
 	}
@@ -293,6 +297,8 @@ Main.prototype = {
 		this._addMessage("print your current ID.");
 		this._addMessage("**/impersonate** *ID*");
 		this._addMessage("set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).");
+		this._addMessage("**/survey** *ROOM*");
+		this._addMessage("move to a different chat room.");
 	}
 	,_parseMessages: function(data) {
 		var parsed = JSON.parse(data);

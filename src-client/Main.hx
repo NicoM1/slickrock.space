@@ -162,6 +162,7 @@ class Main
 		commands.set('revivify', _generateID);
 		commands.set('impersonate', _setIDCommand);
 		commands.set('oneself', _printID);
+		commands.set('survey', _changeRoom);
 		commands.set('', _help);
 	}
 	
@@ -212,6 +213,15 @@ class Main
 		}
 	}
 	
+	function _changeRoom(arguments: Array<String>) {
+		if (arguments != null && arguments[0] != null && arguments[0] != '') {
+			Browser.window.location.replace(arguments[0]);
+		}
+		else {
+			_addMessage('**/survey** requires argument: *ROOM*');
+		}
+	}
+	
 	function _printID(?arguments: Array<String>) {
 		_addMessage('*Currently impersonating*: $id');
 	}
@@ -223,6 +233,8 @@ class Main
 		_addMessage('print your current ID.');
 		_addMessage('**/impersonate** *ID*');
 		_addMessage('set your ID explicitly, allows you to have all your devices share ID, or steal someone else\'s;).');
+		_addMessage('**/survey** *ROOM*');
+		_addMessage('move to a different chat room.');
 	}
 	//}
 	
