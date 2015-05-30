@@ -116,5 +116,5 @@ li {
 }
 
 ::-webkit-scrollbar { 
-	visibility: hidden; 
+	display: none; 
 }
