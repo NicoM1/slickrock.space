@@ -53,8 +53,11 @@ span {
 }
 
 #chatbox {
-	 -webkit-appearance: none;
+	-webkit-appearance: none;
     -webkit-border-radius:0; 
+	
+	box-sizing: border-box;
+	
     border-radius:0;
 	
 	font-family: 'Arial', sans-serif;
@@ -67,6 +70,7 @@ span {
 	height: 23px;
 	margin: 0px;
 	padding-left: 30px;
+	padding-right: 10px;
 	padding-bottom: 4px;
 	
 	font-size: 110%;
@@ -80,9 +84,7 @@ span {
 #chatbox:active, #chatbox:focus {
 	outline: 0;
 	border-width: 2px;
-	border-right: solid;
 	border-top: solid;
-	border-top-right-radius: 6px;
 }
 
 #chevron {
