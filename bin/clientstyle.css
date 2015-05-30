@@ -52,7 +52,6 @@ span {
 	font-family: 'Arial', sans-serif;
 	
 	position: fixed;
-	position: sticky;
 	bottom: 0px;
 	left: 0px;
 
@@ -80,7 +79,6 @@ span {
 
 #chevron {
 	position: fixed;
-	position: sticky;
 	left: 5px;
 	bottom: 13px;
 	width: 15px;
