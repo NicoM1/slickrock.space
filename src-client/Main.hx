@@ -333,6 +333,9 @@ class Main
 			var preTag = '<pre>$text</pre>';
 			parsed = codeBB.replace(parsed, preTag);
 		}
+		while (parsed.indexOf('javascript:') != -1) {
+			parsed.replace('javascript:', 'javascript');
+		}
 		return parsed;
 	}
 	//}
