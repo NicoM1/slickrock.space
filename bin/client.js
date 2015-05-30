@@ -163,7 +163,7 @@ var Main = function() {
 	this.requestInProgress = false;
 	this.lastUserID = -2;
 	this.lastIndex = -1;
-	this.basePath = "https://aqueous-basin.herokuapp.com/";
+	this.basePath = "https://aqueous-api.herokuapp.com/";
 	var _g = this;
 	this.room = window.room;
 	this._buildCommands();

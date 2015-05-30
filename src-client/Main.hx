@@ -28,7 +28,7 @@ using StringTools;
 class Main 
 {
 	var room: String;
-	var basePath: String = 'https://aqueous-basin.herokuapp.com/';
+	var basePath: String = 'https://aqueous-api.herokuapp.com/';
 	var id: Int;
 
 	var lastIndex: Int = -1;
