@@ -370,12 +370,12 @@ Main.prototype = {
 		}
 		while(this.boldBB.match(parsed)) {
 			var text = this.boldBB.matched(1);
-			var strongTag = "<strong>" + text + "</strong>";
+			var strongTag = "<b>" + text + "</b>";
 			parsed = this.boldBB.replace(parsed,strongTag);
 		}
 		while(this.italicBB.match(parsed)) {
 			var text1 = this.italicBB.matched(1);
-			var emTag = "<em>" + text1 + "</em>";
+			var emTag = "<i>" + text1 + "</i>";
 			parsed = this.italicBB.replace(parsed,emTag);
 		}
 		while(this.codeBB.match(parsed)) {

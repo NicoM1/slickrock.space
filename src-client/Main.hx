@@ -320,12 +320,12 @@ class Main
 		}
 		while (boldBB.match(parsed)) {
 			var text = boldBB.matched(1);
-			var strongTag = '<strong>$text</strong>';
+			var strongTag = '<b>$text</b>';
 			parsed = boldBB.replace(parsed, strongTag);
 		}
 		while (italicBB.match(parsed)) {
 			var text = italicBB.matched(1);
-			var emTag = '<em>$text</em>';
+			var emTag = '<i>$text</i>';
 			parsed = italicBB.replace(parsed, emTag);
 		}
 		while (codeBB.match(parsed)) {
