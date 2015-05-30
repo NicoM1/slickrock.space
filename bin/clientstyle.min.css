@@ -25,4 +25,4 @@ span{float:left;width:0;height:0;}
 li{margin:0px;padding-top:1px;padding-bottom:1px;}
 .description{margin-bottom:20px;}
 .selected{background-color:hsl(282,45.9%,25.7%);border-radius:4px;}
-::-webkit-scrollbar{display:none;}
+::-webkit-scrollbar{visibility:none;}
