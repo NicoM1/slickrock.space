@@ -334,7 +334,7 @@ class Main
 			parsed = codeBB.replace(parsed, preTag);
 		}
 		while (parsed.indexOf('javascript:') != -1) {
-			parsed.replace('javascript:', 'javascript');
+			parsed = parsed.replace('javascript:', 'javascript');
 		}
 		return parsed;
 	}

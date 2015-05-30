@@ -383,7 +383,7 @@ Main.prototype = {
 			var preTag = "<pre>" + text2 + "</pre>";
 			parsed = this.codeBB.replace(parsed,preTag);
 		}
-		while(parsed.indexOf("javascript:") != -1) StringTools.replace(parsed,"javascript:","javascript");
+		while(parsed.indexOf("javascript:") != -1) parsed = StringTools.replace(parsed,"javascript:","javascript");
 		return parsed;
 	}
 	,_checkKeyPress: function(e) {
