@@ -202,6 +202,7 @@ Main.prototype = {
 		this.messages = window.document.getElementById("messages");
 		this.helpbox = window.document.getElementById("helpbox");
 		this.messageSound = window.document.getElementById("messagesound");
+		this._setupHelpbox();
 		this.chatbox.onclick = $bind(this,this._getNotificationPermission);
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
@@ -219,6 +220,22 @@ Main.prototype = {
 		this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex;
 		this.requestInProgress = true;
 		this.getHttp.request(true);
+	}
+	,_setupHelpbox: function() {
+		var _g2 = this;
+		var _g = 0;
+		var _g1 = this.helpbox.children;
+		while(_g < _g1.length) {
+			var command = [_g1[_g]];
+			++_g;
+			command[0].onclick = (function(command) {
+				return function() {
+					_g2.chatbox.value = "/" + command[0].getAttribute("data-command");
+					_g2.chatbox.onkeyup();
+					_g2.chatbox.focus();
+				};
+			})(command);
+		}
 	}
 	,_getNotificationPermission: function() {
 		if(Notification.permission == "default") Notification.requestPermission(function(permission) {
@@ -387,8 +404,8 @@ Main.prototype = {
 		return parsed;
 	}
 	,_checkKeyPress: function(e) {
-		var code;
-		if(e.keyCode != null) code = e.keyCode; else code = e.which;
+		var code = null;
+		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		var selected = false;
 		if(this.chatbox.value.charAt(0) == "/") {
 			this.helpbox.style.display = "block";
@@ -401,7 +418,7 @@ Main.prototype = {
 				var command = li.getAttribute("data-command");
 				if(li.classList.contains("selected")) {
 					var replacement = "/" + command + " ";
-					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code == 13 && this.chatbox.value.length < replacement.length) this.chatbox.value = replacement;
+					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13 && this.chatbox.value.length < replacement.length) this.chatbox.value = replacement;
 				}
 				var sub = HxOverrides.substr(this.chatbox.value,1,null);
 				var trimmed = false;
@@ -420,7 +437,7 @@ Main.prototype = {
 				}
 			}
 		} else this.helpbox.style.display = "none";
-		if(code == 13) {
+		if(code != null && code == 13) {
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id;
 				this.lastMessage = this.chatbox.value;

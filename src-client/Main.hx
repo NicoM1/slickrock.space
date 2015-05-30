@@ -96,6 +96,8 @@ class Main
 		helpbox = cast Browser.document.getElementById('helpbox');
 		messageSound = cast Browser.document.getElementById('messagesound');
 		
+		_setupHelpbox();
+		
 		chatbox.onclick = _getNotificationPermission;
 		chatbox.onkeyup = _checkKeyPress;
 		chatbox.focus();
@@ -124,6 +126,16 @@ class Main
 		getHttp.request(true);
 	}
 	//}
+	
+	function _setupHelpbox() {
+		for (command in helpbox.children) {
+			command.onclick = function() {
+				chatbox.value = '/' + command.getAttribute('data-command');
+				chatbox.onkeyup();
+				chatbox.focus();
+			}
+		}
+	}
 	
 	//{ notifications
 	function _getNotificationPermission() {
@@ -342,7 +354,10 @@ class Main
 
 	//{ message posting
 	function _checkKeyPress(e) {
-		var code = (e.keyCode != null ? e.keyCode : e.which);
+		var code = null;
+		if(e != null) {
+			 code = (e.keyCode != null ? e.keyCode : e.which);
+		}
 		
 		var selected: Bool = false;
 		if (chatbox.value.charAt(0) == '/') {
@@ -354,7 +369,7 @@ class Main
 				var command = li.getAttribute('data-command');
 				if (li.classList.contains('selected')) {
 					var replacement = '/' + command + ' ';
-					if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code == 13 && chatbox.value.length < replacement.length) {
+					if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13 && chatbox.value.length < replacement.length) {
 						chatbox.value = replacement;
 					}
 				}
@@ -387,7 +402,7 @@ class Main
 			helpbox.style.display = 'none';
 		}
 
-		if (code == 13) { //ENTER
+		if (code != null && code == 13) { //ENTER
 			if(chatbox.value.charAt(0) == '/') {
 				_parseCommand(chatbox.value.substr(1));
 			}
