@@ -5,6 +5,7 @@
 
 body {
     margin: 0px;
+	margin-top: 5px;
 	
 	font-family: 'Lato', sans-serif;
 	font-size: 110%;
@@ -16,6 +17,7 @@ body {
 
 div {
 	margin: 5px;
+	margin-top: 0px;
 }
 
 p {
