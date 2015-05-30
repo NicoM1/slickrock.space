@@ -11,6 +11,7 @@ body {
 	color: #ecf0f1;
 	background-color: #2b2b2b;
 	overflow-x: hidden;
+	word-wrap: break-word;
 }
 
 div {
