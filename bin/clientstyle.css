@@ -27,6 +27,11 @@ img {
 	cursor: pointer;
 }
 
+#messages {
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
 .messageitem {
 	margin-left: 25px;
 }
@@ -95,6 +100,7 @@ span {
 	
 	max-height: 80%;
 	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
 
 	bottom: 31px;
 	width: 70%;
