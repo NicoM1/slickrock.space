@@ -9,6 +9,7 @@ import js.html.ImageElement;
 import js.html.InputElement;
 import js.html.LIElement;
 import js.html.ParagraphElement;
+import js.html.SpanElement;
 import js.html.UListElement;
 import js.Lib;
 import js.Browser;
@@ -39,6 +40,7 @@ class Main
 	var chatbox: InputElement;
 	var helpbox: UListElement;
 	var messages: DivElement;
+	var chevron: SpanElement;
 	var messageSound: AudioElement;
 	var lastParagraph: DivElement;
 	
@@ -94,6 +96,7 @@ class Main
 		chatbox = cast Browser.document.getElementById('chatbox');
 		messages = cast Browser.document.getElementById('messages');
 		helpbox = cast Browser.document.getElementById('helpbox');
+		chevron = cast Browser.document.getElementById('chevron');
 		messageSound = cast Browser.document.getElementById('messagesound');
 		
 		_setupHelpbox();
@@ -460,6 +463,7 @@ class Main
 		id = id_;
 		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
 		chatbox.style.borderColor = _generateColorFromID(id, true);
+		chevron.style.color = _generateColorFromID(id);
 	}
 	//}
 	
