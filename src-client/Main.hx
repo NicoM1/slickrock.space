@@ -120,7 +120,7 @@ class Main
 				_tryAuth();
 			}
 		}
-		chatbox.onchange = function() {
+		chatbox.oninput = function() {
 			_getNotificationPermission();
 			if (token == null) {
 				_tryAuth();
@@ -151,7 +151,9 @@ class Main
 		else {
 			privateID = Std.parseInt(Cookie.get('private'));
 			token = Std.parseInt(Cookie.get('token'));
-			_checkValid();
+			if(token != null) {
+				_checkValid();
+			}
 		}
 	}
 	

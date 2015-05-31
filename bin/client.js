@@ -219,7 +219,7 @@ Main.prototype = {
 			_g._getNotificationPermission();
 			if(_g.token == null) _g._tryAuth();
 		};
-		this.chatbox.onchange = function() {
+		this.chatbox.oninput = function() {
 			_g._getNotificationPermission();
 			if(_g.token == null) _g._tryAuth();
 		};
@@ -236,7 +236,7 @@ Main.prototype = {
 		} else {
 			this.privateID = Std.parseInt(js_Cookie.get("private"));
 			this.token = Std.parseInt(js_Cookie.get("token"));
-			this._checkValid();
+			if(this.token != null) this._checkValid();
 		}
 	}
 	,_setToken: function(_token) {
