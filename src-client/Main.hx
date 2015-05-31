@@ -124,7 +124,9 @@ class Main
 			_setID(Std.parseInt(Cookie.get('id')));
 		}
 		
-		_tryAuth();
+		if(token == null) {
+			_tryAuth();
+		}
 	}
 	
 	function _setupPrivateID() {
