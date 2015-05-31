@@ -2,6 +2,7 @@ package;
 
 import abe.App;
 import express.Middleware;
+import express.Response;
 import haxe.Json;
 
 import js.Node;
@@ -66,27 +67,16 @@ class RouteHandler implements abe.IRoute {
 	}
 	
 	@:post('/chat/:message/:room/:id/:privateID/:token')
-	function postWithID(message: String, room: String, id: Int, privateID: Int, token: Int) {
-		if(Main.tokens[privateID] == token) {
-			if (!Main.rooms.exists(room)) {
-				Main.rooms.set(room, {
-					messages: new Array<Message>(),
-					lock: null,
-					owner: null
-				});
-			}
-			
-			if(Main.rooms.get(room).lock == null) {
-				Main.rooms.get(room).messages.push( { text: message, id: id } );
-			}
-		}
-		
-		response.setHeader('Access-Control-Allow-Origin', '*');
-		response.send('maybe it just needs a response');
+	function sendMessage(message: String, room: String, id: Int, privateID: Int, token: Int) {
+		_sendMessage(response, message, room, null, id, privateID, token);
 	}
 	
 	@:post('/chat/:message/:room/:password/:id/:privateID/:token')
-	function postWithPass(message: String, room: String, password: String, id: Int, privateID: Int, token: Int) {
+	function sendMessageWithPass(message: String, room: String, password: String, id: Int, privateID: Int, token: Int) {
+		_sendMessage(response, message, room, password, id, privateID, token);
+	}
+
+	function _sendMessage(response: Response, message: String, room: String, password: String, id: Int, privateID: Int, token: Int) {
 		if(Main.tokens[privateID] == token) {
 			if (!Main.rooms.exists(room)) {
 				Main.rooms.set(room, {
@@ -136,8 +126,18 @@ class RouteHandler implements abe.IRoute {
 		response.send('failed');
 	}
 	
+	@:get('/api/:room/:lastID')
+	@:post('/api/:room/:lastID')
+	function getMessages(room: String, lastID: Int) {
+		_getMessages(response, room, null, lastID);
+	}
+	
 	@:post('/api/:room/:password/:lastID')
-	function apiWithPass(room: String, password: String, lastID: Int) {
+	function getMessagesWithPass(room: String, password: String, lastID: Int) {
+		_getMessages(response, room, password, lastID);
+	}
+	
+	function _getMessages(response: Response, room: String, password: String, lastID: Int) {
 		if (!Main.rooms.exists(room)) {
 			Main.rooms.set(room, {
 				messages: new Array<Message>(),
@@ -167,43 +167,12 @@ class RouteHandler implements abe.IRoute {
 		}
 		else {
 			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('password');
-		}
-	}
-	
-	@:get('/api/:room/:lastID')
-	@:post('/api/:room/:lastID')
-	function api(room: String, lastID: Int) {
-		if (!Main.rooms.exists(room)) {
-			Main.rooms.set(room, {
-				messages: new Array<Message>(),
-				lock: null,
-				owner: null
-			});
-		}
-		
-		if(Main.rooms.get(room).lock == null) {
-			var messages: MessageData = {
-				messages: {
-					messages: new Array<Message>(),
-					lock: null,
-					owner: null
-				},
-				lastID: Main.rooms.get(room).messages.length - 1
-			};
-			
-			if (lastID < Main.rooms.get(room).messages.length - 1) {
-				for (i in (lastID + 1)...Main.rooms.get(room).messages.length) {
-					messages.messages.messages.push(Main.rooms.get(room).messages[i]);
-				}
+			if(password != null) { 
+				response.send('password');
 			}
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.setHeader('Content-Type', 'application/json');
-			response.send(messages);
-		}
-		else {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('locked');
+			else {
+				response.send('locked');
+			}
 		}
 	}
 	
