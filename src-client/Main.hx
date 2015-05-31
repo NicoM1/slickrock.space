@@ -173,7 +173,7 @@ class Main
 	}
 	
 	function _getAuth(data: String) {
-		_addMessage('What does this say? $data');
+		_addMessage('what does this say? $data');
 	}
 	
 	function _loop() {

@@ -254,7 +254,7 @@ Main.prototype = {
 		this.authHttp.request(true);
 	}
 	,_getAuth: function(data) {
-		this._addMessage("What does this say? " + data);
+		this._addMessage("what does this say? " + data);
 	}
 	,_loop: function() {
 		var _g = this;
