@@ -368,13 +368,19 @@ class Main
 	//{ messages
 	function _parseMessages(data) {	
 		if (data == 'locked') {
-			_addMessage('room is locked.');
+			if(!locked) {
+				_addMessage('room is locked.');
+			}
 			locked = true;
+			requestInProgress = false;
 			return;
 		}
 		if (data == 'password') {
-			_addMessage('incorrect password.');
+			if(!locked) {
+				_addMessage('incorrect password.');
+			}
 			locked = true;
+			requestInProgress = false;
 			return;
 		}
 		var parsed: MessageData = Json.parse(data);

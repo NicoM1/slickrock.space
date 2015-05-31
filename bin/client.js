@@ -401,13 +401,15 @@ Main.prototype = {
 	}
 	,_parseMessages: function(data) {
 		if(data == "locked") {
-			this._addMessage("room is locked.");
+			if(!this.locked) this._addMessage("room is locked.");
 			this.locked = true;
+			this.requestInProgress = false;
 			return;
 		}
 		if(data == "password") {
-			this._addMessage("incorrect password.");
+			if(!this.locked) this._addMessage("incorrect password.");
 			this.locked = true;
+			this.requestInProgress = false;
 			return;
 		}
 		var parsed = JSON.parse(data);
