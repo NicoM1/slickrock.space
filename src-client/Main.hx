@@ -176,7 +176,7 @@ class Main
 	
 	function _getAuth(data: String) {
 		_addMessage('what does this say?');
-		_addMessage('#http://dummyimage.com/250/ffffff/000000/&text=$data#');
+		_addMessage('#http://dummyimage.com/250x100/2b2b2b/ecf0f1/&text=$data#');
 	}
 	
 	function _loop() {

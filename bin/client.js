@@ -256,7 +256,7 @@ Main.prototype = {
 	}
 	,_getAuth: function(data) {
 		this._addMessage("what does this say?");
-		this._addMessage("#http://dummyimage.com/250/ffffff/000000/&text=" + data + "#");
+		this._addMessage("#http://dummyimage.com/250x100/2b2b2b/ecf0f1/&text=" + data + "#");
 	}
 	,_loop: function() {
 		var _g = this;
