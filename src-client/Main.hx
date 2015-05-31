@@ -320,10 +320,11 @@ class Main
 			_addMessage('**/fasten** requires argument: *PASSWORD*.');
 			return;
 		}
-		var lockHttp: Http = new Http(basePath + 'api/lock/' + room + '/$arguments[0]');
+		var password = arguments[0];
+		var lockHttp: Http = new Http(basePath + 'api/lock/' + room + '/$password' + '/$privateID');
 		lockHttp.onData = function(d) {
 			if(d == 'locked') {
-				_addMessage('$room locked with password: $arguments[0].');
+				_addMessage('$room locked with password: $password.');
 			}
 			else {
 				_addMessage('you are not authorized to lock $room.');

@@ -369,9 +369,10 @@ Main.prototype = {
 			this._addMessage("**/fasten** requires argument: *PASSWORD*.");
 			return;
 		}
-		var lockHttp = new haxe_Http(this.basePath + "api/lock/" + this.room + ("/" + Std.string($arguments) + "[0]"));
+		var password = $arguments[0];
+		var lockHttp = new haxe_Http(this.basePath + "api/lock/" + this.room + ("/" + password) + ("/" + this.privateID));
 		lockHttp.onData = function(d) {
-			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + Std.string($arguments) + "[0]."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
+			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + password + "."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
 			console.log(e);
