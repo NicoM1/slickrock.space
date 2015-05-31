@@ -158,6 +158,7 @@ var Main = function() {
 	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
 	this.notifications = [];
+	this.hasTriedAuth = false;
 	this.locked = false;
 	this.focussed = true;
 	this.first = true;
@@ -217,11 +218,11 @@ Main.prototype = {
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
 			_g._getNotificationPermission();
-			if(_g.token == null) _g._tryAuth();
+			if(_g.token == null && !_g.hasTriedAuth) _g._tryAuth();
 		};
 		this.chatbox.oninput = function() {
 			_g._getNotificationPermission();
-			if(_g.token == null) _g._tryAuth();
+			if(_g.token == null && !_g.hasTriedAuth) _g._tryAuth();
 		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
@@ -263,6 +264,7 @@ Main.prototype = {
 	,_tryAuth: function() {
 		this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);
 		this.authHttp.request(true);
+		this.hasTriedAuth = true;
 	}
 	,_getAuth: function(data) {
 		this._addMessage("please enter the following to authenticate.");

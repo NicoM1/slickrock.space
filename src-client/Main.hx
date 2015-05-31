@@ -52,6 +52,7 @@ class Main
 	var first: Bool = true;
 	var focussed: Bool = true;
 	var locked = false;
+	var hasTriedAuth = false;
 	
 	var notifications: Array<Notification> = new Array<Notification>();
 	var numNotifications: Int = 0;
@@ -116,13 +117,13 @@ class Main
 		
 		chatbox.onclick = function() {
 			_getNotificationPermission();
-			if (token == null) {
+			if (token == null && !hasTriedAuth) {
 				_tryAuth();
 			}
 		}
 		chatbox.oninput = function() {
 			_getNotificationPermission();
-			if (token == null) {
+			if (token == null && !hasTriedAuth) {
 				_tryAuth();
 			}
 		}
@@ -188,6 +189,7 @@ class Main
 	function _tryAuth() {
 		authHttp.url = basePath + 'api/gettoken/$privateID';
 		authHttp.request(true);
+		hasTriedAuth = true;
 	}
 	
 	function _getAuth(data: String) {
