@@ -366,7 +366,7 @@ Main.prototype = {
 		var _g = this;
 		console.log($arguments);
 		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
-			this._addMessage("**/lock** requires argument: *PASSWORD*.");
+			this._addMessage("**/fasten** requires argument: *PASSWORD*.");
 			return;
 		}
 		var lockHttp = new haxe_Http(this.basePath + "api/lock/" + this.room + ("/" + Std.string($arguments) + "[0]"));

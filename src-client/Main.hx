@@ -317,7 +317,7 @@ class Main
 	function _lockRoom(arguments: Array<String>) {
 		trace(arguments);
 		if (arguments.length == 0 || arguments[0].trim() == '') {
-			_addMessage('**/lock** requires argument: *PASSWORD*.');
+			_addMessage('**/fasten** requires argument: *PASSWORD*.');
 			return;
 		}
 		var lockHttp: Http = new Http(basePath + 'api/lock/' + room + '/$arguments[0]');
