@@ -173,7 +173,7 @@ var Main = function() {
 	this.authHttp.onData = $bind(this,this._getAuth);
 	this.authHttp.onError = function(error) {
 		console.log(error);
-		_g._addMessage("Could not connect to authentication api");
+		_g._addMessage("Could not connect to authentication api, please refresh the page.");
 	};
 	this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
 	this.getHttp.async = true;
@@ -240,7 +240,7 @@ Main.prototype = {
 		checkValid.onData = function(data) {
 			if(data == "invalid") {
 				_g.token = null;
-				_g.authHttp.request(true);
+				_g._tryAuth();
 				return;
 			}
 		};

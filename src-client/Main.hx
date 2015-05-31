@@ -67,7 +67,7 @@ class Main
 		authHttp.onData = _getAuth;
 		authHttp.onError = function(error) { 
 			trace(error); 
-			_addMessage('Could not connect to authentication api');
+			_addMessage('Could not connect to authentication api, please refresh the page.');
 		}
 		
 		getHttp = new Http(basePath + lastIndex);
@@ -154,7 +154,7 @@ class Main
 		checkValid.onData = function(data: String) {
 			if (data == 'invalid') {
 				token = null;
-				authHttp.request(true);
+				_tryAuth();
 				return;
 			}
 		}
