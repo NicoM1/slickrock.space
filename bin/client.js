@@ -163,21 +163,31 @@ var Main = function() {
 	this.requestInProgress = false;
 	this.lastUserID = -2;
 	this.lastIndex = -1;
-	this.basePath = "https://aqueous-api.herokuapp.com/";
+	this.token = null;
+	this.basePath = "https://aqueous-dev.herokuapp.com/";
 	var _g = this;
 	this.room = window.room;
 	this._buildCommands();
+	this._setupPrivateID();
+	this.authHttp = new haxe_Http(this.basePath);
+	this.authHttp.async = true;
+	this.authHttp.onData = $bind(this,this._getAuth);
+	this.authHttp.onError = function(error) {
+		console.log(error);
+		_g._addMessage("Could not connect to authentication api");
+	};
+	this._tryAuth();
 	this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
 	this.getHttp.async = true;
 	this.getHttp.onData = $bind(this,this._parseMessages);
-	this.getHttp.onError = function(error) {
-		console.log(error);
+	this.getHttp.onError = function(error1) {
+		console.log(error1);
 		_g.requestInProgress = false;
 	};
 	this.postHttp = new haxe_Http(this.basePath);
 	this.postHttp.async = true;
-	this.postHttp.onError = function(error1) {
-		console.log(error1);
+	this.postHttp.onError = function(error2) {
+		console.log(error2);
 		_g.requestInProgress = false;
 	};
 	window.onload = $bind(this,this._windowLoaded);
@@ -208,6 +218,26 @@ Main.prototype = {
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
+	}
+	,_setupPrivateID: function() {
+		if(!js_Cookie.exists("private")) {
+			this.privateID = Std["int"](Math.random() * 16777215);
+			js_Cookie.set("private",Std.string(this.privateID));
+		} else {
+			this.privateID = Std.parseInt(js_Cookie.get("private"));
+			this.token = Std.parseInt(js_Cookie.get("token"));
+		}
+	}
+	,_setToken: function(_token) {
+		this.token = _token;
+		js_Cookie.set("token",Std.string(this.token));
+	}
+	,_tryAuth: function() {
+		this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);
+		this.authHttp.request(true);
+	}
+	,_getAuth: function(data) {
+		this._addMessage("What does this say? " + data);
 	}
 	,_loop: function() {
 		var _g = this;
@@ -439,8 +469,14 @@ Main.prototype = {
 			}
 		} else this.helpbox.style.display = "none";
 		if(code != null && code == 13) {
+			if(this.token == null) {
+				this.token = Std.parseInt(this.chatbox.value);
+				this.chatbox.value = "";
+				this.helpbox.style.display = "none";
+				return;
+			}
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
-				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id;
+				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token;
 				this.lastMessage = this.chatbox.value;
 				this.postHttp.request(true);
 				this._update();
@@ -536,6 +572,9 @@ var Std = function() { };
 Std.__name__ = true;
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
+};
+Std["int"] = function(x) {
+	return x | 0;
 };
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);

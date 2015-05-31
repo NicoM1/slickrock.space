@@ -15,6 +15,7 @@ using StringTools;
 class Main {
 
 	public static var db: Array<String> = [];
+	public static var tokens: Array<Int> = [];
 	
 	static var textDB: String = '';
 	
@@ -64,18 +65,28 @@ class RouteHandler implements abe.IRoute {
 		});
 	}
 	
-	@:post('/chat/:message/:room/:id')
-	function postWithID(message: String, room: String, id: Int) {
-		if (!Main.rooms.exists(room)) {
-			Main.rooms.set(room, {
-				messages: new Array<Message>()
-			});
+	@:post('/chat/:message/:room/:id/:privateID/:token')
+	function postWithID(message: String, room: String, id: Int, privateID: Int, token: Int) {
+		if(Main.tokens[privateID] == token) {
+			if (!Main.rooms.exists(room)) {
+				Main.rooms.set(room, {
+					messages: new Array<Message>()
+				});
+			}
+			
+			Main.rooms.get(room).messages.push( { text: message, id: id } );
 		}
-		
-		Main.rooms.get(room).messages.push( { text: message, id: id } );
 		
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('maybe it just needs a response');
+	}
+	
+	@:get('/api/gettoken/:privateID') 
+	@:post('/api/gettoken/:privateID') 
+	function getToken(privateID: Int) {
+		Main.tokens[privateID] = Std.int(Math.random() * 0xFFFFFF);
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send(Std.string(Main.tokens[privateID]));
 	}
 	
 	@:get('/api/:room/:lastID')

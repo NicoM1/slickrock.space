@@ -28,14 +28,17 @@ using StringTools;
 class Main 
 {
 	var room: String;
-	var basePath: String = 'https://aqueous-api.herokuapp.com/';
+	var basePath: String = 'https://aqueous-dev.herokuapp.com/';
 	var id: Int;
+	var privateID: Int;
+	var token: Int = null;
 
 	var lastIndex: Int = -1;
 	var lastUserID: Int = -2;
 	
 	var getHttp: Http;
 	var postHttp: Http;
+	var authHttp: Http;
 	
 	var chatbox: InputElement;
 	var helpbox: UListElement;
@@ -58,6 +61,17 @@ class Main
 	function new() {
 		room = untyped window.room;
 		_buildCommands();
+		_setupPrivateID();
+		
+		authHttp = new Http(basePath);
+		authHttp.async = true;
+		authHttp.onData = _getAuth;
+		authHttp.onError = function(error) { 
+			trace(error); 
+			_addMessage('Could not connect to authentication api');
+		}
+		
+		_tryAuth();
 		
 		getHttp = new Http(basePath + lastIndex);
 		getHttp.async = true;
@@ -111,6 +125,31 @@ class Main
 		else {
 			_setID(Std.parseInt(Cookie.get('id')));
 		}
+	}
+	
+	function _setupPrivateID() {
+		if (!Cookie.exists('private')) {
+			privateID = Std.int(Math.random() * 0xFFFFFF);
+			Cookie.set('private', Std.string(privateID));
+		}
+		else {
+			privateID = Std.parseInt(Cookie.get('private'));
+			token = Std.parseInt(Cookie.get('token'));
+		}
+	}
+	
+	function _setToken(_token: Int) {
+		token = _token;
+		Cookie.set('token', Std.string(token));
+	}
+	
+	function _tryAuth() {
+		authHttp.url = basePath + 'api/gettoken/$privateID';
+		authHttp.request(true);
+	}
+	
+	function _getAuth(data: String) {
+		_addMessage('What does this say? $data');
 	}
 	
 	function _loop() {
@@ -406,11 +445,17 @@ class Main
 		}
 
 		if (code != null && code == 13) { //ENTER
+			if (token == null) {
+				token = Std.parseInt(chatbox.value);
+				chatbox.value = '';
+				helpbox.style.display = 'none';
+				return;
+			}
 			if(chatbox.value.charAt(0) == '/') {
 				_parseCommand(chatbox.value.substr(1));
 			}
 			else {
-				postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + id;
+				postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + id + '/' + privateID + '/' + token;
 				lastMessage = chatbox.value;
 				postHttp.request(true);
 				_update();
