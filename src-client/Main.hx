@@ -132,7 +132,7 @@ class Main
 	function _setupPrivateID() {
 		if (!Cookie.exists('private')) {
 			privateID = Std.int(Math.random() * 0xFFFFFF);
-			Cookie.set('private', Std.string(privateID));
+			Cookie.set('private', Std.string(privateID), 60 * 60 * 24 * 365 * 10);
 		}
 		else {
 			privateID = Std.parseInt(Cookie.get('private'));
@@ -155,7 +155,7 @@ class Main
 		}
 		checkValid.request(true);
 		if(token != null) {
-			Cookie.set('token', Std.string(token));
+			Cookie.set('token', Std.string(token), 60 * 60 * 24 * 365 * 10);
 		}
 	}
 	

@@ -222,7 +222,7 @@ Main.prototype = {
 	,_setupPrivateID: function() {
 		if(!js_Cookie.exists("private")) {
 			this.privateID = Std["int"](Math.random() * 16777215);
-			js_Cookie.set("private",Std.string(this.privateID));
+			js_Cookie.set("private",Std.string(this.privateID),315360000);
 		} else {
 			this.privateID = Std.parseInt(js_Cookie.get("private"));
 			this.token = Std.parseInt(js_Cookie.get("token"));
@@ -243,7 +243,7 @@ Main.prototype = {
 			_g._addMessage("an error occured getting authentication, please refresh the page.");
 		};
 		checkValid.request(true);
-		if(this.token != null) js_Cookie.set("token",Std.string(this.token));
+		if(this.token != null) js_Cookie.set("token",Std.string(this.token),315360000);
 	}
 	,_tryAuth: function() {
 		this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);
