@@ -531,6 +531,7 @@ class Main
 			}
 			if (locked) {
 				_setPassword(chatbox.value);
+				_addMessage('attempting to unlock room with: $password');
 				chatbox.value = '';
 				helpbox.style.display = 'none';
 				return;

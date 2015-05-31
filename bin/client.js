@@ -534,6 +534,7 @@ Main.prototype = {
 			}
 			if(this.locked) {
 				this._setPassword(this.chatbox.value);
+				this._addMessage("attempting to unlock room with: " + this.password);
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
 				return;
