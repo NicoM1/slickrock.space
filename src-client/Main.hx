@@ -367,6 +367,7 @@ class Main
 	function _parseMessage(raw: String): String {
 		var parsed: String = raw.replace('\n', ' ');
 		parsed = parsed.htmlEscape();
+		parsed = parsed.replace("\"", "&quot;");
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
 			var imgTag = '<img src="$imgPath" class="imgmessage"></img>';
@@ -508,7 +509,7 @@ class Main
 		id = id_;
 		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
 		chatbox.style.borderColor = _generateColorFromID(id, true);
-		chevron.style.color = _generateColorFromID(id);
+		//chevron.style.color = _generateColorFromID(id);
 	}
 	//}
 	

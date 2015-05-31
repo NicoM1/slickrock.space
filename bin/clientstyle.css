@@ -5,6 +5,7 @@
 
 body {
     margin: 0px;
+	margin-top: 5px;
 	
 	font-family: 'Lato', sans-serif;
 	font-size: 110%;
@@ -16,6 +17,7 @@ body {
 
 div {
 	margin: 5px;
+	margin-top: 0px;
 }
 
 p {
@@ -26,6 +28,7 @@ p {
 img {
 	max-width: 100%;
 	cursor: pointer;
+	display: block;
 }
 
 #messages {
@@ -35,6 +38,7 @@ img {
 
 .messageitem {
 	margin-left: 25px;
+	margin-bottom: 5px;
 }
 
 .messageblock {
@@ -51,8 +55,11 @@ span {
 }
 
 #chatbox {
-	 -webkit-appearance: none;
+	-webkit-appearance: none;
     -webkit-border-radius:0; 
+	
+	box-sizing: border-box;
+	
     border-radius:0;
 	
 	font-family: 'Arial', sans-serif;
@@ -62,9 +69,10 @@ span {
 	left: 0px;
 
 	width: 100%;
-	height: 23px;
+	height: 31px;
 	margin: 0px;
-	padding-left: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
 	padding-bottom: 4px;
 	
 	font-size: 110%;
@@ -78,17 +86,16 @@ span {
 #chatbox:active, #chatbox:focus {
 	outline: 0;
 	border-width: 2px;
-	border-right: solid;
 	border-top: solid;
-	border-top-right-radius: 6px;
 }
 
 #chevron {
 	position: fixed;
 	left: 5px;
-	bottom: 13px;
+	bottom: 14px;
 	width: 15px;
 	height: 10px;
+	font-family: 'Lato', sans-serif;
 }
 
 #helpbox {
