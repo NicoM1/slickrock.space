@@ -96,7 +96,7 @@ class RouteHandler implements abe.IRoute {
 				});
 			}
 			
-			if(Main.rooms.get(room).lock == password) {
+			if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
 				Main.rooms.get(room).messages.push( { text: message, id: id } );
 			}
 		}
@@ -146,7 +146,7 @@ class RouteHandler implements abe.IRoute {
 			});
 		}
 		
-		if(Main.rooms.get(room).lock == password) {
+		if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
 			var messages: MessageData = {
 				messages: {
 					messages: new Array<Message>(),

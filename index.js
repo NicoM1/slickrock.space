@@ -261,7 +261,7 @@ RouteHandler.prototype = {
 				var value = { messages : [], lock : null, owner : null};
 				Main.rooms.set(room,value);
 			}
-			if(Main.rooms.get(room).lock == password) Main.rooms.get(room).messages.push({ text : message, id : id});
+			if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) Main.rooms.get(room).messages.push({ text : message, id : id});
 		}
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("maybe it just needs a response");
@@ -294,7 +294,7 @@ RouteHandler.prototype = {
 			var value = { messages : [], lock : null, owner : null};
 			Main.rooms.set(room,value);
 		}
-		if(Main.rooms.get(room).lock == password) {
+		if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
 			var messages = { messages : { messages : [], lock : null, owner : null}, lastID : Main.rooms.get(room).messages.length - 1};
 			if(lastID < Main.rooms.get(room).messages.length - 1) {
 				var _g1 = lastID + 1;
