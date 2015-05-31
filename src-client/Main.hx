@@ -114,7 +114,12 @@ class Main
 		
 		_setupHelpbox();
 		
-		chatbox.onclick = _getNotificationPermission;
+		chatbox.onclick = function() {
+			_getNotificationPermission();
+			if (token == null) {
+				_tryAuth();
+			}
+		}
 		chatbox.onkeyup = _checkKeyPress;
 		chatbox.focus();
 		
@@ -476,10 +481,6 @@ class Main
 
 	//{ message posting
 	function _checkKeyPress(e) {
-		if (token == null) {
-			_tryAuth();
-		}
-		
 		var code = null;
 		if(e != null) {
 			 code = (e.keyCode != null ? e.keyCode : e.which);

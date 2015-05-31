@@ -208,13 +208,17 @@ Main.main = function() {
 };
 Main.prototype = {
 	_windowLoaded: function() {
+		var _g = this;
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
 		this.helpbox = window.document.getElementById("helpbox");
 		this.chevron = window.document.getElementById("chevron");
 		this.messageSound = window.document.getElementById("messagesound");
 		this._setupHelpbox();
-		this.chatbox.onclick = $bind(this,this._getNotificationPermission);
+		this.chatbox.onclick = function() {
+			_g._getNotificationPermission();
+			if(_g.token == null) _g._tryAuth();
+		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
@@ -492,7 +496,6 @@ Main.prototype = {
 		return parsed;
 	}
 	,_checkKeyPress: function(e) {
-		if(this.token == null) this._tryAuth();
 		var code = null;
 		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		var selected = false;
