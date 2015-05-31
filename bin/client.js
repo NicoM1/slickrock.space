@@ -176,7 +176,6 @@ var Main = function() {
 		console.log(error);
 		_g._addMessage("Could not connect to authentication api");
 	};
-	this._tryAuth();
 	this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
 	this.getHttp.async = true;
 	this.getHttp.onData = $bind(this,this._parseMessages);
@@ -218,6 +217,7 @@ Main.prototype = {
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
+		this._tryAuth();
 	}
 	,_setupPrivateID: function() {
 		if(!js_Cookie.exists("private")) {

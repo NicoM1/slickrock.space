@@ -71,8 +71,6 @@ class Main
 			_addMessage('Could not connect to authentication api');
 		}
 		
-		_tryAuth();
-		
 		getHttp = new Http(basePath + lastIndex);
 		getHttp.async = true;
 		getHttp.onData = _parseMessages;
@@ -125,6 +123,8 @@ class Main
 		else {
 			_setID(Std.parseInt(Cookie.get('id')));
 		}
+		
+		_tryAuth();
 	}
 	
 	function _setupPrivateID() {
