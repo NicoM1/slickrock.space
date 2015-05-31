@@ -61,7 +61,6 @@ class Main
 	function new() {
 		room = untyped window.room;
 		_buildCommands();
-		_setupPrivateID();
 		
 		authHttp = new Http(basePath);
 		authHttp.async = true;
@@ -124,7 +123,8 @@ class Main
 			_setID(Std.parseInt(Cookie.get('id')));
 		}
 		
-		if(token == null) {
+		_setupPrivateID();
+		if (token == null) {
 			_tryAuth();
 		}
 	}
@@ -137,11 +137,19 @@ class Main
 		else {
 			privateID = Std.parseInt(Cookie.get('private'));
 			token = Std.parseInt(Cookie.get('token'));
+			_checkValid();
 		}
 	}
 	
 	function _setToken(_token: Int) {
 		token = _token;
+		_checkValid();
+		if(token != null) {
+			Cookie.set('token', Std.string(token), 60 * 60 * 24 * 365 * 10);
+		}
+	}
+	
+	function _checkValid() {
 		var checkValid = new Http(basePath + 'api/checkvalid/$privateID/$token');
 		checkValid.onData = function(data: String) {
 			if (data == 'invalid') {
@@ -154,9 +162,6 @@ class Main
 			_addMessage('an error occured getting authentication, please refresh the page.');
 		}
 		checkValid.request(true);
-		if(token != null) {
-			Cookie.set('token', Std.string(token), 60 * 60 * 24 * 365 * 10);
-		}
 	}
 	
 	function _tryAuth() {

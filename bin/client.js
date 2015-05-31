@@ -168,7 +168,6 @@ var Main = function() {
 	var _g = this;
 	this.room = window.room;
 	this._buildCommands();
-	this._setupPrivateID();
 	this.authHttp = new haxe_Http(this.basePath);
 	this.authHttp.async = true;
 	this.authHttp.onData = $bind(this,this._getAuth);
@@ -217,6 +216,7 @@ Main.prototype = {
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
+		this._setupPrivateID();
 		if(this.token == null) this._tryAuth();
 	}
 	,_setupPrivateID: function() {
@@ -226,11 +226,16 @@ Main.prototype = {
 		} else {
 			this.privateID = Std.parseInt(js_Cookie.get("private"));
 			this.token = Std.parseInt(js_Cookie.get("token"));
+			this._checkValid();
 		}
 	}
 	,_setToken: function(_token) {
-		var _g = this;
 		this.token = _token;
+		this._checkValid();
+		if(this.token != null) js_Cookie.set("token",Std.string(this.token),315360000);
+	}
+	,_checkValid: function() {
+		var _g = this;
 		var checkValid = new haxe_Http(this.basePath + ("api/checkvalid/" + this.privateID + "/" + this.token));
 		checkValid.onData = function(data) {
 			if(data == "invalid") {
@@ -243,7 +248,6 @@ Main.prototype = {
 			_g._addMessage("an error occured getting authentication, please refresh the page.");
 		};
 		checkValid.request(true);
-		if(this.token != null) js_Cookie.set("token",Std.string(this.token),315360000);
 	}
 	,_tryAuth: function() {
 		this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);
