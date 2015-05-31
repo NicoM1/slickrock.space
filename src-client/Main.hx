@@ -333,6 +333,8 @@ class Main
 			trace(e);
 			_addMessage('failed to connect to api, couldn\'t lock room.');
 		}
+		
+		lockHttp.request(true);
 	}
 	
 	function _help(?arguments: Array<String>) {

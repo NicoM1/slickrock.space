@@ -377,6 +377,7 @@ Main.prototype = {
 			console.log(e);
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
+		lockHttp.request(true);
 	}
 	,_help: function($arguments) {
 		this._addMessage("**/revivify**");
