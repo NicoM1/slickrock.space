@@ -130,9 +130,6 @@ class Main
 		}
 		
 		_setupPrivateID();
-		if (token == null) {
-			_tryAuth();
-		}
 	}
 	
 	function _setupPrivateID() {
@@ -181,7 +178,7 @@ class Main
 	}
 	
 	function _getAuth(data: String) {
-		_addMessage('what does this say?');
+		_addMessage('please enter the following to authenticate.');
 		_addMessage('empty', null, '<img src="http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=$data" class="imgmessage" width="200">');
 	}
 	
@@ -369,7 +366,7 @@ class Main
 	function _parseMessages(data) {	
 		if (data == 'locked') {
 			if(!locked) {
-				_addMessage('room is locked.');
+				_addMessage('room is locked, please enter password.');
 			}
 			locked = true;
 			requestInProgress = false;
@@ -377,7 +374,7 @@ class Main
 		}
 		if (data == 'password') {
 			if(!locked) {
-				_addMessage('incorrect password.');
+				_addMessage('incorrect password, please resend password.');
 			}
 			locked = true;
 			requestInProgress = false;
@@ -479,6 +476,10 @@ class Main
 
 	//{ message posting
 	function _checkKeyPress(e) {
+		if (token == null) {
+			_tryAuth();
+		}
+		
 		var code = null;
 		if(e != null) {
 			 code = (e.keyCode != null ? e.keyCode : e.which);
@@ -540,6 +541,8 @@ class Main
 				_addMessage('attempting to unlock room with: $password');
 				chatbox.value = '';
 				helpbox.style.display = 'none';
+				_addMessage('successfully unlocked.');
+				locked = false;
 				return;
 			}
 			if(chatbox.value.charAt(0) == '/') {

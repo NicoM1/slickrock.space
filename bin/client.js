@@ -220,7 +220,6 @@ Main.prototype = {
 		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
 		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
 		this._setupPrivateID();
-		if(this.token == null) this._tryAuth();
 	}
 	,_setupPrivateID: function() {
 		if(!js_Cookie.exists("private")) {
@@ -258,7 +257,7 @@ Main.prototype = {
 		this.authHttp.request(true);
 	}
 	,_getAuth: function(data) {
-		this._addMessage("what does this say?");
+		this._addMessage("please enter the following to authenticate.");
 		this._addMessage("empty",null,"<img src=\"http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=" + data + "\" class=\"imgmessage\" width=\"200\">");
 	}
 	,_loop: function() {
@@ -401,13 +400,13 @@ Main.prototype = {
 	}
 	,_parseMessages: function(data) {
 		if(data == "locked") {
-			if(!this.locked) this._addMessage("room is locked.");
+			if(!this.locked) this._addMessage("room is locked, please enter password.");
 			this.locked = true;
 			this.requestInProgress = false;
 			return;
 		}
 		if(data == "password") {
-			if(!this.locked) this._addMessage("incorrect password.");
+			if(!this.locked) this._addMessage("incorrect password, please resend password.");
 			this.locked = true;
 			this.requestInProgress = false;
 			return;
@@ -493,6 +492,7 @@ Main.prototype = {
 		return parsed;
 	}
 	,_checkKeyPress: function(e) {
+		if(this.token == null) this._tryAuth();
 		var code = null;
 		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		var selected = false;
@@ -539,6 +539,8 @@ Main.prototype = {
 				this._addMessage("attempting to unlock room with: " + this.password);
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
+				this._addMessage("successfully unlocked.");
+				this.locked = false;
 				return;
 			}
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
