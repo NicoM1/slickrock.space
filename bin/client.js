@@ -158,6 +158,7 @@ var Main = function() {
 	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
 	this.notifications = [];
+	this.wasLocked = false;
 	this.hasTriedAuth = false;
 	this.locked = false;
 	this.focussed = true;
@@ -411,13 +412,19 @@ Main.prototype = {
 			if(!this.locked) this._addMessage("room is locked, please enter password.");
 			this.locked = true;
 			this.requestInProgress = false;
+			this.wasLocked = true;
 			return;
 		}
 		if(data == "password") {
 			if(!this.locked) this._addMessage("incorrect password, please resend password.");
 			this.locked = true;
 			this.requestInProgress = false;
+			this.wasLocked = true;
 			return;
+		}
+		if(this.wasLocked) {
+			this._addMessage("successfully unlocked.");
+			this.wasLocked = false;
 		}
 		var parsed = JSON.parse(data);
 		var _g = 0;
@@ -546,7 +553,6 @@ Main.prototype = {
 				this._addMessage("attempting to unlock room with: " + this.password + ".");
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
-				this._addMessage("successfully unlocked.");
 				this.locked = false;
 				return;
 			}

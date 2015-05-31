@@ -51,8 +51,9 @@ class Main
 	var requestInProgress: Bool = false;
 	var first: Bool = true;
 	var focussed: Bool = true;
-	var locked = false;
-	var hasTriedAuth = false;
+	var locked: Bool = false;
+	var hasTriedAuth: Bool = false;
+	var wasLocked: Bool = false;
 	
 	var notifications: Array<Notification> = new Array<Notification>();
 	var numNotifications: Int = 0;
@@ -385,6 +386,7 @@ class Main
 			}
 			locked = true;
 			requestInProgress = false;
+			wasLocked = true;
 			return;
 		}
 		if (data == 'password') {
@@ -393,7 +395,12 @@ class Main
 			}
 			locked = true;
 			requestInProgress = false;
+			wasLocked = true;
 			return;
+		}
+		if(wasLocked) {
+			_addMessage('successfully unlocked.');
+			wasLocked = false;
 		}
 		var parsed: MessageData = Json.parse(data);
 		for (p in parsed.messages.messages) {		
@@ -552,7 +559,6 @@ class Main
 				_addMessage('attempting to unlock room with: $password.');
 				chatbox.value = '';
 				helpbox.style.display = 'none';
-				_addMessage('successfully unlocked.');
 				locked = false;
 				return;
 			}
