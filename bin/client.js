@@ -381,6 +381,7 @@ Main.prototype = {
 	,_parseMessage: function(raw) {
 		var parsed = StringTools.replace(raw,"\n"," ");
 		parsed = StringTools.htmlEscape(parsed);
+		parsed = StringTools.replace(parsed,"\"","&quot;");
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var imgTag = "<img src=\"" + imgPath + "\" class=\"imgmessage\"></img>";
@@ -481,7 +482,6 @@ Main.prototype = {
 		this.id = id_;
 		js_Cookie.set("id",Std.string(this.id),315360000);
 		this.chatbox.style.borderColor = this._generateColorFromID(this.id,true);
-		this.chevron.style.color = this._generateColorFromID(this.id);
 	}
 	,__class__: Main
 };
