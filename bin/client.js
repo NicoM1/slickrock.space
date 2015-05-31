@@ -255,7 +255,8 @@ Main.prototype = {
 		this.authHttp.request(true);
 	}
 	,_getAuth: function(data) {
-		this._addMessage("what does this say? " + data);
+		this._addMessage("what does this say?");
+		this._addMessage("#http://dummyimage.com/250/ffffff/000000/&text=" + data + "#");
 	}
 	,_loop: function() {
 		var _g = this;
