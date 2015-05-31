@@ -365,7 +365,7 @@ Main.prototype = {
 	,_lockRoom: function($arguments) {
 		var _g = this;
 		console.log($arguments);
-		if($arguments.length == 0) {
+		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
 			this._addMessage("**/lock** requires argument: *PASSWORD*.");
 			return;
 		}

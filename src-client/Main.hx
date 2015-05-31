@@ -316,7 +316,7 @@ class Main
 	
 	function _lockRoom(arguments: Array<String>) {
 		trace(arguments);
-		if (arguments.length == 0) {
+		if (arguments.length == 0 || arguments[0].trim() == '') {
 			_addMessage('**/lock** requires argument: *PASSWORD*.');
 			return;
 		}
