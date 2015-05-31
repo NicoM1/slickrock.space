@@ -219,6 +219,10 @@ Main.prototype = {
 			_g._getNotificationPermission();
 			if(_g.token == null) _g._tryAuth();
 		};
+		this.chatbox.onchange = function() {
+			_g._getNotificationPermission();
+			if(_g.token == null) _g._tryAuth();
+		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));

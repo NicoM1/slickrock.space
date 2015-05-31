@@ -120,6 +120,12 @@ class Main
 				_tryAuth();
 			}
 		}
+		chatbox.onchange = function() {
+			_getNotificationPermission();
+			if (token == null) {
+				_tryAuth();
+			}
+		}
 		chatbox.onkeyup = _checkKeyPress;
 		chatbox.focus();
 		
