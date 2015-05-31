@@ -231,10 +231,11 @@ Main.prototype = {
 	}
 	,_setToken: function(_token) {
 		this.token = _token;
-		this._checkValid();
+		this._checkValid(true);
 		if(this.token != null) js_Cookie.set("token",Std.string(this.token),315360000);
 	}
-	,_checkValid: function() {
+	,_checkValid: function(printValid) {
+		if(printValid == null) printValid = false;
 		var _g = this;
 		var checkValid = new haxe_Http(this.basePath + ("api/checkvalid/" + this.privateID + "/" + this.token));
 		checkValid.onData = function(data) {
@@ -242,7 +243,7 @@ Main.prototype = {
 				_g.token = null;
 				_g._tryAuth();
 				return;
-			} else _g._addMessage("authentication successful, chat away.");
+			} else if(printValid) _g._addMessage("authentication successful, chat away.");
 		};
 		checkValid.onError = function(e) {
 			_g._addMessage("an error occured getting authentication, please refresh the page.");

@@ -143,13 +143,13 @@ class Main
 	
 	function _setToken(_token: Int) {
 		token = _token;
-		_checkValid();
+		_checkValid(true);
 		if(token != null) {
 			Cookie.set('token', Std.string(token), 60 * 60 * 24 * 365 * 10);
 		}
 	}
 	
-	function _checkValid() {
+	function _checkValid(printValid: Bool = false) {
 		var checkValid = new Http(basePath + 'api/checkvalid/$privateID/$token');
 		checkValid.onData = function(data: String) {
 			if (data == 'invalid') {
@@ -158,7 +158,9 @@ class Main
 				return;
 			}
 			else {
-				_addMessage('authentication successful, chat away.');
+				if(printValid) {
+					_addMessage('authentication successful, chat away.');
+				}
 			}
 		}
 		checkValid.onError = function(e) {
