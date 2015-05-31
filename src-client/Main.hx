@@ -315,6 +315,7 @@ class Main
 	}
 	
 	function _lockRoom(arguments: Array<String>) {
+		trace(arguments);
 		if (arguments.length == 0) {
 			_addMessage('**/lock** requires argument: *PASSWORD*.');
 			return;
