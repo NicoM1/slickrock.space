@@ -335,7 +335,7 @@ class Main
 		lockHttp.onData = function(d) {
 			if(d == 'locked') {
 				_addMessage('$room locked with password: $newPassword.');
-				password = newPassword;
+				_setPassword(newPassword);
 			}
 			else {
 				_addMessage('you are not authorized to lock $room.');

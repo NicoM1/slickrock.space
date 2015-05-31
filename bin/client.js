@@ -376,7 +376,7 @@ Main.prototype = {
 		lockHttp.onData = function(d) {
 			if(d == "locked") {
 				_g._addMessage("" + _g.room + " locked with password: " + newPassword + ".");
-				_g.password = newPassword;
+				_g._setPassword(newPassword);
 			} else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
