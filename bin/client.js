@@ -256,7 +256,7 @@ Main.prototype = {
 	}
 	,_getAuth: function(data) {
 		this._addMessage("what does this say?");
-		this._addMessage("#http://dummyimage.com/200x64/2b2b2b/ecf0f1/&text=" + data + "#");
+		this._addMessage("empty",null,"<img src=\"http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=" + data + "\" class=\"imgmessage\" width=\"200\">");
 	}
 	,_loop: function() {
 		var _g = this;
@@ -405,7 +405,7 @@ Main.prototype = {
 		}
 		this.requestInProgress = false;
 	}
-	,_addMessage: function(msg,id) {
+	,_addMessage: function(msg,id,customHTML) {
 		msg = this._parseMessage(msg);
 		var message;
 		var differentUser = false;
@@ -422,7 +422,7 @@ Main.prototype = {
 		var _this1 = window.document;
 		messageItem = _this1.createElement("div");
 		messageItem.className = "messageitem";
-		messageItem.innerHTML = msg;
+		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		message.appendChild(messageItem);
 		window.scrollTo(0,window.document.body.scrollHeight);
 		return messageItem;
