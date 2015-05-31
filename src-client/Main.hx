@@ -176,7 +176,7 @@ class Main
 	
 	function _getAuth(data: String) {
 		_addMessage('what does this say?');
-		_addMessage('#http://dummyimage.com/200x64/2b2b2b/ecf0f1/&text=$data#');
+		_addMessage('empty', null, '<img src="http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=$data" class="imgmessage" width="200">');
 	}
 	
 	function _loop() {
@@ -352,7 +352,7 @@ class Main
 		requestInProgress = false;
 	}
 	
-	function _addMessage(msg: String, ?id: Int): DivElement {
+	function _addMessage(msg: String, ?id: Int, ?customHTML: String): DivElement {
 		msg = _parseMessage(msg);
 		
 		var message: DivElement;
@@ -377,7 +377,7 @@ class Main
 		var messageItem: DivElement = Browser.document.createDivElement();
 		messageItem.className = 'messageitem';
 		
-		messageItem.innerHTML = msg;
+		messageItem.innerHTML = customHTML==null? msg : customHTML;
 		
 		message.appendChild(messageItem);
 		
