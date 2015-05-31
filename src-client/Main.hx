@@ -48,7 +48,7 @@ class Main
 	var chevron: SpanElement;
 	var messageSound: AudioElement;
 	var lastParagraph: DivElement;
-	var favicon: LinkElement;
+	var favicons: Array<LinkElement>;
 	
 	var requestInProgress: Bool = false;
 	var first: Bool = true;
@@ -97,7 +97,9 @@ class Main
 		Browser.window.onfocus = function() {
 			focussed = true;
 			Browser.document.title = 'aqueous-basin.';
-			favicon.href = 'bin/faviconempty.ico';
+			for (f in favicons) {
+				f.href = 'bin/faviconempty.ico';
+			}
 			_clearNotifications();
 			numNotifications = 0;
 		};
@@ -115,7 +117,10 @@ class Main
 		messages = cast Browser.document.getElementById('messages');
 		helpbox = cast Browser.document.getElementById('helpbox');
 		chevron = cast Browser.document.getElementById('chevron');
-		favicon = cast Browser.document.getElementById('favicon');
+		favicons = new Array<LinkElement>();
+		for (f in Browser.document.getElementsByClassName('favicon')) {
+			favicons.push(cast f);
+		}
 		messageSound = cast Browser.document.getElementById('messagesound');
 		
 		_setupHelpbox();
@@ -412,7 +417,9 @@ class Main
 			
 			if (!focussed && !first) {
 				Browser.document.title = '# aqueous-basin.';
-				favicon.href = 'bin/favicon.ico';
+				for (f in favicons) {
+					f.href = 'bin/favicon.ico';
+				}
 				messageSound.play();
 				numNotifications++;
 				_sendNotification(message.innerText != null? message.innerText : message.textContent);

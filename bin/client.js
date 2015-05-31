@@ -196,7 +196,13 @@ var Main = function() {
 	window.onfocus = function() {
 		_g.focussed = true;
 		window.document.title = "aqueous-basin.";
-		_g.favicon.href = "bin/faviconempty.ico";
+		var _g1 = 0;
+		var _g2 = _g.favicons;
+		while(_g1 < _g2.length) {
+			var f = _g2[_g1];
+			++_g1;
+			f.href = "bin/faviconempty.ico";
+		}
 		_g._clearNotifications();
 		_g.numNotifications = 0;
 	};
@@ -216,7 +222,14 @@ Main.prototype = {
 		this.messages = window.document.getElementById("messages");
 		this.helpbox = window.document.getElementById("helpbox");
 		this.chevron = window.document.getElementById("chevron");
-		this.favicon = window.document.getElementById("favicon");
+		this.favicons = [];
+		var _g1 = 0;
+		var _g11 = window.document.getElementsByClassName("favicon");
+		while(_g1 < _g11.length) {
+			var f = _g11[_g1];
+			++_g1;
+			this.favicons.push(f);
+		}
 		this.messageSound = window.document.getElementById("messagesound");
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
@@ -437,7 +450,13 @@ Main.prototype = {
 			var message = this._addMessage(p.text,p.id);
 			if(!this.focussed && !this.first) {
 				window.document.title = "# aqueous-basin.";
-				this.favicon.href = "bin/favicon.ico";
+				var _g2 = 0;
+				var _g3 = this.favicons;
+				while(_g2 < _g3.length) {
+					var f = _g3[_g2];
+					++_g2;
+					f.href = "bin/favicon.ico";
+				}
 				this.messageSound.play();
 				this.numNotifications++;
 				this._sendNotification(message.innerText != null?message.innerText:message.textContent);
@@ -446,15 +465,15 @@ Main.prototype = {
 		}
 		this.lastIndex = parsed.lastID;
 		this.first = false;
-		var _g2 = 0;
+		var _g4 = 0;
 		var _g11 = window.document.getElementsByClassName("imgmessage");
-		while(_g2 < _g11.length) {
-			var i = _g11[_g2];
-			++_g2;
+		while(_g4 < _g11.length) {
+			var i = _g11[_g4];
+			++_g4;
 			var image = i;
-			i.onclick = (function(f,a1) {
+			i.onclick = (function(f1,a1) {
 				return function() {
-					f(a1);
+					f1(a1);
 				};
 			})($bind(this,this._openImageInNewTab),image.src);
 		}
