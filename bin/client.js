@@ -242,7 +242,7 @@ Main.prototype = {
 				_g.token = null;
 				_g._tryAuth();
 				return;
-			}
+			} else _g._addMessage("authentication successful, chat away.");
 		};
 		checkValid.onError = function(e) {
 			_g._addMessage("an error occured getting authentication, please refresh the page.");

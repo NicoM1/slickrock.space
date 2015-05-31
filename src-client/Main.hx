@@ -157,6 +157,9 @@ class Main
 				_tryAuth();
 				return;
 			}
+			else {
+				_addMessage('authentication successful, chat away.');
+			}
 		}
 		checkValid.onError = function(e) {
 			_addMessage('an error occured getting authentication, please refresh the page.');
