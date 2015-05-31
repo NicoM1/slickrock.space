@@ -217,7 +217,7 @@ Main.prototype = {
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
-		this._tryAuth();
+		if(this.token == null) this._tryAuth();
 	}
 	,_setupPrivateID: function() {
 		if(!js_Cookie.exists("private")) {
@@ -471,7 +471,7 @@ Main.prototype = {
 		} else this.helpbox.style.display = "none";
 		if(code != null && code == 13) {
 			if(this.token == null) {
-				this.token = Std.parseInt(this.chatbox.value);
+				this._setToken(Std.parseInt(this.chatbox.value));
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
 				return;

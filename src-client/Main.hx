@@ -449,7 +449,7 @@ class Main
 
 		if (code != null && code == 13) { //ENTER
 			if (token == null) {
-				token = Std.parseInt(chatbox.value);
+				_setToken(Std.parseInt(chatbox.value));
 				chatbox.value = '';
 				helpbox.style.display = 'none';
 				return;
