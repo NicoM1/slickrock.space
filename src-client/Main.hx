@@ -142,7 +142,21 @@ class Main
 	
 	function _setToken(_token: Int) {
 		token = _token;
-		Cookie.set('token', Std.string(token));
+		var checkValid = new Http(basePath + 'api/checkvalid/$privateID/$token');
+		checkValid.onData = function(data: String) {
+			if (data == 'invalid') {
+				token = null;
+				authHttp.request(true);
+				return;
+			}
+		}
+		checkValid.onError = function(e) {
+			_addMessage('an error occured getting authentication, please refresh the page.');
+		}
+		checkValid.request(true);
+		if(token != null) {
+			Cookie.set('token', Std.string(token));
+		}
 	}
 	
 	function _tryAuth() {

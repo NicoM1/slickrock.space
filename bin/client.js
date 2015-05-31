@@ -229,8 +229,21 @@ Main.prototype = {
 		}
 	}
 	,_setToken: function(_token) {
+		var _g = this;
 		this.token = _token;
-		js_Cookie.set("token",Std.string(this.token));
+		var checkValid = new haxe_Http(this.basePath + ("api/checkvalid/" + this.privateID + "/" + this.token));
+		checkValid.onData = function(data) {
+			if(data == "invalid") {
+				_g.token = null;
+				_g.authHttp.request(true);
+				return;
+			}
+		};
+		checkValid.onError = function(e) {
+			_g._addMessage("an error occured getting authentication, please refresh the page.");
+		};
+		checkValid.request(true);
+		if(this.token != null) js_Cookie.set("token",Std.string(this.token));
 	}
 	,_tryAuth: function() {
 		this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);

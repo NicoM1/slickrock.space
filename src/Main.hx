@@ -81,12 +81,21 @@ class RouteHandler implements abe.IRoute {
 		response.send('maybe it just needs a response');
 	}
 	
-	@:get('/api/gettoken/:privateID') 
 	@:post('/api/gettoken/:privateID') 
 	function getToken(privateID: Int) {
 		Main.tokens[privateID] = Std.int(Math.random() * 0xFFFFFF);
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send(Std.string(Main.tokens[privateID]));
+	}
+
+	@:post('/api/checkvalid/:privateID/:token') 
+	function checkValid(privateID: Int, token: Int) {
+		var value = 'invalid';
+		if (Main.tokens[privateID] == token) {
+			value = 'valid';
+		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send(value);
 	}
 	
 	@:get('/api/:room/:lastID')

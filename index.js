@@ -169,12 +169,12 @@ var Main = function() {
 		var processor3 = new abe_core_ArgumentProcessor(filters3,[{ name : "privateID", optional : false, type : "Int", sources : ["params"]}]);
 		var process3 = new RouteHandler_$getToken_$RouteProcess({ privateID : null},instance,processor3);
 		var uses3 = [];
-		router.registerMethod("/api/gettoken/:privateID","get",process3,uses3,[]);
+		router.registerMethod("/api/gettoken/:privateID","post",process3,uses3,[]);
 		var filters4 = new abe_core_ArgumentsFilter();
-		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "privateID", optional : false, type : "Int", sources : ["params"]}]);
-		var process4 = new RouteHandler_$getToken_$RouteProcess({ privateID : null},instance,processor4);
+		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "token", optional : false, type : "Int", sources : ["params"]}]);
+		var process4 = new RouteHandler_$checkValid_$RouteProcess({ privateID : null, token : null},instance,processor4);
 		var uses4 = [];
-		router.registerMethod("/api/gettoken/:privateID","post",process4,uses4,[]);
+		router.registerMethod("/api/checkvalid/:privateID/:token","post",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
 		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
 		var process5 = new RouteHandler_$api_$RouteProcess({ room : null, lastID : null},instance,processor5);
@@ -244,6 +244,12 @@ RouteHandler.prototype = {
 		Main.tokens[privateID] = Std["int"](Math.random() * 16777215);
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send(Std.string(Main.tokens[privateID]));
+	}
+	,checkValid: function(privateID,token,request,response,next) {
+		var value = "invalid";
+		if(Main.tokens[privateID] == token) value = "valid";
+		response.setHeader("Access-Control-Allow-Origin","*");
+		response.send(value);
 	}
 	,api: function(room,lastID,request,response,next) {
 		if(!Main.rooms.exists(room)) {
@@ -361,6 +367,17 @@ RouteHandler_$chatroom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.p
 		this.instance.chatroom(this.args.room,request,response,next);
 	}
 	,__class__: RouteHandler_$chatroom_$RouteProcess
+});
+var RouteHandler_$checkValid_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$checkValid_$RouteProcess.__name__ = ["RouteHandler_checkValid_RouteProcess"];
+RouteHandler_$checkValid_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$checkValid_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.checkValid(this.args.privateID,this.args.token,request,response,next);
+	}
+	,__class__: RouteHandler_$checkValid_$RouteProcess
 });
 var RouteHandler_$getToken_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
