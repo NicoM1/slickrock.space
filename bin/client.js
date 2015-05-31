@@ -163,6 +163,7 @@ var Main = function() {
 	this.requestInProgress = false;
 	this.lastUserID = -2;
 	this.lastIndex = -1;
+	this.password = null;
 	this.token = null;
 	this.basePath = "https://aqueous-dev.herokuapp.com/";
 	var _g = this;
@@ -267,7 +268,7 @@ Main.prototype = {
 	}
 	,_update: function() {
 		if(this.requestInProgress) return;
-		this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex;
+		if(this.password == null) this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex; else this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex;
 		this.requestInProgress = true;
 		this.getHttp.request(true);
 	}
@@ -368,10 +369,13 @@ Main.prototype = {
 			this._addMessage("**/fasten** requires argument: *PASSWORD*.");
 			return;
 		}
-		var password = $arguments[0];
-		var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + password));
+		var newPassword = $arguments[0];
+		var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + newPassword));
 		lockHttp.onData = function(d) {
-			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + password + "."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
+			if(d == "locked") {
+				_g._addMessage("" + _g.room + " locked with password: " + newPassword + ".");
+				_g.password = newPassword;
+			} else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
 			console.log(e);
@@ -521,7 +525,7 @@ Main.prototype = {
 				return;
 			}
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
-				this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token;
+				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
 				this.lastMessage = this.chatbox.value;
 				this.postHttp.request(true);
 				this._update();

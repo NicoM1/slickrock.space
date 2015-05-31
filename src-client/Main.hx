@@ -32,6 +32,7 @@ class Main
 	var id: Int;
 	var privateID: Int;
 	var token: Int = null;
+	var password: String = null;
 
 	var lastIndex: Int = -1;
 	var lastUserID: Int = -2;
@@ -190,7 +191,12 @@ class Main
 		if (requestInProgress) {
 			return;
 		}
-		getHttp.url = basePath + 'api/' + room + '/' + lastIndex;
+		if(password == null) {
+			getHttp.url = basePath + 'api/' + room + '/' + lastIndex;
+		}
+		else {
+			getHttp.url = basePath + 'api/' + room + '/' + password + '/' + lastIndex;
+		}
 		requestInProgress = true;
 		getHttp.request(true);
 	}
@@ -319,11 +325,12 @@ class Main
 			_addMessage('**/fasten** requires argument: *PASSWORD*.');
 			return;
 		}
-		var password = arguments[0];
-		var lockHttp: Http = new Http(basePath + 'api/lock/$room/$privateID/$password');
+		var newPassword = arguments[0];
+		var lockHttp: Http = new Http(basePath + 'api/lock/$room/$privateID/$newPassword');
 		lockHttp.onData = function(d) {
 			if(d == 'locked') {
-				_addMessage('$room locked with password: $password.');
+				_addMessage('$room locked with password: $newPassword.');
+				password = newPassword;
 			}
 			else {
 				_addMessage('you are not authorized to lock $room.');
@@ -515,7 +522,12 @@ class Main
 				_parseCommand(chatbox.value.substr(1));
 			}
 			else {
-				postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + id + '/' + privateID + '/' + token;
+				if(password == null) {
+					postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + id + '/' + privateID + '/' + token;
+				}
+				else {
+					postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + password +'/' + id + '/' + privateID + '/' + token;
+				}
 				lastMessage = chatbox.value;
 				postHttp.request(true);
 				_update();

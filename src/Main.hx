@@ -85,6 +85,26 @@ class RouteHandler implements abe.IRoute {
 		response.send('maybe it just needs a response');
 	}
 	
+	@:post('/chat/:message/:room/:password/:id/:privateID/:token')
+	function postWithPass(message: String, room: String, password: String, id: Int, privateID: Int, token: Int) {
+		if(Main.tokens[privateID] == token) {
+			if (!Main.rooms.exists(room)) {
+				Main.rooms.set(room, {
+					messages: new Array<Message>(),
+					lock: null,
+					owner: null
+				});
+			}
+			
+			if(Main.rooms.get(room).lock == password) {
+				Main.rooms.get(room).messages.push( { text: message, id: id } );
+			}
+		}
+		
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send('maybe it just needs a response');
+	}
+	
 	@:post('/api/gettoken/:privateID') 
 	function getToken(privateID: Int) {
 		Main.tokens[privateID] = Std.int(Math.random() * 0xFFFFFF);
@@ -114,6 +134,41 @@ class RouteHandler implements abe.IRoute {
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('failed');
+	}
+	
+	@:post('/api/:room/:password/:lastID')
+	function apiWithPass(room: String, password: String, lastID: Int) {
+		if (!Main.rooms.exists(room)) {
+			Main.rooms.set(room, {
+				messages: new Array<Message>(),
+				lock: null,
+				owner: null
+			});
+		}
+		
+		if(Main.rooms.get(room).lock == password) {
+			var messages: MessageData = {
+				messages: {
+					messages: new Array<Message>(),
+					lock: null,
+					owner: null
+				},
+				lastID: Main.rooms.get(room).messages.length - 1
+			};
+			
+			if (lastID < Main.rooms.get(room).messages.length - 1) {
+				for (i in (lastID + 1)...Main.rooms.get(room).messages.length) {
+					messages.messages.messages.push(Main.rooms.get(room).messages[i]);
+				}
+			}
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.setHeader('Content-Type', 'application/json');
+			response.send(messages);
+		}
+		else {
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('incorrect room password.');
+		}
 	}
 	
 	@:get('/api/:room/:lastID')
