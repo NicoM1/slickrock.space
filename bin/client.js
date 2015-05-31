@@ -320,6 +320,7 @@ Main.prototype = {
 		this.commands.set("oneself",$bind(this,this._printID));
 		this.commands.set("existent",$bind(this,this._printRoom));
 		this.commands.set("survey",$bind(this,this._changeRoom));
+		this.commands.set("fasten",$bind(this,this._lockRoom));
 		this.commands.set("",$bind(this,this._help));
 	}
 	,_parseCommand: function(commandString) {
@@ -349,17 +350,32 @@ Main.prototype = {
 	,_setIDCommand: function($arguments) {
 		if($arguments != null && $arguments[0] != null && $arguments[0] != "") {
 			var newID = Std.parseInt($arguments[0]);
-			if(newID != null) this._setID(newID); else this._addMessage("Could not parse argument: *ID*");
-		} else this._addMessage("**/impersonate** requires argument: *ID*");
+			if(newID != null) this._setID(newID); else this._addMessage("Could not parse argument: *ID*.");
+		} else this._addMessage("**/impersonate** requires argument: *ID*.");
 	}
 	,_changeRoom: function($arguments) {
-		if($arguments != null && $arguments[0] != null && $arguments[0] != "") window.location.replace($arguments[0]); else this._addMessage("**/survey** requires argument: *ROOM*");
+		if($arguments != null && $arguments[0] != null && $arguments[0] != "") window.location.replace($arguments[0]); else this._addMessage("**/survey** requires argument: *ROOM*.");
 	}
 	,_printID: function($arguments) {
 		this._addMessage("*Currently impersonating*: " + this.id);
 	}
 	,_printRoom: function($arguments) {
 		this._addMessage("*Currently in*: " + this.room);
+	}
+	,_lockRoom: function($arguments) {
+		var _g = this;
+		if($arguments.length == 0) {
+			this._addMessage("**/lock** requires argument: *PASSWORD*.");
+			return;
+		}
+		var lockHttp = new haxe_Http(this.basePath + "api/lock/" + this.room + ("/" + Std.string($arguments) + "[0]"));
+		lockHttp.onData = function(d) {
+			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + Std.string($arguments) + "[0]."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
+		};
+		lockHttp.onError = function(e) {
+			console.log(e);
+			_g._addMessage("failed to connect to api, couldn't lock room.");
+		};
 	}
 	,_help: function($arguments) {
 		this._addMessage("**/revivify**");
@@ -372,6 +388,8 @@ Main.prototype = {
 		this._addMessage("print the chat room you are currently in.");
 		this._addMessage("**/survey** *ROOM*");
 		this._addMessage("move to a different chat room.");
+		this._addMessage("**/fasten** *PASSWORD*");
+		this._addMessage("attempt to lock the current room.");
 	}
 	,_parseMessages: function(data) {
 		var parsed = JSON.parse(data);

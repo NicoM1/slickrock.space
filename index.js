@@ -176,15 +176,20 @@ var Main = function() {
 		var uses4 = [];
 		router.registerMethod("/api/checkvalid/:privateID/:token","post",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
-		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
-		var process5 = new RouteHandler_$api_$RouteProcess({ room : null, lastID : null},instance,processor5);
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]}]);
+		var process5 = new RouteHandler_$lockRoom_$RouteProcess({ room : null, privateID : null, password : null},instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/api/:room/:lastID","get",process5,uses5,[]);
+		router.registerMethod("/api/lock/:room/:privateID/:password","post",process5,uses5,[]);
 		var filters6 = new abe_core_ArgumentsFilter();
 		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
 		var process6 = new RouteHandler_$api_$RouteProcess({ room : null, lastID : null},instance,processor6);
 		var uses6 = [];
-		router.registerMethod("/api/:room/:lastID","post",process6,uses6,[]);
+		router.registerMethod("/api/:room/:lastID","get",process6,uses6,[]);
+		var filters7 = new abe_core_ArgumentsFilter();
+		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process7 = new RouteHandler_$api_$RouteProcess({ room : null, lastID : null},instance,processor7);
+		var uses7 = [];
+		router.registerMethod("/api/:room/:lastID","post",process7,uses7,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -232,7 +237,7 @@ RouteHandler.prototype = {
 	,postWithID: function(message,room,id,privateID,token,request,response,next) {
 		if(Main.tokens[privateID] == token) {
 			if(!Main.rooms.exists(room)) {
-				var value = { messages : []};
+				var value = { messages : [], lock : null};
 				Main.rooms.set(room,value);
 			}
 			Main.rooms.get(room).messages.push({ text : message, id : id});
@@ -251,12 +256,23 @@ RouteHandler.prototype = {
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send(value);
 	}
+	,lockRoom: function(room,privateID,password,request,response,next) {
+		var roomE = Main.rooms.get(room);
+		if(roomE.messages.length == 0 && roomE.lock == null) {
+			roomE.lock = password;
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("locked");
+			return;
+		}
+		response.setHeader("Access-Control-Allow-Origin","*");
+		response.send("failed");
+	}
 	,api: function(room,lastID,request,response,next) {
 		if(!Main.rooms.exists(room)) {
-			var value = { messages : []};
+			var value = { messages : [], lock : null};
 			Main.rooms.set(room,value);
 		}
-		var messages = { messages : { messages : []}, lastID : Main.rooms.get(room).messages.length - 1};
+		var messages = { messages : { messages : [], lock : null}, lastID : Main.rooms.get(room).messages.length - 1};
 		if(lastID < Main.rooms.get(room).messages.length - 1) {
 			var _g1 = lastID + 1;
 			var _g = Main.rooms.get(room).messages.length;
@@ -400,6 +416,17 @@ RouteHandler_$index_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prot
 		this.instance.index(request,response,next);
 	}
 	,__class__: RouteHandler_$index_$RouteProcess
+});
+var RouteHandler_$lockRoom_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$lockRoom_$RouteProcess.__name__ = ["RouteHandler_lockRoom_RouteProcess"];
+RouteHandler_$lockRoom_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$lockRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.lockRoom(this.args.room,this.args.privateID,this.args.password,request,response,next);
+	}
+	,__class__: RouteHandler_$lockRoom_$RouteProcess
 });
 var RouteHandler_$postWithID_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);

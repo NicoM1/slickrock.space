@@ -70,7 +70,8 @@ class RouteHandler implements abe.IRoute {
 		if(Main.tokens[privateID] == token) {
 			if (!Main.rooms.exists(room)) {
 				Main.rooms.set(room, {
-					messages: new Array<Message>()
+					messages: new Array<Message>(),
+					lock: null
 				});
 			}
 			
@@ -98,18 +99,33 @@ class RouteHandler implements abe.IRoute {
 		response.send(value);
 	}
 	
+	@:post('/api/lock/:room/:privateID/:password')
+	function lockRoom(room: String, privateID: Int, password: String) {
+		var roomE = Main.rooms.get(room);
+		if (roomE.messages.length == 0 && roomE.lock == null) {
+			roomE.lock = password;
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('locked');
+			return;
+		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send('failed');
+	}
+	
 	@:get('/api/:room/:lastID')
 	@:post('/api/:room/:lastID')
 	function api(room: String, lastID: Int) {
 		if (!Main.rooms.exists(room)) {
 			Main.rooms.set(room, {
-				messages: new Array<Message>()
+				messages: new Array<Message>(),
+				lock: null
 			});
 		}
 		
 		var messages: MessageData = {
 			messages: {
-				messages: new Array<Message>()
+				messages: new Array<Message>(),
+				lock: null
 			},
 			lastID: Main.rooms.get(room).messages.length - 1
 		};

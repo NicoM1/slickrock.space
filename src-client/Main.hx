@@ -245,6 +245,8 @@ class Main
 		commands.set('oneself', _printID);
 		commands.set('existent', _printRoom);
 		commands.set('survey', _changeRoom);
+		commands.set('fasten', _lockRoom);
+		
 		commands.set('', _help);
 	}
 	
@@ -287,11 +289,11 @@ class Main
 				_setID(newID);
 			}
 			else {
-				_addMessage('Could not parse argument: *ID*');
+				_addMessage('Could not parse argument: *ID*.');
 			}
 		}
 		else {
-			_addMessage('**/impersonate** requires argument: *ID*');
+			_addMessage('**/impersonate** requires argument: *ID*.');
 		}
 	}
 	
@@ -300,7 +302,7 @@ class Main
 			Browser.window.location.replace(arguments[0]);
 		}
 		else {
-			_addMessage('**/survey** requires argument: *ROOM*');
+			_addMessage('**/survey** requires argument: *ROOM*.');
 		}
 	}
 	
@@ -310,6 +312,26 @@ class Main
 	
 	function _printRoom(?arguments: Array<String>) {
 		_addMessage('*Currently in*: $room');
+	}
+	
+	function _lockRoom(arguments: Array<String>) {
+		if (arguments.length == 0) {
+			_addMessage('**/lock** requires argument: *PASSWORD*.');
+			return;
+		}
+		var lockHttp: Http = new Http(basePath + 'api/lock/' + room + '/$arguments[0]');
+		lockHttp.onData = function(d) {
+			if(d == 'locked') {
+				_addMessage('$room locked with password: $arguments[0].');
+			}
+			else {
+				_addMessage('you are not authorized to lock $room.');
+			}
+		}
+		lockHttp.onError = function(e) {
+			trace(e);
+			_addMessage('failed to connect to api, couldn\'t lock room.');
+		}
 	}
 	
 	function _help(?arguments: Array<String>) {
@@ -323,6 +345,8 @@ class Main
 		_addMessage('print the chat room you are currently in.');
 		_addMessage('**/survey** *ROOM*');
 		_addMessage('move to a different chat room.');
+		_addMessage('**/fasten** *PASSWORD*');
+		_addMessage('attempt to lock the current room.');
 	}
 	//}
 	
