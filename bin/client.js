@@ -196,6 +196,7 @@ var Main = function() {
 	window.onfocus = function() {
 		_g.focussed = true;
 		window.document.title = "aqueous-basin.";
+		_g.favicon.href = "bin/faviconempty.ico";
 		_g._clearNotifications();
 		_g.numNotifications = 0;
 	};
@@ -215,6 +216,7 @@ Main.prototype = {
 		this.messages = window.document.getElementById("messages");
 		this.helpbox = window.document.getElementById("helpbox");
 		this.chevron = window.document.getElementById("chevron");
+		this.favicon = window.document.getElementById("favicon");
 		this.messageSound = window.document.getElementById("messagesound");
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
@@ -435,6 +437,7 @@ Main.prototype = {
 			var message = this._addMessage(p.text,p.id);
 			if(!this.focussed && !this.first) {
 				window.document.title = "# aqueous-basin.";
+				this.favicon.href = "bin/favicon.ico";
 				this.messageSound.play();
 				this.numNotifications++;
 				this._sendNotification(message.innerText != null?message.innerText:message.textContent);
