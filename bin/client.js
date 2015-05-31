@@ -370,7 +370,7 @@ Main.prototype = {
 			return;
 		}
 		var password = $arguments[0];
-		var lockHttp = new haxe_Http(this.basePath + "api/lock/" + this.room + ("/" + password) + ("/" + this.privateID));
+		var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + password));
 		lockHttp.onData = function(d) {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + password + "."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};

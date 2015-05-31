@@ -321,7 +321,7 @@ class Main
 			return;
 		}
 		var password = arguments[0];
-		var lockHttp: Http = new Http(basePath + 'api/lock/' + room + '/$password' + '/$privateID');
+		var lockHttp: Http = new Http(basePath + 'api/lock/$room/$privateID/$password');
 		lockHttp.onData = function(d) {
 			if(d == 'locked') {
 				_addMessage('$room locked with password: $password.');
