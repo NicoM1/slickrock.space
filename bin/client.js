@@ -488,7 +488,8 @@ Main.prototype = {
 		} else this.helpbox.style.display = "none";
 		if(code != null && code == 13) {
 			if(this.token == null) {
-				this._setToken(Std.parseInt(this.chatbox.value));
+				var t = Std.parseInt(this.chatbox.value);
+				this._setToken(t != null?t:-1);
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
 				return;

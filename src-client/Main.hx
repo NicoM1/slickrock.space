@@ -468,7 +468,8 @@ class Main
 
 		if (code != null && code == 13) { //ENTER
 			if (token == null) {
-				_setToken(Std.parseInt(chatbox.value));
+				var t = Std.parseInt(chatbox.value);
+				_setToken(t != null? t : -1);
 				chatbox.value = '';
 				helpbox.style.display = 'none';
 				return;
