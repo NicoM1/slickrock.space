@@ -309,7 +309,7 @@ RouteHandler.prototype = {
 			response.send(messages);
 		} else {
 			response.setHeader("Access-Control-Allow-Origin","*");
-			response.send("incorrect room password.");
+			response.send("password");
 		}
 	}
 	,api: function(room,lastID,request,response,next) {

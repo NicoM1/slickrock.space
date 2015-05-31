@@ -51,6 +51,7 @@ class Main
 	var requestInProgress: Bool = false;
 	var first: Bool = true;
 	var focussed: Bool = true;
+	var locked = false;
 	
 	var notifications: Array<Notification> = new Array<Notification>();
 	var numNotifications: Int = 0;
@@ -122,6 +123,10 @@ class Main
 		}
 		else {
 			_setID(Std.parseInt(Cookie.get('id')));
+		}
+		
+		if (Cookie.exists('$room-password')) {
+			_setPassword(Cookie.get('$room-password'));
 		}
 		
 		_setupPrivateID();
@@ -363,7 +368,13 @@ class Main
 	//{ messages
 	function _parseMessages(data) {	
 		if (data == 'locked') {
-			_addMessage('room is locked');
+			_addMessage('room is locked.');
+			locked = true;
+			return;
+		}
+		if (data == 'password') {
+			_addMessage('incorrect password.');
+			locked = true;
 			return;
 		}
 		var parsed: MessageData = Json.parse(data);
@@ -518,6 +529,12 @@ class Main
 				helpbox.style.display = 'none';
 				return;
 			}
+			if (locked) {
+				_setPassword(chatbox.value);
+				chatbox.value = '';
+				helpbox.style.display = 'none';
+				return;
+			}
 			if(chatbox.value.charAt(0) == '/') {
 				_parseCommand(chatbox.value.substr(1));
 			}
@@ -534,8 +551,7 @@ class Main
 			}
 			chatbox.value = '';
 			helpbox.style.display = 'none';
-		}
-		
+		}	
 	}
 	//}
 	
@@ -581,6 +597,11 @@ class Main
 		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
 		chatbox.style.borderColor = _generateColorFromID(id, true);
 		//chevron.style.color = _generateColorFromID(id);
+	}
+	
+	function _setPassword(password_: String) {
+		password = password_;
+		Cookie.set('$room-password', password, 60 * 60 * 24 * 365 * 10);
 	}
 	//}
 	

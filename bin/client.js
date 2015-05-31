@@ -158,6 +158,7 @@ var Main = function() {
 	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
 	this.notifications = [];
+	this.locked = false;
 	this.focussed = true;
 	this.first = true;
 	this.requestInProgress = false;
@@ -217,6 +218,7 @@ Main.prototype = {
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
+		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
 		this._setupPrivateID();
 		if(this.token == null) this._tryAuth();
 	}
@@ -399,7 +401,13 @@ Main.prototype = {
 	}
 	,_parseMessages: function(data) {
 		if(data == "locked") {
-			this._addMessage("room is locked");
+			this._addMessage("room is locked.");
+			this.locked = true;
+			return;
+		}
+		if(data == "password") {
+			this._addMessage("incorrect password.");
+			this.locked = true;
 			return;
 		}
 		var parsed = JSON.parse(data);
@@ -524,6 +532,12 @@ Main.prototype = {
 				this.helpbox.style.display = "none";
 				return;
 			}
+			if(this.locked) {
+				this._setPassword(this.chatbox.value);
+				this.chatbox.value = "";
+				this.helpbox.style.display = "none";
+				return;
+			}
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
 				this.lastMessage = this.chatbox.value;
@@ -566,6 +580,10 @@ Main.prototype = {
 		this.id = id_;
 		js_Cookie.set("id",Std.string(this.id),315360000);
 		this.chatbox.style.borderColor = this._generateColorFromID(this.id,true);
+	}
+	,_setPassword: function(password_) {
+		this.password = password_;
+		js_Cookie.set("" + this.room + "-password",this.password,315360000);
 	}
 	,__class__: Main
 };
