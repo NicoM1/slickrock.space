@@ -343,11 +343,11 @@ class Main
 			return;
 		}
 		var newPassword = arguments[0];
+		_setPassword(newPassword);
 		var lockHttp: Http = new Http(basePath + 'api/lock/$room/$privateID/$newPassword');
 		lockHttp.onData = function(d) {
 			if(d == 'locked') {
 				_addMessage('$room locked with password: $newPassword.');
-				_setPassword(newPassword);
 			}
 			else {
 				_addMessage('you are not authorized to lock $room.');
