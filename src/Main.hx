@@ -125,7 +125,7 @@ class RouteHandler implements abe.IRoute {
 	@:post('/api/lock/:room/:privateID/:password')
 	function lockRoom(room: String, privateID: Int, password: String) {
 		var roomE = Main.rooms.get(room);
-		if (roomE.messages.length == 0 && roomE.lock == null) {
+		if (roomE.owner == privateID ||  (roomE.messages.length == 0 && roomE.lock == null)) {
 			roomE.lock = password;
 			roomE.owner = privateID;
 			response.setHeader('Access-Control-Allow-Origin', '*');
