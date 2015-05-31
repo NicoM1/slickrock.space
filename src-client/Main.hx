@@ -315,7 +315,6 @@ class Main
 	}
 	
 	function _lockRoom(arguments: Array<String>) {
-		trace(arguments);
 		if (arguments.length == 0 || arguments[0].trim() == '') {
 			_addMessage('**/fasten** requires argument: *PASSWORD*.');
 			return;
@@ -355,7 +354,11 @@ class Main
 	//}
 	
 	//{ messages
-	function _parseMessages(data) {		
+	function _parseMessages(data) {	
+		if (data == 'locked') {
+			_addMessage('room is locked');
+			return;
+		}
 		var parsed: MessageData = Json.parse(data);
 		for (p in parsed.messages.messages) {		
 			var message = _addMessage(p.text, p.id);

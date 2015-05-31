@@ -364,7 +364,6 @@ Main.prototype = {
 	}
 	,_lockRoom: function($arguments) {
 		var _g = this;
-		console.log($arguments);
 		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
 			this._addMessage("**/fasten** requires argument: *PASSWORD*.");
 			return;
@@ -395,6 +394,10 @@ Main.prototype = {
 		this._addMessage("attempt to lock the current room.");
 	}
 	,_parseMessages: function(data) {
+		if(data == "locked") {
+			this._addMessage("room is locked");
+			return;
+		}
 		var parsed = JSON.parse(data);
 		var _g = 0;
 		var _g1 = parsed.messages.messages;

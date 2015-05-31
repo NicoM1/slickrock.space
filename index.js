@@ -237,10 +237,10 @@ RouteHandler.prototype = {
 	,postWithID: function(message,room,id,privateID,token,request,response,next) {
 		if(Main.tokens[privateID] == token) {
 			if(!Main.rooms.exists(room)) {
-				var value = { messages : [], lock : null};
+				var value = { messages : [], lock : null, owner : null};
 				Main.rooms.set(room,value);
 			}
-			Main.rooms.get(room).messages.push({ text : message, id : id});
+			if(Main.rooms.get(room).lock == null) Main.rooms.get(room).messages.push({ text : message, id : id});
 		}
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("maybe it just needs a response");
@@ -260,6 +260,7 @@ RouteHandler.prototype = {
 		var roomE = Main.rooms.get(room);
 		if(roomE.messages.length == 0 && roomE.lock == null) {
 			roomE.lock = password;
+			roomE.owner = privateID;
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("locked");
 			return;
@@ -269,21 +270,26 @@ RouteHandler.prototype = {
 	}
 	,api: function(room,lastID,request,response,next) {
 		if(!Main.rooms.exists(room)) {
-			var value = { messages : [], lock : null};
+			var value = { messages : [], lock : null, owner : null};
 			Main.rooms.set(room,value);
 		}
-		var messages = { messages : { messages : [], lock : null}, lastID : Main.rooms.get(room).messages.length - 1};
-		if(lastID < Main.rooms.get(room).messages.length - 1) {
-			var _g1 = lastID + 1;
-			var _g = Main.rooms.get(room).messages.length;
-			while(_g1 < _g) {
-				var i = _g1++;
-				messages.messages.messages.push(Main.rooms.get(room).messages[i]);
+		if(Main.rooms.get(room).lock == null) {
+			var messages = { messages : { messages : [], lock : null, owner : null}, lastID : Main.rooms.get(room).messages.length - 1};
+			if(lastID < Main.rooms.get(room).messages.length - 1) {
+				var _g1 = lastID + 1;
+				var _g = Main.rooms.get(room).messages.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					messages.messages.messages.push(Main.rooms.get(room).messages[i]);
+				}
 			}
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.setHeader("Content-Type","application/json");
+			response.send(messages);
+		} else {
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("locked");
 		}
-		response.setHeader("Access-Control-Allow-Origin","*");
-		response.setHeader("Content-Type","application/json");
-		response.send(messages);
 	}
 	,_serveHtml: function(path,handler) {
 		js_node_Fs.readFile(path,{ encoding : "utf8"},handler);

@@ -71,11 +71,14 @@ class RouteHandler implements abe.IRoute {
 			if (!Main.rooms.exists(room)) {
 				Main.rooms.set(room, {
 					messages: new Array<Message>(),
-					lock: null
+					lock: null,
+					owner: null
 				});
 			}
 			
-			Main.rooms.get(room).messages.push( { text: message, id: id } );
+			if(Main.rooms.get(room).lock == null) {
+				Main.rooms.get(room).messages.push( { text: message, id: id } );
+			}
 		}
 		
 		response.setHeader('Access-Control-Allow-Origin', '*');
@@ -104,6 +107,7 @@ class RouteHandler implements abe.IRoute {
 		var roomE = Main.rooms.get(room);
 		if (roomE.messages.length == 0 && roomE.lock == null) {
 			roomE.lock = password;
+			roomE.owner = privateID;
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('locked');
 			return;
@@ -118,26 +122,34 @@ class RouteHandler implements abe.IRoute {
 		if (!Main.rooms.exists(room)) {
 			Main.rooms.set(room, {
 				messages: new Array<Message>(),
-				lock: null
+				lock: null,
+				owner: null
 			});
 		}
 		
-		var messages: MessageData = {
-			messages: {
-				messages: new Array<Message>(),
-				lock: null
-			},
-			lastID: Main.rooms.get(room).messages.length - 1
-		};
-		
-		if (lastID < Main.rooms.get(room).messages.length - 1) {
-			for (i in (lastID + 1)...Main.rooms.get(room).messages.length) {
-				messages.messages.messages.push(Main.rooms.get(room).messages[i]);
+		if(Main.rooms.get(room).lock == null) {
+			var messages: MessageData = {
+				messages: {
+					messages: new Array<Message>(),
+					lock: null,
+					owner: null
+				},
+				lastID: Main.rooms.get(room).messages.length - 1
+			};
+			
+			if (lastID < Main.rooms.get(room).messages.length - 1) {
+				for (i in (lastID + 1)...Main.rooms.get(room).messages.length) {
+					messages.messages.messages.push(Main.rooms.get(room).messages[i]);
+				}
 			}
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.setHeader('Content-Type', 'application/json');
+			response.send(messages);
 		}
-		response.setHeader('Access-Control-Allow-Origin', '*');
-		response.setHeader('Content-Type', 'application/json');
-		response.send(messages);
+		else {
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('locked');
+		}
 	}
 	
 	function _serveHtml(path: String, handler: Error->String->Void) {
