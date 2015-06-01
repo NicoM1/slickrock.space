@@ -482,6 +482,7 @@ class Main
 		var parsed: String = raw.replace('\n', ' ');
 		parsed = parsed.htmlEscape();
 		parsed = parsed.replace("\"", "&quot;");
+		parsed = parsed.replace(":", "&colon;");
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
 			var imgTag = '<img src="$imgPath" class="imgmessage"></img>';
@@ -501,9 +502,6 @@ class Main
 			var text = codeBB.matched(1);
 			var preTag = '<pre>$text</pre>';
 			parsed = codeBB.replace(parsed, preTag);
-		}
-		while (parsed.indexOf('javascript:') != -1) {
-			parsed = parsed.replace('javascript:', 'javascript');
 		}
 		return parsed;
 	}
@@ -586,7 +584,9 @@ class Main
 					postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + password +'/' + id + '/' + privateID + '/' + token;
 				}
 				lastMessage = chatbox.value;
-				postHttp.request(true);
+				if(chatbox.value.trim() == '') {
+					postHttp.request(true);
+				}
 				_update();
 			}
 			chatbox.value = '';

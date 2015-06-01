@@ -508,6 +508,7 @@ Main.prototype = {
 		var parsed = StringTools.replace(raw,"\n"," ");
 		parsed = StringTools.htmlEscape(parsed);
 		parsed = StringTools.replace(parsed,"\"","&quot;");
+		parsed = StringTools.replace(parsed,":","&colon;");
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var imgTag = "<img src=\"" + imgPath + "\" class=\"imgmessage\"></img>";
@@ -528,7 +529,6 @@ Main.prototype = {
 			var preTag = "<pre>" + text2 + "</pre>";
 			parsed = this.codeBB.replace(parsed,preTag);
 		}
-		while(parsed.indexOf("javascript:") != -1) parsed = StringTools.replace(parsed,"javascript:","javascript");
 		return parsed;
 	}
 	,_checkKeyPress: function(e) {
@@ -584,7 +584,7 @@ Main.prototype = {
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
 				this.lastMessage = this.chatbox.value;
-				this.postHttp.request(true);
+				if(StringTools.trim(this.chatbox.value) == "") this.postHttp.request(true);
 				this._update();
 			}
 			this.chatbox.value = "";
