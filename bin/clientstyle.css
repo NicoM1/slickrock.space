@@ -130,6 +130,10 @@ li {
 	padding-bottom: 1px;
 }
 
+li:hover {
+	cursor: pointer;
+}
+
 .description {
 	margin-bottom: 20px;
 }
