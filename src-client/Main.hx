@@ -187,6 +187,7 @@ class Main
 			else {
 				if(printValid) {
 					_addMessage('authentication successful, chat away.');
+					hasTriedAuth = false;
 				}
 			}
 		}
@@ -424,10 +425,6 @@ class Main
 				numNotifications++;
 				_sendNotification(message.innerText != null? message.innerText : message.textContent);
 			}
-			
-			if(p.id != null && p.id != -1) {
-				lastUserID = p.id;
-			}
 		}
 		lastIndex = parsed.lastID;
 		first = false;
@@ -470,6 +467,8 @@ class Main
 		message.appendChild(messageItem);
 		
 		Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+		
+		lastUserID = id;
 		
 		return messageItem;
 	}

@@ -270,7 +270,10 @@ Main.prototype = {
 				_g.token = null;
 				_g._tryAuth();
 				return;
-			} else if(printValid) _g._addMessage("authentication successful, chat away.");
+			} else if(printValid) {
+				_g._addMessage("authentication successful, chat away.");
+				_g.hasTriedAuth = false;
+			}
 		};
 		checkValid.onError = function(e) {
 			_g._addMessage("an error occured getting authentication, please refresh the page.");
@@ -461,7 +464,6 @@ Main.prototype = {
 				this.numNotifications++;
 				this._sendNotification(message.innerText != null?message.innerText:message.textContent);
 			}
-			if(p.id != null && p.id != -1) this.lastUserID = p.id;
 		}
 		this.lastIndex = parsed.lastID;
 		this.first = false;
@@ -499,6 +501,7 @@ Main.prototype = {
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		message.appendChild(messageItem);
 		window.scrollTo(0,window.document.body.scrollHeight);
+		this.lastUserID = id;
 		return messageItem;
 	}
 	,_parseMessage: function(raw) {
