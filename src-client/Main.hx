@@ -565,18 +565,18 @@ class Main
 				helpbox.style.display = 'none';
 				return;
 			}
-			if (locked) {
-				_setPassword(chatbox.value);
-				_addMessage('attempting to unlock room with: $password.');
-				chatbox.value = '';
-				helpbox.style.display = 'none';
-				locked = false;
-				return;
-			}
 			if(chatbox.value.charAt(0) == '/') {
 				_parseCommand(chatbox.value.substr(1));
 			}
 			else {
+				if (locked) {
+					_setPassword(chatbox.value);
+					_addMessage('attempting to unlock room with: $password.');
+					chatbox.value = '';
+					helpbox.style.display = 'none';
+					locked = false;
+					return;
+				}
 				if(password == null) {
 					postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + id + '/' + privateID + '/' + token;
 				}

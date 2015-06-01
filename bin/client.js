@@ -573,15 +573,15 @@ Main.prototype = {
 				this.helpbox.style.display = "none";
 				return;
 			}
-			if(this.locked) {
-				this._setPassword(this.chatbox.value);
-				this._addMessage("attempting to unlock room with: " + this.password + ".");
-				this.chatbox.value = "";
-				this.helpbox.style.display = "none";
-				this.locked = false;
-				return;
-			}
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
+				if(this.locked) {
+					this._setPassword(this.chatbox.value);
+					this._addMessage("attempting to unlock room with: " + this.password + ".");
+					this.chatbox.value = "";
+					this.helpbox.style.display = "none";
+					this.locked = false;
+					return;
+				}
 				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
 				this.lastMessage = this.chatbox.value;
 				if(StringTools.trim(this.chatbox.value) != "") this.postHttp.request(true);
