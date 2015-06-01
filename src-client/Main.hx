@@ -29,7 +29,7 @@ using StringTools;
 class Main 
 {
 	var room: String;
-	var basePath: String = 'https://aqueous-dev.herokuapp.com/';
+	var basePath: String = 'https://aqueous-api.herokuapp.com/';
 	var id: Int;
 	var privateID: Int;
 	var token: Int = null;
