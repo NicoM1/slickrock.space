@@ -234,6 +234,7 @@ RouteHandler.prototype = {
 		});
 	}
 	,chatroom: function(room,request,response,next) {
+		room = room.toLowerCase();
 		this._serveHtml("bin/index.html",function(e,d) {
 			if(e == null) {
 				var withRoom = "";
@@ -245,9 +246,11 @@ RouteHandler.prototype = {
 		});
 	}
 	,sendMessage: function(message,room,id,privateID,token,request,response,next) {
+		room = room.toLowerCase();
 		this._sendMessage(response,message,room,null,id,privateID,token);
 	}
 	,sendMessageWithPass: function(message,room,password,id,privateID,token,request,response,next) {
+		room = room.toLowerCase();
 		this._sendMessage(response,message,room,password,id,privateID,token);
 	}
 	,_sendMessage: function(response,message,room,password,id,privateID,token) {
@@ -273,6 +276,7 @@ RouteHandler.prototype = {
 		response.send(value);
 	}
 	,lockRoom: function(room,privateID,password,request,response,next) {
+		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.owner == privateID || roomE.messages.length == 0 && roomE.lock == null) {
 			roomE.lock = password;
@@ -285,9 +289,11 @@ RouteHandler.prototype = {
 		response.send("failed");
 	}
 	,getMessages: function(room,lastID,request,response,next) {
+		room = room.toLowerCase();
 		this._getMessages(response,room,null,lastID);
 	}
 	,getMessagesWithPass: function(room,password,lastID,request,response,next) {
+		room = room.toLowerCase();
 		this._getMessages(response,room,password,lastID);
 	}
 	,_getMessages: function(response,room,password,lastID) {

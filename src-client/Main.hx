@@ -425,7 +425,9 @@ class Main
 				_sendNotification(message.innerText != null? message.innerText : message.textContent);
 			}
 			
-			lastUserID = p.id;
+			if(p.id != null && p.id != -1) {
+				lastUserID = p.id;
+			}
 		}
 		lastIndex = parsed.lastID;
 		first = false;
@@ -525,7 +527,7 @@ class Main
 				var command = li.getAttribute('data-command');
 				if (li.classList.contains('selected')) {
 					var replacement = '/' + command + ' ';
-					if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13 && chatbox.value.length < replacement.length) {
+					if (chatbox.value.substr(0,replacement.length) != replacement && chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13 && chatbox.value.length < replacement.length) {
 						chatbox.value = replacement;
 					}
 				}

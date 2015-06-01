@@ -55,6 +55,7 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/:room')
 	function chatroom(room: String) {
+		room = room.toLowerCase();
 		_serveHtml('bin/index.html', function(e, d) {
 			if (e == null) {
 				var withRoom: String = '';
@@ -68,11 +69,13 @@ class RouteHandler implements abe.IRoute {
 	
 	@:post('/chat/:message/:room/:id/:privateID/:token')
 	function sendMessage(message: String, room: String, id: Int, privateID: Int, token: Int) {
+		room = room.toLowerCase();
 		_sendMessage(response, message, room, null, id, privateID, token);
 	}
 	
 	@:post('/chat/:message/:room/:password/:id/:privateID/:token')
 	function sendMessageWithPass(message: String, room: String, password: String, id: Int, privateID: Int, token: Int) {
+		room = room.toLowerCase();
 		_sendMessage(response, message, room, password, id, privateID, token);
 	}
 
@@ -114,6 +117,7 @@ class RouteHandler implements abe.IRoute {
 	
 	@:post('/api/lock/:room/:privateID/:password')
 	function lockRoom(room: String, privateID: Int, password: String) {
+		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if (roomE.owner == privateID ||  (roomE.messages.length == 0 && roomE.lock == null)) {
 			roomE.lock = password;
@@ -129,11 +133,13 @@ class RouteHandler implements abe.IRoute {
 	@:get('/api/:room/:lastID')
 	@:post('/api/:room/:lastID')
 	function getMessages(room: String, lastID: Int) {
+		room = room.toLowerCase();
 		_getMessages(response, room, null, lastID);
 	}
 	
 	@:post('/api/:room/:password/:lastID')
 	function getMessagesWithPass(room: String, password: String, lastID: Int) {
+		room = room.toLowerCase();
 		_getMessages(response, room, password, lastID);
 	}
 	

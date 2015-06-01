@@ -461,7 +461,7 @@ Main.prototype = {
 				this.numNotifications++;
 				this._sendNotification(message.innerText != null?message.innerText:message.textContent);
 			}
-			this.lastUserID = p.id;
+			if(p.id != null && p.id != -1) this.lastUserID = p.id;
 		}
 		this.lastIndex = parsed.lastID;
 		this.first = false;
@@ -543,7 +543,7 @@ Main.prototype = {
 				var command = li.getAttribute("data-command");
 				if(li.classList.contains("selected")) {
 					var replacement = "/" + command + " ";
-					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13 && this.chatbox.value.length < replacement.length) this.chatbox.value = replacement;
+					if(HxOverrides.substr(this.chatbox.value,0,replacement.length) != replacement && this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13 && this.chatbox.value.length < replacement.length) this.chatbox.value = replacement;
 				}
 				var sub = HxOverrides.substr(this.chatbox.value,1,null);
 				var trimmed = false;
