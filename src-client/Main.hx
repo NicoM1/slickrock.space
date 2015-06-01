@@ -584,7 +584,7 @@ class Main
 					postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + password +'/' + id + '/' + privateID + '/' + token;
 				}
 				lastMessage = chatbox.value;
-				if(chatbox.value.trim() == '') {
+				if(chatbox.value.trim() != '') {
 					postHttp.request(true);
 				}
 				_update();

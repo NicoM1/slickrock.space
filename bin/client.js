@@ -584,7 +584,7 @@ Main.prototype = {
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
 				this.lastMessage = this.chatbox.value;
-				if(StringTools.trim(this.chatbox.value) == "") this.postHttp.request(true);
+				if(StringTools.trim(this.chatbox.value) != "") this.postHttp.request(true);
 				this._update();
 			}
 			this.chatbox.value = "";
