@@ -59,7 +59,7 @@ class Main {
 	}
 	
 	public static function emptyTyping(room: String, id: Int) {
-		//rooms[room].typing.remove(id);
+		rooms[room].typing.remove(id);
 	}
 	
 	public static function main() {
@@ -135,6 +135,7 @@ class RouteHandler implements abe.IRoute {
 		response.send(Std.string(Main.tokens[privateID]));
 	}
 	
+	@:get('/api/typing/:room/:id') 
 	@:post('/api/typing/:room/:id') 
 	function typing(room: String, id: Int) {
 		if (Main.rooms.get(room).typing.indexOf(id) == -1) {
