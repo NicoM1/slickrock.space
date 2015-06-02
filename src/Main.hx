@@ -138,6 +138,7 @@ class RouteHandler implements abe.IRoute {
 		else {
 			Main.resetTypingTimer(id);
 		}
+		response.send('needs a response');
 	}
 
 	@:post('/api/checkvalid/:privateID/:token') 

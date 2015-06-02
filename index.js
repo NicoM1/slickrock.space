@@ -319,6 +319,7 @@ RouteHandler.prototype = {
 			Main.typing.push(id);
 			Main.clearTyping(id);
 		} else Main.resetTypingTimer(id);
+		response.send("needs a response");
 	}
 	,checkValid: function(privateID,token,request,response,next) {
 		var value = "invalid";
