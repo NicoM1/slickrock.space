@@ -482,17 +482,19 @@ class Main
 		typings = [];
 		
 		for (t in parsed.messages.typing) {
-			var typeMessage = Browser.document.createDivElement();
-			typeMessage.className = 'messageitem';
-			typeMessage.innerHTML = 'typing...';
-			var message: MessageDiv = {
-				id: t,
-				chevron: _makeSpan(true, t),
-				message: typeMessage
+			if(t != id) {
+				var typeMessage = Browser.document.createDivElement();
+				typeMessage.className = 'messageitem';
+				typeMessage.innerHTML = 'typing...';
+				var message: MessageDiv = {
+					id: t,
+					chevron: _makeSpan(true, t),
+					message: typeMessage
+				}
+				typings.push(message);
+				messages.appendChild(message.chevron);
+				messages.appendChild(message.message);
 			}
-			typings.push(message);
-			messages.appendChild(message.chevron);
-			messages.appendChild(message.message);
 		}
 		
 		lastIndex = parsed.lastID;
