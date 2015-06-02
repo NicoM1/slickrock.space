@@ -512,6 +512,7 @@ Main.prototype = {
 			var typeMessage;
 			var _this = window.document;
 			typeMessage = _this.createElement("div");
+			typeMessage.className = "messageblock";
 			typeMessage.innerHTML = "typing...";
 			var message1 = { id : t1, chevron : this._makeSpan(true,t1), message : typeMessage};
 			this.typings.push(message1);
