@@ -352,6 +352,8 @@ Main.prototype = {
 		this.commands.set("existent",$bind(this,this._printRoom));
 		this.commands.set("survey",$bind(this,this._changeRoom));
 		this.commands.set("fasten",$bind(this,this._lockRoom));
+		this.commands.set("unfasten",$bind(this,this._unlockRoom));
+		this.commands.set("claim",$bind(this,this._claimRoom));
 		this.commands.set("",$bind(this,this._help));
 	}
 	,_parseCommand: function(commandString) {
@@ -387,6 +389,18 @@ Main.prototype = {
 	,_changeRoom: function($arguments) {
 		if($arguments != null && $arguments[0] != null && $arguments[0] != "") window.location.replace($arguments[0]); else this._addMessage("**/survey** requires argument: *ROOM*.");
 	}
+	,_claimRoom: function($arguments) {
+		var _g = this;
+		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID));
+		lockHttp.onData = function(d) {
+			if(d == "claimed") _g._addMessage("" + _g.room + " claimed."); else _g._addMessage("you are not authorized to claim " + _g.room + ".");
+		};
+		lockHttp.onError = function(e) {
+			console.log(e);
+			_g._addMessage("failed to connect to api, couldn't claim room.");
+		};
+		lockHttp.request(true);
+	}
 	,_printID: function($arguments) {
 		this._addMessage("*Currently impersonating*: " + this.id);
 	}
@@ -411,6 +425,18 @@ Main.prototype = {
 		};
 		lockHttp.request(true);
 	}
+	,_unlockRoom: function($arguments) {
+		var _g = this;
+		var lockHttp = new haxe_Http(this.basePath + ("api/unlock/" + this.room + "/" + this.privateID));
+		lockHttp.onData = function(d) {
+			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
+		};
+		lockHttp.onError = function(e) {
+			console.log(e);
+			_g._addMessage("failed to connect to api, couldn't unlock room.");
+		};
+		lockHttp.request(true);
+	}
 	,_help: function($arguments) {
 		this._addMessage("**/revivify**");
 		this._addMessage("regenerate your ID, giving you a new color.");
@@ -422,8 +448,12 @@ Main.prototype = {
 		this._addMessage("print the chat room you are currently in.");
 		this._addMessage("**/survey** *ROOM*");
 		this._addMessage("move to a different chat room.");
+		this._addMessage("**/claim** *PASSWORD*");
+		this._addMessage("attempt to take ownership of the current room.");
 		this._addMessage("**/fasten** *PASSWORD*");
 		this._addMessage("attempt to lock the current room.");
+		this._addMessage("**/unfasten**");
+		this._addMessage("attempt to unlock the current room.");
 	}
 	,_parseMessages: function(data) {
 		if(data == "locked") {

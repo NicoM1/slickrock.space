@@ -280,6 +280,8 @@ class Main
 		commands.set('existent', _printRoom);
 		commands.set('survey', _changeRoom);
 		commands.set('fasten', _lockRoom);
+		commands.set('unfasten', _unlockRoom);
+		commands.set('claim', _claimRoom);
 		
 		commands.set('', _help);
 	}
@@ -340,6 +342,24 @@ class Main
 		}
 	}
 	
+	function _claimRoom(?arguments: Array<String>) {
+		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID');
+		lockHttp.onData = function(d) {
+			if(d == 'claimed') {
+				_addMessage('$room claimed.');
+			}
+			else {
+				_addMessage('you are not authorized to claim $room.');
+			}
+		}
+		lockHttp.onError = function(e) {
+			trace(e);
+			_addMessage('failed to connect to api, couldn\'t claim room.');
+		}
+		
+		lockHttp.request(true);
+	}
+	
 	function _printID(?arguments: Array<String>) {
 		_addMessage('*Currently impersonating*: $id');
 	}
@@ -372,6 +392,24 @@ class Main
 		lockHttp.request(true);
 	}
 	
+	function _unlockRoom(?arguments: Array<String>) {
+		var lockHttp: Http = new Http(basePath + 'api/unlock/$room/$privateID');
+		lockHttp.onData = function(d) {
+			if(d == 'unlocked') {
+				_addMessage('$room unlocked.');
+			}
+			else {
+				_addMessage('you are not authorized to unlock $room.');
+			}
+		}
+		lockHttp.onError = function(e) {
+			trace(e);
+			_addMessage('failed to connect to api, couldn\'t unlock room.');
+		}
+		
+		lockHttp.request(true);
+	}
+	
 	function _help(?arguments: Array<String>) {
 		_addMessage('**/revivify**');
 		_addMessage('regenerate your ID, giving you a new color.');
@@ -383,8 +421,12 @@ class Main
 		_addMessage('print the chat room you are currently in.');
 		_addMessage('**/survey** *ROOM*');
 		_addMessage('move to a different chat room.');
+		_addMessage('**/claim** *PASSWORD*');
+		_addMessage('attempt to take ownership of the current room.');
 		_addMessage('**/fasten** *PASSWORD*');
 		_addMessage('attempt to lock the current room.');
+		_addMessage('**/unfasten**');
+		_addMessage('attempt to unlock the current room.');
 	}
 	//}
 	
