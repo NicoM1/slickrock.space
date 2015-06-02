@@ -59,7 +59,7 @@ class Main {
 	}
 	
 	public static function emptyTyping(room: String, id: Int) {
-		rooms[room].typing.remove(id);
+		//rooms[room].typing.remove(id);
 	}
 	
 	public static function main() {
