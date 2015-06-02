@@ -504,7 +504,6 @@ Main.prototype = {
 			this.messages.removeChild(t.message);
 		}
 		this.typings = [];
-		console.log("typing: " + Std.string(parsed.messages.typing));
 		var _g5 = 0;
 		var _g12 = parsed.messages.typing;
 		while(_g5 < _g12.length) {
@@ -590,15 +589,6 @@ Main.prototype = {
 	}
 	,_checkKeyPress: function(e) {
 		var _g = this;
-		if(this.canSendTypingNotification) {
-			var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
-			typingHttp.request(true);
-			this.canSendTypingNotification = false;
-			var timer = new haxe_Timer(2500);
-			timer.run = function() {
-				_g.canSendTypingNotification = true;
-			};
-		}
 		var code = null;
 		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		var selected = false;
@@ -656,6 +646,17 @@ Main.prototype = {
 			}
 			this.chatbox.value = "";
 			this.helpbox.style.display = "none";
+		}
+		if(!this.locked && this.token != null) {
+			if(this.canSendTypingNotification) {
+				var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
+				typingHttp.request(true);
+				this.canSendTypingNotification = false;
+				var timer = new haxe_Timer(2500);
+				timer.run = function() {
+					_g.canSendTypingNotification = true;
+				};
+			}
 		}
 	}
 	,_openImageInNewTab: function(src) {

@@ -481,7 +481,6 @@ class Main
 		}
 		typings = [];
 		
-		trace('typing: ' + parsed.messages.typing);
 		for (t in parsed.messages.typing) {
 			if(t != id) {
 				var typeMessage = Browser.document.createDivElement();
@@ -581,16 +580,6 @@ class Main
 
 	//{ message posting
 	function _checkKeyPress(e) {
-		if (canSendTypingNotification) {
-			var typingHttp: Http = new Http(basePath + 'api/typing/$room/$id');
-			typingHttp.request(true);
-			canSendTypingNotification = false;
-			var timer = new Timer(2500);
-			timer.run = function() {
-				canSendTypingNotification = true;
-			}
-		}
-		
 		var code = null;
 		if(e != null) {
 			 code = (e.keyCode != null ? e.keyCode : e.which);
@@ -673,7 +662,19 @@ class Main
 			}
 			chatbox.value = '';
 			helpbox.style.display = 'none';
-		}	
+		}
+		
+		if (!locked && token != null) {
+			if (canSendTypingNotification) {
+				var typingHttp: Http = new Http(basePath + 'api/typing/$room/$id');
+				typingHttp.request(true);
+				canSendTypingNotification = false;
+				var timer = new Timer(2500);
+				timer.run = function() {
+					canSendTypingNotification = true;
+				}
+			}
+		}
 	}
 	//}
 	
