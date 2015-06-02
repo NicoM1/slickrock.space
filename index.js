@@ -156,6 +156,8 @@ Lambda.has = function(it,elt) {
 };
 var Main = function() {
 	Main.rooms = new haxe_ds_StringMap();
+	Main.typing = new haxe_ds_StringMap();
+	Main.typingTimers = new haxe_ds_StringMap();
 	var app = new abe_App();
 	(function(instance,parent) {
 		var router = parent.mount("/");
@@ -185,10 +187,10 @@ var Main = function() {
 		var uses4 = [];
 		router.registerMethod("/api/gettoken/:privateID","post",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
-		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
-		var process5 = new RouteHandler_$typing_$RouteProcess({ id : null},instance,processor5);
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
+		var process5 = new RouteHandler_$typing_$RouteProcess({ room : null, id : null},instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/api/typing/:id","post",process5,uses5,[]);
+		router.registerMethod("/api/typing/:room/:id","post",process5,uses5,[]);
 		var filters6 = new abe_core_ArgumentsFilter();
 		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "token", optional : false, type : "Int", sources : ["params"]}]);
 		var process6 = new RouteHandler_$checkValid_$RouteProcess({ privateID : null, token : null},instance,processor6);
@@ -233,26 +235,44 @@ var Main = function() {
 	app.router.serve("/bin","./bin");
 };
 Main.__name__ = ["Main"];
-Main.clearTyping = function(id) {
-	if(Main.typingTimers[id] == null) {
+Main.clearTyping = function(room,id) {
+	if(Main.typingTimers.get(room) == null) {
+		var v = [];
+		Main.typingTimers.set(room,v);
+		v;
+	}
+	if(Main.typingTimers.get(room)[id] == null) {
 		var timer = new haxe_Timer(3000);
-		timer.run = (function(f,id1) {
+		timer.run = (function(f,a1,id1) {
 			return function() {
-				f(id1);
+				f(a1,id1);
 			};
-		})(Main.emptyTyping,id);
-		Main.typingTimers[id] = timer;
-	} else Main.resetTypingTimer(id);
+		})(Main.emptyTyping,room,id);
+		Main.typingTimers.get(room)[id] = timer;
+	} else Main.resetTypingTimer(room,id);
 };
-Main.resetTypingTimer = function(id) {
-	Main.typingTimers[id].run = (function(f,id1) {
+Main.resetTypingTimer = function(room,id) {
+	if(Main.typingTimers.get(room) == null) {
+		var v = [];
+		Main.typingTimers.set(room,v);
+		v;
+		return;
+	}
+	Main.typingTimers.get(room)[id].run = (function(f,a1,id1) {
 		return function() {
-			f(id1);
+			f(a1,id1);
 		};
-	})(Main.emptyTyping,id);
+	})(Main.emptyTyping,room,id);
 };
-Main.emptyTyping = function(id) {
-	HxOverrides.remove(Main.typing,id);
+Main.emptyTyping = function(room,id) {
+	if(Main.typingTimers.get(room) == null) {
+		var v = [];
+		Main.typingTimers.set(room,v);
+		v;
+		return;
+	}
+	var _this = Main.typing.get(room);
+	HxOverrides.remove(_this,id);
 };
 Main.main = function() {
 	new Main();
@@ -299,6 +319,7 @@ RouteHandler.prototype = {
 		this._sendMessage(response,message,room,password,id,privateID,token);
 	}
 	,_sendMessage: function(response,message,room,password,id,privateID,token) {
+		Main.emptyTyping(room,id);
 		if(Main.tokens[privateID] == token) {
 			if(!Main.rooms.exists(room)) {
 				var value = { messages : [], lock : null, owner : null, typing : null};
@@ -314,11 +335,16 @@ RouteHandler.prototype = {
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send(Std.string(Main.tokens[privateID]));
 	}
-	,typing: function(id,request,response,next) {
-		if(HxOverrides.indexOf(Main.typing,id,0) == -1) {
-			Main.typing.push(id);
-			Main.clearTyping(id);
-		} else Main.resetTypingTimer(id);
+	,typing: function(room,id,request,response,next) {
+		if((function($this) {
+			var $r;
+			var _this = Main.typing.get(room);
+			$r = HxOverrides.indexOf(_this,id,0);
+			return $r;
+		}(this)) == -1) {
+			Main.typing.get(room).push(id);
+			Main.clearTyping(room,id);
+		} else Main.resetTypingTimer(room,id);
 		response.send("needs a response");
 	}
 	,checkValid: function(privateID,token,request,response,next) {
@@ -378,7 +404,12 @@ RouteHandler.prototype = {
 			Main.rooms.set(room,value);
 		}
 		if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
-			var messages = { messages : { messages : [], lock : null, owner : null, typing : Main.typing.slice()}, lastID : Main.rooms.get(room).messages.length - 1};
+			var messages = { messages : { messages : [], lock : null, owner : null, typing : (function($this) {
+				var $r;
+				var _this = Main.typing.get(room);
+				$r = _this.slice();
+				return $r;
+			}(this))}, lastID : Main.rooms.get(room).messages.length - 1};
 			if(lastID < Main.rooms.get(room).messages.length - 1) {
 				var _g1 = lastID + 1;
 				var _g = Main.rooms.get(room).messages.length;
@@ -589,7 +620,7 @@ RouteHandler_$typing_$RouteProcess.__name__ = ["RouteHandler_typing_RouteProcess
 RouteHandler_$typing_$RouteProcess.__super__ = abe_core_RouteProcess;
 RouteHandler_$typing_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
 	execute: function(request,response,next) {
-		this.instance.typing(this.args.id,request,response,next);
+		this.instance.typing(this.args.room,this.args.id,request,response,next);
 	}
 	,__class__: RouteHandler_$typing_$RouteProcess
 });
@@ -4786,8 +4817,6 @@ if(typeof(scope.performance.now) == "undefined") {
 DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 Main.db = [];
 Main.tokens = [];
-Main.typing = [];
-Main.typingTimers = [];
 Main.textDB = "";
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
 abe_core_ArgumentsFilter.globalFilters = (function() {

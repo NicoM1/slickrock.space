@@ -19,9 +19,9 @@ class Main {
 
 	public static var db: Array<String> = [];
 	public static var tokens: Array<Int> = [];
-	public static var typing: Array<Int> = [];
+	public static var typing: Map<String, Array<Int>>;
 	
-	static var typingTimers: Array<Timer> = [];
+	static var typingTimers: Map<String, Array<Timer>>;
 	
 	static var textDB: String = '';
 	
@@ -29,6 +29,8 @@ class Main {
 		
 	function new() {
 		rooms = new Rooms();
+		typing = new Map();
+		typingTimers = new Map();
 		
 		var app = new App();
 		app.router.register(new RouteHandler());
@@ -38,23 +40,34 @@ class Main {
 		app.router.serve('/bin', './bin');
 	}
 	
-	public static function clearTyping(id: Int) {
-		if(typingTimers[id] == null) {
+	public static function clearTyping(room: String, id: Int) {
+		if (typingTimers[room] == null) {
+			typingTimers[room] = new Array();
+		}
+		if(typingTimers[room][id] == null) {
 			var timer = new Timer(3000);
-			timer.run = emptyTyping.bind(id);
-			typingTimers[id] = timer;
+			timer.run = emptyTyping.bind(room, id);
+			typingTimers[room][id] = timer;
 		}
 		else {
-			resetTypingTimer(id);
+			resetTypingTimer(room, id);
 		}
 	}
 	
-	public static function resetTypingTimer(id: Int) {
-		typingTimers[id].run = emptyTyping.bind(id);
+	public static function resetTypingTimer(room: String, id: Int) {
+		if (typingTimers[room] == null) {
+			typingTimers[room] = new Array();
+			return;
+		}
+		typingTimers[room][id].run = emptyTyping.bind(room, id);
 	}
 	
-	static function emptyTyping(id: Int) {
-		typing.remove(id);
+	public static function emptyTyping(room: String, id: Int) {
+		if (typingTimers[room] == null) {
+			typingTimers[room] = new Array();
+			return;
+		}
+		typing[room].remove(id);
 	}
 	
 	public static function main() {
@@ -103,6 +116,7 @@ class RouteHandler implements abe.IRoute {
 	}
 
 	function _sendMessage(response: Response, message: String, room: String, password: String, id: Int, privateID: Int, token: Int) {
+		Main.emptyTyping(room, id);
 		if(Main.tokens[privateID] == token) {
 			if (!Main.rooms.exists(room)) {
 				Main.rooms.set(room, {
@@ -129,14 +143,14 @@ class RouteHandler implements abe.IRoute {
 		response.send(Std.string(Main.tokens[privateID]));
 	}
 	
-	@:post('/api/typing/:id') 
-	function typing(id: Int) {
-		if (Main.typing.indexOf(id) == -1) {
-			Main.typing.push(id);
-			Main.clearTyping(id);
+	@:post('/api/typing/:room/:id') 
+	function typing(room: String, id: Int) {
+		if (Main.typing.get(room).indexOf(id) == -1) {
+			Main.typing.get(room).push(id);
+			Main.clearTyping(room, id);
 		}
 		else {
-			Main.resetTypingTimer(id);
+			Main.resetTypingTimer(room, id);
 		}
 		response.send('needs a response');
 	}
@@ -223,7 +237,7 @@ class RouteHandler implements abe.IRoute {
 					messages: new Array<Message>(),
 					lock: null,
 					owner: null,
-					typing: Main.typing.copy()
+					typing: Main.typing[room].copy()
 				},
 				lastID: Main.rooms.get(room).messages.length - 1
 			};
