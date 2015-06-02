@@ -158,12 +158,14 @@ var Main = function() {
 	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
 	this.notifications = [];
+	this.canSendTypingNotification = true;
 	this.wasLocked = false;
 	this.hasTriedAuth = false;
 	this.locked = false;
 	this.focussed = true;
 	this.first = true;
 	this.requestInProgress = false;
+	this.typings = [];
 	this.lastUserID = -2;
 	this.lastIndex = -1;
 	this.password = null;
@@ -173,14 +175,12 @@ var Main = function() {
 	this.room = window.room;
 	this._buildCommands();
 	this.authHttp = new haxe_Http(this.basePath);
-	this.authHttp.async = true;
 	this.authHttp.onData = $bind(this,this._getAuth);
 	this.authHttp.onError = function(error) {
 		console.log(error);
 		_g._addMessage("Could not connect to authentication api, please refresh the page.");
 	};
 	this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
-	this.getHttp.async = true;
 	this.getHttp.onData = $bind(this,this._parseMessages);
 	this.getHttp.onError = function(error1) {
 		console.log(error1);
@@ -495,13 +495,37 @@ Main.prototype = {
 				this._sendNotification(message.innerText != null?message.innerText:message.textContent);
 			}
 		}
+		var _g4 = 0;
+		var _g11 = this.typings;
+		while(_g4 < _g11.length) {
+			var t = _g11[_g4];
+			++_g4;
+			this.messages.removeChild(t.chevron);
+			this.messages.removeChild(t.message);
+		}
+		this.typings = [];
+		var _g5 = 0;
+		var _g12 = parsed.messages.typing;
+		while(_g5 < _g12.length) {
+			var t1 = _g12[_g5];
+			++_g5;
+			var message1 = { id : t1, chevron : this._makeSpan(true,t1), message : (function($this) {
+				var $r;
+				var _this = window.document;
+				$r = _this.createElement("div");
+				return $r;
+			}(this))};
+			this.typings.push(message1);
+			this.messages.appendChild(message1.chevron);
+			this.messages.appendChild(message1.message);
+		}
 		this.lastIndex = parsed.lastID;
 		this.first = false;
-		var _g4 = 0;
-		var _g11 = window.document.getElementsByClassName("imgmessage");
-		while(_g4 < _g11.length) {
-			var i = _g11[_g4];
-			++_g4;
+		var _g6 = 0;
+		var _g13 = window.document.getElementsByClassName("imgmessage");
+		while(_g6 < _g13.length) {
+			var i = _g13[_g6];
+			++_g6;
 			var image = i;
 			i.onclick = (function(f1,a1) {
 				return function() {
@@ -562,6 +586,10 @@ Main.prototype = {
 		return parsed;
 	}
 	,_checkKeyPress: function(e) {
+		if(this.canSendTypingNotification) {
+			var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.id));
+			typingHttp.request(true);
+		}
 		var code = null;
 		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		var selected = false;

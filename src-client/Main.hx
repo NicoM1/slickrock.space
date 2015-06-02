@@ -26,6 +26,12 @@ import thx.math.random.PseudoRandom;
 
 using StringTools;
 
+typedef MessageDiv = {
+	id: Int,
+	message: DivElement,
+	chevron: Element
+};
+
 class Main 
 {
 	var room: String;
@@ -49,6 +55,7 @@ class Main
 	var messageSound: AudioElement;
 	var lastParagraph: DivElement;
 	var favicons: Array<LinkElement>;
+	var typings: Array<MessageDiv> = new Array<MessageDiv>();
 	
 	var requestInProgress: Bool = false;
 	var first: Bool = true;
@@ -56,6 +63,7 @@ class Main
 	var locked: Bool = false;
 	var hasTriedAuth: Bool = false;
 	var wasLocked: Bool = false;
+	var canSendTypingNotification: Bool = true;
 	
 	var notifications: Array<Notification> = new Array<Notification>();
 	var numNotifications: Int = 0;
@@ -69,7 +77,6 @@ class Main
 		_buildCommands();
 		
 		authHttp = new Http(basePath);
-		authHttp.async = true;
 		authHttp.onData = _getAuth;
 		authHttp.onError = function(error) { 
 			trace(error); 
@@ -77,7 +84,6 @@ class Main
 		}
 		
 		getHttp = new Http(basePath + lastIndex);
-		getHttp.async = true;
 		getHttp.onData = _parseMessages;
 		getHttp.onError = function(error) { 
 			trace(error); 
@@ -450,7 +456,7 @@ class Main
 			wasLocked = true;
 			return;
 		}
-		if(wasLocked) {
+		if (wasLocked) {
 			_addMessage('successfully unlocked.');
 			wasLocked = false;
 		}
@@ -468,6 +474,24 @@ class Main
 				_sendNotification(message.innerText != null? message.innerText : message.textContent);
 			}
 		}
+		
+		for (t in typings) {
+			messages.removeChild(t.chevron);
+			messages.removeChild(t.message);
+		}
+		typings = [];
+		
+		for (t in parsed.messages.typing) {
+			var message: MessageDiv = {
+				id: t,
+				chevron: _makeSpan(true, t),
+				message: Browser.document.createDivElement()
+			}
+			typings.push(message);
+			messages.appendChild(message.chevron);
+			messages.appendChild(message.message);
+		}
+		
 		lastIndex = parsed.lastID;
 		first = false;
 		
@@ -551,6 +575,11 @@ class Main
 
 	//{ message posting
 	function _checkKeyPress(e) {
+		if (canSendTypingNotification) {
+			var typingHttp: Http = new Http(basePath + 'api/typing/$id');
+			typingHttp.request(true);
+		}
+		
 		var code = null;
 		if(e != null) {
 			 code = (e.keyCode != null ? e.keyCode : e.which);

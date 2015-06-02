@@ -3,5 +3,6 @@ package;
 typedef MessageList = {
 	lock: String,
 	owner: Int,
-	messages: Array<Message>
+	messages: Array<Message>,
+	typing: Array<Int>
 }

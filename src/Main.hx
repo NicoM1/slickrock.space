@@ -4,6 +4,8 @@ import abe.App;
 import express.Middleware;
 import express.Response;
 import haxe.Json;
+import haxe.Timer;
+import thx.Dates.HaxeDateTools;
 
 import js.Node;
 import js.node.Fs;
@@ -17,6 +19,9 @@ class Main {
 
 	public static var db: Array<String> = [];
 	public static var tokens: Array<Int> = [];
+	public static var typing: Array<Int> = [];
+	
+	static var typingTimers: Array<Timer> = [];
 	
 	static var textDB: String = '';
 	
@@ -33,13 +38,31 @@ class Main {
 		app.router.serve('/bin', './bin');
 	}
 	
+	public static function clearTyping(id: Int) {
+		if(typingTimers[id] == null) {
+			var timer = new Timer(3000);
+			timer.run = emptyTyping.bind(id);
+			typingTimers[id] = timer;
+		}
+		else {
+			resetTypingTimer(id);
+		}
+	}
+	
+	public static function resetTypingTimer(id: Int) {
+		typingTimers[id].run = emptyTyping.bind(id);
+	}
+	
+	static function emptyTyping(id: Int) {
+		typing.remove(id);
+	}
+	
 	public static function main() {
 		new Main();
 	}
 }
 
 class RouteHandler implements abe.IRoute {
-	
 	@:get('/')
 	function index() {
 		_serveHtml('bin/index.html', function(e, d) {
@@ -85,7 +108,8 @@ class RouteHandler implements abe.IRoute {
 				Main.rooms.set(room, {
 					messages: new Array<Message>(),
 					lock: null,
-					owner: null
+					owner: null,
+					typing: null
 				});
 			}
 			
@@ -103,6 +127,17 @@ class RouteHandler implements abe.IRoute {
 		Main.tokens[privateID] = Std.int(Math.random() * 0xFFFFFF);
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send(Std.string(Main.tokens[privateID]));
+	}
+	
+	@:post('/api/typing/:id') 
+	function typing(id: Int) {
+		if (Main.typing.indexOf(id) == -1) {
+			Main.typing.push(id);
+			Main.clearTyping(id);
+		}
+		else {
+			Main.resetTypingTimer(id);
+		}
 	}
 
 	@:post('/api/checkvalid/:privateID/:token') 
@@ -176,7 +211,8 @@ class RouteHandler implements abe.IRoute {
 			Main.rooms.set(room, {
 				messages: new Array<Message>(),
 				lock: null,
-				owner: null
+				owner: null,
+				typing: null
 			});
 		}
 		
@@ -185,7 +221,8 @@ class RouteHandler implements abe.IRoute {
 				messages: {
 					messages: new Array<Message>(),
 					lock: null,
-					owner: null
+					owner: null,
+					typing: Main.typing.copy()
 				},
 				lastID: Main.rooms.get(room).messages.length - 1
 			};

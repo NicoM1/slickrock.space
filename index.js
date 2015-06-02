@@ -6,6 +6,15 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var DateTools = function() { };
+DateTools.__name__ = ["DateTools"];
+DateTools.getMonthDays = function(d) {
+	var month = d.getMonth();
+	var year = d.getFullYear();
+	if(month != 1) return DateTools.DAYS_OF_MONTH[month];
+	var isB = year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+	if(isB) return 29; else return 28;
+};
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
@@ -176,40 +185,45 @@ var Main = function() {
 		var uses4 = [];
 		router.registerMethod("/api/gettoken/:privateID","post",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
-		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "token", optional : false, type : "Int", sources : ["params"]}]);
-		var process5 = new RouteHandler_$checkValid_$RouteProcess({ privateID : null, token : null},instance,processor5);
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
+		var process5 = new RouteHandler_$typing_$RouteProcess({ id : null},instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/api/checkvalid/:privateID/:token","post",process5,uses5,[]);
+		router.registerMethod("/api/typing/:id","post",process5,uses5,[]);
 		var filters6 = new abe_core_ArgumentsFilter();
-		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]}]);
-		var process6 = new RouteHandler_$lockRoom_$RouteProcess({ room : null, privateID : null, password : null},instance,processor6);
+		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "token", optional : false, type : "Int", sources : ["params"]}]);
+		var process6 = new RouteHandler_$checkValid_$RouteProcess({ privateID : null, token : null},instance,processor6);
 		var uses6 = [];
-		router.registerMethod("/api/lock/:room/:privateID/:password","post",process6,uses6,[]);
+		router.registerMethod("/api/checkvalid/:privateID/:token","post",process6,uses6,[]);
 		var filters7 = new abe_core_ArgumentsFilter();
-		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]}]);
-		var process7 = new RouteHandler_$unlockRoom_$RouteProcess({ room : null, privateID : null},instance,processor7);
+		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]}]);
+		var process7 = new RouteHandler_$lockRoom_$RouteProcess({ room : null, privateID : null, password : null},instance,processor7);
 		var uses7 = [];
-		router.registerMethod("/api/unlock/:room/:privateID","post",process7,uses7,[]);
+		router.registerMethod("/api/lock/:room/:privateID/:password","post",process7,uses7,[]);
 		var filters8 = new abe_core_ArgumentsFilter();
 		var processor8 = new abe_core_ArgumentProcessor(filters8,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]}]);
-		var process8 = new RouteHandler_$claimRoom_$RouteProcess({ room : null, privateID : null},instance,processor8);
+		var process8 = new RouteHandler_$unlockRoom_$RouteProcess({ room : null, privateID : null},instance,processor8);
 		var uses8 = [];
-		router.registerMethod("/api/claim/:room/:privateID","post",process8,uses8,[]);
+		router.registerMethod("/api/unlock/:room/:privateID","post",process8,uses8,[]);
 		var filters9 = new abe_core_ArgumentsFilter();
-		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
-		var process9 = new RouteHandler_$getMessages_$RouteProcess({ room : null, lastID : null},instance,processor9);
+		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]}]);
+		var process9 = new RouteHandler_$claimRoom_$RouteProcess({ room : null, privateID : null},instance,processor9);
 		var uses9 = [];
-		router.registerMethod("/api/:room/:lastID","get",process9,uses9,[]);
+		router.registerMethod("/api/claim/:room/:privateID","post",process9,uses9,[]);
 		var filters10 = new abe_core_ArgumentsFilter();
 		var processor10 = new abe_core_ArgumentProcessor(filters10,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
 		var process10 = new RouteHandler_$getMessages_$RouteProcess({ room : null, lastID : null},instance,processor10);
 		var uses10 = [];
-		router.registerMethod("/api/:room/:lastID","post",process10,uses10,[]);
+		router.registerMethod("/api/:room/:lastID","get",process10,uses10,[]);
 		var filters11 = new abe_core_ArgumentsFilter();
-		var processor11 = new abe_core_ArgumentProcessor(filters11,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
-		var process11 = new RouteHandler_$getMessagesWithPass_$RouteProcess({ room : null, password : null, lastID : null},instance,processor11);
+		var processor11 = new abe_core_ArgumentProcessor(filters11,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process11 = new RouteHandler_$getMessages_$RouteProcess({ room : null, lastID : null},instance,processor11);
 		var uses11 = [];
-		router.registerMethod("/api/:room/:password/:lastID","post",process11,uses11,[]);
+		router.registerMethod("/api/:room/:lastID","post",process11,uses11,[]);
+		var filters12 = new abe_core_ArgumentsFilter();
+		var processor12 = new abe_core_ArgumentProcessor(filters12,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process12 = new RouteHandler_$getMessagesWithPass_$RouteProcess({ room : null, password : null, lastID : null},instance,processor12);
+		var uses12 = [];
+		router.registerMethod("/api/:room/:password/:lastID","post",process12,uses12,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -219,6 +233,27 @@ var Main = function() {
 	app.router.serve("/bin","./bin");
 };
 Main.__name__ = ["Main"];
+Main.clearTyping = function(id) {
+	if(Main.typingTimers[id] == null) {
+		var timer = new haxe_Timer(3000);
+		timer.run = (function(f,id1) {
+			return function() {
+				f(id1);
+			};
+		})(Main.emptyTyping,id);
+		Main.typingTimers[id] = timer;
+	} else Main.resetTypingTimer(id);
+};
+Main.resetTypingTimer = function(id) {
+	Main.typingTimers[id].run = (function(f,id1) {
+		return function() {
+			f(id1);
+		};
+	})(Main.emptyTyping,id);
+};
+Main.emptyTyping = function(id) {
+	HxOverrides.remove(Main.typing,id);
+};
 Main.main = function() {
 	new Main();
 };
@@ -266,7 +301,7 @@ RouteHandler.prototype = {
 	,_sendMessage: function(response,message,room,password,id,privateID,token) {
 		if(Main.tokens[privateID] == token) {
 			if(!Main.rooms.exists(room)) {
-				var value = { messages : [], lock : null, owner : null};
+				var value = { messages : [], lock : null, owner : null, typing : null};
 				Main.rooms.set(room,value);
 			}
 			if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) Main.rooms.get(room).messages.push({ text : message, id : id});
@@ -278,6 +313,12 @@ RouteHandler.prototype = {
 		Main.tokens[privateID] = Std["int"](Math.random() * 16777215);
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send(Std.string(Main.tokens[privateID]));
+	}
+	,typing: function(id,request,response,next) {
+		if(HxOverrides.indexOf(Main.typing,id,0) == -1) {
+			Main.typing.push(id);
+			Main.clearTyping(id);
+		} else Main.resetTypingTimer(id);
 	}
 	,checkValid: function(privateID,token,request,response,next) {
 		var value = "invalid";
@@ -332,11 +373,11 @@ RouteHandler.prototype = {
 	}
 	,_getMessages: function(response,room,password,lastID) {
 		if(!Main.rooms.exists(room)) {
-			var value = { messages : [], lock : null, owner : null};
+			var value = { messages : [], lock : null, owner : null, typing : null};
 			Main.rooms.set(room,value);
 		}
 		if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
-			var messages = { messages : { messages : [], lock : null, owner : null}, lastID : Main.rooms.get(room).messages.length - 1};
+			var messages = { messages : { messages : [], lock : null, owner : null, typing : Main.typing.slice()}, lastID : Main.rooms.get(room).messages.length - 1};
 			if(lastID < Main.rooms.get(room).messages.length - 1) {
 				var _g1 = lastID + 1;
 				var _g = Main.rooms.get(room).messages.length;
@@ -539,6 +580,17 @@ RouteHandler_$sendMessage_$RouteProcess.prototype = $extend(abe_core_RouteProces
 		this.instance.sendMessage(this.args.message,this.args.room,this.args.id,this.args.privateID,this.args.token,request,response,next);
 	}
 	,__class__: RouteHandler_$sendMessage_$RouteProcess
+});
+var RouteHandler_$typing_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$typing_$RouteProcess.__name__ = ["RouteHandler_typing_RouteProcess"];
+RouteHandler_$typing_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$typing_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.typing(this.args.id,request,response,next);
+	}
+	,__class__: RouteHandler_$typing_$RouteProcess
 });
 var RouteHandler_$unlockRoom_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
@@ -1167,6 +1219,19 @@ haxe_IMap.prototype = {
 	,exists: null
 	,keys: null
 	,__class__: haxe_IMap
+};
+var haxe_Timer = function(time_ms) {
+	var me = this;
+	this.id = setInterval(function() {
+		me.run();
+	},time_ms);
+};
+haxe_Timer.__name__ = ["haxe","Timer"];
+haxe_Timer.prototype = {
+	id: null
+	,run: function() {
+	}
+	,__class__: haxe_Timer
 };
 var haxe_ds_Option = { __ename__ : ["haxe","ds","Option"], __constructs__ : ["Some","None"] };
 haxe_ds_Option.Some = function(v) { var $x = ["Some",0,v]; $x.__enum__ = haxe_ds_Option; $x.toString = $estr; return $x; };
@@ -1886,6 +1951,348 @@ thx_Bools.parse = function(v) {
 		throw new js__$Boot_HaxeError("unable to parse \"" + v1 + "\"");
 	}
 };
+var thx_Dates = function() { };
+thx_Dates.__name__ = ["thx","Dates"];
+thx_Dates.compare = function(a,b) {
+	return thx_Floats.compare(a.getTime(),b.getTime());
+};
+thx_Dates.create = function(year,month,day,hour,minute,second) {
+	if(second == null) second = 0;
+	if(minute == null) minute = 0;
+	if(hour == null) hour = 0;
+	if(day == null) day = 1;
+	if(month == null) month = 0;
+	minute += Math.floor(second / 60);
+	second = second % 60;
+	if(second < 0) second += 60;
+	hour += Math.floor(minute / 60);
+	minute = minute % 60;
+	if(minute < 0) minute += 60;
+	day += Math.floor(hour / 24);
+	hour = hour % 24;
+	if(hour < 0) hour += 24;
+	if(day == 0) {
+		month -= 1;
+		if(month < 0) {
+			month = 11;
+			year -= 1;
+		}
+		day = thx_Dates.numDaysInMonth(month,year);
+	}
+	year += Math.floor(month / 12);
+	month = month % 12;
+	if(month < 0) month += 12;
+	var daysInMonth = thx_Dates.numDaysInMonth(month,year);
+	while(day > daysInMonth) {
+		if(day > daysInMonth) {
+			day -= daysInMonth;
+			month++;
+		}
+		if(month > 11) {
+			month -= 12;
+			year++;
+		}
+		daysInMonth = thx_Dates.numDaysInMonth(month,year);
+	}
+	return new Date(year,month,day,hour,minute,second);
+};
+thx_Dates.equals = function(a,b) {
+	return a.getTime() == b.getTime();
+};
+thx_Dates.isLeapYear = function(year) {
+	if(year % 4 != 0) return false;
+	if(year % 100 == 0) return year % 400 == 0;
+	return true;
+};
+thx_Dates.isInLeapYear = function(d) {
+	return thx_Dates.isLeapYear(d.getFullYear());
+};
+thx_Dates.numDaysInMonth = function(month,year) {
+	switch(month) {
+	case 0:case 2:case 4:case 6:case 7:case 9:case 11:
+		return 31;
+	case 3:case 5:case 8:case 10:
+		return 30;
+	case 1:
+		if(thx_Dates.isLeapYear(year)) return 29; else return 28;
+		break;
+	default:
+		throw new js__$Boot_HaxeError("Invalid month \"" + month + "\".  Month should be a number, Jan=0, Dec=11");
+	}
+};
+thx_Dates.numDaysInThisMonth = function(d) {
+	return thx_Dates.numDaysInMonth(d.getMonth(),d.getFullYear());
+};
+thx_Dates.snapNext = function(date,period) {
+	var t = thx_Timestamps.snapNext(date.getTime(),period);
+	var d = new Date();
+	d.setTime(t);
+	return d;
+};
+thx_Dates.snapPrev = function(date,period) {
+	var t = thx_Timestamps.snapPrev(date.getTime(),period);
+	var d = new Date();
+	d.setTime(t);
+	return d;
+};
+thx_Dates.snapTo = function(date,period) {
+	var t = thx_Timestamps.snapTo(date.getTime(),period);
+	var d = new Date();
+	d.setTime(t);
+	return d;
+};
+thx_Dates.jump = function(date,period,amount) {
+	var sec = date.getSeconds();
+	var min = date.getMinutes();
+	var hour = date.getHours();
+	var day = date.getDate();
+	var month = date.getMonth();
+	var year = date.getFullYear();
+	switch(period[1]) {
+	case 0:
+		sec += amount;
+		break;
+	case 1:
+		min += amount;
+		break;
+	case 2:
+		hour += amount;
+		break;
+	case 3:
+		day += amount;
+		break;
+	case 4:
+		day += amount * 7;
+		break;
+	case 5:
+		month += amount;
+		break;
+	case 6:
+		year += amount;
+		break;
+	}
+	return thx_Dates.create(year,month,day,hour,min,sec);
+};
+thx_Dates.snapToWeekDay = function(date,day,firstDayOfWk) {
+	if(firstDayOfWk == null) firstDayOfWk = 0;
+	var d = date.getDay();
+	var s = day;
+	if(s < firstDayOfWk) s = s + 7;
+	if(d < firstDayOfWk) d = d + 7;
+	return thx_Dates.jump(date,thx_TimePeriod.Day,s - d);
+};
+thx_Dates.snapNextWeekDay = function(date,day) {
+	var d = date.getDay();
+	var s = day;
+	if(s < d) s = s + 7;
+	return thx_Dates.jump(date,thx_TimePeriod.Day,s - d);
+};
+thx_Dates.snapPrevWeekDay = function(date,day) {
+	var d = date.getDay();
+	var s = day;
+	if(s > d) s = s - 7;
+	return thx_Dates.jump(date,thx_TimePeriod.Day,s - d);
+};
+thx_Dates.prevYear = function(d) {
+	return thx_Dates.jump(d,thx_TimePeriod.Year,-1);
+};
+thx_Dates.nextYear = function(d) {
+	return thx_Dates.jump(d,thx_TimePeriod.Year,1);
+};
+thx_Dates.prevMonth = function(d) {
+	return thx_Dates.jump(d,thx_TimePeriod.Month,-1);
+};
+thx_Dates.nextMonth = function(d) {
+	return thx_Dates.jump(d,thx_TimePeriod.Month,1);
+};
+thx_Dates.prevWeek = function(d) {
+	return thx_Dates.jump(d,thx_TimePeriod.Week,-1);
+};
+thx_Dates.nextWeek = function(d) {
+	return thx_Dates.jump(d,thx_TimePeriod.Week,1);
+};
+thx_Dates.prevDay = function(d) {
+	return thx_Dates.jump(d,thx_TimePeriod.Day,-1);
+};
+thx_Dates.nextDay = function(d) {
+	return thx_Dates.jump(d,thx_TimePeriod.Day,1);
+};
+var thx_Timestamps = function() { };
+thx_Timestamps.__name__ = ["thx","Timestamps"];
+thx_Timestamps.create = function(year,month,day,hour,minute,second) {
+	return thx_Dates.create(year,month,day,hour,minute,second).getTime();
+};
+thx_Timestamps.snapNext = function(time,period) {
+	switch(period[1]) {
+	case 0:
+		return Math.ceil(time / 1000.0) * 1000.0;
+	case 1:
+		return Math.ceil(time / 60000.0) * 60000.0;
+	case 2:
+		return Math.ceil(time / 3600000.0) * 3600000.0;
+	case 3:
+		var d;
+		var d1 = new Date();
+		d1.setTime(time);
+		d = d1;
+		return thx_Timestamps.create(d.getFullYear(),d.getMonth(),d.getDate() + 1,0,0,0);
+	case 4:
+		var d2;
+		var d3 = new Date();
+		d3.setTime(time);
+		d2 = d3;
+		var wd = d2.getDay();
+		return thx_Timestamps.create(d2.getFullYear(),d2.getMonth(),d2.getDate() + 7 - wd,0,0,0);
+	case 5:
+		var d4;
+		var d5 = new Date();
+		d5.setTime(time);
+		d4 = d5;
+		return thx_Timestamps.create(d4.getFullYear(),d4.getMonth() + 1,1,0,0,0);
+	case 6:
+		var d6;
+		var d7 = new Date();
+		d7.setTime(time);
+		d6 = d7;
+		return thx_Timestamps.create(d6.getFullYear() + 1,0,1,0,0,0);
+	}
+};
+thx_Timestamps.snapPrev = function(time,period) {
+	switch(period[1]) {
+	case 0:
+		return Math.floor(time / 1000.0) * 1000.0;
+	case 1:
+		return Math.floor(time / 60000.0) * 60000.0;
+	case 2:
+		return Math.floor(time / 3600000.0) * 3600000.0;
+	case 3:
+		var d;
+		var d1 = new Date();
+		d1.setTime(time);
+		d = d1;
+		return thx_Timestamps.create(d.getFullYear(),d.getMonth(),d.getDate(),0,0,0);
+	case 4:
+		var d2;
+		var d3 = new Date();
+		d3.setTime(time);
+		d2 = d3;
+		var wd = d2.getDay();
+		return thx_Timestamps.create(d2.getFullYear(),d2.getMonth(),d2.getDate() - wd,0,0,0);
+	case 5:
+		var d4;
+		var d5 = new Date();
+		d5.setTime(time);
+		d4 = d5;
+		return thx_Timestamps.create(d4.getFullYear(),d4.getMonth(),1,0,0,0);
+	case 6:
+		var d6;
+		var d7 = new Date();
+		d7.setTime(time);
+		d6 = d7;
+		return thx_Timestamps.create(d6.getFullYear(),0,1,0,0,0);
+	}
+};
+thx_Timestamps.snapTo = function(time,period) {
+	switch(period[1]) {
+	case 0:
+		return Math.round(time / 1000.0) * 1000.0;
+	case 1:
+		return Math.round(time / 60000.0) * 60000.0;
+	case 2:
+		return Math.round(time / 3600000.0) * 3600000.0;
+	case 3:
+		var d;
+		var d1 = new Date();
+		d1.setTime(time);
+		d = d1;
+		var mod;
+		if(d.getHours() >= 12) mod = 1; else mod = 0;
+		return thx_Timestamps.create(d.getFullYear(),d.getMonth(),d.getDate() + mod,0,0,0);
+	case 4:
+		var d2;
+		var d3 = new Date();
+		d3.setTime(time);
+		d2 = d3;
+		var wd = d2.getDay();
+		var mod1;
+		if(wd < 3) mod1 = -wd; else if(wd > 3) mod1 = 7 - wd; else if(d2.getHours() < 12) mod1 = -wd; else mod1 = 7 - wd;
+		return thx_Timestamps.create(d2.getFullYear(),d2.getMonth(),d2.getDate() + mod1,0,0,0);
+	case 5:
+		var d4;
+		var d5 = new Date();
+		d5.setTime(time);
+		d4 = d5;
+		var mod2;
+		if(d4.getDate() > Math.round(DateTools.getMonthDays(d4) / 2)) mod2 = 1; else mod2 = 0;
+		return thx_Timestamps.create(d4.getFullYear(),d4.getMonth() + mod2,1,0,0,0);
+	case 6:
+		var d6;
+		var d7 = new Date();
+		d7.setTime(time);
+		d6 = d7;
+		var mod3;
+		if(time > new Date(d6.getFullYear(),6,2,0,0,0).getTime()) mod3 = 1; else mod3 = 0;
+		return thx_Timestamps.create(d6.getFullYear() + mod3,0,1,0,0,0);
+	}
+};
+thx_Timestamps.snapToWeekDay = function(time,day,firstDayOfWk) {
+	return thx_Dates.snapToWeekDay((function($this) {
+		var $r;
+		var d = new Date();
+		d.setTime(time);
+		$r = d;
+		return $r;
+	}(this)),day,firstDayOfWk).getTime();
+};
+thx_Timestamps.snapNextWeekDay = function(time,day) {
+	return thx_Dates.snapNextWeekDay((function($this) {
+		var $r;
+		var d = new Date();
+		d.setTime(time);
+		$r = d;
+		return $r;
+	}(this)),day).getTime();
+};
+thx_Timestamps.snapPrevWeekDay = function(time,day) {
+	return thx_Dates.snapPrevWeekDay((function($this) {
+		var $r;
+		var d = new Date();
+		d.setTime(time);
+		$r = d;
+		return $r;
+	}(this)),day).getTime();
+};
+thx_Timestamps.r = function(t,v) {
+	return Math.round(t / v) * v;
+};
+thx_Timestamps.f = function(t,v) {
+	return Math.floor(t / v) * v;
+};
+thx_Timestamps.c = function(t,v) {
+	return Math.ceil(t / v) * v;
+};
+var thx_TimePeriod = { __ename__ : ["thx","TimePeriod"], __constructs__ : ["Second","Minute","Hour","Day","Week","Month","Year"] };
+thx_TimePeriod.Second = ["Second",0];
+thx_TimePeriod.Second.toString = $estr;
+thx_TimePeriod.Second.__enum__ = thx_TimePeriod;
+thx_TimePeriod.Minute = ["Minute",1];
+thx_TimePeriod.Minute.toString = $estr;
+thx_TimePeriod.Minute.__enum__ = thx_TimePeriod;
+thx_TimePeriod.Hour = ["Hour",2];
+thx_TimePeriod.Hour.toString = $estr;
+thx_TimePeriod.Hour.__enum__ = thx_TimePeriod;
+thx_TimePeriod.Day = ["Day",3];
+thx_TimePeriod.Day.toString = $estr;
+thx_TimePeriod.Day.__enum__ = thx_TimePeriod;
+thx_TimePeriod.Week = ["Week",4];
+thx_TimePeriod.Week.toString = $estr;
+thx_TimePeriod.Week.__enum__ = thx_TimePeriod;
+thx_TimePeriod.Month = ["Month",5];
+thx_TimePeriod.Month.toString = $estr;
+thx_TimePeriod.Month.__enum__ = thx_TimePeriod;
+thx_TimePeriod.Year = ["Year",6];
+thx_TimePeriod.Year.toString = $estr;
+thx_TimePeriod.Year.__enum__ = thx_TimePeriod;
 var thx_Dynamics = function() { };
 thx_Dynamics.__name__ = ["thx","Dynamics"];
 thx_Dynamics.equals = function(a,b) {
@@ -4375,8 +4782,11 @@ if(typeof(scope.performance.now) == "undefined") {
 	};
 	scope.performance.now = now;
 }
+DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 Main.db = [];
 Main.tokens = [];
+Main.typing = [];
+Main.typingTimers = [];
 Main.textDB = "";
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
 abe_core_ArgumentsFilter.globalFilters = (function() {
