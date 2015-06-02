@@ -519,6 +519,7 @@ Main.prototype = {
 				this.typings.push(message1);
 				this.messages.appendChild(message1.chevron);
 				this.messages.appendChild(message1.message);
+				window.scrollTo(0,window.document.body.scrollHeight);
 			}
 		}
 		this.lastIndex = parsed.lastID;

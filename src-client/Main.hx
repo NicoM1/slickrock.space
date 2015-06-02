@@ -494,6 +494,7 @@ class Main
 				typings.push(message);
 				messages.appendChild(message.chevron);
 				messages.appendChild(message.message);
+				Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
 			}
 		}
 		
