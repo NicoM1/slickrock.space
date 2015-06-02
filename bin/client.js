@@ -586,20 +586,26 @@ Main.prototype = {
 		return parsed;
 	}
 	,_checkKeyPress: function(e) {
+		var _g = this;
 		if(this.canSendTypingNotification) {
 			var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.id));
 			typingHttp.request(true);
+			this.canSendTypingNotification = false;
+			var timer = new haxe_Timer(2500);
+			timer.run = function() {
+				_g.canSendTypingNotification = true;
+			};
 		}
 		var code = null;
 		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		var selected = false;
 		if(this.chatbox.value.charAt(0) == "/") {
 			this.helpbox.style.display = "block";
-			var _g = 0;
-			var _g1 = this.helpbox.children;
-			while(_g < _g1.length) {
-				var c = _g1[_g];
-				++_g;
+			var _g1 = 0;
+			var _g11 = this.helpbox.children;
+			while(_g1 < _g11.length) {
+				var c = _g11[_g1];
+				++_g1;
 				var li = c;
 				var command = li.getAttribute("data-command");
 				if(li.classList.contains("selected")) {

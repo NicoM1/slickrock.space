@@ -578,6 +578,11 @@ class Main
 		if (canSendTypingNotification) {
 			var typingHttp: Http = new Http(basePath + 'api/typing/$id');
 			typingHttp.request(true);
+			canSendTypingNotification = false;
+			var timer = new Timer(2500);
+			timer.run = function() {
+				canSendTypingNotification = true;
+			}
 		}
 		
 		var code = null;
