@@ -482,7 +482,7 @@ class Main
 		typings = [];
 		
 		for (t in parsed.messages.typing) {
-			if(t != id) {
+			//if(t != id) {
 				var typeMessage = Browser.document.createDivElement();
 				typeMessage.className = 'messageitem';
 				typeMessage.innerHTML = 'typing...';
@@ -494,7 +494,7 @@ class Main
 				typings.push(message);
 				messages.appendChild(message.chevron);
 				messages.appendChild(message.message);
-			}
+			//}
 		}
 		
 		lastIndex = parsed.lastID;

@@ -509,17 +509,15 @@ Main.prototype = {
 		while(_g5 < _g12.length) {
 			var t1 = _g12[_g5];
 			++_g5;
-			if(t1 != this.id) {
-				var typeMessage;
-				var _this = window.document;
-				typeMessage = _this.createElement("div");
-				typeMessage.className = "messageitem";
-				typeMessage.innerHTML = "typing...";
-				var message1 = { id : t1, chevron : this._makeSpan(true,t1), message : typeMessage};
-				this.typings.push(message1);
-				this.messages.appendChild(message1.chevron);
-				this.messages.appendChild(message1.message);
-			}
+			var typeMessage;
+			var _this = window.document;
+			typeMessage = _this.createElement("div");
+			typeMessage.className = "messageitem";
+			typeMessage.innerHTML = "typing...";
+			var message1 = { id : t1, chevron : this._makeSpan(true,t1), message : typeMessage};
+			this.typings.push(message1);
+			this.messages.appendChild(message1.chevron);
+			this.messages.appendChild(message1.message);
 		}
 		this.lastIndex = parsed.lastID;
 		this.first = false;
