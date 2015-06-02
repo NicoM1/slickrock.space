@@ -483,7 +483,7 @@ class Main
 		
 		for (t in parsed.messages.typing) {
 			var typeMessage = Browser.document.createDivElement();
-			typeMessage.className = 'messageblock';
+			typeMessage.className = 'messageitem';
 			typeMessage.innerHTML = 'typing...';
 			var message: MessageDiv = {
 				id: t,
