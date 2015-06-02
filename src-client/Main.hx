@@ -482,10 +482,12 @@ class Main
 		typings = [];
 		
 		for (t in parsed.messages.typing) {
+			var typeMessage = Browser.document.createDivElement();
+			typeMessage.innerHTML = 'typing...';
 			var message: MessageDiv = {
 				id: t,
 				chevron: _makeSpan(true, t),
-				message: Browser.document.createDivElement()
+				message: typeMessage
 			}
 			typings.push(message);
 			messages.appendChild(message.chevron);
