@@ -504,20 +504,23 @@ Main.prototype = {
 			this.messages.removeChild(t.message);
 		}
 		this.typings = [];
+		console.log("typing: " + Std.string(parsed.messages.typing));
 		var _g5 = 0;
 		var _g12 = parsed.messages.typing;
 		while(_g5 < _g12.length) {
 			var t1 = _g12[_g5];
 			++_g5;
-			var typeMessage;
-			var _this = window.document;
-			typeMessage = _this.createElement("div");
-			typeMessage.className = "messageitem";
-			typeMessage.innerHTML = "typing...";
-			var message1 = { id : t1, chevron : this._makeSpan(true,t1), message : typeMessage};
-			this.typings.push(message1);
-			this.messages.appendChild(message1.chevron);
-			this.messages.appendChild(message1.message);
+			if(t1 != this.id) {
+				var typeMessage;
+				var _this = window.document;
+				typeMessage = _this.createElement("div");
+				typeMessage.className = "messageitem";
+				typeMessage.innerHTML = "typing...";
+				var message1 = { id : t1, chevron : this._makeSpan(true,t1), message : typeMessage};
+				this.typings.push(message1);
+				this.messages.appendChild(message1.chevron);
+				this.messages.appendChild(message1.message);
+			}
 		}
 		this.lastIndex = parsed.lastID;
 		this.first = false;
