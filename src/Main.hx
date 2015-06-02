@@ -18,9 +18,7 @@ using StringTools;
 class Main {
 
 	public static var db: Array<String> = [];
-	public static var tokens: Array<Int> = [];
-	public static var typing: Map<String, Array<Int>>;
-	
+	public static var tokens: Array<Int> = [];	
 	static var typingTimers: Map<String, Array<Timer>>;
 	
 	static var textDB: String = '';
@@ -29,7 +27,6 @@ class Main {
 		
 	function new() {
 		rooms = new Rooms();
-		typing = new Map();
 		typingTimers = new Map();
 		
 		var app = new App();
@@ -58,9 +55,6 @@ class Main {
 		if (typingTimers[room] == null) {
 			typingTimers[room] = new Array();
 		}
-		if (typing[room] == null) {
-			typing[room] = new Array();
-		}
 		typingTimers[room][id].run = emptyTyping.bind(room, id);
 	}
 	
@@ -68,10 +62,7 @@ class Main {
 		if (typingTimers[room] == null) {
 			typingTimers[room] = new Array();
 		}
-		if (typing[room] == null) {
-			typing[room] = new Array();
-		}
-		typing[room].remove(id);
+		rooms[room].typing.remove(id);
 	}
 	
 	public static function main() {
@@ -149,11 +140,8 @@ class RouteHandler implements abe.IRoute {
 	
 	@:post('/api/typing/:room/:id') 
 	function typing(room: String, id: Int) {
-		if (Main.typing.get(room) == null) {
-			Main.typing.set(room, new Array());
-		}
-		if (Main.typing.get(room).indexOf(id) == -1) {
-			Main.typing.get(room).push(id);
+		if (Main.rooms.get(room).typing.indexOf(id) == -1) {
+			Main.rooms.get(room).typing.push(id);
 			Main.clearTyping(room, id);
 		}
 		else {
@@ -244,7 +232,7 @@ class RouteHandler implements abe.IRoute {
 					messages: new Array<Message>(),
 					lock: null,
 					owner: null,
-					typing: Main.typing[room] != null? Main.typing[room].copy() : []
+					typing: Main.rooms.get(room).typing
 				},
 				lastID: Main.rooms.get(room).messages.length - 1
 			};

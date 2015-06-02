@@ -156,7 +156,6 @@ Lambda.has = function(it,elt) {
 };
 var Main = function() {
 	Main.rooms = new haxe_ds_StringMap();
-	Main.typing = new haxe_ds_StringMap();
 	Main.typingTimers = new haxe_ds_StringMap();
 	var app = new abe_App();
 	(function(instance,parent) {
@@ -257,11 +256,6 @@ Main.resetTypingTimer = function(room,id) {
 		Main.typingTimers.set(room,v);
 		v;
 	}
-	if(Main.typing.get(room) == null) {
-		var v1 = [];
-		Main.typing.set(room,v1);
-		v1;
-	}
 	Main.typingTimers.get(room)[id].run = (function(f,a1,id1) {
 		return function() {
 			f(a1,id1);
@@ -274,12 +268,7 @@ Main.emptyTyping = function(room,id) {
 		Main.typingTimers.set(room,v);
 		v;
 	}
-	if(Main.typing.get(room) == null) {
-		var v1 = [];
-		Main.typing.set(room,v1);
-		v1;
-	}
-	var _this = Main.typing.get(room);
+	var _this = Main.rooms.get(room).typing;
 	HxOverrides.remove(_this,id);
 };
 Main.main = function() {
@@ -344,17 +333,13 @@ RouteHandler.prototype = {
 		response.send(Std.string(Main.tokens[privateID]));
 	}
 	,typing: function(room,id,request,response,next) {
-		if(Main.typing.get(room) == null) {
-			var value = [];
-			Main.typing.set(room,value);
-		}
 		if((function($this) {
 			var $r;
-			var _this = Main.typing.get(room);
+			var _this = Main.rooms.get(room).typing;
 			$r = HxOverrides.indexOf(_this,id,0);
 			return $r;
 		}(this)) == -1) {
-			Main.typing.get(room).push(id);
+			Main.rooms.get(room).typing.push(id);
 			Main.clearTyping(room,id);
 		} else Main.resetTypingTimer(room,id);
 		response.send("needs a response");
@@ -416,12 +401,7 @@ RouteHandler.prototype = {
 			Main.rooms.set(room,value);
 		}
 		if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
-			var messages = { messages : { messages : [], lock : null, owner : null, typing : Main.typing.get(room) != null?(function($this) {
-				var $r;
-				var _this = Main.typing.get(room);
-				$r = _this.slice();
-				return $r;
-			}(this)):[]}, lastID : Main.rooms.get(room).messages.length - 1};
+			var messages = { messages : { messages : [], lock : null, owner : null, typing : Main.rooms.get(room).typing}, lastID : Main.rooms.get(room).messages.length - 1};
 			if(lastID < Main.rooms.get(room).messages.length - 1) {
 				var _g1 = lastID + 1;
 				var _g = Main.rooms.get(room).messages.length;
