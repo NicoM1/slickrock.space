@@ -319,7 +319,7 @@ RouteHandler.prototype = {
 		Main.emptyTyping(room,id);
 		if(Main.tokens[privateID] == token) {
 			if(!Main.rooms.exists(room)) {
-				var value = { messages : [], lock : null, owner : null, typing : null};
+				var value = { messages : [], lock : null, owner : null, typing : []};
 				Main.rooms.set(room,value);
 			}
 			if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) Main.rooms.get(room).messages.push({ text : message, id : id});
@@ -397,7 +397,7 @@ RouteHandler.prototype = {
 	}
 	,_getMessages: function(response,room,password,lastID) {
 		if(!Main.rooms.exists(room)) {
-			var value = { messages : [], lock : null, owner : null, typing : null};
+			var value = { messages : [], lock : null, owner : null, typing : []};
 			Main.rooms.set(room,value);
 		}
 		if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {

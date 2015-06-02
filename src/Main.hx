@@ -118,7 +118,7 @@ class RouteHandler implements abe.IRoute {
 					messages: new Array<Message>(),
 					lock: null,
 					owner: null,
-					typing: null
+					typing: []
 				});
 			}
 			
@@ -222,7 +222,7 @@ class RouteHandler implements abe.IRoute {
 				messages: new Array<Message>(),
 				lock: null,
 				owner: null,
-				typing: null
+				typing: []
 			});
 		}
 		
