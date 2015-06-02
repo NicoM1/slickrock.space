@@ -57,7 +57,9 @@ class Main {
 	public static function resetTypingTimer(room: String, id: Int) {
 		if (typingTimers[room] == null) {
 			typingTimers[room] = new Array();
-			return;
+		}
+		if (typing[room] == null) {
+			typing[room] = new Array();
 		}
 		typingTimers[room][id].run = emptyTyping.bind(room, id);
 	}
@@ -65,7 +67,9 @@ class Main {
 	public static function emptyTyping(room: String, id: Int) {
 		if (typingTimers[room] == null) {
 			typingTimers[room] = new Array();
-			return;
+		}
+		if (typing[room] == null) {
+			typing[room] = new Array();
 		}
 		typing[room].remove(id);
 	}

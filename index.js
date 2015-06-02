@@ -256,7 +256,11 @@ Main.resetTypingTimer = function(room,id) {
 		var v = [];
 		Main.typingTimers.set(room,v);
 		v;
-		return;
+	}
+	if(Main.typing.get(room) == null) {
+		var v1 = [];
+		Main.typing.set(room,v1);
+		v1;
 	}
 	Main.typingTimers.get(room)[id].run = (function(f,a1,id1) {
 		return function() {
@@ -269,7 +273,11 @@ Main.emptyTyping = function(room,id) {
 		var v = [];
 		Main.typingTimers.set(room,v);
 		v;
-		return;
+	}
+	if(Main.typing.get(room) == null) {
+		var v1 = [];
+		Main.typing.set(room,v1);
+		v1;
 	}
 	var _this = Main.typing.get(room);
 	HxOverrides.remove(_this,id);
