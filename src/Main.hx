@@ -59,10 +59,7 @@ class Main {
 	}
 	
 	public static function emptyTyping(room: String, id: Int) {
-		if (typingTimers[room] == null) {
-			typingTimers[room] = new Array();
-		}
-		rooms[room].typing.remove(id);
+		//rooms[room].typing.remove(id);
 	}
 	
 	public static function main() {
