@@ -344,6 +344,10 @@ RouteHandler.prototype = {
 		response.send(Std.string(Main.tokens[privateID]));
 	}
 	,typing: function(room,id,request,response,next) {
+		if(Main.typing.get(room) == null) {
+			var value = [];
+			Main.typing.set(room,value);
+		}
 		if((function($this) {
 			var $r;
 			var _this = Main.typing.get(room);

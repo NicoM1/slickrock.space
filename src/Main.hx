@@ -149,6 +149,9 @@ class RouteHandler implements abe.IRoute {
 	
 	@:post('/api/typing/:room/:id') 
 	function typing(room: String, id: Int) {
+		if (Main.typing.get(room) == null) {
+			Main.typing.set(room, new Array());
+		}
 		if (Main.typing.get(room).indexOf(id) == -1) {
 			Main.typing.get(room).push(id);
 			Main.clearTyping(room, id);
