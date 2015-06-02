@@ -268,6 +268,8 @@ Main.resetTypingTimer = function(room,id) {
 	})(Main.emptyTyping,room,id);
 };
 Main.emptyTyping = function(room,id) {
+	var _this = Main.rooms.get(room).typing;
+	HxOverrides.remove(_this,id);
 };
 Main.main = function() {
 	new Main();

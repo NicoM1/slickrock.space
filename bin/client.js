@@ -591,7 +591,7 @@ Main.prototype = {
 	,_checkKeyPress: function(e) {
 		var _g = this;
 		if(this.canSendTypingNotification) {
-			var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.id));
+			var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
 			typingHttp.request(true);
 			this.canSendTypingNotification = false;
 			var timer = new haxe_Timer(2500);

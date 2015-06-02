@@ -582,7 +582,7 @@ class Main
 	//{ message posting
 	function _checkKeyPress(e) {
 		if (canSendTypingNotification) {
-			var typingHttp: Http = new Http(basePath + 'api/typing/$id');
+			var typingHttp: Http = new Http(basePath + 'api/typing/$room/$id');
 			typingHttp.request(true);
 			canSendTypingNotification = false;
 			var timer = new Timer(2500);
