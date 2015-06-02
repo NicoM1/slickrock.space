@@ -241,7 +241,7 @@ class RouteHandler implements abe.IRoute {
 					messages: new Array<Message>(),
 					lock: null,
 					owner: null,
-					typing: Main.typing[room] != null? Main.typing[room].copy() : null
+					typing: Main.typing[room] != null? Main.typing[room].copy() : []
 				},
 				lastID: Main.rooms.get(room).messages.length - 1
 			};

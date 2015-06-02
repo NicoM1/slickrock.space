@@ -417,7 +417,7 @@ RouteHandler.prototype = {
 				var _this = Main.typing.get(room);
 				$r = _this.slice();
 				return $r;
-			}(this)):null}, lastID : Main.rooms.get(room).messages.length - 1};
+			}(this)):[]}, lastID : Main.rooms.get(room).messages.length - 1};
 			if(lastID < Main.rooms.get(room).messages.length - 1) {
 				var _g1 = lastID + 1;
 				var _g = Main.rooms.get(room).messages.length;
