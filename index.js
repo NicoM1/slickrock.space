@@ -404,12 +404,12 @@ RouteHandler.prototype = {
 			Main.rooms.set(room,value);
 		}
 		if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
-			var messages = { messages : { messages : [], lock : null, owner : null, typing : (function($this) {
+			var messages = { messages : { messages : [], lock : null, owner : null, typing : Main.typing.get(room) != null?(function($this) {
 				var $r;
 				var _this = Main.typing.get(room);
 				$r = _this.slice();
 				return $r;
-			}(this))}, lastID : Main.rooms.get(room).messages.length - 1};
+			}(this)):[]}, lastID : Main.rooms.get(room).messages.length - 1};
 			if(lastID < Main.rooms.get(room).messages.length - 1) {
 				var _g1 = lastID + 1;
 				var _g = Main.rooms.get(room).messages.length;
