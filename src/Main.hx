@@ -13,6 +13,8 @@ import js.Error;
 
 import express.Express;
 
+import org.mongodb.Mongo;
+
 using StringTools;
 
 class Main {
