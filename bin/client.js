@@ -400,7 +400,7 @@ Main.prototype = {
 		} else this._addMessage("**/impersonate** requires argument: *ID*.");
 	}
 	,_changeRoom: function($arguments) {
-		if($arguments != null && $arguments[0] != null && $arguments[0] != "") window.location.replace($arguments[0]); else this._addMessage("**/survey** requires argument: *ROOM*.");
+		if($arguments != null && $arguments[0] != null && $arguments[0] != "") window.location.href = $arguments[0]; else this._addMessage("**/survey** requires argument: *ROOM*.");
 	}
 	,_claimRoom: function($arguments) {
 		var _g = this;

@@ -355,7 +355,7 @@ class Main
 	
 	function _changeRoom(arguments: Array<String>) {
 		if (arguments != null && arguments[0] != null && arguments[0] != '') {
-			Browser.window.location.replace(arguments[0]);
+			Browser.window.location.href = arguments[0];
 		}
 		else {
 			_addMessage('**/survey** requires argument: *ROOM*.');
