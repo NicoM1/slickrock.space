@@ -154,6 +154,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.commandIndex = -1;
 	this.sendLast = false;
 	this.lastMessage = "";
 	this.commands = new haxe_ds_StringMap();
@@ -607,7 +608,10 @@ Main.prototype = {
 		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		var selected = false;
 		if(this.chatbox.value.charAt(0) == "/") {
-			this.helpbox.style.display = "block";
+			if(this.helpbox.style.display != "block") {
+				this.helpbox.style.display = "block";
+				this.commandIndex = -1;
+			}
 			var _g1 = 0;
 			var _g11 = this.helpbox.children;
 			while(_g1 < _g11.length) {
@@ -634,6 +638,23 @@ Main.prototype = {
 						selected = true;
 					} else li.classList.remove("selected");
 				}
+			}
+			if(code == 40 || code == 38) {
+				var _g2 = 0;
+				var _g12 = this.helpbox.children;
+				while(_g2 < _g12.length) {
+					var c1 = _g12[_g2];
+					++_g2;
+					c1.classList.remove("selected");
+				}
+				if(code == 40) {
+					this.commandIndex++;
+					if(this.commandIndex >= this.helpbox.children.length) this.commandIndex = 0;
+				} else if(code == 38) {
+					this.commandIndex--;
+					if(this.commandIndex <= -1) this.commandIndex = this.helpbox.children.length - 1;
+				}
+				this.helpbox.children[this.commandIndex].classList.add("selected");
 			}
 		} else this.helpbox.style.display = "none";
 		if(code != null && code == 13) {

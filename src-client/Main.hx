@@ -73,6 +73,8 @@ class Main
 	var lastMessage: String = '';
 	var sendLast: Bool = false;
 	
+	var commandIndex: Int = -1;
+	
 	function new() {
 		room = untyped window.room;
 		_buildCommands();
@@ -602,7 +604,10 @@ class Main
 		
 		var selected: Bool = false;
 		if (chatbox.value.charAt(0) == '/') {
-			helpbox.style.display = 'block';
+			if(helpbox.style.display != 'block') {
+				helpbox.style.display = 'block';
+				commandIndex = -1;
+			}
 			
 			for (c in helpbox.children) {
 				var li: LIElement = cast c;
@@ -637,6 +642,24 @@ class Main
 						li.classList.remove('selected');
 					}
 				}
+			}
+			if (code == 40 || code == 38) {
+				for (c in helpbox.children) {
+					c.classList.remove('selected');
+				}
+				if (code == 40) { //DOWN
+					commandIndex++;
+					if (commandIndex >= helpbox.children.length) {
+						commandIndex = 0;
+					}
+				}
+				else if (code == 38) { //UP
+					commandIndex--;
+					if (commandIndex <= -1) {
+						commandIndex = helpbox.children.length - 1;
+					}
+				}
+				helpbox.children[commandIndex].classList.add('selected');
 			}
 		}
 		else {
