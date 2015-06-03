@@ -92,6 +92,13 @@ class Main
 		
 		postHttp = new Http(basePath);
 		postHttp.async = true;
+		postHttp.onData = function(data) {
+			if (data == 'failed') {
+				token = null;
+				hasTriedAuth = false;
+				_tryAuth();
+			}
+		}
 		postHttp.onError = function(error) { 
 			trace(error); 
 			requestInProgress = false; 

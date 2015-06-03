@@ -323,9 +323,12 @@ RouteHandler.prototype = {
 				Main.rooms.set(room,value);
 			}
 			if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) Main.rooms.get(room).messages.push({ text : message, id : id});
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("success");
+			return;
 		}
 		response.setHeader("Access-Control-Allow-Origin","*");
-		response.send("maybe it just needs a response");
+		response.send("failed");
 	}
 	,getToken: function(privateID,request,response,next) {
 		Main.tokens[privateID] = Std["int"](Math.random() * 16777215);
