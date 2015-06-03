@@ -188,6 +188,13 @@ var Main = function() {
 	};
 	this.postHttp = new haxe_Http(this.basePath);
 	this.postHttp.async = true;
+	this.postHttp.onData = function(data) {
+		if(data == "failed") {
+			_g.token = null;
+			_g.hasTriedAuth = false;
+			_g._tryAuth();
+		}
+	};
 	this.postHttp.onError = function(error2) {
 		console.log(error2);
 		_g.requestInProgress = false;
@@ -238,7 +245,7 @@ Main.prototype = {
 		};
 		this.chatbox.oninput = function() {
 			_g._getNotificationPermission();
-			if(!_g.hasTriedAuth) _g._tryAuth();
+			if(_g.token == null && !_g.hasTriedAuth) _g._tryAuth();
 		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
