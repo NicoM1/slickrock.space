@@ -203,6 +203,11 @@ class Main
 				if(printValid) {
 					_addMessage('authentication successful, chat away.');
 					hasTriedAuth = false;
+					
+					if (sendLast) {
+						_postMessage(lastMessage);
+						_update();
+					}
 				}
 			}
 		}
@@ -644,9 +649,6 @@ class Main
 				_setToken(t != null? t : -1);
 				chatbox.value = '';
 				helpbox.style.display = 'none';
-				if(!sendLast) {
-					return;
-				}
 			}
 			if(chatbox.value.charAt(0) == '/') {
 				_parseCommand(chatbox.value.substr(1));
@@ -660,25 +662,11 @@ class Main
 					locked = false;
 					return;
 				}
+			
+				_postMessage(chatbox.value);
 				
-				var toSend: String;
-				if (sendLast) {
-					toSend = lastMessage.urlEncode();
-					sendLast = false;
-				}
-				else {
-					toSend = chatbox.value.urlEncode();
-				}
-				if(password == null) {
-					postHttp.url = basePath + 'chat/' + toSend +'/' + room + '/' + id + '/' + privateID + '/' + token;
-				}
-				else {
-					postHttp.url = basePath + 'chat/' + toSend +'/' + room + '/' + password +'/' + id + '/' + privateID + '/' + token;
-				}
-				lastMessage = toSend;
-				if(chatbox.value.trim() != '') {
-					postHttp.request(true);
-				}
+				lastMessage = chatbox.value;
+				
 				_update();
 			}
 			chatbox.value = '';
@@ -695,6 +683,18 @@ class Main
 					canSendTypingNotification = true;
 				}
 			}
+		}
+	}
+	
+	function _postMessage(msg: String) {
+		if (msg.trim() != '') {
+			if(password == null) {
+				postHttp.url = basePath + 'chat/' + msg.urlEncode() +'/' + room + '/' + id + '/' + privateID + '/' + token;
+			}
+			else {
+				postHttp.url = basePath + 'chat/' + msg.urlEncode() +'/' + room + '/' + password +'/' + id + '/' + privateID + '/' + token;
+			}
+			postHttp.request(true);
 		}
 	}
 	//}

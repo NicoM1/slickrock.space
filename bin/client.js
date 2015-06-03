@@ -282,6 +282,10 @@ Main.prototype = {
 			} else if(printValid) {
 				_g._addMessage("authentication successful, chat away.");
 				_g.hasTriedAuth = false;
+				if(_g.sendLast) {
+					_g._postMessage(_g.lastMessage);
+					_g._update();
+				}
 			}
 		};
 		checkValid.onError = function(e) {
@@ -638,7 +642,6 @@ Main.prototype = {
 				this._setToken(t != null?t:-1);
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
-				if(!this.sendLast) return;
 			}
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				if(this.locked) {
@@ -649,14 +652,8 @@ Main.prototype = {
 					this.locked = false;
 					return;
 				}
-				var toSend;
-				if(this.sendLast) {
-					toSend = encodeURIComponent(this.lastMessage);
-					this.sendLast = false;
-				} else toSend = encodeURIComponent(this.chatbox.value);
-				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + toSend + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + toSend + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
-				this.lastMessage = toSend;
-				if(StringTools.trim(this.chatbox.value) != "") this.postHttp.request(true);
+				this._postMessage(this.chatbox.value);
+				this.lastMessage = this.chatbox.value;
 				this._update();
 			}
 			this.chatbox.value = "";
@@ -672,6 +669,12 @@ Main.prototype = {
 					_g.canSendTypingNotification = true;
 				};
 			}
+		}
+	}
+	,_postMessage: function(msg) {
+		if(StringTools.trim(msg) != "") {
+			if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
+			this.postHttp.request(true);
 		}
 	}
 	,_openImageInNewTab: function(src) {
