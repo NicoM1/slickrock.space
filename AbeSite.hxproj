@@ -30,7 +30,6 @@
   <!-- haxelib libraries -->
   <haxelib>
     <library name="abe" />
-    <library name="mongodb" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

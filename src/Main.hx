@@ -13,8 +13,6 @@ import js.Error;
 
 import express.Express;
 
-import org.mongodb.Mongo;
-
 using StringTools;
 
 class Main {
@@ -147,6 +145,7 @@ class RouteHandler implements abe.IRoute {
 		else {
 			Main.resetTypingTimer(room, id);
 		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('needs a response');
 	}
 

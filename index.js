@@ -342,6 +342,7 @@ RouteHandler.prototype = {
 			Main.rooms.get(room).typing.push(id);
 			Main.clearTyping(room,id);
 		} else Main.resetTypingTimer(room,id);
+		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("needs a response");
 	}
 	,checkValid: function(privateID,token,request,response,next) {
