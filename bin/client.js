@@ -154,6 +154,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.sendLast = false;
 	this.lastMessage = "";
 	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
@@ -192,6 +193,7 @@ var Main = function() {
 		if(data == "failed") {
 			_g.token = null;
 			_g.hasTriedAuth = false;
+			_g.sendLast = true;
 			_g._tryAuth();
 		}
 	};
@@ -636,7 +638,7 @@ Main.prototype = {
 				this._setToken(t != null?t:-1);
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
-				return;
+				if(!this.sendLast) return;
 			}
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				if(this.locked) {
@@ -647,8 +649,13 @@ Main.prototype = {
 					this.locked = false;
 					return;
 				}
-				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(this.chatbox.value) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
-				this.lastMessage = this.chatbox.value;
+				var toSend;
+				if(this.sendLast) {
+					toSend = encodeURIComponent(this.lastMessage);
+					this.sendLast = false;
+				} else toSend = encodeURIComponent(this.chatbox.value);
+				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + toSend + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + toSend + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
+				this.lastMessage = toSend;
 				if(StringTools.trim(this.chatbox.value) != "") this.postHttp.request(true);
 				this._update();
 			}

@@ -71,6 +71,7 @@ class Main
 	var commands: Map<String, Array<String> -> Void> = new Map();
 	
 	var lastMessage: String = '';
+	var sendLast: Bool = false;
 	
 	function new() {
 		room = untyped window.room;
@@ -96,6 +97,7 @@ class Main
 			if (data == 'failed') {
 				token = null;
 				hasTriedAuth = false;
+				sendLast = true;
 				_tryAuth();
 			}
 		}
@@ -642,7 +644,9 @@ class Main
 				_setToken(t != null? t : -1);
 				chatbox.value = '';
 				helpbox.style.display = 'none';
-				return;
+				if(!sendLast) {
+					return;
+				}
 			}
 			if(chatbox.value.charAt(0) == '/') {
 				_parseCommand(chatbox.value.substr(1));
@@ -656,13 +660,22 @@ class Main
 					locked = false;
 					return;
 				}
-				if(password == null) {
-					postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + id + '/' + privateID + '/' + token;
+				
+				var toSend: String;
+				if (sendLast) {
+					toSend = lastMessage.urlEncode();
+					sendLast = false;
 				}
 				else {
-					postHttp.url = basePath + 'chat/' + chatbox.value.urlEncode() +'/' + room + '/' + password +'/' + id + '/' + privateID + '/' + token;
+					toSend = chatbox.value.urlEncode();
 				}
-				lastMessage = chatbox.value;
+				if(password == null) {
+					postHttp.url = basePath + 'chat/' + toSend +'/' + room + '/' + id + '/' + privateID + '/' + token;
+				}
+				else {
+					postHttp.url = basePath + 'chat/' + toSend +'/' + room + '/' + password +'/' + id + '/' + privateID + '/' + token;
+				}
+				lastMessage = toSend;
 				if(chatbox.value.trim() != '') {
 					postHttp.request(true);
 				}
