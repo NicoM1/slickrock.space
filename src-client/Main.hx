@@ -649,6 +649,7 @@ class Main
 				_setToken(t != null? t : -1);
 				chatbox.value = '';
 				helpbox.style.display = 'none';
+				return;
 			}
 			if(chatbox.value.charAt(0) == '/') {
 				_parseCommand(chatbox.value.substr(1));

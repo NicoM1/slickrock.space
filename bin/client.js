@@ -642,6 +642,7 @@ Main.prototype = {
 				this._setToken(t != null?t:-1);
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
+				return;
 			}
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				if(this.locked) {
