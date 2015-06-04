@@ -9,58 +9,67 @@
 	<link class="favicon" rel="shortcut icon" type="image/x-icon" href="bin/faviconempty.ico" />
 	<link class="favicon" rel="icon" type="image/x-icon" href="bin/faviconempty.ico" />
 </head>
-<body>
-	<script src="bin/client.js"></script>
-	<audio id="messagesound">
-		<source src="pop_drip.ogg" type="audio/ogg">
-		<source src="pop_drip.mp3" type="audio/mpeg">
-		<source src="pop_drip.wav" type="audio/wav">
-	</audio>
-	<div id="messages"></div>
-	<br/>
-	<br/>
-	<ul id="helpbox">
-		<li data-command="revivify">
-			<div class="command"><strong>/revivify</strong></div>
-			<div class="description">regenerate your ID, giving you a new color.</div>
-		</li>
-		
-		<li data-command="oneself">
-			<div class="command"><strong>/oneself</strong></div>
-			<div class="description">print your current ID.</div>
-		</li>
-		
-		<li data-command="impersonate">
-			<div class="command"><strong>/impersonate</strong> <em>ID</em></div>
-			<div class="description">set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).</div>
-		</li>
-		
-		<li data-command="existent">
-			<div class="command"><strong>/existent</strong></div>
-			<div class="description">print the chat room you are currently in.</div>
-		</li>
-		
-		<li data-command="survey">
-			<div class="command"><strong>/survey</strong> <em>ROOM</em></div>
-			<div class="description">move to a different chat room.</div>
-		</li>
-				
-		<li data-command="claim">
-			<div class="command"><strong>/claim</strong></div>
-			<div class="description">attempt to take ownership of the current room.</div>
-		</li>
-		
-		<li data-command="fasten">
-			<div class="command"><strong>/fasten</strong> <em>PASSWORD</em></div>
-			<div class="description">attempt to lock the current room.</div>
-		</li>
-		
-		<li data-command="unfasten">
-			<div class="command"><strong>/unfasten</strong></div>
-			<div class="description">attempt to unlock the current room.</div>
-		</li>
-	</ul>
-	<input id="chatbox"></input>
-	<!--<span id="chevron">></span>-->
-</body>
+	<body>
+		<script src="bin/client.js"></script>
+		<audio id="messagesound">
+			<source src="pop_drip.ogg" type="audio/ogg">
+			<source src="pop_drip.mp3" type="audio/mpeg">
+			<source src="pop_drip.wav" type="audio/wav">
+		</audio>
+		<div id="messages"></div>
+		<br/>
+		<br/>
+		<ul id="helpbox">
+			<li data-command="revivify">
+				<div class="command"><strong>/revivify</strong></div>
+				<div class="description">regenerate your ID, giving you a new color.</div>
+			</li>
+			
+			<li data-command="oneself">
+				<div class="command"><strong>/oneself</strong></div>
+				<div class="description">print your current ID.</div>
+			</li>
+			
+			<li data-command="impersonate">
+				<div class="command"><strong>/impersonate</strong> <em>ID</em></div>
+				<div class="description">set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).</div>
+			</li>
+			
+			<li data-command="existent">
+				<div class="command"><strong>/existent</strong></div>
+				<div class="description">print the chat room you are currently in.</div>
+			</li>
+			
+			<li data-command="survey">
+				<div class="command"><strong>/survey</strong> <em>ROOM</em></div>
+				<div class="description">move to a different chat room.</div>
+			</li>
+					
+			<li data-command="claim">
+				<div class="command"><strong>/claim</strong></div>
+				<div class="description">attempt to take ownership of the current room.</div>
+			</li>
+			
+			<li data-command="fasten">
+				<div class="command"><strong>/fasten</strong> <em>PASSWORD</em></div>
+				<div class="description">attempt to lock the current room.</div>
+			</li>
+			
+			<li data-command="unfasten">
+				<div class="command"><strong>/unfasten</strong></div>
+				<div class="description">attempt to unlock the current room.</div>
+			</li>
+		</ul>
+		<input id="chatbox"></input>
+
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-49979451-3', 'auto');
+		  ga('send', 'pageview');
+		</script>
+	</body>
 </html>

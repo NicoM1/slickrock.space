@@ -655,6 +655,7 @@ Main.prototype = {
 					if(this.commandIndex <= -1) this.commandIndex = this.helpbox.children.length - 1;
 				}
 				this.helpbox.children[this.commandIndex].classList.add("selected");
+				this.helpbox.scrollTop = this.helpbox.children[this.commandIndex].offsetTop;
 			}
 		} else this.helpbox.style.display = "none";
 		if(code != null && code == 13) {

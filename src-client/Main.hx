@@ -660,6 +660,7 @@ class Main
 					}
 				}
 				helpbox.children[commandIndex].classList.add('selected');
+				helpbox.scrollTop = helpbox.children[commandIndex].offsetTop;
 			}
 		}
 		else {
