@@ -237,7 +237,7 @@ class RouteHandler implements abe.IRoute {
 				},
 				lastID: Main.rooms.get(room).messages.length - 1
 			};
-			
+
 			if (lastID < Main.rooms.get(room).messages.length - 1) {
 				for (i in (lastID + 1)...Main.rooms.get(room).messages.length) {
 					messages.messages.messages.push(Main.rooms.get(room).messages[i]);

@@ -269,6 +269,7 @@ Main.prototype = {
 	,_setToken: function(_token) {
 		this.token = _token;
 		this._checkValid(true);
+		this.lastIndex = 0;
 		if(this.token != null) js_Cookie.set("token",Std.string(this.token),315360000);
 	}
 	,_checkValid: function(printValid) {
