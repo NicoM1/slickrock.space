@@ -54,9 +54,6 @@ class Main {
 			}
 			mongodb = db;
 			_parseMessages();
-			_test('testroom', 0, 'testing');
-			_test('testr', 5, 'ting');
-			_test('testroom', 1, 'testing1');
 		});
 	}
 	

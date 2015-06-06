@@ -341,7 +341,6 @@ Main.prototype = {
 	MongoClient: null
 	,mongoUrl: null
 	,_setupMongo: function() {
-		var _g = this;
 		this.MongoClient = require("mongodb").MongoClient;
 		var this1 = process.env;
 		this.mongoUrl = this1.MONGOLAB_URL;
@@ -349,9 +348,6 @@ Main.prototype = {
 			if(err != null) console.log(err);
 			Main.mongodb = db;
 			Main._parseMessages();
-			_g._test("testroom",0,"testing");
-			_g._test("testr",5,"ting");
-			_g._test("testroom",1,"testing1");
 		});
 	}
 	,_test: function(room,id,message) {
