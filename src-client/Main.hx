@@ -188,7 +188,7 @@ class Main
 	function _setToken(_token: Int) {
 		token = _token;
 		_checkValid(true);
-		lastIndex = 0;
+		//lastIndex = 0;
 		if(token != null) {
 			Cookie.set('token', Std.string(token), 60 * 60 * 24 * 365 * 10);
 		}
