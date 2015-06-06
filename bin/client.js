@@ -173,7 +173,7 @@ var Main = function() {
 	this.lastIndex = -1;
 	this.password = null;
 	this.token = null;
-	this.basePath = "https://aqueous-dev.herokuapp.com/";
+	this.basePath = "https://aqueous-api.herokuapp.com/";
 	var _g = this;
 	this.room = window.room;
 	this._buildCommands();
@@ -270,7 +270,6 @@ Main.prototype = {
 	,_setToken: function(_token) {
 		this.token = _token;
 		this._checkValid(true);
-		this.lastIndex = 0;
 		if(this.token != null) js_Cookie.set("token",Std.string(this.token),315360000);
 	}
 	,_checkValid: function(printValid) {
