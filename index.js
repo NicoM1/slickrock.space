@@ -155,6 +155,8 @@ Lambda.has = function(it,elt) {
 	return false;
 };
 var Main = function() {
+	this.mongoUrl = "";
+	this._setupMongo();
 	Main.rooms = new haxe_ds_StringMap();
 	Main.typingTimers = new haxe_ds_StringMap();
 	var app = new abe_App();
@@ -271,11 +273,97 @@ Main.emptyTyping = function(room,id) {
 	var _this = Main.rooms.get(room).typing;
 	HxOverrides.remove(_this,id);
 };
+Main._parseMessages = function() {
+	Main.mongodb.collection("roominfo").find().toArray(function(e,r) {
+		if(e != null) {
+			console.log(e);
+			return;
+		}
+		var roominfo = r;
+		var _g = 0;
+		while(_g < roominfo.length) {
+			var r1 = roominfo[_g];
+			++_g;
+			if(!Main.rooms.exists(r1._id)) {
+				var value = { messages : [], lock : null, owner : null, typing : []};
+				Main.rooms.set(r1._id,value);
+			}
+			Main.rooms.get(r1._id).lock = r1.lock;
+			Main.rooms.get(r1._id).owner = r1.owner;
+		}
+	});
+	Main.mongodb.collection("messages").find().sort({ _id : 1}).toArray(function(e1,r2) {
+		if(e1 != null) {
+			console.log(e1);
+			return;
+		}
+		var messages = r2;
+		var _g1 = 0;
+		while(_g1 < messages.length) {
+			var m = messages[_g1];
+			++_g1;
+			if(!Main.rooms.exists(m.room)) {
+				var value1 = { messages : [], lock : null, owner : null, typing : []};
+				Main.rooms.set(m.room,value1);
+			}
+			Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id});
+		}
+	});
+	Main.mongodb.collection("tokens").find().toArray(function(e2,r3) {
+		if(e2 != null) {
+			console.log(e2);
+			return;
+		}
+		var tokenos = r3;
+		var _g2 = 0;
+		while(_g2 < tokenos.length) {
+			var t = tokenos[_g2];
+			++_g2;
+			Main.tokens[t._id] = t.token;
+		}
+	});
+};
+Main.saveMessage = function(msg) {
+	if(Main.mongodb != null) Main.mongodb.collection("messages").insertOne(msg,function(e,r) {
+		if(e != null) console.log(e);
+	}); else console.log("mongo null");
+};
+Main.roomInfo = function(roomInfo) {
+	Main.mongodb.collection("roominfo").save(roomInfo);
+};
+Main.saveToken = function(token) {
+	Main.mongodb.collection("tokens").save(token);
+};
 Main.main = function() {
 	new Main();
 };
 Main.prototype = {
-	__class__: Main
+	MongoClient: null
+	,mongoUrl: null
+	,_setupMongo: function() {
+		var _g = this;
+		this.MongoClient = require("mongodb").MongoClient;
+		var this1 = process.env;
+		this.mongoUrl = this1.MONGOLAB_URL;
+		this.MongoClient.connect(this.mongoUrl,function(err,db) {
+			if(err != null) console.log(err);
+			Main.mongodb = db;
+			Main._parseMessages();
+			_g._test("testroom",0,"testing");
+			_g._test("testr",5,"ting");
+			_g._test("testroom",1,"testing1");
+		});
+	}
+	,_test: function(room,id,message) {
+		if(!Main.rooms.exists(room)) {
+			var value = { messages : [], lock : null, owner : null, typing : []};
+			Main.rooms.set(room,value);
+		}
+		Main.emptyTyping(room,id);
+		Main.rooms.get(room).messages.push({ text : message, id : id});
+		Main.saveMessage({ text : message, id : id, room : room});
+	}
+	,__class__: Main
 };
 var abe_IRoute = function() { };
 abe_IRoute.__name__ = ["abe","IRoute"];
@@ -316,13 +404,16 @@ RouteHandler.prototype = {
 		this._sendMessage(response,message,room,password,id,privateID,token);
 	}
 	,_sendMessage: function(response,message,room,password,id,privateID,token) {
-		Main.emptyTyping(room,id);
 		if(Main.tokens[privateID] == token) {
 			if(!Main.rooms.exists(room)) {
 				var value = { messages : [], lock : null, owner : null, typing : []};
 				Main.rooms.set(room,value);
 			}
-			if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) Main.rooms.get(room).messages.push({ text : message, id : id});
+			Main.emptyTyping(room,id);
+			if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
+				Main.rooms.get(room).messages.push({ text : message, id : id});
+				Main.saveMessage({ text : message, id : id, room : room});
+			}
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("success");
 			return;
@@ -332,6 +423,7 @@ RouteHandler.prototype = {
 	}
 	,getToken: function(privateID,request,response,next) {
 		Main.tokens[privateID] = Std["int"](Math.random() * 16777215);
+		Main.saveToken({ _id : privateID, token : Main.tokens[privateID]});
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send(Std.string(Main.tokens[privateID]));
 	}
@@ -360,6 +452,7 @@ RouteHandler.prototype = {
 		if(roomE.owner == privateID || roomE.messages.length == 0 && roomE.lock == null) {
 			roomE.lock = password;
 			roomE.owner = privateID;
+			Main.roomInfo({ _id : room, lock : password, owner : privateID});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("locked");
 			return;
@@ -372,6 +465,7 @@ RouteHandler.prototype = {
 		var roomE = Main.rooms.get(room);
 		if(roomE.owner == privateID) {
 			roomE.lock = null;
+			Main.roomInfo({ _id : room, lock : null, owner : Main.rooms.get(room).owner});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("unlocked");
 			return;
@@ -384,6 +478,7 @@ RouteHandler.prototype = {
 		var roomE = Main.rooms.get(room);
 		if(roomE.owner == null && roomE.messages.length == 0) {
 			roomE.owner = privateID;
+			Main.roomInfo({ _id : room, owner : privateID});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("claimed");
 			return;

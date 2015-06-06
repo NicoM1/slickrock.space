@@ -35,7 +35,7 @@ typedef MessageDiv = {
 class Main 
 {
 	var room: String;
-	var basePath: String = 'https://aqueous-api.herokuapp.com/';
+	var basePath: String = 'https://aqueous-dev.herokuapp.com/';
 	var id: Int;
 	var privateID: Int;
 	var token: Int = null;
@@ -762,10 +762,12 @@ class Main
 		return '#' + hsl.hex(6);
 	}
 	
+	var col = ~/#[0-9a-f]+/i;
 	function _setID(id_: Int) {
 		id = id_;
 		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
-		chatbox.style.borderColor = _generateColorFromID(id, true);
+		chatbox.style.borderTopColor = _generateColorFromID(id, true);
+		//chatbox.style.boxShadow.replace = _generateColorFromID(id, true);
 		//chevron.style.color = _generateColorFromID(id);
 	}
 	

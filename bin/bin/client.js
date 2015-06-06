@@ -150,7 +150,6 @@ _$List_ListIterator.prototype = {
 	,__class__: _$List_ListIterator
 };
 var Main = function() {
-	this.col = new EReg("#[0-9a-f]+","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
@@ -173,7 +172,7 @@ var Main = function() {
 	this.lastIndex = -1;
 	this.password = null;
 	this.token = null;
-	this.basePath = "https://aqueous-dev.herokuapp.com/";
+	this.basePath = "https://aqueous-api.herokuapp.com/";
 	var _g = this;
 	this.room = window.room;
 	this._buildCommands();
@@ -733,7 +732,7 @@ Main.prototype = {
 	,_setID: function(id_) {
 		this.id = id_;
 		js_Cookie.set("id",Std.string(this.id),315360000);
-		this.chatbox.style.borderTopColor = this._generateColorFromID(this.id,true);
+		this.chatbox.style.boxShadow = this._generateColorFromID(this.id,true);
 	}
 	,_setPassword: function(password_) {
 		this.password = password_;
