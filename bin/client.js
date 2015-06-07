@@ -675,7 +675,20 @@ Main.prototype = {
 				this.helpbox.children[this.commandIndex].classList.add("selected");
 				this.helpbox.scrollTop = this.helpbox.children[this.commandIndex].offsetTop;
 			}
-		} else this.helpbox.style.display = "none";
+		} else {
+			this.helpbox.style.display = "none";
+			if(!this.locked && this.token != null) {
+				if(this.canSendTypingNotification) {
+					var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
+					typingHttp.request(true);
+					this.canSendTypingNotification = false;
+					var timer = new haxe_Timer(2500);
+					timer.run = function() {
+						_g.canSendTypingNotification = true;
+					};
+				}
+			}
+		}
 		if(code != null && code == 13) {
 			if(this.token == null) {
 				var t = this.chatbox.value;
@@ -699,17 +712,6 @@ Main.prototype = {
 			}
 			this.chatbox.value = "";
 			this.helpbox.style.display = "none";
-		}
-		if(!this.locked && this.token != null) {
-			if(this.canSendTypingNotification) {
-				var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
-				typingHttp.request(true);
-				this.canSendTypingNotification = false;
-				var timer = new haxe_Timer(2500);
-				timer.run = function() {
-					_g.canSendTypingNotification = true;
-				};
-			}
 		}
 	}
 	,_postMessage: function(msg) {

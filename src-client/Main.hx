@@ -689,6 +689,18 @@ class Main
 		}
 		else {
 			helpbox.style.display = 'none';
+					
+			if (!locked && token != null) {
+				if (canSendTypingNotification) {
+					var typingHttp: Http = new Http(basePath + 'api/typing/$room/$id');
+					typingHttp.request(true);
+					canSendTypingNotification = false;
+					var timer = new Timer(2500);
+					timer.run = function() {
+						canSendTypingNotification = true;
+					}
+				}
+			}
 		}
 
 		if (code != null && code == 13) { //ENTER
@@ -720,18 +732,6 @@ class Main
 			}
 			chatbox.value = '';
 			helpbox.style.display = 'none';
-		}
-		
-		if (!locked && token != null) {
-			if (canSendTypingNotification) {
-				var typingHttp: Http = new Http(basePath + 'api/typing/$room/$id');
-				typingHttp.request(true);
-				canSendTypingNotification = false;
-				var timer = new Timer(2500);
-				timer.run = function() {
-					canSendTypingNotification = true;
-				}
-			}
 		}
 	}
 	
