@@ -27,7 +27,7 @@ import thx.math.random.PseudoRandom;
 using StringTools;
 
 typedef MessageDiv = {
-	id: Int,
+	id: String,
 	message: DivElement,
 	chevron: Element
 };
@@ -36,13 +36,13 @@ class Main
 {
 	var room: String;
 	var basePath: String = 'https://aqueous-dev.herokuapp.com/';
-	var id: Int;
+	var id: String;
 	var privateID: String;
 	var token: String = null;
 	var password: String = null;
 
 	var lastIndex: Int = -1;
-	var lastUserID: Int = -2;
+	var lastUserID: String = '-2';
 	
 	var getHttp: Http;
 	var postHttp: Http;
@@ -158,10 +158,10 @@ class Main
 		chatbox.focus();
 		
 		if(!Cookie.exists('id')) {
-			_generateID();
+			_getID();
 		}
 		else {
-			_setID(Std.parseInt(Cookie.get('id')));
+			_setID(Cookie.get('id'));
 		}
 		
 		if (Cookie.exists('$room-password')) {
@@ -304,7 +304,7 @@ class Main
 		
 	//{ commands
 	function _buildCommands() {
-		commands.set('revivify', _generateID);
+		commands.set('revivify', _getID);
 		commands.set('impersonate', _setIDCommand);
 		commands.set('oneself', _printID);
 		commands.set('existent', _printRoom);
@@ -344,13 +344,22 @@ class Main
 	//}
 	
 	//{ command functions
-	function _generateID(?arguments: Array<String>) {
-		_setID(new Random(Math.random() * 0xFFFFFF).int(0, 0xFFFFFF));
+	function _getID(?arguments: Array<String>) {
+		var idHttp: Http = new Http(basePath + 'api/getID');
+		idHttp.onData = function(d) {
+			_setID(d);
+		}
+		idHttp.onError = function(e) {
+			trace(e);
+			_addMessage('failed to connect to api, couldn\'t get ID.');
+		}
+		
+		idHttp.request(true);
 	}
 	
 	function _setIDCommand(arguments: Array<String>) {
 		if (arguments != null && arguments[0] != null && arguments[0] != '') {
-			var newID = Std.parseInt(arguments[0]);
+			var newID = arguments[0];
 			if (newID != null) {
 				_setID(newID);
 			}
@@ -539,13 +548,13 @@ class Main
 		}
 	}
 	
-	function _addMessage(msg: String, ?id: Int, ?customHTML: String): DivElement {
+	function _addMessage(msg: String, ?id: String, ?customHTML: String): DivElement {
 		msg = _parseMessage(msg);
 		
 		var message: DivElement;
 		
 		var differentUser = false;
-		if (id == null || id == -1 || id != lastUserID ) {
+		if (id == null || id == '-1' || id != lastUserID ) {
 			differentUser = true;
 		}
 		
@@ -744,7 +753,7 @@ class Main
 		win.focus();
 	}
 	
-	function _makeSpan(?pointer: Bool = false, ?id: Int): Element {
+	function _makeSpan(?pointer: Bool = false, ?id: String): Element {
 		var span = Browser.document.createSpanElement();
 		if (pointer) {
 			span.innerHTML = '>';
@@ -756,12 +765,16 @@ class Main
 		return span;
 	}
 	
-	function _generateColorFromID(?id: Int, ?dark: Bool = false): String {
+	function _generateColorFromID(?id: String, ?dark: Bool = false): String {
 		var hsl: Hsl;
-		if(id != null && id != -1) {
-			var hue = new Random(id * 12189234).float(0, 360);
-			var sat = new Random(id * 12189234).float(0.3, 0.5);
-			var light = new Random(id * 12189234).float(0.3, 0.5);
+		if (id != null && id != '-1') {
+			var intID = 0;
+			for (s in id.split('')) {
+				intID += Std.parseInt(s);
+			}
+			var hue = new Random(intID * 12189234).float(0, 360);
+			var sat = new Random(intID * 12189234).float(0.3, 0.5);
+			var light = new Random(intID * 12189234).float(0.3, 0.5);
 			hsl = Hsl.create(hue, sat, light);
 			
 			if (dark) {
@@ -775,10 +788,9 @@ class Main
 		return '#' + hsl.hex(6);
 	}
 	
-	var col = ~/#[0-9a-f]+/i;
-	function _setID(id_: Int) {
+	function _setID(id_: String) {
 		id = id_;
-		Cookie.set('id', Std.string(id), 60 * 60 * 24 * 365 * 10);
+		Cookie.set('id', id, 60 * 60 * 24 * 365 * 10);
 		chatbox.style.borderTopColor = _generateColorFromID(id, true);
 		//chatbox.style.boxShadow.replace = _generateColorFromID(id, true);
 		//chevron.style.color = _generateColorFromID(id);

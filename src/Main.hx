@@ -20,17 +20,22 @@ using StringTools;
 
 class Main {
 	public static var tokens: Map<String, String>;	
-	static var typingTimers: Map<String, Array<Timer>>;
+	static var typingTimers: Map<String, Map<String, Timer>>;
 	
 	static var textDB: String = '';
 	
 	public static var rooms: Rooms;
+	
+	static var animalWords: Array<String>;
+	static var adjectives: Array<String>;
 	
 	var MongoClient: Dynamic;
 	var mongoUrl = '';
 	static var mongodb: Dynamic;
 		
 	function new() {
+		animalWords = Fs.readFileSync('bin/animals.txt', { encoding: 'utf8' } ).split('\n');
+		adjectives = Fs.readFileSync('bin/adjectives.txt', { encoding: 'utf8' }).split('\n');
 		_setupMongo();
 		rooms = new Rooms();
 		typingTimers = new Map();
@@ -57,7 +62,7 @@ class Main {
 		});
 	}
 	
-	function _test(room: String, id: Int, message: String) {
+	function _test(room: String, id: String, message: String) {
 		if (!Main.rooms.exists(room)) {
 			Main.rooms.set(room, {
 				messages: new Array<Message>(),
@@ -73,9 +78,9 @@ class Main {
 		Main.saveMessage( { text: message, id: id, room: room} );
 	}
 	
-	public static function clearTyping(room: String, id: Int) {
+	public static function clearTyping(room: String, id: String) {
 		if (typingTimers[room] == null) {
-			typingTimers[room] = new Array();
+			typingTimers[room] = new Map();
 		}
 		if(typingTimers[room][id] == null) {
 			var timer = new Timer(3000);
@@ -87,14 +92,14 @@ class Main {
 		}
 	}
 	
-	public static function resetTypingTimer(room: String, id: Int) {
+	public static function resetTypingTimer(room: String, id: String) {
 		if (typingTimers[room] == null) {
-			typingTimers[room] = new Array();
+			typingTimers[room] = new Map();
 		}
 		typingTimers[room][id].run = emptyTyping.bind(room, id);
 	}
 	
-	public static function emptyTyping(room: String, id: Int) {
+	public static function emptyTyping(room: String, id: String) {
 		rooms[room].typing.remove(id);
 	}
 	
@@ -170,6 +175,15 @@ class Main {
 		mongodb.collection('tokens').save(token);
 	}
 	
+	public static function getUserID(): String {
+		var rand = new Random(Date.now().getTime());
+		var ID: String = '';
+		ID += adjectives[rand.int(adjectives.length)];
+		ID += adjectives[rand.int(adjectives.length)];
+		ID += animalWords[rand.int(animalWords.length)];
+		return ID;
+	}
+	
 	public static function main() {
 		new Main();
 	}
@@ -204,18 +218,18 @@ class RouteHandler implements abe.IRoute {
 	}
 	
 	@:post('/chat/:message/:room/:id/:privateID/:token')
-	function sendMessage(message: String, room: String, id: Int, privateID: String, token: String) {
+	function sendMessage(message: String, room: String, id: String, privateID: String, token: String) {
 		room = room.toLowerCase();
 		_sendMessage(response, message, room, null, id, privateID, token);
 	}
 	
 	@:post('/chat/:message/:room/:password/:id/:privateID/:token')
-	function sendMessageWithPass(message: String, room: String, password: String, id: Int, privateID: String, token: String) {
+	function sendMessageWithPass(message: String, room: String, password: String, id: String, privateID: String, token: String) {
 		room = room.toLowerCase();
 		_sendMessage(response, message, room, password, id, privateID, token);
 	}
 
-	function _sendMessage(response: Response, message: String, room: String, password: String, id: Int, privateID: String, token: String) {
+	function _sendMessage(response: Response, message: String, room: String, password: String, id: String, privateID: String, token: String) {
 		if(Main.tokens[privateID] == token) {
 			if (!Main.rooms.exists(room)) {
 				Main.rooms.set(room, {
@@ -239,6 +253,12 @@ class RouteHandler implements abe.IRoute {
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('failed');
+	}
+	
+	@:post('/api/getID') 
+	function getID() {
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send(Main.getUserID());
 	}
 	
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -268,7 +288,7 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/api/typing/:room/:id') 
 	@:post('/api/typing/:room/:id') 
-	function typing(room: String, id: Int) {
+	function typing(room: String, id: String) {
 		if (Main.rooms.get(room).typing.indexOf(id) == -1) {
 			Main.rooms.get(room).typing.push(id);
 			Main.clearTyping(room, id);

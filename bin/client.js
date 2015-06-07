@@ -150,7 +150,6 @@ _$List_ListIterator.prototype = {
 	,__class__: _$List_ListIterator
 };
 var Main = function() {
-	this.col = new EReg("#[0-9a-f]+","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
@@ -170,7 +169,7 @@ var Main = function() {
 	this.first = true;
 	this.requestInProgress = false;
 	this.typings = [];
-	this.lastUserID = -2;
+	this.lastUserID = "-2";
 	this.lastIndex = -1;
 	this.password = null;
 	this.token = null;
@@ -254,7 +253,7 @@ Main.prototype = {
 		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
-		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
+		if(!js_Cookie.exists("id")) this._getID(); else this._setID(js_Cookie.get("id"));
 		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
 		this._setupPrivateID();
 	}
@@ -365,7 +364,7 @@ Main.prototype = {
 		this.notifications = [];
 	}
 	,_buildCommands: function() {
-		this.commands.set("revivify",$bind(this,this._generateID));
+		this.commands.set("revivify",$bind(this,this._getID));
 		this.commands.set("impersonate",$bind(this,this._setIDCommand));
 		this.commands.set("oneself",$bind(this,this._printID));
 		this.commands.set("existent",$bind(this,this._printRoom));
@@ -396,12 +395,21 @@ Main.prototype = {
 			this._help();
 		}
 	}
-	,_generateID: function($arguments) {
-		this._setID(new Random(Math.random() * 16777215)["int"](0,16777215));
+	,_getID: function($arguments) {
+		var _g = this;
+		var idHttp = new haxe_Http(this.basePath + "api/getID");
+		idHttp.onData = function(d) {
+			_g._setID(d);
+		};
+		idHttp.onError = function(e) {
+			console.log(e);
+			_g._addMessage("failed to connect to api, couldn't get ID.");
+		};
+		idHttp.request(true);
 	}
 	,_setIDCommand: function($arguments) {
 		if($arguments != null && $arguments[0] != null && $arguments[0] != "") {
-			var newID = Std.parseInt($arguments[0]);
+			var newID = $arguments[0];
 			if(newID != null) this._setID(newID); else this._addMessage("Could not parse argument: *ID*.");
 		} else this._addMessage("**/impersonate** requires argument: *ID*.");
 	}
@@ -564,7 +572,7 @@ Main.prototype = {
 		msg = this._parseMessage(msg);
 		var message;
 		var differentUser = false;
-		if(id == null || id == -1 || id != this.lastUserID) differentUser = true;
+		if(id == null || id == "-1" || id != this.lastUserID) differentUser = true;
 		if(differentUser) {
 			var _this = window.document;
 			message = _this.createElement("div");
@@ -727,10 +735,18 @@ Main.prototype = {
 	,_generateColorFromID: function(id,dark) {
 		if(dark == null) dark = false;
 		var hsl;
-		if(id != null && id != -1) {
-			var hue = new Random(id * 12189234)["float"](0,360);
-			var sat = new Random(id * 12189234)["float"](0.3,0.5);
-			var light = new Random(id * 12189234)["float"](0.3,0.5);
+		if(id != null && id != "-1") {
+			var intID = 0;
+			var _g = 0;
+			var _g1 = id.split("");
+			while(_g < _g1.length) {
+				var s = _g1[_g];
+				++_g;
+				intID += Std.parseInt(s);
+			}
+			var hue = new Random(intID * 12189234)["float"](0,360);
+			var sat = new Random(intID * 12189234)["float"](0.3,0.5);
+			var light = new Random(intID * 12189234)["float"](0.3,0.5);
 			hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
 			if(dark) hsl = thx_color__$Hsl_Hsl_$Impl_$.darker(hsl,0.5);
 		} else hsl = thx_color__$Hsl_Hsl_$Impl_$.create(0,1,1);
@@ -738,7 +754,7 @@ Main.prototype = {
 	}
 	,_setID: function(id_) {
 		this.id = id_;
-		js_Cookie.set("id",Std.string(this.id),315360000);
+		js_Cookie.set("id",this.id,315360000);
 		this.chatbox.style.borderTopColor = this._generateColorFromID(this.id,true);
 	}
 	,_setPassword: function(password_) {

@@ -5,5 +5,5 @@ typedef MessageList = {
 	?salt: String,
 	owner: String,
 	messages: Array<Message>,
-	typing: Array<Int>
+	typing: Array<String>
 }

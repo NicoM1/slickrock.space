@@ -1,7 +1,7 @@
 package;
 
 typedef MessageObject = {
-	id: Int,
+	id: String,
 	room: String,
 	text: String
 }

@@ -2,5 +2,5 @@ package;
 
 typedef Message = {
 	text: String,
-	id: Int
+	id: String
 }
