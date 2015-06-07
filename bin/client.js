@@ -746,6 +746,7 @@ Main.prototype = {
 				var s = id.charAt(i);
 				intID += Std.parseInt(s);
 			}
+			console.log(intID);
 			var hue = new Random(intID * 12189234)["float"](0,360);
 			var sat = new Random(intID * 12189234)["float"](0.3,0.5);
 			var light = new Random(intID * 12189234)["float"](0.3,0.5);
