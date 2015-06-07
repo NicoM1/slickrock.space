@@ -173,6 +173,7 @@ var Main = function() {
 	this.lastIndex = -1;
 	this.password = null;
 	this.token = null;
+	this.id = null;
 	this.basePath = "https://aqueous-dev.herokuapp.com/";
 	var _g = this;
 	this.room = window.room;
