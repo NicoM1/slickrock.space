@@ -348,6 +348,7 @@ class Main
 		var idHttp: Http = new Http(basePath + 'api/getID');
 		idHttp.onData = function(d) {
 			_setID(d);
+			trace(id);
 		}
 		idHttp.onError = function(e) {
 			trace(e);

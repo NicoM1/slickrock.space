@@ -400,6 +400,7 @@ Main.prototype = {
 		var idHttp = new haxe_Http(this.basePath + "api/getID");
 		idHttp.onData = function(d) {
 			_g._setID(d);
+			console.log(_g.id);
 		};
 		idHttp.onError = function(e) {
 			console.log(e);
