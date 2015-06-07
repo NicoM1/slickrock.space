@@ -364,6 +364,7 @@ Main.prototype = {
 var abe_IRoute = function() { };
 abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
+	this.letters = "abcdefghijklmnopqrstuvwxyz";
 };
 RouteHandler.__name__ = ["RouteHandler"];
 RouteHandler.__interfaces__ = [abe_IRoute];
@@ -406,7 +407,8 @@ RouteHandler.prototype = {
 				Main.rooms.set(room,value);
 			}
 			Main.emptyTyping(room,id);
-			if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
+			var roomE = Main.rooms.get(room);
+			if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
 				Main.rooms.get(room).messages.push({ text : message, id : id});
 				Main.saveMessage({ text : message, id : id, room : room});
 			}
@@ -445,10 +447,11 @@ RouteHandler.prototype = {
 	,lockRoom: function(room,privateID,password,request,response,next) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if(roomE.owner == privateID || roomE.messages.length == 0 && roomE.lock == null) {
-			roomE.lock = password;
-			roomE.owner = privateID;
-			Main.roomInfo({ _id : room, lock : password, owner : privateID});
+		if(roomE.messages.length == 0 && roomE.lock == null || roomE.owner == haxe_crypto_Sha1.encode(roomE.salt + privateID)) {
+			roomE.salt = this.getSalt();
+			roomE.lock = haxe_crypto_Sha1.encode(roomE.salt + password);
+			roomE.owner = haxe_crypto_Sha1.encode(roomE.salt + privateID);
+			Main.roomInfo({ _id : room, lock : roomE.lock, owner : roomE.owner, salt : roomE.salt});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("locked");
 			return;
@@ -456,12 +459,23 @@ RouteHandler.prototype = {
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("failed");
 	}
+	,letters: null
+	,getSalt: function() {
+		var rand = new Random(new Date().getTime());
+		return this.letters.charAt(rand["int"](this.letters.length,null)) + this.letters.charAt(rand["int"](this.letters.length,null));
+	}
 	,unlockRoom: function(room,privateID,request,response,next) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if(roomE.owner == privateID) {
-			roomE.lock = null;
-			Main.roomInfo({ _id : room, lock : null, owner : Main.rooms.get(room).owner});
+		if(roomE.lock != null) {
+			if(roomE.owner == haxe_crypto_Sha1.encode(roomE.salt + privateID)) {
+				roomE.lock = null;
+				Main.roomInfo({ _id : room, lock : null, owner : roomE.owner, salt : roomE.salt});
+				response.setHeader("Access-Control-Allow-Origin","*");
+				response.send("unlocked");
+				return;
+			}
+		} else {
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("unlocked");
 			return;
@@ -473,8 +487,9 @@ RouteHandler.prototype = {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.owner == null && roomE.messages.length == 0) {
-			roomE.owner = privateID;
-			Main.roomInfo({ _id : room, owner : privateID});
+			roomE.salt = this.getSalt();
+			roomE.owner = roomE.owner = haxe_crypto_Sha1.encode(roomE.salt + privateID);
+			Main.roomInfo({ _id : room, owner : roomE.owner, salt : roomE.salt});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("claimed");
 			return;
@@ -495,7 +510,8 @@ RouteHandler.prototype = {
 			var value = { messages : [], lock : null, owner : null, typing : []};
 			Main.rooms.set(room,value);
 		}
-		if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
+		var roomE = Main.rooms.get(room);
+		if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
 			var messages = { messages : { messages : [], lock : null, owner : null, typing : Main.rooms.get(room).typing}, lastID : Main.rooms.get(room).messages.length - 1};
 			if(lastID < Main.rooms.get(room).messages.length - 1) {
 				var _g1 = lastID + 1;
@@ -522,6 +538,54 @@ RouteHandler.prototype = {
 	,__class__: RouteHandler
 };
 Math.__name__ = ["Math"];
+var Random = function(_initial_seed) {
+	this.initial = this.seed = _initial_seed;
+	this.seed = this.initial;
+};
+Random.__name__ = ["Random"];
+Random.prototype = {
+	get: function() {
+		return (this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233;
+	}
+	,'float': function(min,max) {
+		if(max == null) {
+			max = min;
+			min = 0;
+		}
+		return ((this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233) * (max - min) + min;
+	}
+	,'int': function(min,max) {
+		if(max == null) {
+			max = min;
+			min = 0;
+		}
+		return Math.floor(this["float"](min,max));
+	}
+	,bool: function(chance) {
+		if(chance == null) chance = 0.5;
+		return (this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233 < chance;
+	}
+	,sign: function(chance) {
+		if(chance == null) chance = 0.5;
+		if((this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233 < chance) return 1; else return -1;
+	}
+	,bit: function(chance) {
+		if(chance == null) chance = 0.5;
+		if((this.seed = this.seed * 16807 % 2147483647) / 2147483647 + 0.000000000233 < chance) return 1; else return 0;
+	}
+	,reset: function() {
+		var s = this.seed;
+		this.initial = this.seed = s;
+		this.initial;
+	}
+	,seed: null
+	,initial: null
+	,set_initial: function(_initial) {
+		this.initial = this.seed = _initial;
+		return this.initial;
+	}
+	,__class__: Random
+};
 var Reflect = function() { };
 Reflect.__name__ = ["Reflect"];
 Reflect.field = function(o,field) {
@@ -784,6 +848,16 @@ StringTools.trim = function(s) {
 };
 StringTools.replace = function(s,sub,by) {
 	return s.split(sub).join(by);
+};
+StringTools.hex = function(n,digits) {
+	var s = "";
+	var hexChars = "0123456789ABCDEF";
+	do {
+		s = hexChars.charAt(n & 15) + s;
+		n >>>= 4;
+	} while(n > 0);
+	if(digits != null) while(s.length < digits) s = "0" + s;
+	return s;
 };
 var ValueType = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] };
 ValueType.TNull = ["TNull",0];
@@ -1339,6 +1413,16 @@ haxe_IMap.prototype = {
 	,keys: null
 	,__class__: haxe_IMap
 };
+var haxe__$Int64__$_$_$Int64 = function(high,low) {
+	this.high = high;
+	this.low = low;
+};
+haxe__$Int64__$_$_$Int64.__name__ = ["haxe","_Int64","___Int64"];
+haxe__$Int64__$_$_$Int64.prototype = {
+	high: null
+	,low: null
+	,__class__: haxe__$Int64__$_$_$Int64
+};
 var haxe_Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
@@ -1351,6 +1435,98 @@ haxe_Timer.prototype = {
 	,run: function() {
 	}
 	,__class__: haxe_Timer
+};
+var haxe_crypto_Sha1 = function() {
+};
+haxe_crypto_Sha1.__name__ = ["haxe","crypto","Sha1"];
+haxe_crypto_Sha1.encode = function(s) {
+	var sh = new haxe_crypto_Sha1();
+	var h = sh.doEncode(haxe_crypto_Sha1.str2blks(s));
+	return sh.hex(h);
+};
+haxe_crypto_Sha1.str2blks = function(s) {
+	var nblk = (s.length + 8 >> 6) + 1;
+	var blks = [];
+	var _g1 = 0;
+	var _g = nblk * 16;
+	while(_g1 < _g) {
+		var i1 = _g1++;
+		blks[i1] = 0;
+	}
+	var _g11 = 0;
+	var _g2 = s.length;
+	while(_g11 < _g2) {
+		var i2 = _g11++;
+		var p1 = i2 >> 2;
+		blks[p1] |= HxOverrides.cca(s,i2) << 24 - ((i2 & 3) << 3);
+	}
+	var i = s.length;
+	var p = i >> 2;
+	blks[p] |= 128 << 24 - ((i & 3) << 3);
+	blks[nblk * 16 - 1] = s.length * 8;
+	return blks;
+};
+haxe_crypto_Sha1.prototype = {
+	doEncode: function(x) {
+		var w = [];
+		var a = 1732584193;
+		var b = -271733879;
+		var c = -1732584194;
+		var d = 271733878;
+		var e = -1009589776;
+		var i = 0;
+		while(i < x.length) {
+			var olda = a;
+			var oldb = b;
+			var oldc = c;
+			var oldd = d;
+			var olde = e;
+			var j = 0;
+			while(j < 80) {
+				if(j < 16) w[j] = x[i + j]; else w[j] = this.rol(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16],1);
+				var t = (a << 5 | a >>> 27) + this.ft(j,b,c,d) + e + w[j] + this.kt(j);
+				e = d;
+				d = c;
+				c = b << 30 | b >>> 2;
+				b = a;
+				a = t;
+				j++;
+			}
+			a += olda;
+			b += oldb;
+			c += oldc;
+			d += oldd;
+			e += olde;
+			i += 16;
+		}
+		return [a,b,c,d,e];
+	}
+	,rol: function(num,cnt) {
+		return num << cnt | num >>> 32 - cnt;
+	}
+	,ft: function(t,b,c,d) {
+		if(t < 20) return b & c | ~b & d;
+		if(t < 40) return b ^ c ^ d;
+		if(t < 60) return b & c | b & d | c & d;
+		return b ^ c ^ d;
+	}
+	,kt: function(t) {
+		if(t < 20) return 1518500249;
+		if(t < 40) return 1859775393;
+		if(t < 60) return -1894007588;
+		return -899497514;
+	}
+	,hex: function(a) {
+		var str = "";
+		var _g = 0;
+		while(_g < a.length) {
+			var num = a[_g];
+			++_g;
+			str += StringTools.hex(num,8);
+		}
+		return str.toLowerCase();
+	}
+	,__class__: haxe_crypto_Sha1
 };
 var haxe_ds_Option = { __ename__ : ["haxe","ds","Option"], __constructs__ : ["Some","None"] };
 haxe_ds_Option.Some = function(v) { var $x = ["Some",0,v]; $x.__enum__ = haxe_ds_Option; $x.toString = $estr; return $x; };
@@ -1404,6 +1580,61 @@ haxe_ds_StringMap.prototype = {
 		return out;
 	}
 	,__class__: haxe_ds_StringMap
+};
+var haxe_io_Error = { __ename__ : ["haxe","io","Error"], __constructs__ : ["Blocked","Overflow","OutsideBounds","Custom"] };
+haxe_io_Error.Blocked = ["Blocked",0];
+haxe_io_Error.Blocked.toString = $estr;
+haxe_io_Error.Blocked.__enum__ = haxe_io_Error;
+haxe_io_Error.Overflow = ["Overflow",1];
+haxe_io_Error.Overflow.toString = $estr;
+haxe_io_Error.Overflow.__enum__ = haxe_io_Error;
+haxe_io_Error.OutsideBounds = ["OutsideBounds",2];
+haxe_io_Error.OutsideBounds.toString = $estr;
+haxe_io_Error.OutsideBounds.__enum__ = haxe_io_Error;
+haxe_io_Error.Custom = function(e) { var $x = ["Custom",3,e]; $x.__enum__ = haxe_io_Error; $x.toString = $estr; return $x; };
+var haxe_io_FPHelper = function() { };
+haxe_io_FPHelper.__name__ = ["haxe","io","FPHelper"];
+haxe_io_FPHelper.i32ToFloat = function(i) {
+	var sign = 1 - (i >>> 31 << 1);
+	var exp = i >>> 23 & 255;
+	var sig = i & 8388607;
+	if(sig == 0 && exp == 0) return 0.0;
+	return sign * (1 + Math.pow(2,-23) * sig) * Math.pow(2,exp - 127);
+};
+haxe_io_FPHelper.floatToI32 = function(f) {
+	if(f == 0) return 0;
+	var af;
+	if(f < 0) af = -f; else af = f;
+	var exp = Math.floor(Math.log(af) / 0.6931471805599453);
+	if(exp < -127) exp = -127; else if(exp > 128) exp = 128;
+	var sig = Math.round((af / Math.pow(2,exp) - 1) * 8388608) & 8388607;
+	return (f < 0?-2147483648:0) | exp + 127 << 23 | sig;
+};
+haxe_io_FPHelper.i64ToDouble = function(low,high) {
+	var sign = 1 - (high >>> 31 << 1);
+	var exp = (high >> 20 & 2047) - 1023;
+	var sig = (high & 1048575) * 4294967296. + (low >>> 31) * 2147483648. + (low & 2147483647);
+	if(sig == 0 && exp == -1023) return 0.0;
+	return sign * (1.0 + Math.pow(2,-52) * sig) * Math.pow(2,exp);
+};
+haxe_io_FPHelper.doubleToI64 = function(v) {
+	var i64 = haxe_io_FPHelper.i64tmp;
+	if(v == 0) {
+		i64.low = 0;
+		i64.high = 0;
+	} else {
+		var av;
+		if(v < 0) av = -v; else av = v;
+		var exp = Math.floor(Math.log(av) / 0.6931471805599453);
+		var sig;
+		var v1 = (av / Math.pow(2,exp) - 1) * 4503599627370496.;
+		sig = Math.round(v1);
+		var sig_l = sig | 0;
+		var sig_h = sig / 4294967296.0 | 0;
+		i64.low = sig_l;
+		i64.high = (v < 0?-2147483648:0) | exp + 1023 << 20 | sig_h;
+	}
+	return i64;
 };
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
@@ -1551,6 +1782,193 @@ js_Boot.__isNativeObj = function(o) {
 };
 js_Boot.__resolveNativeClass = function(name) {
 	return (Function("return typeof " + name + " != \"undefined\" ? " + name + " : null"))();
+};
+var js_html_compat_ArrayBuffer = function(a) {
+	if((a instanceof Array) && a.__enum__ == null) {
+		this.a = a;
+		this.byteLength = a.length;
+	} else {
+		var len = a;
+		this.a = [];
+		var _g = 0;
+		while(_g < len) {
+			var i = _g++;
+			this.a[i] = 0;
+		}
+		this.byteLength = len;
+	}
+};
+js_html_compat_ArrayBuffer.__name__ = ["js","html","compat","ArrayBuffer"];
+js_html_compat_ArrayBuffer.sliceImpl = function(begin,end) {
+	var u = new Uint8Array(this,begin,end == null?null:end - begin);
+	var result = new ArrayBuffer(u.byteLength);
+	var resultArray = new Uint8Array(result);
+	resultArray.set(u);
+	return result;
+};
+js_html_compat_ArrayBuffer.prototype = {
+	byteLength: null
+	,a: null
+	,slice: function(begin,end) {
+		return new js_html_compat_ArrayBuffer(this.a.slice(begin,end));
+	}
+	,__class__: js_html_compat_ArrayBuffer
+};
+var js_html_compat_DataView = function(buffer,byteOffset,byteLength) {
+	this.buf = buffer;
+	if(byteOffset == null) this.offset = 0; else this.offset = byteOffset;
+	if(byteLength == null) this.length = buffer.byteLength - this.offset; else this.length = byteLength;
+	if(this.offset < 0 || this.length < 0 || this.offset + this.length > buffer.byteLength) throw new js__$Boot_HaxeError(haxe_io_Error.OutsideBounds);
+};
+js_html_compat_DataView.__name__ = ["js","html","compat","DataView"];
+js_html_compat_DataView.prototype = {
+	buf: null
+	,offset: null
+	,length: null
+	,getInt8: function(byteOffset) {
+		var v = this.buf.a[this.offset + byteOffset];
+		if(v >= 128) return v - 256; else return v;
+	}
+	,getUint8: function(byteOffset) {
+		return this.buf.a[this.offset + byteOffset];
+	}
+	,getInt16: function(byteOffset,littleEndian) {
+		var v = this.getUint16(byteOffset,littleEndian);
+		if(v >= 32768) return v - 65536; else return v;
+	}
+	,getUint16: function(byteOffset,littleEndian) {
+		if(littleEndian) return this.buf.a[this.offset + byteOffset] | this.buf.a[this.offset + byteOffset + 1] << 8; else return this.buf.a[this.offset + byteOffset] << 8 | this.buf.a[this.offset + byteOffset + 1];
+	}
+	,getInt32: function(byteOffset,littleEndian) {
+		var p = this.offset + byteOffset;
+		var a = this.buf.a[p++];
+		var b = this.buf.a[p++];
+		var c = this.buf.a[p++];
+		var d = this.buf.a[p++];
+		if(littleEndian) return a | b << 8 | c << 16 | d << 24; else return d | c << 8 | b << 16 | a << 24;
+	}
+	,getUint32: function(byteOffset,littleEndian) {
+		var v = this.getInt32(byteOffset,littleEndian);
+		if(v < 0) return v + 4294967296.; else return v;
+	}
+	,getFloat32: function(byteOffset,littleEndian) {
+		return haxe_io_FPHelper.i32ToFloat(this.getInt32(byteOffset,littleEndian));
+	}
+	,getFloat64: function(byteOffset,littleEndian) {
+		var a = this.getInt32(byteOffset,littleEndian);
+		var b = this.getInt32(byteOffset + 4,littleEndian);
+		return haxe_io_FPHelper.i64ToDouble(littleEndian?a:b,littleEndian?b:a);
+	}
+	,setInt8: function(byteOffset,value) {
+		if(value < 0) this.buf.a[byteOffset + this.offset] = value + 128 & 255; else this.buf.a[byteOffset + this.offset] = value & 255;
+	}
+	,setUint8: function(byteOffset,value) {
+		this.buf.a[byteOffset + this.offset] = value & 255;
+	}
+	,setInt16: function(byteOffset,value,littleEndian) {
+		this.setUint16(byteOffset,value < 0?value + 65536:value,littleEndian);
+	}
+	,setUint16: function(byteOffset,value,littleEndian) {
+		var p = byteOffset + this.offset;
+		if(littleEndian) {
+			this.buf.a[p] = value & 255;
+			this.buf.a[p++] = value >> 8 & 255;
+		} else {
+			this.buf.a[p++] = value >> 8 & 255;
+			this.buf.a[p] = value & 255;
+		}
+	}
+	,setInt32: function(byteOffset,value,littleEndian) {
+		this.setUint32(byteOffset,value,littleEndian);
+	}
+	,setUint32: function(byteOffset,value,littleEndian) {
+		var p = byteOffset + this.offset;
+		if(littleEndian) {
+			this.buf.a[p++] = value & 255;
+			this.buf.a[p++] = value >> 8 & 255;
+			this.buf.a[p++] = value >> 16 & 255;
+			this.buf.a[p++] = value >>> 24;
+		} else {
+			this.buf.a[p++] = value >>> 24;
+			this.buf.a[p++] = value >> 16 & 255;
+			this.buf.a[p++] = value >> 8 & 255;
+			this.buf.a[p++] = value & 255;
+		}
+	}
+	,setFloat32: function(byteOffset,value,littleEndian) {
+		this.setUint32(byteOffset,haxe_io_FPHelper.floatToI32(value),littleEndian);
+	}
+	,setFloat64: function(byteOffset,value,littleEndian) {
+		var i64 = haxe_io_FPHelper.doubleToI64(value);
+		if(littleEndian) {
+			this.setUint32(byteOffset,i64.low);
+			this.setUint32(byteOffset,i64.high);
+		} else {
+			this.setUint32(byteOffset,i64.high);
+			this.setUint32(byteOffset,i64.low);
+		}
+	}
+	,__class__: js_html_compat_DataView
+};
+var js_html_compat_Uint8Array = function() { };
+js_html_compat_Uint8Array.__name__ = ["js","html","compat","Uint8Array"];
+js_html_compat_Uint8Array._new = function(arg1,offset,length) {
+	var arr;
+	if(typeof(arg1) == "number") {
+		arr = [];
+		var _g = 0;
+		while(_g < arg1) {
+			var i = _g++;
+			arr[i] = 0;
+		}
+		arr.byteLength = arr.length;
+		arr.byteOffset = 0;
+		arr.buffer = new js_html_compat_ArrayBuffer(arr);
+	} else if(js_Boot.__instanceof(arg1,js_html_compat_ArrayBuffer)) {
+		var buffer = arg1;
+		if(offset == null) offset = 0;
+		if(length == null) length = buffer.byteLength - offset;
+		if(offset == 0) arr = buffer.a; else arr = buffer.a.slice(offset,offset + length);
+		arr.byteLength = arr.length;
+		arr.byteOffset = offset;
+		arr.buffer = buffer;
+	} else if((arg1 instanceof Array) && arg1.__enum__ == null) {
+		arr = arg1.slice();
+		arr.byteLength = arr.length;
+		arr.byteOffset = 0;
+		arr.buffer = new js_html_compat_ArrayBuffer(arr);
+	} else throw new js__$Boot_HaxeError("TODO " + Std.string(arg1));
+	arr.subarray = js_html_compat_Uint8Array._subarray;
+	arr.set = js_html_compat_Uint8Array._set;
+	return arr;
+};
+js_html_compat_Uint8Array._set = function(arg,offset) {
+	var t = this;
+	if(js_Boot.__instanceof(arg.buffer,js_html_compat_ArrayBuffer)) {
+		var a = arg;
+		if(arg.byteLength + offset > t.byteLength) throw new js__$Boot_HaxeError("set() outside of range");
+		var _g1 = 0;
+		var _g = arg.byteLength;
+		while(_g1 < _g) {
+			var i = _g1++;
+			t[i + offset] = a[i];
+		}
+	} else if((arg instanceof Array) && arg.__enum__ == null) {
+		var a1 = arg;
+		if(a1.length + offset > t.byteLength) throw new js__$Boot_HaxeError("set() outside of range");
+		var _g11 = 0;
+		var _g2 = a1.length;
+		while(_g11 < _g2) {
+			var i1 = _g11++;
+			t[i1 + offset] = a1[i1];
+		}
+	} else throw new js__$Boot_HaxeError("TODO");
+};
+js_html_compat_Uint8Array._subarray = function(start,end) {
+	var t = this;
+	var a = js_html_compat_Uint8Array._new(t.slice(start,end));
+	a.byteOffset = start;
+	return a;
 };
 var js_node_Fs = require("fs");
 var js_node_Http = require("http");
@@ -4835,6 +5253,10 @@ if(Array.prototype.filter == null) Array.prototype.filter = function(f1) {
 	return a1;
 };
 var __map_reserved = {}
+var ArrayBuffer = (Function("return typeof ArrayBuffer != 'undefined' ? ArrayBuffer : null"))() || js_html_compat_ArrayBuffer;
+if(ArrayBuffer.prototype.slice == null) ArrayBuffer.prototype.slice = js_html_compat_ArrayBuffer.sliceImpl;
+var DataView = (Function("return typeof DataView != 'undefined' ? DataView : null"))() || js_html_compat_DataView;
+var Uint8Array = (Function("return typeof Uint8Array != 'undefined' ? Uint8Array : null"))() || js_html_compat_Uint8Array._new;
 
       // Production steps of ECMA-262, Edition 5, 15.4.4.21
       // Reference: http://es5.github.io/#x15.4.4.21
@@ -4902,7 +5324,6 @@ if(typeof(scope.performance.now) == "undefined") {
 	scope.performance.now = now;
 }
 DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
-Main.db = [];
 Main.tokens = [];
 Main.textDB = "";
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
@@ -4928,7 +5349,14 @@ abe_core_ArgumentsFilter.globalFilters = (function() {
 	filters.push(new abe_core_filters_ArrayFilter("{}","|",object));
 	return filters;
 })();
+haxe_io_FPHelper.i64tmp = (function($this) {
+	var $r;
+	var x = new haxe__$Int64__$_$_$Int64(0,0);
+	$r = x;
+	return $r;
+}(this));
 js_Boot.__toStr = {}.toString;
+js_html_compat_Uint8Array.BYTES_PER_ELEMENT = 1;
 thx_Floats.TOLERANCE = 10e-5;
 thx_Floats.EPSILON = 10e-10;
 thx_Floats.pattern_parse = new EReg("^(\\+|-)?\\d+(\\.\\d+)?(e-?\\d+)?$","");
