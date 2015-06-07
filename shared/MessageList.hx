@@ -2,7 +2,8 @@ package;
 
 typedef MessageList = {
 	lock: String,
-	owner: Int,
+	?salt: String,
+	owner: String,
 	messages: Array<Message>,
 	typing: Array<Int>
 }

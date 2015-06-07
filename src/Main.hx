@@ -3,6 +3,7 @@ package;
 import abe.App;
 import express.Middleware;
 import express.Response;
+import haxe.crypto.Sha1;
 import haxe.Json;
 import haxe.Timer;
 import js.Lib;
@@ -18,13 +19,7 @@ import express.Express;
 using StringTools;
 
 class Main {
-<<<<<<< Updated upstream
-
-	public static var db: Array<String> = [];
-	public static var tokens: Array<Int> = [];	
-=======
 	public static var tokens: Map<String, String>;	
->>>>>>> Stashed changes
 	static var typingTimers: Map<String, Array<Timer>>;
 	
 	static var textDB: String = '';
@@ -121,6 +116,7 @@ class Main {
 				}
 				rooms.get(r._id).lock = r.lock;
 				rooms.get(r._id).owner = r.owner;
+				rooms.get(r._id).salt = r.salt;
 			}
 		});
 		mongodb.collection('messages').find().sort( { _id:1 } ).toArray(function(e, r) {
@@ -232,7 +228,8 @@ class RouteHandler implements abe.IRoute {
 			
 			Main.emptyTyping(room, id);
 			
-			if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
+			var roomE = Main.rooms.get(room);
+			if(roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt+password)) {
 				Main.rooms.get(room).messages.push( { text: message, id: id } );
 				Main.saveMessage( { text: message, id: id, room: room} );
 			}
@@ -287,10 +284,11 @@ class RouteHandler implements abe.IRoute {
 	function lockRoom(room: String, privateID: String, password: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if (roomE.owner == privateID ||  (roomE.messages.length == 0 && roomE.lock == null)) {
-			roomE.lock = password;
-			roomE.owner = privateID;
-			Main.roomInfo( { _id: room, lock: password, owner: privateID } );
+		if ((roomE.messages.length == 0 && roomE.lock == null) || roomE.owner == Sha1.encode(roomE.salt+privateID)) {
+			roomE.salt = getSalt();
+			roomE.lock = Sha1.encode(roomE.salt+password);
+			roomE.owner = Sha1.encode(roomE.salt+privateID);
+			Main.roomInfo( { _id: room, lock: roomE.lock, owner: roomE.owner, salt: roomE.salt } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('locked');
 			return;
@@ -299,13 +297,26 @@ class RouteHandler implements abe.IRoute {
 		response.send('failed');
 	}
 	
+	var letters = 'abcdefghijklmnopqrstuvwxyz';
+	function getSalt(): String {
+		var rand = new Random(Date.now().getTime());
+		return letters.charAt(rand.int(letters.length)) + letters.charAt(rand.int(letters.length));
+	}
+	
 	@:post('/api/unlock/:room/:privateID')
 	function unlockRoom(room: String, privateID: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if (roomE.owner == privateID) {
-			roomE.lock = null;
-			Main.roomInfo( { _id: room, lock: null, owner: Main.rooms[room].owner } );
+		if(roomE.lock != null) {
+			if (roomE.owner == Sha1.encode(roomE.salt+privateID)) {
+				roomE.lock = null;
+				Main.roomInfo( { _id: room, lock: null, owner: roomE.owner, salt: roomE.salt } );
+				response.setHeader('Access-Control-Allow-Origin', '*');
+				response.send('unlocked');
+				return;
+			}
+		}
+		else {
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('unlocked');
 			return;
@@ -319,8 +330,9 @@ class RouteHandler implements abe.IRoute {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if (roomE.owner == null &&  roomE.messages.length == 0) {
-			roomE.owner = privateID;
-			Main.roomInfo( { _id: room, owner: privateID } );
+			roomE.salt = getSalt();
+			roomE.owner = roomE.owner = Sha1.encode(roomE.salt+privateID);
+			Main.roomInfo( { _id: room, owner: roomE.owner, salt: roomE.salt } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('claimed');
 			return;
@@ -352,7 +364,8 @@ class RouteHandler implements abe.IRoute {
 			});
 		}
 		
-		if(Main.rooms.get(room).lock == null || Main.rooms.get(room).lock == password) {
+		var roomE = Main.rooms.get(room);
+		if(roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt+password)) {
 			var messages: MessageData = {
 				messages: {
 					messages: new Array<Message>(),
