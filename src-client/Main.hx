@@ -771,9 +771,8 @@ class Main
 		if (id != null && id != '-1') {
 			var intID = 0;
 			for (i in 0...id.length) {
-				var s = id.charAt(i);
-				trace(s);
-				intID += Std.parseInt(s);
+				var s = id.charCodeAt(i);
+				intID += s;
 			}
 			trace(intID);
 			var hue = new Random(intID * 12189234).float(0, 360);

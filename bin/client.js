@@ -743,9 +743,8 @@ Main.prototype = {
 			var _g = id.length;
 			while(_g1 < _g) {
 				var i = _g1++;
-				var s = id.charAt(i);
-				console.log(s);
-				intID += Std.parseInt(s);
+				var s = HxOverrides.cca(id,i);
+				intID += s;
 			}
 			console.log(intID);
 			var hue = new Random(intID * 12189234)["float"](0,360);
