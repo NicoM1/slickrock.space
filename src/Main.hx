@@ -247,7 +247,7 @@ class RouteHandler implements abe.IRoute {
 	function getToken(privateID: String) {
 		var rand = new Random(Date.now().getTime());
 		var token: String = '';
-		while (token.length <= 40) {
+		while (token.length <= 6) {
 			token += alphanumeric.charAt(rand.int(alphanumeric.length));
 		}
 		Main.tokens[privateID] = token;

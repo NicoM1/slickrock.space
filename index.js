@@ -428,7 +428,7 @@ RouteHandler.prototype = {
 	,getToken: function(privateID,request,response,next) {
 		var rand = new Random(new Date().getTime());
 		var token = "";
-		while(token.length <= 40) token += this.alphanumeric.charAt(rand["int"](this.alphanumeric.length,null));
+		while(token.length <= 6) token += this.alphanumeric.charAt(rand["int"](this.alphanumeric.length,null));
 		{
 			Main.tokens.set(privateID,token);
 			token;
