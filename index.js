@@ -290,6 +290,7 @@ Main._parseMessages = function() {
 			}
 			Main.rooms.get(r1._id).lock = r1.lock;
 			Main.rooms.get(r1._id).owner = r1.owner;
+			Main.rooms.get(r1._id).salt = r1.salt;
 		}
 	});
 	Main.mongodb.collection("messages").find().sort({ _id : 1}).toArray(function(e1,r2) {

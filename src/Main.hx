@@ -115,6 +115,7 @@ class Main {
 				}
 				rooms.get(r._id).lock = r.lock;
 				rooms.get(r._id).owner = r.owner;
+				rooms.get(r._id).salt = r.salt;
 			}
 		});
 		mongodb.collection('messages').find().sort( { _id:1 } ).toArray(function(e, r) {
