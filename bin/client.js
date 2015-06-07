@@ -744,6 +744,7 @@ Main.prototype = {
 			while(_g1 < _g) {
 				var i = _g1++;
 				var s = id.charAt(i);
+				console.log(s);
 				intID += Std.parseInt(s);
 			}
 			console.log(intID);

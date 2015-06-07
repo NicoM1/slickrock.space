@@ -772,6 +772,7 @@ class Main
 			var intID = 0;
 			for (i in 0...id.length) {
 				var s = id.charAt(i);
+				trace(s);
 				intID += Std.parseInt(s);
 			}
 			trace(intID);
