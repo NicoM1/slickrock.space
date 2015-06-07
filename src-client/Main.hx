@@ -518,7 +518,7 @@ class Main
 				typings.push(message);
 				messages.appendChild(message.chevron);
 				messages.appendChild(message.message);
-				Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+				_tryScroll();
 			}
 		}
 		
@@ -531,6 +531,12 @@ class Main
 		}
 		
 		requestInProgress = false;
+	}
+	
+	function _tryScroll() {
+		if ((Browser.window.innerHeight + Browser.window.scrollY) >= Browser.document.body.offsetHeight) {
+			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+		}
 	}
 	
 	function _addMessage(msg: String, ?id: Int, ?customHTML: String): DivElement {
@@ -562,7 +568,7 @@ class Main
 		
 		message.appendChild(messageItem);
 		
-		Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+		_tryScroll();
 		
 		lastUserID = id;
 		

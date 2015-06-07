@@ -538,7 +538,7 @@ Main.prototype = {
 				this.typings.push(message1);
 				this.messages.appendChild(message1.chevron);
 				this.messages.appendChild(message1.message);
-				window.scrollTo(0,window.document.body.scrollHeight);
+				this._tryScroll();
 			}
 		}
 		this.lastIndex = parsed.lastID;
@@ -556,6 +556,9 @@ Main.prototype = {
 			})($bind(this,this._openImageInNewTab),image.src);
 		}
 		this.requestInProgress = false;
+	}
+	,_tryScroll: function() {
+		if(window.innerHeight + window.scrollY >= window.document.body.offsetHeight) window.scrollTo(0,window.document.body.scrollHeight);
 	}
 	,_addMessage: function(msg,id,customHTML) {
 		msg = this._parseMessage(msg);
@@ -576,7 +579,7 @@ Main.prototype = {
 		messageItem.className = "messageitem";
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		message.appendChild(messageItem);
-		window.scrollTo(0,window.document.body.scrollHeight);
+		this._tryScroll();
 		this.lastUserID = id;
 		return messageItem;
 	}
