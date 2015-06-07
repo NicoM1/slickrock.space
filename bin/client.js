@@ -756,6 +756,7 @@ Main.prototype = {
 	}
 	,_setID: function(id_) {
 		this.id = id_;
+		console.log(this.id);
 		js_Cookie.set("id",this.id,315360000);
 		this.chatbox.style.borderTopColor = this._generateColorFromID(this.id,true);
 	}

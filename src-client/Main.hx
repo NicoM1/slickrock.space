@@ -44,7 +44,7 @@ class Main
 	var lastIndex: Int = -1;
 	var lastUserID: String = '-2';
 	
-	var getHttp: Http;
+	var getHttp: Http; 
 	var postHttp: Http;
 	var authHttp: Http;
 	
@@ -791,6 +791,7 @@ class Main
 	
 	function _setID(id_: String) {
 		id = id_;
+		trace(id);
 		Cookie.set('id', id, 60 * 60 * 24 * 365 * 10);
 		chatbox.style.borderTopColor = _generateColorFromID(id, true);
 		//chatbox.style.boxShadow.replace = _generateColorFromID(id, true);
