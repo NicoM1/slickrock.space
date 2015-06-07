@@ -568,7 +568,7 @@ Main.prototype = {
 		this.requestInProgress = false;
 	}
 	,_tryScroll: function() {
-		if(window.innerHeight + window.scrollY >= window.document.body.offsetHeight) window.scrollTo(0,window.document.body.scrollHeight);
+		window.scrollTo(0,window.document.body.scrollHeight);
 	}
 	,_addMessage: function(msg,id,customHTML) {
 		msg = this._parseMessage(msg);
