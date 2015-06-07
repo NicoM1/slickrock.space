@@ -18,9 +18,13 @@ import express.Express;
 using StringTools;
 
 class Main {
+<<<<<<< Updated upstream
 
 	public static var db: Array<String> = [];
 	public static var tokens: Array<Int> = [];	
+=======
+	public static var tokens: Map<String, String>;	
+>>>>>>> Stashed changes
 	static var typingTimers: Map<String, Array<Timer>>;
 	
 	static var textDB: String = '';
@@ -35,6 +39,7 @@ class Main {
 		_setupMongo();
 		rooms = new Rooms();
 		typingTimers = new Map();
+		tokens = new Map();
 		
 		var app = new App();
 		app.router.register(new RouteHandler());
@@ -203,18 +208,18 @@ class RouteHandler implements abe.IRoute {
 	}
 	
 	@:post('/chat/:message/:room/:id/:privateID/:token')
-	function sendMessage(message: String, room: String, id: Int, privateID: Int, token: Int) {
+	function sendMessage(message: String, room: String, id: Int, privateID: String, token: String) {
 		room = room.toLowerCase();
 		_sendMessage(response, message, room, null, id, privateID, token);
 	}
 	
 	@:post('/chat/:message/:room/:password/:id/:privateID/:token')
-	function sendMessageWithPass(message: String, room: String, password: String, id: Int, privateID: Int, token: Int) {
+	function sendMessageWithPass(message: String, room: String, password: String, id: Int, privateID: String, token: String) {
 		room = room.toLowerCase();
 		_sendMessage(response, message, room, password, id, privateID, token);
 	}
 
-	function _sendMessage(response: Response, message: String, room: String, password: String, id: Int, privateID: Int, token: Int) {
+	function _sendMessage(response: Response, message: String, room: String, password: String, id: Int, privateID: String, token: String) {
 		if(Main.tokens[privateID] == token) {
 			if (!Main.rooms.exists(room)) {
 				Main.rooms.set(room, {
@@ -239,12 +244,29 @@ class RouteHandler implements abe.IRoute {
 		response.send('failed');
 	}
 	
+	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
+	
 	@:post('/api/gettoken/:privateID') 
-	function getToken(privateID: Int) {
-		Main.tokens[privateID] = Std.int(Math.random() * 0xFFFFFF);
-		Main.saveToken( { _id: privateID, token: Main.tokens[privateID] } );
+	function getToken(privateID: String) {
+		var rand = new Random(Date.now().getTime());
+		var token: String = '';
+		while (token.length <= 40) {
+			token += alphanumeric.charAt(rand.int(alphanumeric.length));
+		}
+		Main.tokens[privateID] = token;
+		Main.saveToken( { _id: privateID, token: token } );
 		response.setHeader('Access-Control-Allow-Origin', '*');
-		response.send(Std.string(Main.tokens[privateID]));
+		response.send(token);
+	}
+	
+	@:post('/api/checkvalid/:privateID/:token') 
+	function checkValid(privateID: String, token: String) {
+		var value = 'invalid';
+		if (Main.tokens[privateID] == token) {
+			value = 'valid';
+		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send(value);
 	}
 	
 	@:get('/api/typing/:room/:id') 
@@ -260,19 +282,9 @@ class RouteHandler implements abe.IRoute {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('needs a response');
 	}
-
-	@:post('/api/checkvalid/:privateID/:token') 
-	function checkValid(privateID: Int, token: Int) {
-		var value = 'invalid';
-		if (Main.tokens[privateID] == token) {
-			value = 'valid';
-		}
-		response.setHeader('Access-Control-Allow-Origin', '*');
-		response.send(value);
-	}
 	
 	@:post('/api/lock/:room/:privateID/:password')
-	function lockRoom(room: String, privateID: Int, password: String) {
+	function lockRoom(room: String, privateID: String, password: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if (roomE.owner == privateID ||  (roomE.messages.length == 0 && roomE.lock == null)) {
@@ -288,7 +300,7 @@ class RouteHandler implements abe.IRoute {
 	}
 	
 	@:post('/api/unlock/:room/:privateID')
-	function unlockRoom(room: String, privateID: Int) {
+	function unlockRoom(room: String, privateID: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if (roomE.owner == privateID) {
@@ -303,7 +315,7 @@ class RouteHandler implements abe.IRoute {
 	}
 	
 	@:post('/api/claim/:room/:privateID')
-	function claimRoom(room: String, privateID: Int) {
+	function claimRoom(room: String, privateID: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if (roomE.owner == null &&  roomE.messages.length == 0) {

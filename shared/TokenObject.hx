@@ -1,6 +1,6 @@
 package;
 
 typedef TokenObject = {
-	_id: Int,
-	token: Int	
+	_id: String,
+	token: String
 }

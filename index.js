@@ -159,6 +159,7 @@ var Main = function() {
 	this._setupMongo();
 	Main.rooms = new haxe_ds_StringMap();
 	Main.typingTimers = new haxe_ds_StringMap();
+	Main.tokens = new haxe_ds_StringMap();
 	var app = new abe_App();
 	(function(instance,parent) {
 		var router = parent.mount("/");
@@ -173,47 +174,47 @@ var Main = function() {
 		var uses1 = [];
 		router.registerMethod("/:room","get",process1,uses1,[]);
 		var filters2 = new abe_core_ArgumentsFilter();
-		var processor2 = new abe_core_ArgumentProcessor(filters2,[{ name : "message", optional : false, type : "String", sources : ["params"]},{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "Int", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "token", optional : false, type : "Int", sources : ["params"]}]);
+		var processor2 = new abe_core_ArgumentProcessor(filters2,[{ name : "message", optional : false, type : "String", sources : ["params"]},{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "Int", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "token", optional : false, type : "String", sources : ["params"]}]);
 		var process2 = new RouteHandler_$sendMessage_$RouteProcess({ message : null, room : null, id : null, privateID : null, token : null},instance,processor2);
 		var uses2 = [];
 		router.registerMethod("/chat/:message/:room/:id/:privateID/:token","post",process2,uses2,[]);
 		var filters3 = new abe_core_ArgumentsFilter();
-		var processor3 = new abe_core_ArgumentProcessor(filters3,[{ name : "message", optional : false, type : "String", sources : ["params"]},{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "Int", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "token", optional : false, type : "Int", sources : ["params"]}]);
+		var processor3 = new abe_core_ArgumentProcessor(filters3,[{ name : "message", optional : false, type : "String", sources : ["params"]},{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "Int", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "token", optional : false, type : "String", sources : ["params"]}]);
 		var process3 = new RouteHandler_$sendMessageWithPass_$RouteProcess({ message : null, room : null, password : null, id : null, privateID : null, token : null},instance,processor3);
 		var uses3 = [];
 		router.registerMethod("/chat/:message/:room/:password/:id/:privateID/:token","post",process3,uses3,[]);
 		var filters4 = new abe_core_ArgumentsFilter();
-		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "privateID", optional : false, type : "Int", sources : ["params"]}]);
+		var processor4 = new abe_core_ArgumentProcessor(filters4,[{ name : "privateID", optional : false, type : "String", sources : ["params"]}]);
 		var process4 = new RouteHandler_$getToken_$RouteProcess({ privateID : null},instance,processor4);
 		var uses4 = [];
 		router.registerMethod("/api/gettoken/:privateID","post",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
-		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
-		var process5 = new RouteHandler_$typing_$RouteProcess({ room : null, id : null},instance,processor5);
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "token", optional : false, type : "String", sources : ["params"]}]);
+		var process5 = new RouteHandler_$checkValid_$RouteProcess({ privateID : null, token : null},instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/api/typing/:room/:id","get",process5,uses5,[]);
+		router.registerMethod("/api/checkvalid/:privateID/:token","post",process5,uses5,[]);
 		var filters6 = new abe_core_ArgumentsFilter();
 		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
 		var process6 = new RouteHandler_$typing_$RouteProcess({ room : null, id : null},instance,processor6);
 		var uses6 = [];
-		router.registerMethod("/api/typing/:room/:id","post",process6,uses6,[]);
+		router.registerMethod("/api/typing/:room/:id","get",process6,uses6,[]);
 		var filters7 = new abe_core_ArgumentsFilter();
-		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "token", optional : false, type : "Int", sources : ["params"]}]);
-		var process7 = new RouteHandler_$checkValid_$RouteProcess({ privateID : null, token : null},instance,processor7);
+		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "Int", sources : ["params"]}]);
+		var process7 = new RouteHandler_$typing_$RouteProcess({ room : null, id : null},instance,processor7);
 		var uses7 = [];
-		router.registerMethod("/api/checkvalid/:privateID/:token","post",process7,uses7,[]);
+		router.registerMethod("/api/typing/:room/:id","post",process7,uses7,[]);
 		var filters8 = new abe_core_ArgumentsFilter();
-		var processor8 = new abe_core_ArgumentProcessor(filters8,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]}]);
+		var processor8 = new abe_core_ArgumentProcessor(filters8,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]}]);
 		var process8 = new RouteHandler_$lockRoom_$RouteProcess({ room : null, privateID : null, password : null},instance,processor8);
 		var uses8 = [];
 		router.registerMethod("/api/lock/:room/:privateID/:password","post",process8,uses8,[]);
 		var filters9 = new abe_core_ArgumentsFilter();
-		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]}]);
+		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]}]);
 		var process9 = new RouteHandler_$unlockRoom_$RouteProcess({ room : null, privateID : null},instance,processor9);
 		var uses9 = [];
 		router.registerMethod("/api/unlock/:room/:privateID","post",process9,uses9,[]);
 		var filters10 = new abe_core_ArgumentsFilter();
-		var processor10 = new abe_core_ArgumentProcessor(filters10,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "Int", sources : ["params"]}]);
+		var processor10 = new abe_core_ArgumentProcessor(filters10,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]}]);
 		var process10 = new RouteHandler_$claimRoom_$RouteProcess({ room : null, privateID : null},instance,processor10);
 		var uses10 = [];
 		router.registerMethod("/api/claim/:room/:privateID","post",process10,uses10,[]);
@@ -319,7 +320,9 @@ Main._parseMessages = function() {
 		while(_g2 < tokenos.length) {
 			var t = tokenos[_g2];
 			++_g2;
-			Main.tokens[t._id] = t.token;
+			var v = t.token;
+			Main.tokens.set(t._id,v);
+			v;
 		}
 	});
 };
@@ -364,6 +367,11 @@ Main.prototype = {
 var abe_IRoute = function() { };
 abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
+<<<<<<< Updated upstream
+=======
+	this.letters = "abcdefghijklmnopqrstuvwxyz";
+	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
+>>>>>>> Stashed changes
 };
 RouteHandler.__name__ = ["RouteHandler"];
 RouteHandler.__interfaces__ = [abe_IRoute];
@@ -400,7 +408,7 @@ RouteHandler.prototype = {
 		this._sendMessage(response,message,room,password,id,privateID,token);
 	}
 	,_sendMessage: function(response,message,room,password,id,privateID,token) {
-		if(Main.tokens[privateID] == token) {
+		if(Main.tokens.get(privateID) == token) {
 			if(!Main.rooms.exists(room)) {
 				var value = { messages : [], lock : null, owner : null, typing : []};
 				Main.rooms.set(room,value);
@@ -417,11 +425,24 @@ RouteHandler.prototype = {
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("failed");
 	}
+	,alphanumeric: null
 	,getToken: function(privateID,request,response,next) {
-		Main.tokens[privateID] = Std["int"](Math.random() * 16777215);
-		Main.saveToken({ _id : privateID, token : Main.tokens[privateID]});
+		var rand = new Random(new Date().getTime());
+		var token = "";
+		while(token.length <= 40) token += this.alphanumeric.charAt(rand["int"](this.alphanumeric.length,null));
+		{
+			Main.tokens.set(privateID,token);
+			token;
+		}
+		Main.saveToken({ _id : privateID, token : token});
 		response.setHeader("Access-Control-Allow-Origin","*");
-		response.send(Std.string(Main.tokens[privateID]));
+		response.send(token);
+	}
+	,checkValid: function(privateID,token,request,response,next) {
+		var value = "invalid";
+		if(Main.tokens.get(privateID) == token) value = "valid";
+		response.setHeader("Access-Control-Allow-Origin","*");
+		response.send(value);
 	}
 	,typing: function(room,id,request,response,next) {
 		if((function($this) {
@@ -435,12 +456,6 @@ RouteHandler.prototype = {
 		} else Main.resetTypingTimer(room,id);
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("needs a response");
-	}
-	,checkValid: function(privateID,token,request,response,next) {
-		var value = "invalid";
-		if(Main.tokens[privateID] == token) value = "valid";
-		response.setHeader("Access-Control-Allow-Origin","*");
-		response.send(value);
 	}
 	,lockRoom: function(room,privateID,password,request,response,next) {
 		room = room.toLowerCase();
@@ -729,9 +744,6 @@ Std.instance = function(value,c) {
 };
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
-};
-Std["int"] = function(x) {
-	return x | 0;
 };
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
@@ -4902,8 +4914,11 @@ if(typeof(scope.performance.now) == "undefined") {
 	scope.performance.now = now;
 }
 DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
+<<<<<<< Updated upstream
 Main.db = [];
 Main.tokens = [];
+=======
+>>>>>>> Stashed changes
 Main.textDB = "";
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
 abe_core_ArgumentsFilter.globalFilters = (function() {

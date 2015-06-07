@@ -35,10 +35,10 @@ typedef MessageDiv = {
 class Main 
 {
 	var room: String;
-	var basePath: String = 'https://aqueous-api.herokuapp.com/';
+	var basePath: String = 'https://aqueous-dev.herokuapp.com/';
 	var id: Int;
-	var privateID: Int;
-	var token: Int = null;
+	var privateID: String;
+	var token: String = null;
 	var password: String = null;
 
 	var lastIndex: Int = -1;
@@ -171,26 +171,33 @@ class Main
 		_setupPrivateID();
 	}
 	
+	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
+	
 	function _setupPrivateID() {
 		if (!Cookie.exists('private')) {
-			privateID = Std.int(Math.random() * 0xFFFFFF);
-			Cookie.set('private', Std.string(privateID), 60 * 60 * 24 * 365 * 10);
+			var rand = new Random(Date.now().getTime());
+			var newPrivate: String = '';
+			while (newPrivate.length <= 40) {
+				newPrivate += alphanumeric.charAt(rand.int(alphanumeric.length));
+			}
+			privateID = newPrivate;
+			Cookie.set('private', newPrivate, 60 * 60 * 24 * 365 * 10);
 		}
 		else {
-			privateID = Std.parseInt(Cookie.get('private'));
-			token = Std.parseInt(Cookie.get('token'));
+			privateID = Cookie.get('private');
+			token = Cookie.get('token');
 			if(token != null) {
 				_checkValid();
 			}
 		}
 	}
 	
-	function _setToken(_token: Int) {
+	function _setToken(_token: String) {
 		token = _token;
 		_checkValid(true);
 		//lastIndex = 0;
 		if(token != null) {
-			Cookie.set('token', Std.string(token), 60 * 60 * 24 * 365 * 10);
+			Cookie.set('token', token, 60 * 60 * 24 * 365 * 10);
 		}
 	}
 	
@@ -670,8 +677,8 @@ class Main
 
 		if (code != null && code == 13) { //ENTER
 			if (token == null) {
-				var t = Std.parseInt(chatbox.value);
-				_setToken(t != null? t : -1);
+				var t = chatbox.value;
+				_setToken(t != null? t : '-1');
 				chatbox.value = '';
 				helpbox.style.display = 'none';
 				return;

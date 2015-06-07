@@ -155,6 +155,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
 	this.commandIndex = -1;
 	this.sendLast = false;
 	this.lastMessage = "";
@@ -173,7 +174,7 @@ var Main = function() {
 	this.lastIndex = -1;
 	this.password = null;
 	this.token = null;
-	this.basePath = "https://aqueous-api.herokuapp.com/";
+	this.basePath = "https://aqueous-dev.herokuapp.com/";
 	var _g = this;
 	this.room = window.room;
 	this._buildCommands();
@@ -259,18 +260,21 @@ Main.prototype = {
 	}
 	,_setupPrivateID: function() {
 		if(!js_Cookie.exists("private")) {
-			this.privateID = Std["int"](Math.random() * 16777215);
-			js_Cookie.set("private",Std.string(this.privateID),315360000);
+			var rand = new Random(new Date().getTime());
+			var newPrivate = "";
+			while(newPrivate.length <= 40) newPrivate += this.alphanumeric.charAt(rand["int"](this.alphanumeric.length,null));
+			this.privateID = newPrivate;
+			js_Cookie.set("private",newPrivate,315360000);
 		} else {
-			this.privateID = Std.parseInt(js_Cookie.get("private"));
-			this.token = Std.parseInt(js_Cookie.get("token"));
+			this.privateID = js_Cookie.get("private");
+			this.token = js_Cookie.get("token");
 			if(this.token != null) this._checkValid();
 		}
 	}
 	,_setToken: function(_token) {
 		this.token = _token;
 		this._checkValid(true);
-		if(this.token != null) js_Cookie.set("token",Std.string(this.token),315360000);
+		if(this.token != null) js_Cookie.set("token",this.token,315360000);
 	}
 	,_checkValid: function(printValid) {
 		if(printValid == null) printValid = false;
@@ -661,8 +665,8 @@ Main.prototype = {
 		} else this.helpbox.style.display = "none";
 		if(code != null && code == 13) {
 			if(this.token == null) {
-				var t = Std.parseInt(this.chatbox.value);
-				this._setToken(t != null?t:-1);
+				var t = this.chatbox.value;
+				this._setToken(t != null?t:"-1");
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
 				return;
@@ -791,9 +795,6 @@ var Std = function() { };
 Std.__name__ = true;
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
-};
-Std["int"] = function(x) {
-	return x | 0;
 };
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
