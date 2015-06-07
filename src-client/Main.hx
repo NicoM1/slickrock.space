@@ -770,7 +770,8 @@ class Main
 		var hsl: Hsl;
 		if (id != null && id != '-1') {
 			var intID = 0;
-			for (s in id.split('')) {
+			for (i in 0...id.length) {
+				var s = id.charAt(i);
 				intID += Std.parseInt(s);
 			}
 			var hue = new Random(intID * 12189234).float(0, 360);

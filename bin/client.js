@@ -739,11 +739,11 @@ Main.prototype = {
 		var hsl;
 		if(id != null && id != "-1") {
 			var intID = 0;
-			var _g = 0;
-			var _g1 = id.split("");
-			while(_g < _g1.length) {
-				var s = _g1[_g];
-				++_g;
+			var _g1 = 0;
+			var _g = id.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				var s = id.charAt(i);
 				intID += Std.parseInt(s);
 			}
 			var hue = new Random(intID * 12189234)["float"](0,360);
