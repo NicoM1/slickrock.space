@@ -348,6 +348,7 @@ class Main
 		var idHttp: Http = new Http(basePath + 'api/getID');
 		idHttp.onData = function(d) {
 			_setID(d);
+			_printID();
 		}
 		idHttp.onError = function(e) {
 			trace(e);
@@ -790,6 +791,10 @@ class Main
 	}
 	
 	function _setID(id_: String) {
+		if (Std.parseInt(id_) != null) {
+			_getID();
+			return;
+		}
 		id = id_;
 		Cookie.set('id', id, 60 * 60 * 24 * 365 * 10);
 		chatbox.style.borderTopColor = _generateColorFromID(id, true);

@@ -401,6 +401,7 @@ Main.prototype = {
 		var idHttp = new haxe_Http(this.basePath + "api/getID");
 		idHttp.onData = function(d) {
 			_g._setID(d);
+			_g._printID();
 		};
 		idHttp.onError = function(e) {
 			console.log(e);
@@ -756,6 +757,10 @@ Main.prototype = {
 		return "#" + StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6);
 	}
 	,_setID: function(id_) {
+		if(Std.parseInt(id_) != null) {
+			this._getID();
+			return;
+		}
 		this.id = id_;
 		js_Cookie.set("id",this.id,315360000);
 		this.chatbox.style.borderTopColor = this._generateColorFromID(this.id,true);
