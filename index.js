@@ -261,7 +261,7 @@ Main.clearTyping = function(room,id) {
 		$r = this1.get(id);
 		return $r;
 	}(this)) == null) {
-		var timer = new haxe_Timer(3000);
+		var timer = new haxe_Timer(10000);
 		timer.run = (function(f,a1,id1) {
 			return function() {
 				f(a1,id1);

@@ -83,7 +83,7 @@ class Main {
 			typingTimers[room] = new Map();
 		}
 		if(typingTimers[room][id] == null) {
-			var timer = new Timer(3000);
+			var timer = new Timer(10000);
 			timer.run = emptyTyping.bind(room, id);
 			typingTimers[room][id] = timer;
 		}
