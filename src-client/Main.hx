@@ -774,7 +774,6 @@ class Main
 				var s = id.charCodeAt(i);
 				intID += s;
 			}
-			trace(intID);
 			var hue = new Random(intID * 12189234).float(0, 360);
 			var sat = new Random(intID * 12189234).float(0.3, 0.5);
 			var light = new Random(intID * 12189234).float(0.3, 0.5);
@@ -793,7 +792,6 @@ class Main
 	
 	function _setID(id_: String) {
 		id = id_;
-		trace(id);
 		Cookie.set('id', id, 60 * 60 * 24 * 365 * 10);
 		chatbox.style.borderTopColor = _generateColorFromID(id, true);
 		//chatbox.style.boxShadow.replace = _generateColorFromID(id, true);

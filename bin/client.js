@@ -746,7 +746,6 @@ Main.prototype = {
 				var s = HxOverrides.cca(id,i);
 				intID += s;
 			}
-			console.log(intID);
 			var hue = new Random(intID * 12189234)["float"](0,360);
 			var sat = new Random(intID * 12189234)["float"](0.3,0.5);
 			var light = new Random(intID * 12189234)["float"](0.3,0.5);
@@ -757,7 +756,6 @@ Main.prototype = {
 	}
 	,_setID: function(id_) {
 		this.id = id_;
-		console.log(this.id);
 		js_Cookie.set("id",this.id,315360000);
 		this.chatbox.style.borderTopColor = this._generateColorFromID(this.id,true);
 	}
