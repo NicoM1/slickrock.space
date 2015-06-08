@@ -535,6 +535,7 @@ class Main
 			return;
 		}
 		if (data == 'nomongo') {
+			requestInProgress = false;
 			return;
 		}
 		if (wasLocked) {
