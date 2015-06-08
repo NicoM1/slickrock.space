@@ -591,7 +591,7 @@ class Main
 	}
 	
 	function _tryScroll() {
-		if ((Browser.window.innerHeight + Browser.document.body.scrollTop) >= Browser.document.body.offsetHeight) {
+		if ((Browser.window.innerHeight + Browser.window.scrollY) >= messages.offsetHeight) {
 			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
 		}
 	}
