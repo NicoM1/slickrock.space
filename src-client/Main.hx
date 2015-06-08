@@ -588,6 +588,7 @@ class Main
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
 			i.onclick = _openImageInNewTab.bind(image.src);
+			i.onload = _tryScroll;
 		}
 		
 		if (first) {

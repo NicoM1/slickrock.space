@@ -601,6 +601,7 @@ Main.prototype = {
 					f1(a1);
 				};
 			})($bind(this,this._openImageInNewTab),image.src);
+			i.onload = $bind(this,this._tryScroll);
 		}
 		if(this.first) window.scrollTo(0,this.messages.scrollHeight);
 		this.requestInProgress = false;
