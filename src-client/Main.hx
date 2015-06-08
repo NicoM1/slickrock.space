@@ -40,7 +40,7 @@ class Main
 	var privateID: String;
 	var token: String = null;
 	var password: String = null;
-	var adminPassword: String = '';
+	var adminPassword: String = '-1';
 
 	var lastIndex: Int = -1;
 	var lastUserID: String = '-2';
@@ -422,35 +422,30 @@ class Main
 	}
 	
 	function _lockRoom(arguments: Array<String>) {
-		if(adminPassword != null && adminPassword != '') {
-			if (arguments.length == 0 || arguments[0].trim() == '') {
-				_addMessage('**/fasten** requires argument: *PASSWORD*.');
-				return;
-			}
-			var newPassword = arguments[0];
-			_setPassword(newPassword);
-			var lockHttp: Http = new Http(basePath + 'api/lock/$room/$privateID/$newPassword/$adminPassword');
-			lockHttp.onData = function(d) {
-				if(d == 'locked') {
-					_addMessage('$room locked with password: $newPassword.');
-				}
-				else if (d == 'unclaimed') {
-					_addMessage('$room must be claimed before locking.');
-				}
-				else {
-					_addMessage('you are not authorized to lock $room.');
-				}
-			}
-			lockHttp.onError = function(e) {
-				trace(e);
-				_addMessage('failed to connect to api, couldn\'t lock room.');
-			}
-			
-			lockHttp.request(true);
+		if (arguments.length == 0 || arguments[0].trim() == '') {
+			_addMessage('**/fasten** requires argument: *PASSWORD*.');
+			return;
 		}
-		else {
-			_addMessage('$room must be claimed before locking.');
+		var newPassword = arguments[0];
+		_setPassword(newPassword);
+		var lockHttp: Http = new Http(basePath + 'api/lock/$room/$privateID/$newPassword/$adminPassword');
+		lockHttp.onData = function(d) {
+			if(d == 'locked') {
+				_addMessage('$room locked with password: $newPassword.');
+			}
+			else if (d == 'unclaimed') {
+				_addMessage('$room must be claimed before locking.');
+			}
+			else {
+				_addMessage('you are not authorized to lock $room.');
+			}
 		}
+		lockHttp.onError = function(e) {
+			trace(e);
+			_addMessage('failed to connect to api, couldn\'t lock room.');
+		}
+		
+		lockHttp.request(true);
 	}
 	
 	function _unlockRoom(?arguments: Array<String>) {
