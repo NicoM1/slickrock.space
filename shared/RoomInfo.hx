@@ -1,8 +1,8 @@
 package;
 
 typedef RoomInfo = {
-	?owner: String,
 	?lock: String,
 	?salt: String,
+	?pw: String,
 	_id: String
 }

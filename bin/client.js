@@ -171,6 +171,7 @@ var Main = function() {
 	this.typings = [];
 	this.lastUserID = "-2";
 	this.lastIndex = -1;
+	this.adminPassword = "";
 	this.password = null;
 	this.token = null;
 	this.id = null;
@@ -258,6 +259,7 @@ Main.prototype = {
 		this.chatbox.focus();
 		if(!js_Cookie.exists("id")) this._getID(); else this._setID(js_Cookie.get("id"));
 		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
+		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
 		this._setupPrivateID();
 	}
 	,_setupPrivateID: function() {
@@ -422,7 +424,13 @@ Main.prototype = {
 	}
 	,_claimRoom: function($arguments) {
 		var _g = this;
-		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID));
+		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
+			this._addMessage("**/claim** requires argument: *ADMIN_PASSWORD*.");
+			return;
+		}
+		var newPassword = $arguments[0];
+		this._setAdminPassword(newPassword);
+		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
 		lockHttp.onData = function(d) {
 			if(d == "claimed") _g._addMessage("" + _g.room + " claimed."); else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
@@ -446,9 +454,9 @@ Main.prototype = {
 		}
 		var newPassword = $arguments[0];
 		this._setPassword(newPassword);
-		var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + newPassword));
+		var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + newPassword + "/" + this.adminPassword));
 		lockHttp.onData = function(d) {
-			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
+			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
 			console.log(e);
@@ -458,7 +466,7 @@ Main.prototype = {
 	}
 	,_unlockRoom: function($arguments) {
 		var _g = this;
-		var lockHttp = new haxe_Http(this.basePath + ("api/unlock/" + this.room + "/" + this.privateID));
+		var lockHttp = new haxe_Http(this.basePath + ("api/unlock/" + this.room + "/" + this.privateID + "/" + this.adminPassword));
 		lockHttp.onData = function(d) {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
@@ -479,9 +487,11 @@ Main.prototype = {
 		this._addMessage("print the chat room you are currently in.");
 		this._addMessage("**/survey** *ROOM*");
 		this._addMessage("move to a different chat room.");
-		this._addMessage("**/claim** *PASSWORD*");
+		this._addMessage("**/claim** *ADMIN_PASSWORD*");
 		this._addMessage("attempt to take ownership of the current room.");
-		this._addMessage("**/fasten** *PASSWORD*");
+		this._addMessage("**/entitle** *ADMIN_PASSWORD*");
+		this._addMessage("attempt to take authorize youself as admin of the current room.");
+		this._addMessage("**/fasten** *PUBLIC_PASSWORD*");
 		this._addMessage("attempt to lock the current room.");
 		this._addMessage("**/unfasten**");
 		this._addMessage("attempt to unlock the current room.");
@@ -770,6 +780,10 @@ Main.prototype = {
 	,_setPassword: function(password_) {
 		this.password = password_;
 		js_Cookie.set("" + this.room + "-password",this.password,315360000);
+	}
+	,_setAdminPassword: function(password_) {
+		this.adminPassword = password_;
+		js_Cookie.set("" + this.room + "admin-password",this.adminPassword,315360000);
 	}
 	,__class__: Main
 };

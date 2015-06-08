@@ -211,20 +211,20 @@ var Main = function() {
 		var uses8 = [];
 		router.registerMethod("/api/typing/:room/:id","post",process8,uses8,[]);
 		var filters9 = new abe_core_ArgumentsFilter();
-		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]}]);
-		var process9 = new RouteHandler_$lockRoom_$RouteProcess({ room : null, privateID : null, password : null},instance,processor9);
+		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
+		var process9 = new RouteHandler_$lockRoom_$RouteProcess({ room : null, privateID : null, password : null, privatePass : null},instance,processor9);
 		var uses9 = [];
-		router.registerMethod("/api/lock/:room/:privateID/:password","post",process9,uses9,[]);
+		router.registerMethod("/api/lock/:room/:privateID/:password/:privatePass","post",process9,uses9,[]);
 		var filters10 = new abe_core_ArgumentsFilter();
-		var processor10 = new abe_core_ArgumentProcessor(filters10,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]}]);
-		var process10 = new RouteHandler_$unlockRoom_$RouteProcess({ room : null, privateID : null},instance,processor10);
+		var processor10 = new abe_core_ArgumentProcessor(filters10,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
+		var process10 = new RouteHandler_$unlockRoom_$RouteProcess({ room : null, privateID : null, privatePass : null},instance,processor10);
 		var uses10 = [];
-		router.registerMethod("/api/unlock/:room/:privateID","post",process10,uses10,[]);
+		router.registerMethod("/api/unlock/:room/:privateID/:privatePass","post",process10,uses10,[]);
 		var filters11 = new abe_core_ArgumentsFilter();
-		var processor11 = new abe_core_ArgumentProcessor(filters11,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]}]);
-		var process11 = new RouteHandler_$claimRoom_$RouteProcess({ room : null, privateID : null},instance,processor11);
+		var processor11 = new abe_core_ArgumentProcessor(filters11,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
+		var process11 = new RouteHandler_$claimRoom_$RouteProcess({ room : null, privateID : null, privatePass : null},instance,processor11);
 		var uses11 = [];
-		router.registerMethod("/api/claim/:room/:privateID","post",process11,uses11,[]);
+		router.registerMethod("/api/claim/:room/:privateID/:privatePass","post",process11,uses11,[]);
 		var filters12 = new abe_core_ArgumentsFilter();
 		var processor12 = new abe_core_ArgumentProcessor(filters12,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
 		var process12 = new RouteHandler_$getMessages_$RouteProcess({ room : null, lastID : null},instance,processor12);
@@ -305,11 +305,11 @@ Main._parseMessages = function() {
 			var r1 = roominfo[_g];
 			++_g;
 			if(!Main.rooms.exists(r1._id)) {
-				var value = { messages : [], lock : null, owner : null, typing : []};
+				var value = { messages : [], lock : null, pw : null, typing : []};
 				Main.rooms.set(r1._id,value);
 			}
 			Main.rooms.get(r1._id).lock = r1.lock;
-			Main.rooms.get(r1._id).owner = r1.owner;
+			Main.rooms.get(r1._id).pw = r1.pw;
 			Main.rooms.get(r1._id).salt = r1.salt;
 		}
 	});
@@ -324,7 +324,7 @@ Main._parseMessages = function() {
 			var m = messages[_g1];
 			++_g1;
 			if(!Main.rooms.exists(m.room)) {
-				var value1 = { messages : [], lock : null, owner : null, typing : []};
+				var value1 = { messages : [], lock : null, pw : null, typing : []};
 				Main.rooms.set(m.room,value1);
 			}
 			Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id});
@@ -387,7 +387,7 @@ Main.prototype = {
 	}
 	,_test: function(room,id,message) {
 		if(!Main.rooms.exists(room)) {
-			var value = { messages : [], lock : null, owner : null, typing : []};
+			var value = { messages : [], lock : null, pw : null, typing : []};
 			Main.rooms.set(room,value);
 		}
 		Main.emptyTyping(room,id);
@@ -439,7 +439,7 @@ RouteHandler.prototype = {
 	,_sendMessage: function(response,message,room,password,id,privateID,token) {
 		if(Main.tokens.get(privateID) == token) {
 			if(!Main.rooms.exists(room)) {
-				var value = { messages : [], lock : null, owner : null, typing : []};
+				var value = { messages : [], lock : null, pw : null, typing : []};
 				Main.rooms.set(room,value);
 			}
 			Main.emptyTyping(room,id);
@@ -491,16 +491,19 @@ RouteHandler.prototype = {
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("needs a response");
 	}
-	,lockRoom: function(room,privateID,password,request,response,next) {
+	,lockRoom: function(room,privateID,password,privatePass,request,response,next) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if(roomE.messages.length == 0 && roomE.lock == null || roomE.owner == haxe_crypto_Sha1.encode(roomE.salt + privateID)) {
+		if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 			roomE.salt = this.getSalt();
 			roomE.lock = haxe_crypto_Sha1.encode(roomE.salt + password);
-			roomE.owner = haxe_crypto_Sha1.encode(roomE.salt + privateID);
-			Main.roomInfo({ _id : room, lock : roomE.lock, owner : roomE.owner, salt : roomE.salt});
+			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("locked");
+			return;
+		} else {
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("unclaimed");
 			return;
 		}
 		response.setHeader("Access-Control-Allow-Origin","*");
@@ -511,13 +514,13 @@ RouteHandler.prototype = {
 		var rand = new Random(new Date().getTime());
 		return this.letters.charAt(rand["int"](this.letters.length,null)) + this.letters.charAt(rand["int"](this.letters.length,null));
 	}
-	,unlockRoom: function(room,privateID,request,response,next) {
+	,unlockRoom: function(room,privateID,privatePass,request,response,next) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.lock != null) {
-			if(roomE.owner == haxe_crypto_Sha1.encode(roomE.salt + privateID)) {
+			if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo({ _id : room, lock : null, owner : roomE.owner, salt : roomE.salt});
+				Main.roomInfo({ _id : room, lock : null, pw : roomE.pw, salt : roomE.salt});
 				response.setHeader("Access-Control-Allow-Origin","*");
 				response.send("unlocked");
 				return;
@@ -530,13 +533,13 @@ RouteHandler.prototype = {
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send("failed");
 	}
-	,claimRoom: function(room,privateID,request,response,next) {
+	,claimRoom: function(room,privateID,privatePass,request,response,next) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if(roomE.owner == null && roomE.messages.length == 0) {
+		if(roomE.pw == null && roomE.messages.length == 0) {
 			roomE.salt = this.getSalt();
-			roomE.owner = roomE.owner = haxe_crypto_Sha1.encode(roomE.salt + privateID);
-			Main.roomInfo({ _id : room, owner : roomE.owner, salt : roomE.salt});
+			roomE.pw = haxe_crypto_Sha1.encode(roomE.salt + privatePass);
+			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("claimed");
 			return;
@@ -554,12 +557,12 @@ RouteHandler.prototype = {
 	}
 	,_getMessages: function(response,room,password,lastID) {
 		if(!Main.rooms.exists(room)) {
-			var value = { messages : [], lock : null, owner : null, typing : []};
+			var value = { messages : [], lock : null, pw : null, typing : []};
 			Main.rooms.set(room,value);
 		}
 		var roomE = Main.rooms.get(room);
 		if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
-			var messages = { messages : { messages : [], lock : null, owner : null, typing : Main.rooms.get(room).typing}, lastID : Main.rooms.get(room).messages.length - 1};
+			var messages = { messages : { messages : [], lock : null, pw : null, typing : Main.rooms.get(room).typing}, lastID : Main.rooms.get(room).messages.length - 1};
 			if(lastID < Main.rooms.get(room).messages.length - 1) {
 				var _g1 = lastID + 1;
 				var _g = Main.rooms.get(room).messages.length;
@@ -730,7 +733,7 @@ RouteHandler_$claimRoom_$RouteProcess.__name__ = ["RouteHandler_claimRoom_RouteP
 RouteHandler_$claimRoom_$RouteProcess.__super__ = abe_core_RouteProcess;
 RouteHandler_$claimRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
 	execute: function(request,response,next) {
-		this.instance.claimRoom(this.args.room,this.args.privateID,request,response,next);
+		this.instance.claimRoom(this.args.room,this.args.privateID,this.args.privatePass,request,response,next);
 	}
 	,__class__: RouteHandler_$claimRoom_$RouteProcess
 });
@@ -796,7 +799,7 @@ RouteHandler_$lockRoom_$RouteProcess.__name__ = ["RouteHandler_lockRoom_RoutePro
 RouteHandler_$lockRoom_$RouteProcess.__super__ = abe_core_RouteProcess;
 RouteHandler_$lockRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
 	execute: function(request,response,next) {
-		this.instance.lockRoom(this.args.room,this.args.privateID,this.args.password,request,response,next);
+		this.instance.lockRoom(this.args.room,this.args.privateID,this.args.password,this.args.privatePass,request,response,next);
 	}
 	,__class__: RouteHandler_$lockRoom_$RouteProcess
 });
@@ -840,7 +843,7 @@ RouteHandler_$unlockRoom_$RouteProcess.__name__ = ["RouteHandler_unlockRoom_Rout
 RouteHandler_$unlockRoom_$RouteProcess.__super__ = abe_core_RouteProcess;
 RouteHandler_$unlockRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
 	execute: function(request,response,next) {
-		this.instance.unlockRoom(this.args.room,this.args.privateID,request,response,next);
+		this.instance.unlockRoom(this.args.room,this.args.privateID,this.args.privatePass,request,response,next);
 	}
 	,__class__: RouteHandler_$unlockRoom_$RouteProcess
 });

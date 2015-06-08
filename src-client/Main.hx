@@ -40,6 +40,7 @@ class Main
 	var privateID: String;
 	var token: String = null;
 	var password: String = null;
+	var adminPassword: String = '';
 
 	var lastIndex: Int = -1;
 	var lastUserID: String = '-2';
@@ -168,6 +169,10 @@ class Main
 		
 		if (Cookie.exists('$room-password')) {
 			_setPassword(Cookie.get('$room-password'));
+		}
+		
+		if (Cookie.exists('${room}admin-password')) {
+			_setAdminPassword(Cookie.get('${room}admin-password'));
 		}
 		
 		_setupPrivateID();
@@ -384,8 +389,14 @@ class Main
 		}
 	}
 	
-	function _claimRoom(?arguments: Array<String>) {
-		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID');
+	function _claimRoom(arguments: Array<String>) {
+		if (arguments.length == 0 || arguments[0].trim() == '') {
+			_addMessage('**/claim** requires argument: *ADMIN_PASSWORD*.');
+			return;
+		}
+		var newPassword = arguments[0];
+		_setAdminPassword(newPassword);
+		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$newPassword');
 		lockHttp.onData = function(d) {
 			if(d == 'claimed') {
 				_addMessage('$room claimed.');
@@ -417,10 +428,13 @@ class Main
 		}
 		var newPassword = arguments[0];
 		_setPassword(newPassword);
-		var lockHttp: Http = new Http(basePath + 'api/lock/$room/$privateID/$newPassword');
+		var lockHttp: Http = new Http(basePath + 'api/lock/$room/$privateID/$newPassword/$adminPassword');
 		lockHttp.onData = function(d) {
 			if(d == 'locked') {
 				_addMessage('$room locked with password: $newPassword.');
+			}
+			else if (d == 'unclaimed') {
+				_addMessage('$room must be claimed before locking.');
 			}
 			else {
 				_addMessage('you are not authorized to lock $room.');
@@ -435,7 +449,7 @@ class Main
 	}
 	
 	function _unlockRoom(?arguments: Array<String>) {
-		var lockHttp: Http = new Http(basePath + 'api/unlock/$room/$privateID');
+		var lockHttp: Http = new Http(basePath + 'api/unlock/$room/$privateID/$adminPassword');
 		lockHttp.onData = function(d) {
 			if(d == 'unlocked') {
 				_addMessage('$room unlocked.');
@@ -463,9 +477,11 @@ class Main
 		_addMessage('print the chat room you are currently in.');
 		_addMessage('**/survey** *ROOM*');
 		_addMessage('move to a different chat room.');
-		_addMessage('**/claim** *PASSWORD*');
+		_addMessage('**/claim** *ADMIN_PASSWORD*');
 		_addMessage('attempt to take ownership of the current room.');
-		_addMessage('**/fasten** *PASSWORD*');
+		_addMessage('**/entitle** *ADMIN_PASSWORD*');
+		_addMessage('attempt to take authorize youself as admin of the current room.');
+		_addMessage('**/fasten** *PUBLIC_PASSWORD*');
 		_addMessage('attempt to lock the current room.');
 		_addMessage('**/unfasten**');
 		_addMessage('attempt to unlock the current room.');
@@ -807,6 +823,11 @@ class Main
 	function _setPassword(password_: String) {
 		password = password_;
 		Cookie.set('$room-password', password, 60 * 60 * 24 * 365 * 10);
+	}
+	
+	function _setAdminPassword(password_: String) {
+		adminPassword = password_;
+		Cookie.set('${room}admin-password', adminPassword, 60 * 60 * 24 * 365 * 10);
 	}
 	//}
 	

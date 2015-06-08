@@ -67,7 +67,7 @@ class Main {
 			Main.rooms.set(room, {
 				messages: new Array<Message>(),
 				lock: null,
-				owner: null,
+				pw: null,
 				typing: []
 			});
 		}
@@ -115,12 +115,12 @@ class Main {
 					rooms.set(r._id, {
 						messages: new Array<Message>(),
 						lock: null,
-						owner: null,
+						pw: null,
 						typing: []
 					});
 				}
 				rooms.get(r._id).lock = r.lock;
-				rooms.get(r._id).owner = r.owner;
+				rooms.get(r._id).pw = r.pw;
 				rooms.get(r._id).salt = r.salt;
 			}
 		});
@@ -135,7 +135,7 @@ class Main {
 					rooms.set(m.room, {
 						messages: new Array<Message>(),
 						lock: null,
-						owner: null,
+						pw: null,
 						typing: []
 					});
 				}
@@ -240,7 +240,7 @@ class RouteHandler implements abe.IRoute {
 				Main.rooms.set(room, {
 					messages: new Array<Message>(),
 					lock: null,
-					owner: null,
+					pw: null,
 					typing: []
 				});
 			}
@@ -305,17 +305,21 @@ class RouteHandler implements abe.IRoute {
 		response.send('needs a response');
 	}
 	
-	@:post('/api/lock/:room/:privateID/:password')
-	function lockRoom(room: String, privateID: String, password: String) {
+	@:post('/api/lock/:room/:privateID/:password/:privatePass')
+	function lockRoom(room: String, privateID: String, password: String, privatePass: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if ((roomE.messages.length == 0 && roomE.lock == null) || roomE.owner == Sha1.encode(roomE.salt+privateID)) {
+		if (roomE.pw == Sha1.encode(roomE.salt+privatePass)) {
 			roomE.salt = getSalt();
 			roomE.lock = Sha1.encode(roomE.salt+password);
-			roomE.owner = Sha1.encode(roomE.salt+privateID);
-			Main.roomInfo( { _id: room, lock: roomE.lock, owner: roomE.owner, salt: roomE.salt } );
+			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('locked');
+			return;
+		}
+		else {
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('unclaimed');
 			return;
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');
@@ -328,14 +332,14 @@ class RouteHandler implements abe.IRoute {
 		return letters.charAt(rand.int(letters.length)) + letters.charAt(rand.int(letters.length));
 	}
 	
-	@:post('/api/unlock/:room/:privateID')
-	function unlockRoom(room: String, privateID: String) {
+	@:post('/api/unlock/:room/:privateID/:privatePass')
+	function unlockRoom(room: String, privateID: String, privatePass: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.lock != null) {
-			if (roomE.owner == Sha1.encode(roomE.salt+privateID)) {
+			if (roomE.pw == Sha1.encode(roomE.salt+privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo( { _id: room, lock: null, owner: roomE.owner, salt: roomE.salt } );
+				Main.roomInfo( { _id: room, lock: null, pw: roomE.pw, salt: roomE.salt } );
 				response.setHeader('Access-Control-Allow-Origin', '*');
 				response.send('unlocked');
 				return;
@@ -350,14 +354,14 @@ class RouteHandler implements abe.IRoute {
 		response.send('failed');
 	}
 	
-	@:post('/api/claim/:room/:privateID')
-	function claimRoom(room: String, privateID: String) {
+	@:post('/api/claim/:room/:privateID/:privatePass')
+	function claimRoom(room: String, privateID: String, privatePass: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if (roomE.owner == null &&  roomE.messages.length == 0) {
+		if (roomE.pw == null &&  roomE.messages.length == 0) {
 			roomE.salt = getSalt();
-			roomE.owner = roomE.owner = Sha1.encode(roomE.salt+privateID);
-			Main.roomInfo( { _id: room, owner: roomE.owner, salt: roomE.salt } );
+			roomE.pw = Sha1.encode(roomE.salt + privatePass);
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('claimed');
 			return;
@@ -384,7 +388,7 @@ class RouteHandler implements abe.IRoute {
 			Main.rooms.set(room, {
 				messages: new Array<Message>(),
 				lock: null,
-				owner: null,
+				pw: null,
 				typing: []
 			});
 		}
@@ -395,7 +399,7 @@ class RouteHandler implements abe.IRoute {
 				messages: {
 					messages: new Array<Message>(),
 					lock: null,
-					owner: null,
+					pw: null,
 					typing: Main.rooms.get(room).typing
 				},
 				lastID: Main.rooms.get(room).messages.length - 1
