@@ -176,6 +176,8 @@ class Main
 		}
 		
 		_setupPrivateID();
+		
+		Browser.window.scrollTo(0, messages.scrollHeight);
 	}
 	
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';

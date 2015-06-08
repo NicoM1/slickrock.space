@@ -261,6 +261,7 @@ Main.prototype = {
 		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
 		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
 		this._setupPrivateID();
+		window.scrollTo(0,this.messages.scrollHeight);
 	}
 	,_setupPrivateID: function() {
 		if(!js_Cookie.exists("private")) {
