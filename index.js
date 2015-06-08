@@ -536,7 +536,7 @@ RouteHandler.prototype = {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.pw == null && roomE.messages.length == 0 || haxe_crypto_Sha1.encode(roomE.salt + privatePass) == roomE.pw) {
-			roomE.salt = this.getSalt();
+			if(roomE.salt == null) roomE.salt = this.getSalt();
 			roomE.pw = haxe_crypto_Sha1.encode(roomE.salt + privatePass);
 			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt});
 			response.setHeader("Access-Control-Allow-Origin","*");

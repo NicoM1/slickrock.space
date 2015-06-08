@@ -357,8 +357,10 @@ class RouteHandler implements abe.IRoute {
 	function claimRoom(room: String, privateID: String, privatePass: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if ((roomE.pw == null && roomE.messages.length == 0) || Sha1.encode(roomE.salt+privatePass) == roomE.pw) {
-			roomE.salt = getSalt();
+		if ((roomE.pw == null && roomE.messages.length == 0) || Sha1.encode(roomE.salt + privatePass) == roomE.pw) {
+			if(roomE.salt == null) {
+				roomE.salt = getSalt();
+			}
 			roomE.pw = Sha1.encode(roomE.salt + privatePass);
 			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
