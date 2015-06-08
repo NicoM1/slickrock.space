@@ -598,11 +598,11 @@ Main.prototype = {
 				};
 			})($bind(this,this._openImageInNewTab),image.src);
 		}
-		if(this.first) window.scrollTo(0,window.document.body.scrollHeight);
+		if(this.first) window.scrollTo(0,this.messages.scrollHeight);
 		this.requestInProgress = false;
 	}
 	,_tryScroll: function() {
-		if(this._atBottom()) window.scrollTo(0,window.document.body.scrollHeight);
+		if(this._atBottom()) window.scrollTo(0,this.messages.scrollHeight);
 	}
 	,_atBottom: function() {
 		if(window.innerHeight + window.scrollY >= this.messages.offsetHeight) return true;

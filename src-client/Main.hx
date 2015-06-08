@@ -588,7 +588,7 @@ class Main
 		}
 		
 		if (first) {
-			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+			Browser.window.scrollTo(0, messages.scrollHeight);
 		}
 		
 		requestInProgress = false;
@@ -596,7 +596,7 @@ class Main
 	
 	function _tryScroll() {
 		if (_atBottom()) {
-			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+			Browser.window.scrollTo(0, messages.scrollHeight);
 		}
 	}
 	
