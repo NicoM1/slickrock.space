@@ -208,12 +208,14 @@ var Main = function() {
 	window.onfocus = function() {
 		_g.focussed = true;
 		window.document.title = "aqueous-basin.";
-		var _g1 = 0;
-		var _g2 = _g.favicons;
-		while(_g1 < _g2.length) {
-			var f = _g2[_g1];
-			++_g1;
-			f.href = "bin/faviconempty.ico";
+		if(_g.favicons != null) {
+			var _g1 = 0;
+			var _g2 = _g.favicons;
+			while(_g1 < _g2.length) {
+				var f = _g2[_g1];
+				++_g1;
+				f.href = "bin/faviconempty.ico";
+			}
 		}
 		_g._clearNotifications();
 		_g.numNotifications = 0;

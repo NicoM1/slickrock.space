@@ -114,8 +114,10 @@ class Main
 		Browser.window.onfocus = function() {
 			focussed = true;
 			Browser.document.title = 'aqueous-basin.';
-			for (f in favicons) {
-				f.href = 'bin/faviconempty.ico';
+			if(favicons != null) {
+				for (f in favicons) {
+					f.href = 'bin/faviconempty.ico';
+				}
 			}
 			_clearNotifications();
 			numNotifications = 0;
