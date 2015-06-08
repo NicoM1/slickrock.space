@@ -317,7 +317,7 @@ class RouteHandler implements abe.IRoute {
 			response.send('locked');
 			return;
 		}
-		else {
+		else if(privatePass == '-1') {
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('unclaimed');
 			return;
