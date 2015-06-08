@@ -377,6 +377,7 @@ Main.prototype = {
 		this.commands.set("fasten",$bind(this,this._lockRoom));
 		this.commands.set("unfasten",$bind(this,this._unlockRoom));
 		this.commands.set("claim",$bind(this,this._claimRoom));
+		this.commands.set("entitle",$bind(this,this._authorizeRoom));
 		this.commands.set("",$bind(this,this._help));
 	}
 	,_parseCommand: function(commandString) {
@@ -437,6 +438,24 @@ Main.prototype = {
 		lockHttp.onError = function(e) {
 			console.log(e);
 			_g._addMessage("failed to connect to api, couldn't claim room.");
+		};
+		lockHttp.request(true);
+	}
+	,_authorizeRoom: function($arguments) {
+		var _g = this;
+		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
+			this._addMessage("**/entitle** requires argument: *ADMIN_PASSWORD*.");
+			return;
+		}
+		var newPassword = $arguments[0];
+		this._setAdminPassword(newPassword);
+		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
+		lockHttp.onData = function(d) {
+			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
+		};
+		lockHttp.onError = function(e) {
+			console.log(e);
+			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
 	}

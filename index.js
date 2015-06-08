@@ -536,7 +536,7 @@ RouteHandler.prototype = {
 	,claimRoom: function(room,privateID,privatePass,request,response,next) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if(roomE.pw == null && roomE.messages.length == 0) {
+		if(roomE.pw == null && roomE.messages.length == 0 || privatePass == haxe_crypto_Sha1.encode(roomE.salt + roomE.pw)) {
 			roomE.salt = this.getSalt();
 			roomE.pw = haxe_crypto_Sha1.encode(roomE.salt + privatePass);
 			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt});

@@ -319,6 +319,7 @@ class Main
 		commands.set('fasten', _lockRoom);
 		commands.set('unfasten', _unlockRoom);
 		commands.set('claim', _claimRoom);
+		commands.set('entitle', _authorizeRoom);
 		
 		commands.set('', _help);
 	}
@@ -408,6 +409,30 @@ class Main
 		lockHttp.onError = function(e) {
 			trace(e);
 			_addMessage('failed to connect to api, couldn\'t claim room.');
+		}
+		
+		lockHttp.request(true);
+	}
+	
+	function _authorizeRoom(arguments: Array<String>) {
+		if (arguments.length == 0 || arguments[0].trim() == '') {
+			_addMessage('**/entitle** requires argument: *ADMIN_PASSWORD*.');
+			return;
+		}
+		var newPassword = arguments[0];
+		_setAdminPassword(newPassword);
+		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$newPassword');
+		lockHttp.onData = function(d) {
+			if(d == 'claimed') {
+				_addMessage('authorized as admin for $room.');
+			}
+			else {
+				_addMessage('incorrect admin password.');
+			}
+		}
+		lockHttp.onError = function(e) {
+			trace(e);
+			_addMessage('failed to connect to api, couldn\'t authorize admin.');
 		}
 		
 		lockHttp.request(true);
