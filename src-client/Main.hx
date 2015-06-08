@@ -591,9 +591,9 @@ class Main
 	}
 	
 	function _tryScroll() {
-		//if ((Browser.window.innerHeight + Browser.window.scrollY) >= Browser.document.body.offsetHeight) {
+		if ((Browser.window.innerHeight + Browser.document.body.scrollTop) >= Browser.document.body.offsetHeight) {
 			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
-		//}
+		}
 	}
 	
 	function _addMessage(msg: String, ?id: String, ?customHTML: String): DivElement {
