@@ -598,6 +598,7 @@ Main.prototype = {
 				};
 			})($bind(this,this._openImageInNewTab),image.src);
 		}
+		if(this.first) window.scrollTo(0,window.document.body.scrollHeight);
 		this.requestInProgress = false;
 	}
 	,_tryScroll: function() {

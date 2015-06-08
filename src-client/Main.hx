@@ -587,6 +587,10 @@ class Main
 			i.onclick = _openImageInNewTab.bind(image.src);
 		}
 		
+		if (first) {
+			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+		}
+		
 		requestInProgress = false;
 	}
 	
