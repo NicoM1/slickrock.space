@@ -421,6 +421,7 @@ class Main
 		}
 		var newPassword = arguments[0];
 		_setAdminPassword(newPassword);
+		_addMessage('set admin password to: $adminPassword');
 		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$newPassword');
 		lockHttp.onData = function(d) {
 			if(d == 'claimed') {
@@ -852,7 +853,6 @@ class Main
 	
 	function _setAdminPassword(password_: String) {
 		adminPassword = password_;
-		_addMessage('set admin password to: $adminPassword');
 		Cookie.set('${room}admin-password', adminPassword, 60 * 60 * 24 * 365 * 10);
 	}
 	//}

@@ -449,6 +449,7 @@ Main.prototype = {
 		}
 		var newPassword = $arguments[0];
 		this._setAdminPassword(newPassword);
+		this._addMessage("set admin password to: " + this.adminPassword);
 		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
 		lockHttp.onData = function(d) {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
@@ -802,7 +803,6 @@ Main.prototype = {
 	}
 	,_setAdminPassword: function(password_) {
 		this.adminPassword = password_;
-		this._addMessage("set admin password to: " + this.adminPassword);
 		js_Cookie.set("" + this.room + "admin-password",this.adminPassword,315360000);
 	}
 	,__class__: Main
