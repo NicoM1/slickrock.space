@@ -543,7 +543,7 @@ Main.prototype = {
 			var p = _g1[_g];
 			++_g;
 			var message = this._addMessage(p.text,p.id);
-			if(!this.focussed && !this.first) {
+			if((!this.focussed || !this._atBottom()) && !this.first) {
 				window.document.title = "# aqueous-basin.";
 				var _g2 = 0;
 				var _g3 = this.favicons;
@@ -601,7 +601,11 @@ Main.prototype = {
 		this.requestInProgress = false;
 	}
 	,_tryScroll: function() {
-		if(window.innerHeight + window.scrollY >= this.messages.offsetHeight) window.scrollTo(0,window.document.body.scrollHeight);
+		if(this._atBottom()) window.scrollTo(0,window.document.body.scrollHeight);
+	}
+	,_atBottom: function() {
+		if(window.innerHeight + window.scrollY >= this.messages.offsetHeight) return true;
+		return false;
 	}
 	,_addMessage: function(msg,id,customHTML) {
 		msg = this._parseMessage(msg);

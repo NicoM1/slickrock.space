@@ -545,7 +545,7 @@ class Main
 		for (p in parsed.messages.messages) {		
 			var message = _addMessage(p.text, p.id);
 			
-			if (!focussed && !first) {
+			if ((!focussed || !_atBottom()) && !first) {
 				Browser.document.title = '# aqueous-basin.';
 				for (f in favicons) {
 					f.href = 'bin/favicon.ico';
@@ -591,9 +591,16 @@ class Main
 	}
 	
 	function _tryScroll() {
-		if ((Browser.window.innerHeight + Browser.window.scrollY) >= messages.offsetHeight) {
+		if (_atBottom()) {
 			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
 		}
+	}
+	
+	function _atBottom(): Bool {
+		if ((Browser.window.innerHeight + Browser.window.scrollY) >= messages.offsetHeight) { 
+			return true;
+		}
+		return false;
 	}
 	
 	function _addMessage(msg: String, ?id: String, ?customHTML: String): DivElement {
