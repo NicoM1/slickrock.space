@@ -448,21 +448,23 @@ Main.prototype = {
 	}
 	,_lockRoom: function($arguments) {
 		var _g = this;
-		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
-			this._addMessage("**/fasten** requires argument: *PASSWORD*.");
-			return;
-		}
-		var newPassword = $arguments[0];
-		this._setPassword(newPassword);
-		var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + newPassword + "/" + this.adminPassword));
-		lockHttp.onData = function(d) {
-			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
-		};
-		lockHttp.onError = function(e) {
-			console.log(e);
-			_g._addMessage("failed to connect to api, couldn't lock room.");
-		};
-		lockHttp.request(true);
+		if(this.adminPassword != null) {
+			if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
+				this._addMessage("**/fasten** requires argument: *PASSWORD*.");
+				return;
+			}
+			var newPassword = $arguments[0];
+			this._setPassword(newPassword);
+			var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + newPassword + "/" + this.adminPassword));
+			lockHttp.onData = function(d) {
+				if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
+			};
+			lockHttp.onError = function(e) {
+				console.log(e);
+				_g._addMessage("failed to connect to api, couldn't lock room.");
+			};
+			lockHttp.request(true);
+		} else this._addMessage("" + this.room + " must be claimed before locking.");
 	}
 	,_unlockRoom: function($arguments) {
 		var _g = this;
