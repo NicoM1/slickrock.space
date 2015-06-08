@@ -179,8 +179,13 @@ class Main {
 		var rand = new Random(Date.now().getTime());
 		var ID: String = '';
 		ID += adjectives[rand.int(adjectives.length)];
-		ID += adjectives[rand.int(adjectives.length)];
-		ID += animalWords[rand.int(animalWords.length)];
+		var second = adjectives[rand.int(adjectives.length)];
+		second = second.charAt(0).toUpperCase() + second.substr(1);
+		ID += second;
+		var third = animalWords[rand.int(animalWords.length)];
+		second = third.charAt(0).toUpperCase() + third.substr(1);
+		ID += third;
+		
 		return ID;
 	}
 	

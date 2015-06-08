@@ -361,8 +361,12 @@ Main.getUserID = function() {
 	var rand = new Random(new Date().getTime());
 	var ID = "";
 	ID += Main.adjectives[rand["int"](Main.adjectives.length,null)];
-	ID += Main.adjectives[rand["int"](Main.adjectives.length,null)];
-	ID += Main.animalWords[rand["int"](Main.animalWords.length,null)];
+	var second = Main.adjectives[rand["int"](Main.adjectives.length,null)];
+	second = second.charAt(0).toUpperCase() + HxOverrides.substr(second,1,null);
+	ID += second;
+	var third = Main.animalWords[rand["int"](Main.animalWords.length,null)];
+	second = third.charAt(0).toUpperCase() + HxOverrides.substr(third,1,null);
+	ID += third;
 	return ID;
 };
 Main.main = function() {
