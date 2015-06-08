@@ -309,17 +309,17 @@ class RouteHandler implements abe.IRoute {
 	function lockRoom(room: String, privateID: String, password: String, privatePass: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
-		if (roomE.pw == Sha1.encode(roomE.salt+privatePass)) {
+		if(roomE.pw == null) {
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('unclaimed');
+			return;
+		}
+		else if (roomE.pw == Sha1.encode(roomE.salt+privatePass)) {
 			roomE.salt = getSalt();
 			roomE.lock = Sha1.encode(roomE.salt+password);
 			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('locked');
-			return;
-		}
-		else if(privatePass == '-1') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('unclaimed');
 			return;
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');
