@@ -422,7 +422,7 @@ class Main
 	}
 	
 	function _lockRoom(arguments: Array<String>) {
-		if(adminPassword != null) {
+		if(adminPassword != null && adminPassword != '') {
 			if (arguments.length == 0 || arguments[0].trim() == '') {
 				_addMessage('**/fasten** requires argument: *PASSWORD*.');
 				return;

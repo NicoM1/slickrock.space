@@ -448,7 +448,7 @@ Main.prototype = {
 	}
 	,_lockRoom: function($arguments) {
 		var _g = this;
-		if(this.adminPassword != null) {
+		if(this.adminPassword != null && this.adminPassword != "") {
 			if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
 				this._addMessage("**/fasten** requires argument: *PASSWORD*.");
 				return;
