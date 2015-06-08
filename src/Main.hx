@@ -314,8 +314,7 @@ class RouteHandler implements abe.IRoute {
 			response.send('unclaimed');
 			return;
 		}
-		else if (roomE.pw == Sha1.encode(roomE.salt+privatePass)) {
-			roomE.salt = getSalt();
+		else if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
 			roomE.lock = Sha1.encode(roomE.salt+password);
 			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt } );
 			response.setHeader('Access-Control-Allow-Origin', '*');

@@ -499,7 +499,6 @@ RouteHandler.prototype = {
 			response.send("unclaimed");
 			return;
 		} else if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
-			roomE.salt = this.getSalt();
 			roomE.lock = haxe_crypto_Sha1.encode(roomE.salt + password);
 			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt});
 			response.setHeader("Access-Control-Allow-Origin","*");
