@@ -690,22 +690,24 @@ Main.prototype = {
 				}
 			}
 			if(code == 40 || code == 38) {
+				var activeChilren = [];
 				var _g2 = 0;
 				var _g12 = this.helpbox.children;
 				while(_g2 < _g12.length) {
 					var c1 = _g12[_g2];
 					++_g2;
+					if(c1.style.display == "list-item") activeChilren.push(c1);
 					c1.classList.remove("selected");
 				}
 				if(code == 40) {
 					this.commandIndex++;
-					if(this.commandIndex >= this.helpbox.children.length) this.commandIndex = 0;
+					if(this.commandIndex >= activeChilren.length) this.commandIndex = 0;
 				} else if(code == 38) {
 					this.commandIndex--;
-					if(this.commandIndex <= -1) this.commandIndex = this.helpbox.children.length - 1;
+					if(this.commandIndex <= -1) this.commandIndex = activeChilren.length - 1;
 				}
-				this.helpbox.children[this.commandIndex].classList.add("selected");
-				this.helpbox.scrollTop = this.helpbox.children[this.commandIndex].offsetTop;
+				activeChilren[this.commandIndex].classList.add("selected");
+				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
 			}
 		} else {
 			this.helpbox.style.display = "none";

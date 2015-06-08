@@ -712,23 +712,27 @@ class Main
 				}
 			}
 			if (code == 40 || code == 38) {
+				var activeChilren = [];
 				for (c in helpbox.children) {
+					if (c.style.display == 'list-item') {
+						activeChilren.push(c);
+					}
 					c.classList.remove('selected');
 				}
 				if (code == 40) { //DOWN
 					commandIndex++;
-					if (commandIndex >= helpbox.children.length) {
+					if (commandIndex >= activeChilren.length) {
 						commandIndex = 0;
 					}
 				}
 				else if (code == 38) { //UP
 					commandIndex--;
 					if (commandIndex <= -1) {
-						commandIndex = helpbox.children.length - 1;
+						commandIndex = activeChilren.length - 1;
 					}
 				}
-				helpbox.children[commandIndex].classList.add('selected');
-				helpbox.scrollTop = helpbox.children[commandIndex].offsetTop;
+				activeChilren[commandIndex].classList.add('selected');
+				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
 			}
 		}
 		else {
