@@ -183,7 +183,7 @@ class Main {
 		second = second.charAt(0).toUpperCase() + second.substr(1);
 		ID += second;
 		var third = animalWords[rand.int(animalWords.length)];
-		second = third.charAt(0).toUpperCase() + third.substr(1);
+		third = third.charAt(0).toUpperCase() + third.substr(1);
 		ID += third;
 		
 		return ID;

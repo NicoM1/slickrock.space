@@ -365,7 +365,7 @@ Main.getUserID = function() {
 	second = second.charAt(0).toUpperCase() + HxOverrides.substr(second,1,null);
 	ID += second;
 	var third = Main.animalWords[rand["int"](Main.animalWords.length,null)];
-	second = third.charAt(0).toUpperCase() + HxOverrides.substr(third,1,null);
+	third = third.charAt(0).toUpperCase() + HxOverrides.substr(third,1,null);
 	ID += third;
 	return ID;
 };
