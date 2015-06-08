@@ -852,6 +852,7 @@ class Main
 	
 	function _setAdminPassword(password_: String) {
 		adminPassword = password_;
+		_addMessage('set admin password to: $adminPassword');
 		Cookie.set('${room}admin-password', adminPassword, 60 * 60 * 24 * 365 * 10);
 	}
 	//}

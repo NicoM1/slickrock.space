@@ -802,6 +802,7 @@ Main.prototype = {
 	}
 	,_setAdminPassword: function(password_) {
 		this.adminPassword = password_;
+		this._addMessage("set admin password to: " + this.adminPassword);
 		js_Cookie.set("" + this.room + "admin-password",this.adminPassword,315360000);
 	}
 	,__class__: Main
