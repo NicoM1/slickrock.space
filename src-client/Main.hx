@@ -74,7 +74,7 @@ class Main
 	var lastMessage: String = '';
 	var sendLast: Bool = false;
 	
-	var commandIndex: Int = -1;
+	var commandIndex: Int = 0;
 	
 	function new() {
 		room = untyped window.room;
