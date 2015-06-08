@@ -534,6 +534,9 @@ class Main
 			wasLocked = true;
 			return;
 		}
+		if (data == 'nomongo') {
+			return;
+		}
 		if (wasLocked) {
 			_addMessage('successfully unlocked.');
 			wasLocked = false;

@@ -189,6 +189,10 @@ class Main {
 		return ID;
 	}
 	
+	public static function hasMongo() {
+		return mongodb != null;
+	}
+	
 	public static function main() {
 		new Main();
 	}
@@ -385,6 +389,11 @@ class RouteHandler implements abe.IRoute {
 	}
 	
 	function _getMessages(response: Response, room: String, password: String, lastID: Int) {
+		if (!Main.hasMongo()) {
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('nomongo');
+			return;
+		}
 		if (!Main.rooms.exists(room)) {
 			Main.rooms.set(room, {
 				messages: new Array<Message>(),

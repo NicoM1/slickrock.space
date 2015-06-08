@@ -369,6 +369,9 @@ Main.getUserID = function() {
 	ID += third;
 	return ID;
 };
+Main.hasMongo = function() {
+	return Main.mongodb != null;
+};
 Main.main = function() {
 	new Main();
 };
@@ -555,6 +558,11 @@ RouteHandler.prototype = {
 		this._getMessages(response,room,password,lastID);
 	}
 	,_getMessages: function(response,room,password,lastID) {
+		if(!Main.hasMongo()) {
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("nomongo");
+			return;
+		}
 		if(!Main.rooms.exists(room)) {
 			var value = { messages : [], lock : null, pw : null, typing : []};
 			Main.rooms.set(room,value);

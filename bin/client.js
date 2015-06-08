@@ -531,6 +531,7 @@ Main.prototype = {
 			this.wasLocked = true;
 			return;
 		}
+		if(data == "nomongo") return;
 		if(this.wasLocked) {
 			this._addMessage("successfully unlocked.");
 			this.wasLocked = false;
