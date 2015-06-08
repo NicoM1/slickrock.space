@@ -74,7 +74,7 @@ class Main
 	var lastMessage: String = '';
 	var sendLast: Bool = false;
 	
-	var commandIndex: Int = 0;
+	var commandIndex: Int = -1;
 	
 	function new() {
 		room = untyped window.room;
@@ -716,6 +716,9 @@ class Main
 				for (c in helpbox.children) {
 					if (c.style.display == 'list-item') {
 						activeChilren.push(c);
+					}
+					if (c.classList.contains('selected') && commandIndex < 0) {
+						commandIndex = 0;
 					}
 					c.classList.remove('selected');
 				}

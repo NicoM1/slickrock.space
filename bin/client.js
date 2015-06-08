@@ -155,7 +155,7 @@ var Main = function() {
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
-	this.commandIndex = 0;
+	this.commandIndex = -1;
 	this.sendLast = false;
 	this.lastMessage = "";
 	this.commands = new haxe_ds_StringMap();
@@ -697,6 +697,7 @@ Main.prototype = {
 					var c1 = _g12[_g2];
 					++_g2;
 					if(c1.style.display == "list-item") activeChilren.push(c1);
+					if(c1.classList.contains("selected") && this.commandIndex < 0) this.commandIndex = 0;
 					c1.classList.remove("selected");
 				}
 				if(code == 40) {
