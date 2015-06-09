@@ -585,7 +585,6 @@ Main.prototype = {
 			}
 		}
 		this.lastIndex = parsed.lastID;
-		this.first = false;
 		var _g6 = 0;
 		var _g13 = window.document.getElementsByClassName("imgmessage");
 		while(_g6 < _g13.length) {
@@ -608,6 +607,7 @@ Main.prototype = {
 			})($bind(this,this._tryScroll),true);
 		}
 		if(this.first) this._tryScroll(true);
+		this.first = false;
 		this.requestInProgress = false;
 	}
 	,_tryScroll: function(force,img) {

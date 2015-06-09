@@ -579,7 +579,6 @@ class Main
 		}
 		
 		lastIndex = parsed.lastID;
-		first = false;
 		
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
@@ -595,6 +594,8 @@ class Main
 		if (first) {
 			_tryScroll(true);
 		}
+		
+		first = false;
 		
 		requestInProgress = false;
 	}
