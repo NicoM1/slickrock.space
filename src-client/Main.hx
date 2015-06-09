@@ -43,6 +43,7 @@ class Main
 	var adminPassword: String = '-1';
 
 	var lastIndex: Int = -1;
+	var firstIndex: Int = -1;
 	var lastUserID: String = '-2';
 	
 	var getHttp: Http; 
@@ -117,6 +118,7 @@ class Main
 
 		chatbox = cast Browser.document.getElementById('chatbox');
 		messages = cast Browser.document.getElementById('messages');
+		messages.onscroll = _tryGetOldMessages;
 		helpbox = cast Browser.document.getElementById('helpbox');
 		chevron = cast Browser.document.getElementById('chevron');
 		favicons = new Array<LinkElement>();
@@ -176,6 +178,12 @@ class Main
 		_loop();
 	}
 	
+	function _tryGetOldMessages() {
+		if (firstIndex > 0 && messages.scrollTop < 500) {
+			
+		}
+	}
+	
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
 	
 	function _setupPrivateID() {
@@ -200,7 +208,6 @@ class Main
 	function _setToken(_token: String) {
 		token = _token;
 		_checkValid(true);
-		//lastIndex = 0;
 		if(token != null) {
 			Cookie.set('token', token, 60 * 60 * 24 * 365 * 10);
 		}

@@ -2,5 +2,6 @@ package	;
 
 typedef MessageData = {
 	messages: MessageList,
-	lastID: Int
+	lastID: Int,
+	?firstID: Int
 }
