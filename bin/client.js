@@ -597,11 +597,15 @@ Main.prototype = {
 					f1(a1);
 				};
 			})($bind(this,this._openImageInNewTab),image.src);
-			i.onload = (function(f2,a11,a2) {
+			if(!this.first) i.onload = (function(f2,a11,a2) {
 				return function() {
 					f2(a11,a2);
 				};
-			})($bind(this,this._tryScroll),false,i);
+			})($bind(this,this._tryScroll),false,i); else i.onload = (function(f3,a12) {
+				return function() {
+					f3(a12);
+				};
+			})($bind(this,this._tryScroll),true);
 		}
 		if(this.first) this._tryScroll(true);
 		this.requestInProgress = false;
