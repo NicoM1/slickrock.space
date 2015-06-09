@@ -80,6 +80,11 @@ class Main
 		room = untyped window.room;
 		_buildCommands();
 		
+		Browser.window.onload = _windowLoaded;
+	}
+		
+	//{ startup and message loop
+	function _windowLoaded() {	
 		authHttp = new Http(basePath);
 		authHttp.onData = _getAuth;
 		authHttp.onError = function(error) { 
@@ -110,29 +115,6 @@ class Main
 			//chatbox.value = lastMessage; 
 		}
 
-		Browser.window.onload = _windowLoaded;
-		
-		Browser.window.onfocus = function() {
-			focussed = true;
-			Browser.document.title = 'aqueous-basin.';
-			if(favicons != null) {
-				for (f in favicons) {
-					f.href = 'bin/faviconempty.ico';
-				}
-			}
-			_clearNotifications();
-			numNotifications = 0;
-		};
-		
-		Browser.window.onblur = function() {
-			focussed = false;
-		};
-		
-		_loop();
-	}
-		
-	//{ startup and message loop
-	function _windowLoaded() {
 		chatbox = cast Browser.document.getElementById('chatbox');
 		messages = cast Browser.document.getElementById('messages');
 		helpbox = cast Browser.document.getElementById('helpbox');
@@ -142,6 +124,20 @@ class Main
 			favicons.push(cast f);
 		}
 		messageSound = cast Browser.document.getElementById('messagesound');
+				
+		Browser.window.onfocus = function() {
+			focussed = true;
+			Browser.document.title = 'aqueous-basin.';
+			for (f in favicons) {
+				f.href = 'bin/faviconempty.ico';
+			}
+			_clearNotifications();
+			numNotifications = 0;
+		};
+		
+		Browser.window.onblur = function() {
+			focussed = false;
+		};
 		
 		_setupHelpbox();
 		
@@ -178,6 +174,8 @@ class Main
 		_setupPrivateID();
 		
 		Browser.window.scrollTo(0, messages.scrollHeight);
+		
+		_loop();
 	}
 	
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';

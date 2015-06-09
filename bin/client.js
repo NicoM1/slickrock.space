@@ -176,55 +176,9 @@ var Main = function() {
 	this.token = null;
 	this.id = null;
 	this.basePath = "https://aqueous-api.herokuapp.com/";
-	var _g = this;
 	this.room = window.room;
 	this._buildCommands();
-	this.authHttp = new haxe_Http(this.basePath);
-	this.authHttp.onData = $bind(this,this._getAuth);
-	this.authHttp.onError = function(error) {
-		console.log(error);
-		_g._addMessage("Could not connect to authentication api, please refresh the page.");
-	};
-	this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
-	this.getHttp.onData = $bind(this,this._parseMessages);
-	this.getHttp.onError = function(error1) {
-		console.log(error1);
-		_g.requestInProgress = false;
-	};
-	this.postHttp = new haxe_Http(this.basePath);
-	this.postHttp.async = true;
-	this.postHttp.onData = function(data) {
-		if(data == "failed") {
-			_g.token = null;
-			_g.hasTriedAuth = false;
-			_g.sendLast = true;
-			_g._tryAuth();
-		}
-	};
-	this.postHttp.onError = function(error2) {
-		console.log(error2);
-		_g.requestInProgress = false;
-	};
 	window.onload = $bind(this,this._windowLoaded);
-	window.onfocus = function() {
-		_g.focussed = true;
-		window.document.title = "aqueous-basin.";
-		if(_g.favicons != null) {
-			var _g1 = 0;
-			var _g2 = _g.favicons;
-			while(_g1 < _g2.length) {
-				var f = _g2[_g1];
-				++_g1;
-				f.href = "bin/faviconempty.ico";
-			}
-		}
-		_g._clearNotifications();
-		_g.numNotifications = 0;
-	};
-	window.onblur = function() {
-		_g.focussed = false;
-	};
-	this._loop();
 };
 Main.__name__ = true;
 Main.main = function() {
@@ -233,6 +187,32 @@ Main.main = function() {
 Main.prototype = {
 	_windowLoaded: function() {
 		var _g = this;
+		this.authHttp = new haxe_Http(this.basePath);
+		this.authHttp.onData = $bind(this,this._getAuth);
+		this.authHttp.onError = function(error) {
+			console.log(error);
+			_g._addMessage("Could not connect to authentication api, please refresh the page.");
+		};
+		this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
+		this.getHttp.onData = $bind(this,this._parseMessages);
+		this.getHttp.onError = function(error1) {
+			console.log(error1);
+			_g.requestInProgress = false;
+		};
+		this.postHttp = new haxe_Http(this.basePath);
+		this.postHttp.async = true;
+		this.postHttp.onData = function(data) {
+			if(data == "failed") {
+				_g.token = null;
+				_g.hasTriedAuth = false;
+				_g.sendLast = true;
+				_g._tryAuth();
+			}
+		};
+		this.postHttp.onError = function(error2) {
+			console.log(error2);
+			_g.requestInProgress = false;
+		};
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
 		this.helpbox = window.document.getElementById("helpbox");
@@ -246,6 +226,22 @@ Main.prototype = {
 			this.favicons.push(f);
 		}
 		this.messageSound = window.document.getElementById("messagesound");
+		window.onfocus = function() {
+			_g.focussed = true;
+			window.document.title = "aqueous-basin.";
+			var _g12 = 0;
+			var _g2 = _g.favicons;
+			while(_g12 < _g2.length) {
+				var f1 = _g2[_g12];
+				++_g12;
+				f1.href = "bin/faviconempty.ico";
+			}
+			_g._clearNotifications();
+			_g.numNotifications = 0;
+		};
+		window.onblur = function() {
+			_g.focussed = false;
+		};
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
 			_g._getNotificationPermission();
@@ -262,6 +258,7 @@ Main.prototype = {
 		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
 		this._setupPrivateID();
 		window.scrollTo(0,this.messages.scrollHeight);
+		this._loop();
 	}
 	,_setupPrivateID: function() {
 		if(!js_Cookie.exists("private")) {
