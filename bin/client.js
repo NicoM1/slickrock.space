@@ -543,7 +543,7 @@ Main.prototype = {
 			var p = _g1[_g];
 			++_g;
 			var message = this._addMessage(p.text,p.id);
-			if((!this.focussed || !this._atBottom()) && !this.first) {
+			if(!this.focussed && !this.first) {
 				window.document.title = "# aqueous-basin.";
 				var _g2 = 0;
 				var _g3 = this.favicons;

@@ -544,7 +544,7 @@ class Main
 		for (p in parsed.messages.messages) {		
 			var message = _addMessage(p.text, p.id);
 			
-			if ((!focussed || !_atBottom()) && !first) {
+			if (!focussed && !first) {
 				Browser.document.title = '# aqueous-basin.';
 				for (f in favicons) {
 					f.href = 'bin/favicon.ico';
