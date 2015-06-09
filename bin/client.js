@@ -597,21 +597,23 @@ Main.prototype = {
 					f1(a1);
 				};
 			})($bind(this,this._openImageInNewTab),image.src);
-			i.onload = (function(f2,a11) {
+			i.onload = (function(f2,a11,a2) {
 				return function() {
-					f2(a11);
+					f2(a11,a2);
 				};
-			})($bind(this,this._tryScroll),true);
+			})($bind(this,this._tryScroll),false,i);
 		}
 		if(this.first) this._tryScroll(true);
 		this.requestInProgress = false;
 	}
-	,_tryScroll: function(force) {
+	,_tryScroll: function(force,img) {
 		if(force == null) force = false;
-		if(force || this._atBottom()) window.scrollTo(0,this.messages.scrollHeight);
+		if(force || this._atBottom(img)) window.scrollTo(0,this.messages.scrollHeight);
 	}
-	,_atBottom: function() {
-		if(window.innerHeight + window.scrollY >= this.messages.offsetHeight) return true;
+	,_atBottom: function(img) {
+		var offset = 0;
+		if(img != null) offset = img.height;
+		if(window.innerHeight + window.scrollY + offset >= this.messages.offsetHeight) return true;
 		return false;
 	}
 	,_addMessage: function(msg,id,customHTML) {

@@ -584,7 +584,7 @@ class Main
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
 			i.onclick = _openImageInNewTab.bind(image.src);
-			i.onload = _tryScroll.bind(true);
+			i.onload = _tryScroll.bind(false, cast i);
 		}
 		
 		if (first) {
@@ -594,14 +594,18 @@ class Main
 		requestInProgress = false;
 	}
 	
-	function _tryScroll(force: Bool = false) {
-		if (force || _atBottom()) {
+	function _tryScroll(force: Bool = false, img: ImageElement = null) {
+		if (force || _atBottom(img)) {
 			Browser.window.scrollTo(0, messages.scrollHeight);
 		}
 	}
 	
-	function _atBottom(): Bool {
-		if ((Browser.window.innerHeight + Browser.window.scrollY) >= messages.offsetHeight) { 
+	function _atBottom(img: ImageElement = null): Bool {
+		var offset: Float = 0;
+		if (img != null) {
+			offset = img.height;
+		}
+		if ((Browser.window.innerHeight + Browser.window.scrollY + offset) >= messages.offsetHeight) { 
 			return true;
 		}
 		return false;
