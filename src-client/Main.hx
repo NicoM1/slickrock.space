@@ -180,7 +180,18 @@ class Main
 	
 	function _tryGetOldMessages() {
 		if (firstIndex > 0 && messages.scrollTop < 500) {
-			
+			var histHttp: Http = new Http(basePath);
+			histHttp.onError = function(e) {
+				trace(e);
+			}
+			histHttp.onData = _parseMessages.bind(_, true);
+			if(password == null) {
+				histHttp.url = basePath + 'api/' + room + '/' + lastIndex + '/' + firstIndex;
+			}
+			else {
+				histHttp.url = basePath + 'api/' + room + '/' + password + '/' + lastIndex + '/' + firstIndex;
+			}
+			histHttp.request(true);
 		}
 	}
 	
@@ -520,7 +531,7 @@ class Main
 	//}
 	
 	//{ messages
-	function _parseMessages(data) {	
+	function _parseMessages(data, hist: Bool = false ) {	
 		if (data == 'locked') {
 			if(!locked) {
 				_addMessage('room is locked, please enter password.');
@@ -548,8 +559,13 @@ class Main
 			wasLocked = false;
 		}
 		var parsed: MessageData = Json.parse(data);
-		for (p in parsed.messages.messages) {		
-			var message = _addMessage(p.text, p.id);
+		for (i in 0...parsed.messages.messages.length) {
+			var ii = i;
+			if (hist) {
+				ii = parsed.messages.messages.length - i;
+			}
+			var p = parsed.messages.messages[ii];
+			var message = _addMessage(p.text, p.id, hist);
 			
 			if (!focussed && !first) {
 				Browser.document.title = '# aqueous-basin.';
@@ -586,6 +602,7 @@ class Main
 		}
 		
 		lastIndex = parsed.lastID;
+		firstIndex = parsed.firstID != null? parsed.firstID : 0;
 		
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
@@ -624,7 +641,7 @@ class Main
 		return false;
 	}
 	
-	function _addMessage(msg: String, ?id: String, ?customHTML: String): DivElement {
+	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false): DivElement {
 		msg = _parseMessage(msg);
 		
 		var message: DivElement;
@@ -651,9 +668,16 @@ class Main
 		
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
 		
-		message.appendChild(messageItem);
+		if(!hist) {
+			message.appendChild(messageItem);
+		}
+		else {
+			message.insertBefore(messageItem);
+		}
 		
-		_tryScroll();
+		if(!hist) {
+			_tryScroll();
+		}
 		
 		lastUserID = id;
 		

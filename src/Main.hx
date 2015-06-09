@@ -378,7 +378,6 @@ class RouteHandler implements abe.IRoute {
 		response.send('failed');
 	}
 	
-	@:get('/api/:room/:lastID')
 	@:post('/api/:room/:lastID')
 	function getMessages(room: String, lastID: Int) {
 		room = room.toLowerCase();
@@ -391,7 +390,19 @@ class RouteHandler implements abe.IRoute {
 		_getMessages(response, room, password, lastID);
 	}
 	
-	function _getMessages(response: Response, room: String, password: String, lastID: Int) {
+	@:post('/api/hist/:room/:lastID/:firstID')
+	function getMessagesHist(room: String, lastID: Int, firstID: Int) {
+		room = room.toLowerCase();
+		_getMessages(response, room, null, lastID, firstID);
+	}
+	
+	@:post('/api/hist/:room/:password/:lastID/:firstID')
+	function getMessagesHistWithPass(room: String, password: String, lastID: Int, firstID: Int) {
+		room = room.toLowerCase();
+		_getMessages(response, room, password, lastID, firstID);
+	}
+	
+	function _getMessages(response: Response, room: String, password: String, lastID: Int, ?firstID: Int) {
 		if (!Main.hasMongo()) {
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('nomongo');
@@ -419,13 +430,21 @@ class RouteHandler implements abe.IRoute {
 				lastID: roomE.messages.length - 1
 			};
 			
+			var end = roomE.messages.length - 1;
+			
+			if (firstID != null) {
+				lastID = firstID - maxMessageLoad;
+				lastID = lastID > 0? lastID : 0;
+				end = firstID;
+			}
+			
 			if (lastID == -1 && messages.lastID > maxMessageLoad) {
-				//lastID = messages.lastID - maxMessageLoad;
-				//messages.firstID = lastID;
+				lastID = messages.lastID - maxMessageLoad;
+				messages.firstID = lastID;
 			}
 
-			if (lastID < roomE.messages.length - 1) {
-				for (i in (lastID + 1)...roomE.messages.length) {
+			if (lastID < roomE.messages.length - 1 || firstID != null) {
+				for (i in (lastID + 1)...end) {
 					messages.messages.messages.push(roomE.messages[i]);
 				}
 			}
