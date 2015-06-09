@@ -199,6 +199,9 @@ class Main {
 }
 
 class RouteHandler implements abe.IRoute {
+	
+	var maxMessageLoad: Int = 80;
+	
 	@:get('/')
 	function index() {
 		_serveHtml('bin/index.html', function(e, d) {
@@ -404,20 +407,25 @@ class RouteHandler implements abe.IRoute {
 		}
 		
 		var roomE = Main.rooms.get(room);
-		if(roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt+password)) {
+		if (roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt + password)) {
+			var roomE = Main.rooms.get(room);
 			var messages: MessageData = {
 				messages: {
 					messages: new Array<Message>(),
 					lock: null,
 					pw: null,
-					typing: Main.rooms.get(room).typing
+					typing: roomE.typing
 				},
-				lastID: Main.rooms.get(room).messages.length - 1
+				lastID: roomE.messages.length - 1
 			};
+			
+			if (messages.lastID > maxMessageLoad) {
+				lastID = messages.lastID - maxMessageLoad;
+			}
 
-			if (lastID < Main.rooms.get(room).messages.length - 1) {
-				for (i in (lastID + 1)...Main.rooms.get(room).messages.length) {
-					messages.messages.messages.push(Main.rooms.get(room).messages[i]);
+			if (lastID < roomE.messages.length - 1) {
+				for (i in (lastID + 1)...roomE.messages.length) {
+					messages.messages.messages.push(roomE.messages[i]);
 				}
 			}
 			response.setHeader('Access-Control-Allow-Origin', '*');

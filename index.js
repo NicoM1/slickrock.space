@@ -404,11 +404,13 @@ abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
 	this.letters = "abcdefghijklmnopqrstuvwxyz";
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
+	this.maxMessageLoad = 80;
 };
 RouteHandler.__name__ = ["RouteHandler"];
 RouteHandler.__interfaces__ = [abe_IRoute];
 RouteHandler.prototype = {
-	index: function(request,response,next) {
+	maxMessageLoad: null
+	,index: function(request,response,next) {
 		this._serveHtml("bin/index.html",function(e,d) {
 			if(e == null) {
 				var withRoom = "";
@@ -569,13 +571,15 @@ RouteHandler.prototype = {
 		}
 		var roomE = Main.rooms.get(room);
 		if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
-			var messages = { messages : { messages : [], lock : null, pw : null, typing : Main.rooms.get(room).typing}, lastID : Main.rooms.get(room).messages.length - 1};
-			if(lastID < Main.rooms.get(room).messages.length - 1) {
+			var roomE1 = Main.rooms.get(room);
+			var messages = { messages : { messages : [], lock : null, pw : null, typing : roomE1.typing}, lastID : roomE1.messages.length - 1};
+			if(messages.lastID > this.maxMessageLoad) lastID = messages.lastID - this.maxMessageLoad;
+			if(lastID < roomE1.messages.length - 1) {
 				var _g1 = lastID + 1;
-				var _g = Main.rooms.get(room).messages.length;
+				var _g = roomE1.messages.length;
 				while(_g1 < _g) {
 					var i = _g1++;
-					messages.messages.messages.push(Main.rooms.get(room).messages[i]);
+					messages.messages.messages.push(roomE1.messages[i]);
 				}
 			}
 			response.setHeader("Access-Control-Allow-Origin","*");
