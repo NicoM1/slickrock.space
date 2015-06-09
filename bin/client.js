@@ -257,7 +257,6 @@ Main.prototype = {
 		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
 		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
 		this._setupPrivateID();
-		window.scrollTo(0,this.messages.scrollHeight);
 		this._loop();
 	}
 	,_setupPrivateID: function() {
@@ -598,13 +597,18 @@ Main.prototype = {
 					f1(a1);
 				};
 			})($bind(this,this._openImageInNewTab),image.src);
-			i.onload = $bind(this,this._tryScroll);
+			i.onload = (function(f2,a11) {
+				return function() {
+					f2(a11);
+				};
+			})($bind(this,this._tryScroll),true);
 		}
-		if(this.first) window.scrollTo(0,this.messages.scrollHeight);
+		if(this.first) this._tryScroll(true);
 		this.requestInProgress = false;
 	}
-	,_tryScroll: function() {
-		if(this._atBottom()) window.scrollTo(0,this.messages.scrollHeight);
+	,_tryScroll: function(force) {
+		if(force == null) force = false;
+		if(force || this._atBottom()) window.scrollTo(0,this.messages.scrollHeight);
 	}
 	,_atBottom: function() {
 		if(window.innerHeight + window.scrollY >= this.messages.offsetHeight) return true;

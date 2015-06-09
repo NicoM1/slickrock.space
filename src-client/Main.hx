@@ -173,8 +173,6 @@ class Main
 		
 		_setupPrivateID();
 		
-		Browser.window.scrollTo(0, messages.scrollHeight);
-		
 		_loop();
 	}
 	
@@ -586,18 +584,18 @@ class Main
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
 			i.onclick = _openImageInNewTab.bind(image.src);
-			i.onload = _tryScroll;
+			i.onload = _tryScroll.bind(true);
 		}
 		
 		if (first) {
-			Browser.window.scrollTo(0, messages.scrollHeight);
+			_tryScroll(true);
 		}
 		
 		requestInProgress = false;
 	}
 	
-	function _tryScroll() {
-		if (_atBottom()) {
+	function _tryScroll(force: Bool = false) {
+		if (force || _atBottom()) {
 			Browser.window.scrollTo(0, messages.scrollHeight);
 		}
 	}
