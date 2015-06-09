@@ -419,7 +419,7 @@ class RouteHandler implements abe.IRoute {
 				lastID: roomE.messages.length - 1
 			};
 			
-			if (messages.lastID > maxMessageLoad) {
+			if (lastID == -1 && messages.lastID > maxMessageLoad) {
 				lastID = messages.lastID - maxMessageLoad;
 			}
 

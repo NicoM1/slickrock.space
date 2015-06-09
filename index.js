@@ -573,7 +573,7 @@ RouteHandler.prototype = {
 		if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
 			var roomE1 = Main.rooms.get(room);
 			var messages = { messages : { messages : [], lock : null, pw : null, typing : roomE1.typing}, lastID : roomE1.messages.length - 1};
-			if(messages.lastID > this.maxMessageLoad) lastID = messages.lastID - this.maxMessageLoad;
+			if(lastID == -1 && messages.lastID > this.maxMessageLoad) lastID = messages.lastID - this.maxMessageLoad;
 			if(lastID < roomE1.messages.length - 1) {
 				var _g1 = lastID + 1;
 				var _g = roomE1.messages.length;
