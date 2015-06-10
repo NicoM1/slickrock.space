@@ -180,6 +180,8 @@ class Main
 	
 	function _tryGetOldMessages() {
 		if (requestInProgress) return;
+		trace('attempting to load history');
+		trace('first index: ' + firstIndex);
 		if (firstIndex > 0 && messages.scrollTop < 500) {
 			var histHttp: Http = new Http(basePath);
 			histHttp.onError = function(e) {
@@ -560,6 +562,11 @@ class Main
 			_addMessage('successfully unlocked.');
 			wasLocked = false;
 		}
+		
+		if (hist) {
+			trace('recieved hist: ' + data);
+		}
+		
 		var parsed: MessageData = Json.parse(data);
 		for (i in 0...parsed.messages.messages.length) {
 			var ii = i;

@@ -268,6 +268,8 @@ Main.prototype = {
 	,_tryGetOldMessages: function() {
 		var _g = this;
 		if(this.requestInProgress) return;
+		console.log("attempting to load history");
+		console.log("first index: " + this.firstIndex);
 		if(this.firstIndex > 0 && this.messages.scrollTop < 500) {
 			var histHttp = new haxe_Http(this.basePath);
 			histHttp.onError = function(e) {
@@ -561,6 +563,7 @@ Main.prototype = {
 			this._addMessage("successfully unlocked.");
 			this.wasLocked = false;
 		}
+		if(hist) console.log("recieved hist: " + data);
 		var parsed = JSON.parse(data);
 		var _g1 = 0;
 		var _g = parsed.messages.messages.length;
