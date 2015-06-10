@@ -700,12 +700,12 @@ class Main
 				message.insertBefore(messageItem, message.children[0]);
 			}
 			else {
-				message = Browser.document.createDivElement();
+				/*message = Browser.document.createDivElement();
 				message.className = 'messageblock';
 				message.setAttribute('data-id', id);
 				
 				messages.insertBefore(message, messages.children[0]);
-				messages.insertBefore(_makeSpan(differentUser, id), messages.children[0]);
+				messages.insertBefore(_makeSpan(differentUser, id), messages.children[0]);*/
 			}
 		}
 		

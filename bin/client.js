@@ -692,12 +692,6 @@ Main.prototype = {
 			message = this.messages.children[0];
 			var last = message.getAttribute("data-id");
 			if(last == id) message.insertBefore(messageItem,message.children[0]); else {
-				var _this2 = window.document;
-				message = _this2.createElement("div");
-				message.className = "messageblock";
-				message.setAttribute("data-id",id);
-				this.messages.insertBefore(message,this.messages.children[0]);
-				this.messages.insertBefore(this._makeSpan(differentUser,id),this.messages.children[0]);
 			}
 		}
 		if(!hist) {
