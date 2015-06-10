@@ -62,6 +62,7 @@ class Main
 	var requestInProgress: Bool = false;
 	var histRequestInProgress: Bool = false;
 	var first: Bool = true;
+	var initialScroll: Bool = true;
 	var focussed: Bool = true;
 	var locked: Bool = false;
 	var hasTriedAuth: Bool = false;
@@ -181,7 +182,7 @@ class Main
 	}
 	
 	function _tryGetOldMessages() {
-		if (histRequestInProgress) return;
+		if (histRequestInProgress || initialScroll) return;
 		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
 		lastY = Browser.window.pageYOffset;
 		if (scrollY < 0) {
@@ -649,6 +650,7 @@ class Main
 		if (force || _atBottom(img)) {
 			Browser.window.scrollTo(0, messages.scrollHeight);
 			Browser.window.onscroll = _tryGetOldMessages;
+			initialScroll = false;
 		}
 	}
 	

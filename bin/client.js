@@ -167,6 +167,7 @@ var Main = function() {
 	this.hasTriedAuth = false;
 	this.locked = false;
 	this.focussed = true;
+	this.initialScroll = true;
 	this.first = true;
 	this.histRequestInProgress = false;
 	this.requestInProgress = false;
@@ -268,7 +269,7 @@ Main.prototype = {
 	}
 	,_tryGetOldMessages: function() {
 		var _g = this;
-		if(this.histRequestInProgress) return;
+		if(this.histRequestInProgress || this.initialScroll) return;
 		var scrollY;
 		scrollY = (this.lastY != null?this.lastY:window.pageYOffset) - window.pageYOffset;
 		this.lastY = window.pageYOffset;
@@ -657,6 +658,7 @@ Main.prototype = {
 		if(force || this._atBottom(img)) {
 			window.scrollTo(0,this.messages.scrollHeight);
 			window.onscroll = $bind(this,this._tryGetOldMessages);
+			this.initialScroll = false;
 		}
 	}
 	,_atBottom: function(img) {
