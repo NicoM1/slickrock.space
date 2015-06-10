@@ -269,8 +269,6 @@ Main.prototype = {
 		var _g = this;
 		if(this.histRequestInProgress) return;
 		if(this.messages.scrollTop < 500) {
-			console.log("attempting to load history");
-			console.log("first index: " + this.firstIndex);
 			if(this.firstIndex > 0) {
 				var histHttp = new haxe_Http(this.basePath);
 				histHttp.onError = function(e) {
@@ -282,10 +280,7 @@ Main.prototype = {
 						f(a1,a2);
 					};
 				})($bind(this,this._parseMessages),true);
-				if(this.password == null) {
-					histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex;
-					console.log("first: " + this.firstIndex + " last: " + this.lastIndex);
-				} else histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
+				if(this.password == null) histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
 				this.histRequestInProgress = true;
 				histHttp.request(true);
 			}
@@ -350,10 +345,7 @@ Main.prototype = {
 	}
 	,_update: function() {
 		if(this.requestInProgress) return;
-		if(this.password == null) {
-			this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex;
-			console.log("last: " + this.lastIndex);
-		} else this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex;
+		if(this.password == null) this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex; else this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex;
 		this.requestInProgress = true;
 		this.getHttp.request(true);
 	}
@@ -572,8 +564,6 @@ Main.prototype = {
 			this._addMessage("successfully unlocked.");
 			this.wasLocked = false;
 		}
-		if(hist) console.log("recieved hist: " + data);
-		console.log(data);
 		var parsed = JSON.parse(data);
 		var _g1 = 0;
 		var _g = parsed.messages.messages.length;
@@ -626,7 +616,6 @@ Main.prototype = {
 		}
 		this.lastIndex = parsed.lastID;
 		if(parsed.firstID != null) this.firstIndex = parsed.firstID; else this.firstIndex = this.firstIndex;
-		console.log("new first: " + this.firstIndex);
 		var _g6 = 0;
 		var _g13 = window.document.getElementsByClassName("imgmessage");
 		while(_g6 < _g13.length) {

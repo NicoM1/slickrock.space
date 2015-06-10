@@ -181,8 +181,6 @@ class Main
 	function _tryGetOldMessages() {
 		if (histRequestInProgress) return;
 		if (messages.scrollTop < 500) {
-			trace('attempting to load history');
-			trace('first index: ' + firstIndex);
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
 				histHttp.onError = function(e) {
@@ -192,7 +190,6 @@ class Main
 				histHttp.onData = _parseMessages.bind(_, true);
 				if(password == null) {
 					histHttp.url = basePath + 'api/hist/' + room + '/' + lastIndex + '/' + firstIndex;
-					trace('first: ' + firstIndex + ' last: ' + lastIndex);
 				}
 				else {
 					histHttp.url = basePath + 'api/hist/' + room + '/' + password + '/' + lastIndex + '/' + firstIndex;
@@ -282,7 +279,6 @@ class Main
 		}
 		if(password == null) {
 			getHttp.url = basePath + 'api/' + room + '/' + lastIndex;
-			trace('last: ' + lastIndex);
 		}
 		else {
 			getHttp.url = basePath + 'api/' + room + '/' + password + '/' + lastIndex;
@@ -568,12 +564,6 @@ class Main
 			wasLocked = false;
 		}
 		
-		if (hist) {
-			trace('recieved hist: ' + data);
-		}
-		
-		trace(data);
-		
 		var parsed: MessageData = Json.parse(data);
 		for (i in 0...parsed.messages.messages.length) {
 			var ii = i;
@@ -619,7 +609,6 @@ class Main
 		
 		lastIndex = parsed.lastID;
 		firstIndex = parsed.firstID != null? parsed.firstID : firstIndex;
-		trace('new first: $firstIndex');
 		
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
