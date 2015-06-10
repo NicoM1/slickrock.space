@@ -689,9 +689,9 @@ Main.prototype = {
 		messageItem.className = "messageitem";
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		if(!hist) message.appendChild(messageItem); else {
-			message = this.messages.children[0];
+			message = this.messages.children[1];
 			var last = message.getAttribute("data-id");
-			message.insertBefore(messageItem,message.children[1]);
+			message.insertBefore(messageItem,message.children[0]);
 		}
 		if(!hist) {
 			this._tryScroll();

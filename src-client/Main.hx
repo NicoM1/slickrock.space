@@ -694,10 +694,10 @@ class Main
 			message.appendChild(messageItem);
 		}
 		else {
-			message = cast messages.children[0];
+			message = cast messages.children[1];
 			var last = message.getAttribute('data-id');
 			//if(last == id) {
-				message.insertBefore(messageItem, message.children[1]);
+				message.insertBefore(messageItem, message.children[0]);
 			//}
 			//else {
 				/*message = Browser.document.createDivElement();
