@@ -60,6 +60,7 @@ class Main
 	var typings: Array<MessageDiv> = new Array<MessageDiv>();
 	
 	var requestInProgress: Bool = false;
+	var histRequestInProgress: Bool = false;
 	var first: Bool = true;
 	var focussed: Bool = true;
 	var locked: Bool = false;
@@ -178,14 +179,14 @@ class Main
 	}
 	
 	function _tryGetOldMessages() {
-		if (requestInProgress) return;
+		if (histRequestInProgress) return;
 		if (messages.scrollTop < 500) {
 			trace('attempting to load history');
 			trace('first index: ' + firstIndex);
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
 				histHttp.onError = function(e) {
-					requestInProgress = false;
+					histRequestInProgress = false;
 					trace(e);
 				}
 				histHttp.onData = _parseMessages.bind(_, true);
@@ -195,6 +196,7 @@ class Main
 				else {
 					histHttp.url = basePath + 'api/' + room + '/' + password + '/' + lastIndex + '/' + firstIndex;
 				}
+				histRequestInProgress = true;
 				histHttp.request(true);
 			}
 		}
@@ -632,6 +634,9 @@ class Main
 		first = false;
 		
 		requestInProgress = false;
+		if(hist) {
+			histRequestInProgress = false;
+		}
 	}
 	
 	function _tryScroll(force: Bool = false, img: ImageElement = null) {

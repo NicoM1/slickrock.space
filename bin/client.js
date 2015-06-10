@@ -167,6 +167,7 @@ var Main = function() {
 	this.locked = false;
 	this.focussed = true;
 	this.first = true;
+	this.histRequestInProgress = false;
 	this.requestInProgress = false;
 	this.typings = [];
 	this.lastUserID = "-2";
@@ -266,14 +267,14 @@ Main.prototype = {
 	}
 	,_tryGetOldMessages: function() {
 		var _g = this;
-		if(this.requestInProgress) return;
+		if(this.histRequestInProgress) return;
 		if(this.messages.scrollTop < 500) {
 			console.log("attempting to load history");
 			console.log("first index: " + this.firstIndex);
 			if(this.firstIndex > 0) {
 				var histHttp = new haxe_Http(this.basePath);
 				histHttp.onError = function(e) {
-					_g.requestInProgress = false;
+					_g.histRequestInProgress = false;
 					console.log(e);
 				};
 				histHttp.onData = (function(f,a2) {
@@ -282,6 +283,7 @@ Main.prototype = {
 					};
 				})($bind(this,this._parseMessages),true);
 				if(this.password == null) histHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
+				this.histRequestInProgress = true;
 				histHttp.request(true);
 			}
 		}
@@ -643,6 +645,7 @@ Main.prototype = {
 		if(this.first) this._tryScroll(true);
 		this.first = false;
 		this.requestInProgress = false;
+		if(hist) this.histRequestInProgress = false;
 	}
 	,_tryScroll: function(force,img) {
 		if(force == null) force = false;
