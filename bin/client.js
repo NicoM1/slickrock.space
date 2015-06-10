@@ -697,7 +697,7 @@ Main.prototype = {
 				message.className = "messageblock";
 				message.setAttribute("data-id",id);
 				this.messages.insertBefore(message,this.messages.children[0]);
-				this.messages.insertBefore(this._makeSpan(differentUser,id),this.messages.children[0]);
+				this.messages.insertBefore(this._makeSpan(true,id),this.messages.children[0]);
 			}
 		}
 		if(!hist) {

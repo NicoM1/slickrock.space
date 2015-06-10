@@ -705,7 +705,7 @@ class Main
 				message.setAttribute('data-id', id);
 				
 				messages.insertBefore(message, messages.children[0]);
-				messages.insertBefore(_makeSpan(differentUser, id), messages.children[0]);
+				messages.insertBefore(_makeSpan(true, id), messages.children[0]);
 			}
 		}
 		
