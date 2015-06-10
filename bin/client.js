@@ -691,7 +691,7 @@ Main.prototype = {
 		if(!hist) message.appendChild(messageItem); else {
 			message = this.messages.children[0];
 			var last = message.getAttribute("data-id");
-			message.insertBefore(messageItem,message.children[0]);
+			message.insertBefore(messageItem,message.children[1]);
 		}
 		if(!hist) {
 			this._tryScroll();

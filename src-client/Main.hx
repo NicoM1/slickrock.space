@@ -697,7 +697,7 @@ class Main
 			message = cast messages.children[0];
 			var last = message.getAttribute('data-id');
 			//if(last == id) {
-				message.insertBefore(messageItem, message.children[0]);
+				message.insertBefore(messageItem, message.children[1]);
 			//}
 			//else {
 				/*message = Browser.document.createDivElement();
