@@ -650,7 +650,7 @@ class Main
 	function _tryScroll(force: Bool = false, img: ImageElement = null) {
 		if (force || _atBottom(img)) {
 			Browser.window.scrollTo(0, messages.scrollHeight);
-			Browser.window.onscroll = _tryGetOldMessages;
+			//Browser.window.onscroll = _tryGetOldMessages;
 			initialScroll = false;
 		}
 	}

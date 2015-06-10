@@ -630,12 +630,10 @@ Main.prototype = {
 			if(!this.first) i1.onload = (function(f2,a11,a2) {
 				return function() {
 					f2(a11,a2);
-					return;
 				};
 			})($bind(this,this._tryScroll),false,i1); else i1.onload = (function(f3,a12) {
 				return function() {
 					f3(a12);
-					return;
 				};
 			})($bind(this,this._tryScroll),true);
 		}
@@ -648,7 +646,6 @@ Main.prototype = {
 		if(force == null) force = false;
 		if(force || this._atBottom(img)) {
 			window.scrollTo(0,this.messages.scrollHeight);
-			window.onscroll = $bind(this,this._tryGetOldMessages);
 			this.initialScroll = false;
 		}
 	}
