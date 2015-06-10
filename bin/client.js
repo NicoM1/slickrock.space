@@ -698,6 +698,7 @@ Main.prototype = {
 				message.setAttribute("data-id",id);
 				this.messages.insertBefore(message,this.messages.children[0]);
 				this.messages.insertBefore(this._makeSpan(true,id),this.messages.children[0]);
+				message.insertBefore(messageItem,message.children[0]);
 			}
 		}
 		if(!hist) {

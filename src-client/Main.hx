@@ -706,6 +706,7 @@ class Main
 				
 				messages.insertBefore(message, messages.children[0]);
 				messages.insertBefore(_makeSpan(true, id), messages.children[0]);
+				message.insertBefore(messageItem, message.children[0]);
 			}
 		}
 		
