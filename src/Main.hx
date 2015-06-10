@@ -432,7 +432,7 @@ class RouteHandler implements abe.IRoute {
 			};
 			
 			var start = 0;
-			var end = roomE.messages.length + 1;
+			var end = roomE.messages.length;
 			
 			if (firstID != null) {
 				start = firstID - maxMessageLoad;
@@ -448,7 +448,7 @@ class RouteHandler implements abe.IRoute {
 				messages.firstID = lastID;
 			}
 
-			if (start < roomE.messages.length - 1 || firstID != null) {
+			if (start < roomE.messages.length || firstID != null) {
 				for (i in start...end) {
 					messages.messages.messages.push(roomE.messages[i]);
 				}

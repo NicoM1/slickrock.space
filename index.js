@@ -592,7 +592,7 @@ RouteHandler.prototype = {
 			var roomE1 = Main.rooms.get(room);
 			var messages = { messages : { messages : [], lock : null, pw : null, typing : roomE1.typing}, lastID : roomE1.messages.length - 1};
 			var start = 0;
-			var end = roomE1.messages.length + 1;
+			var end = roomE1.messages.length;
 			if(firstID != null) {
 				start = firstID - this.maxMessageLoad;
 				if(lastID > 0) start = lastID; else start = 0;
@@ -602,7 +602,7 @@ RouteHandler.prototype = {
 				start = messages.lastID - this.maxMessageLoad;
 				messages.firstID = lastID;
 			}
-			if(start < roomE1.messages.length - 1 || firstID != null) {
+			if(start < roomE1.messages.length || firstID != null) {
 				var _g = start;
 				while(_g < end) {
 					var i = _g++;
