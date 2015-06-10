@@ -689,7 +689,8 @@ Main.prototype = {
 		messageItem.className = "messageitem";
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		if(!hist) message.appendChild(messageItem); else {
-			var last = this.messages.children[0].getAttribute("data-id");
+			message = this.messages.children[0];
+			var last = message.getAttribute("data-id");
 			if(last == id) message.insertBefore(messageItem,message.children[0]); else {
 				var _this2 = window.document;
 				message = _this2.createElement("div");

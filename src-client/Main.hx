@@ -694,7 +694,8 @@ class Main
 			message.appendChild(messageItem);
 		}
 		else {
-			var last = messages.children[0].getAttribute('data-id');
+			message = cast messages.children[0];
+			var last = message.getAttribute('data-id');
 			if(last == id) {
 				message.insertBefore(messageItem, message.children[0]);
 			}
