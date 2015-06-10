@@ -435,7 +435,7 @@ class RouteHandler implements abe.IRoute {
 			
 			if (firstID != null) {
 				lastID = firstID - maxMessageLoad;
-				lastID = lastID > 0? lastID : 0;
+				lastID = lastID > -1? lastID : -1;
 				end = firstID;
 			}
 			

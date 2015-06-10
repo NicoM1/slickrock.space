@@ -594,7 +594,7 @@ RouteHandler.prototype = {
 			var end = roomE1.messages.length - 1;
 			if(firstID != null) {
 				lastID = firstID - this.maxMessageLoad;
-				if(lastID > 0) lastID = lastID; else lastID = 0;
+				if(lastID > -1) lastID = lastID; else lastID = -1;
 				end = firstID;
 			}
 			if(lastID == -1 && messages.lastID > this.maxMessageLoad) {
