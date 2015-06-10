@@ -594,15 +594,15 @@ RouteHandler.prototype = {
 			var end = roomE1.messages.length - 1;
 			if(firstID != null) {
 				lastID = firstID - this.maxMessageLoad;
-				if(lastID > -1) lastID = lastID; else lastID = -1;
+				if(lastID > 0) lastID = lastID; else lastID = 0;
 				end = firstID;
-			}
+			} else lastID++;
 			if(lastID == -1 && messages.lastID > this.maxMessageLoad) {
 				lastID = messages.lastID - this.maxMessageLoad;
 				messages.firstID = lastID;
 			}
 			if(lastID < roomE1.messages.length - 1 || firstID != null) {
-				var _g = lastID + 1;
+				var _g = lastID;
 				while(_g < end) {
 					var i = _g++;
 					messages.messages.messages.push(roomE1.messages[i]);
