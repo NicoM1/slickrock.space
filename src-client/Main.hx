@@ -570,7 +570,7 @@ class Main
 		for (i in 0...parsed.messages.messages.length) {
 			var ii = i;
 			if (hist) {
-				ii = parsed.messages.messages.length - i;
+				ii = parsed.messages.messages.length - 1 - i;
 			}
 			var p = parsed.messages.messages[ii];
 			var message = _addMessage(p.text, p.id, hist);

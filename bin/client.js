@@ -569,7 +569,7 @@ Main.prototype = {
 		while(_g1 < _g) {
 			var i = _g1++;
 			var ii = i;
-			if(hist) ii = parsed.messages.messages.length - i;
+			if(hist) ii = parsed.messages.messages.length - 1 - i;
 			var p = parsed.messages.messages[ii];
 			var message = this._addMessage(p.text,p.id,null,hist);
 			if(!this.focussed && !this.first) {
