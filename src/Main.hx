@@ -390,6 +390,7 @@ class RouteHandler implements abe.IRoute {
 		_getMessages(response, room, password, lastID);
 	}
 	
+	@:get('/api/hist/:room/:lastID/:firstID')
 	@:post('/api/hist/:room/:lastID/:firstID')
 	function getMessagesHist(room: String, lastID: Int, firstID: Int) {
 		room = room.toLowerCase();
