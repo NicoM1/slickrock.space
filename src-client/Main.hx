@@ -619,6 +619,7 @@ class Main
 		
 		lastIndex = parsed.lastID;
 		firstIndex = parsed.firstID != null? parsed.firstID : firstIndex;
+		trace('new first: $firstIndex');
 		
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;

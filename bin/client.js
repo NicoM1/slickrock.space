@@ -626,6 +626,7 @@ Main.prototype = {
 		}
 		this.lastIndex = parsed.lastID;
 		if(parsed.firstID != null) this.firstIndex = parsed.firstID; else this.firstIndex = this.firstIndex;
+		console.log("new first: " + this.firstIndex);
 		var _g6 = 0;
 		var _g13 = window.document.getElementsByClassName("imgmessage");
 		while(_g6 < _g13.length) {
