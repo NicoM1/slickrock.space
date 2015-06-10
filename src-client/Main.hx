@@ -179,22 +179,24 @@ class Main
 	
 	function _tryGetOldMessages() {
 		if (requestInProgress) return;
-		if (firstIndex > 0 && messages.scrollTop < 500) {
+		if (messages.scrollTop < 500) {
 			trace('attempting to load history');
 			trace('first index: ' + firstIndex);
-			var histHttp: Http = new Http(basePath);
-			histHttp.onError = function(e) {
-				requestInProgress = false;
-				trace(e);
+			if(firstIndex > 0) {
+				var histHttp: Http = new Http(basePath);
+				histHttp.onError = function(e) {
+					requestInProgress = false;
+					trace(e);
+				}
+				histHttp.onData = _parseMessages.bind(_, true);
+				if(password == null) {
+					histHttp.url = basePath + 'api/' + room + '/' + lastIndex + '/' + firstIndex;
+				}
+				else {
+					histHttp.url = basePath + 'api/' + room + '/' + password + '/' + lastIndex + '/' + firstIndex;
+				}
+				histHttp.request(true);
 			}
-			histHttp.onData = _parseMessages.bind(_, true);
-			if(password == null) {
-				histHttp.url = basePath + 'api/' + room + '/' + lastIndex + '/' + firstIndex;
-			}
-			else {
-				histHttp.url = basePath + 'api/' + room + '/' + password + '/' + lastIndex + '/' + firstIndex;
-			}
-			histHttp.request(true);
 		}
 	}
 	

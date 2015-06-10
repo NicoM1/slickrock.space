@@ -267,21 +267,23 @@ Main.prototype = {
 	,_tryGetOldMessages: function() {
 		var _g = this;
 		if(this.requestInProgress) return;
-		if(this.firstIndex > 0 && this.messages.scrollTop < 500) {
+		if(this.messages.scrollTop < 500) {
 			console.log("attempting to load history");
 			console.log("first index: " + this.firstIndex);
-			var histHttp = new haxe_Http(this.basePath);
-			histHttp.onError = function(e) {
-				_g.requestInProgress = false;
-				console.log(e);
-			};
-			histHttp.onData = (function(f,a2) {
-				return function(a1) {
-					f(a1,a2);
+			if(this.firstIndex > 0) {
+				var histHttp = new haxe_Http(this.basePath);
+				histHttp.onError = function(e) {
+					_g.requestInProgress = false;
+					console.log(e);
 				};
-			})($bind(this,this._parseMessages),true);
-			if(this.password == null) histHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
-			histHttp.request(true);
+				histHttp.onData = (function(f,a2) {
+					return function(a1) {
+						f(a1,a2);
+					};
+				})($bind(this,this._parseMessages),true);
+				if(this.password == null) histHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
+				histHttp.request(true);
+			}
 		}
 	}
 	,_setupPrivateID: function() {
