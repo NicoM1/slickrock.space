@@ -179,9 +179,9 @@ class Main
 	
 	function _tryGetOldMessages() {
 		if (requestInProgress) return;
-		trace('attempting to load history');
-		trace('first index: ' + firstIndex);
 		if (firstIndex > 0 && messages.scrollTop < 500) {
+			trace('attempting to load history');
+			trace('first index: ' + firstIndex);
 			var histHttp: Http = new Http(basePath);
 			histHttp.onError = function(e) {
 				requestInProgress = false;

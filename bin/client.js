@@ -267,9 +267,9 @@ Main.prototype = {
 	,_tryGetOldMessages: function() {
 		var _g = this;
 		if(this.requestInProgress) return;
-		console.log("attempting to load history");
-		console.log("first index: " + this.firstIndex);
 		if(this.firstIndex > 0 && this.messages.scrollTop < 500) {
+			console.log("attempting to load history");
+			console.log("first index: " + this.firstIndex);
 			var histHttp = new haxe_Http(this.basePath);
 			histHttp.onError = function(e) {
 				_g.requestInProgress = false;
