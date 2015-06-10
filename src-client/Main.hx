@@ -35,7 +35,7 @@ typedef MessageDiv = {
 class Main 
 {
 	var room: String;
-	var basePath: String = 'https://aqueous-api.herokuapp.com/';
+	var basePath: String = 'https://aqueous-dev.herokuapp.com/';
 	var id: String = null;
 	var privateID: String;
 	var token: String = null;
@@ -94,7 +94,7 @@ class Main
 		}
 		
 		getHttp = new Http(basePath + lastIndex);
-		getHttp.onData = _parseMessages;
+		getHttp.onData = _parseMessages.bind(_, false);
 		getHttp.onError = function(error) { 
 			trace(error); 
 			requestInProgress = false; 
@@ -654,6 +654,7 @@ class Main
 		if (differentUser) {
 			message = Browser.document.createDivElement();
 			message.className = 'messageblock';
+			message.setAttribute('data-id', id);
 			lastParagraph = message;
 					
 			messages.appendChild(_makeSpan(differentUser, id));
@@ -672,14 +673,25 @@ class Main
 			message.appendChild(messageItem);
 		}
 		else {
-			message.insertBefore(messageItem);
+			var last = messages.children[0].getAttribute('data-id');
+			if(last == id) {
+				message.insertBefore(messageItem, message.children[0]);
+			}
+			else {
+				message = Browser.document.createDivElement();
+				message.className = 'messageblock';
+				message.setAttribute('data-id', id);
+				
+				messages.insertBefore(message, messages.children[0]);
+				messages.insertBefore(_makeSpan(differentUser, id), messages.children[0]);
+			}
 		}
 		
 		if(!hist) {
 			_tryScroll();
+					
+			lastUserID = id;
 		}
-		
-		lastUserID = id;
 		
 		return messageItem;
 	}

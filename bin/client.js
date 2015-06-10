@@ -170,12 +170,13 @@ var Main = function() {
 	this.requestInProgress = false;
 	this.typings = [];
 	this.lastUserID = "-2";
+	this.firstIndex = -1;
 	this.lastIndex = -1;
 	this.adminPassword = "-1";
 	this.password = null;
 	this.token = null;
 	this.id = null;
-	this.basePath = "https://aqueous-api.herokuapp.com/";
+	this.basePath = "https://aqueous-dev.herokuapp.com/";
 	this.room = window.room;
 	this._buildCommands();
 	window.onload = $bind(this,this._windowLoaded);
@@ -194,7 +195,11 @@ Main.prototype = {
 			_g._addMessage("Could not connect to authentication api, please refresh the page.");
 		};
 		this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
-		this.getHttp.onData = $bind(this,this._parseMessages);
+		this.getHttp.onData = (function(f,a2) {
+			return function(a1) {
+				f(a1,a2);
+			};
+		})($bind(this,this._parseMessages),false);
 		this.getHttp.onError = function(error1) {
 			console.log(error1);
 			_g.requestInProgress = false;
@@ -215,15 +220,16 @@ Main.prototype = {
 		};
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
+		this.messages.onscroll = $bind(this,this._tryGetOldMessages);
 		this.helpbox = window.document.getElementById("helpbox");
 		this.chevron = window.document.getElementById("chevron");
 		this.favicons = [];
 		var _g1 = 0;
 		var _g11 = window.document.getElementsByClassName("favicon");
 		while(_g1 < _g11.length) {
-			var f = _g11[_g1];
+			var f1 = _g11[_g1];
 			++_g1;
-			this.favicons.push(f);
+			this.favicons.push(f1);
 		}
 		this.messageSound = window.document.getElementById("messagesound");
 		window.onfocus = function() {
@@ -232,9 +238,9 @@ Main.prototype = {
 			var _g12 = 0;
 			var _g2 = _g.favicons;
 			while(_g12 < _g2.length) {
-				var f1 = _g2[_g12];
+				var f2 = _g2[_g12];
 				++_g12;
-				f1.href = "bin/faviconempty.ico";
+				f2.href = "bin/faviconempty.ico";
 			}
 			_g._clearNotifications();
 			_g.numNotifications = 0;
@@ -258,6 +264,21 @@ Main.prototype = {
 		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
 		this._setupPrivateID();
 		this._loop();
+	}
+	,_tryGetOldMessages: function() {
+		if(this.firstIndex > 0 && this.messages.scrollTop < 500) {
+			var histHttp = new haxe_Http(this.basePath);
+			histHttp.onError = function(e) {
+				console.log(e);
+			};
+			histHttp.onData = (function(f,a2) {
+				return function(a1) {
+					f(a1,a2);
+				};
+			})($bind(this,this._parseMessages),true);
+			if(this.password == null) histHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
+			histHttp.request(true);
+		}
 	}
 	,_setupPrivateID: function() {
 		if(!js_Cookie.exists("private")) {
@@ -513,7 +534,8 @@ Main.prototype = {
 		this._addMessage("**/unfasten**");
 		this._addMessage("attempt to unlock the current room.");
 	}
-	,_parseMessages: function(data) {
+	,_parseMessages: function(data,hist) {
+		if(hist == null) hist = false;
 		if(data == "locked") {
 			if(!this.locked) this._addMessage("room is locked, please enter password.");
 			this.locked = true;
@@ -537,12 +559,14 @@ Main.prototype = {
 			this.wasLocked = false;
 		}
 		var parsed = JSON.parse(data);
-		var _g = 0;
-		var _g1 = parsed.messages.messages;
-		while(_g < _g1.length) {
-			var p = _g1[_g];
-			++_g;
-			var message = this._addMessage(p.text,p.id);
+		var _g1 = 0;
+		var _g = parsed.messages.messages.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var ii = i;
+			if(hist) ii = parsed.messages.messages.length - i;
+			var p = parsed.messages.messages[ii];
+			var message = this._addMessage(p.text,p.id,null,hist);
 			if(!this.focussed && !this.first) {
 				window.document.title = "# aqueous-basin.";
 				var _g2 = 0;
@@ -585,22 +609,23 @@ Main.prototype = {
 			}
 		}
 		this.lastIndex = parsed.lastID;
+		if(parsed.firstID != null) this.firstIndex = parsed.firstID; else this.firstIndex = 0;
 		var _g6 = 0;
 		var _g13 = window.document.getElementsByClassName("imgmessage");
 		while(_g6 < _g13.length) {
-			var i = _g13[_g6];
+			var i1 = _g13[_g6];
 			++_g6;
-			var image = i;
-			i.onclick = (function(f1,a1) {
+			var image = i1;
+			i1.onclick = (function(f1,a1) {
 				return function() {
 					f1(a1);
 				};
 			})($bind(this,this._openImageInNewTab),image.src);
-			if(!this.first) i.onload = (function(f2,a11,a2) {
+			if(!this.first) i1.onload = (function(f2,a11,a2) {
 				return function() {
 					f2(a11,a2);
 				};
-			})($bind(this,this._tryScroll),false,i); else i.onload = (function(f3,a12) {
+			})($bind(this,this._tryScroll),false,i1); else i1.onload = (function(f3,a12) {
 				return function() {
 					f3(a12);
 				};
@@ -620,7 +645,8 @@ Main.prototype = {
 		if(window.innerHeight + window.scrollY + offset >= this.messages.offsetHeight) return true;
 		return false;
 	}
-	,_addMessage: function(msg,id,customHTML) {
+	,_addMessage: function(msg,id,customHTML,hist) {
+		if(hist == null) hist = false;
 		msg = this._parseMessage(msg);
 		var message;
 		var differentUser = false;
@@ -629,6 +655,7 @@ Main.prototype = {
 			var _this = window.document;
 			message = _this.createElement("div");
 			message.className = "messageblock";
+			message.setAttribute("data-id",id);
 			this.lastParagraph = message;
 			this.messages.appendChild(this._makeSpan(differentUser,id));
 			this.messages.appendChild(message);
@@ -638,9 +665,21 @@ Main.prototype = {
 		messageItem = _this1.createElement("div");
 		messageItem.className = "messageitem";
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
-		message.appendChild(messageItem);
-		this._tryScroll();
-		this.lastUserID = id;
+		if(!hist) message.appendChild(messageItem); else {
+			var last = this.messages.children[0].getAttribute("data-id");
+			if(last == id) message.insertBefore(messageItem,message.children[0]); else {
+				var _this2 = window.document;
+				message = _this2.createElement("div");
+				message.className = "messageblock";
+				message.setAttribute("data-id",id);
+				this.messages.insertBefore(message,this.messages.children[0]);
+				this.messages.insertBefore(this._makeSpan(differentUser,id),this.messages.children[0]);
+			}
+		}
+		if(!hist) {
+			this._tryScroll();
+			this.lastUserID = id;
+		}
 		return messageItem;
 	}
 	,_parseMessage: function(raw) {
