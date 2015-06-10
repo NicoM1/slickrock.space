@@ -681,7 +681,7 @@ Main.prototype = {
 			var last = message.getAttribute("data-id");
 			if(last == id) {
 				message.insertBefore(messageItem,message.children[0]);
-				offset = message.scrollHeight;
+				offset = messageItem.scrollHeight;
 			} else {
 				var _this2 = window.document;
 				message = _this2.createElement("div");
