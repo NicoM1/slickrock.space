@@ -220,7 +220,6 @@ Main.prototype = {
 		};
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
-		this.messages.onscroll = $bind(this,this._tryGetOldMessages);
 		this.helpbox = window.document.getElementById("helpbox");
 		this.chevron = window.document.getElementById("chevron");
 		this.favicons = [];
@@ -248,6 +247,7 @@ Main.prototype = {
 		window.onblur = function() {
 			_g.focussed = false;
 		};
+		window.onscroll = $bind(this,this._tryGetOldMessages);
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
 			_g._getNotificationPermission();

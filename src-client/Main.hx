@@ -118,7 +118,6 @@ class Main
 
 		chatbox = cast Browser.document.getElementById('chatbox');
 		messages = cast Browser.document.getElementById('messages');
-		messages.onscroll = _tryGetOldMessages;
 		helpbox = cast Browser.document.getElementById('helpbox');
 		chevron = cast Browser.document.getElementById('chevron');
 		favicons = new Array<LinkElement>();
@@ -140,6 +139,8 @@ class Main
 		Browser.window.onblur = function() {
 			focussed = false;
 		};
+		
+		Browser.window.onscroll = _tryGetOldMessages;
 		
 		_setupHelpbox();
 		
