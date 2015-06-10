@@ -140,8 +140,6 @@ class Main
 			focussed = false;
 		};
 		
-		Browser.window.onscroll = _tryGetOldMessages;
-		
 		_setupHelpbox();
 		
 		chatbox.onclick = function() {
@@ -637,6 +635,7 @@ class Main
 	function _tryScroll(force: Bool = false, img: ImageElement = null) {
 		if (force || _atBottom(img)) {
 			Browser.window.scrollTo(0, messages.scrollHeight);
+			Browser.window.onscroll = _tryGetOldMessages;
 		}
 	}
 	
