@@ -703,7 +703,7 @@ class Main
 			var last = message.getAttribute('data-id');
 			if(last == id) {
 				message.insertBefore(messageItem, message.children[0]);
-				offset = messageItem.scrollHeight;
+				offset = message.scrollHeight;
 			}
 			else {
 				message = Browser.document.createDivElement();
