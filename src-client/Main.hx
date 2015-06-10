@@ -570,6 +570,8 @@ class Main
 			trace('recieved hist: ' + data);
 		}
 		
+		trace(data);
+		
 		var parsed: MessageData = Json.parse(data);
 		for (i in 0...parsed.messages.messages.length) {
 			var ii = i;

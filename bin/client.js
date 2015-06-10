@@ -567,6 +567,7 @@ Main.prototype = {
 			this.wasLocked = false;
 		}
 		if(hist) console.log("recieved hist: " + data);
+		console.log(data);
 		var parsed = JSON.parse(data);
 		var _g1 = 0;
 		var _g = parsed.messages.messages.length;
