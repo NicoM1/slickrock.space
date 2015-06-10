@@ -193,7 +193,7 @@ class Main
 			trace('scrolling up');
 		}
 		
-		if (messages.scrollTop < 500) {
+		if (messages.scrollTop < 15) {
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
 				histHttp.onError = function(e) {
@@ -693,6 +693,7 @@ class Main
 		
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
 		
+		var offset = 0;
 		if(!hist) {
 			message.appendChild(messageItem);
 		}
@@ -701,6 +702,7 @@ class Main
 			var last = message.getAttribute('data-id');
 			if(last == id) {
 				message.insertBefore(messageItem, message.children[0]);
+				offset = messageItem.scrollHeight;
 			}
 			else {
 				message = Browser.document.createDivElement();
@@ -710,6 +712,7 @@ class Main
 				messages.insertBefore(message, messages.children[0]);
 				messages.insertBefore(_makeSpan(true, id), messages.children[0]);
 				message.insertBefore(messageItem, message.children[0]);
+				offset = message.scrollHeight;
 			}
 		}
 		
@@ -717,6 +720,9 @@ class Main
 			_tryScroll();
 					
 			lastUserID = id;
+		}
+		else {
+			Browser.document.body.scrollTop += offset;
 		}
 		
 		return messageItem;

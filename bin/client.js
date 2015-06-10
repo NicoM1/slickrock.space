@@ -277,7 +277,7 @@ Main.prototype = {
 			console.log("scrolling down ");
 			return;
 		} else console.log("scrolling up");
-		if(this.messages.scrollTop < 500) {
+		if(this.messages.scrollTop < 15) {
 			if(this.firstIndex > 0) {
 				var histHttp = new haxe_Http(this.basePath);
 				histHttp.onError = function(e) {
@@ -687,10 +687,14 @@ Main.prototype = {
 		messageItem = _this1.createElement("div");
 		messageItem.className = "messageitem";
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
+		var offset = 0;
 		if(!hist) message.appendChild(messageItem); else {
 			message = this.messages.children[1];
 			var last = message.getAttribute("data-id");
-			if(last == id) message.insertBefore(messageItem,message.children[0]); else {
+			if(last == id) {
+				message.insertBefore(messageItem,message.children[0]);
+				offset = messageItem.scrollHeight;
+			} else {
 				var _this2 = window.document;
 				message = _this2.createElement("div");
 				message.className = "messageblock";
@@ -698,12 +702,13 @@ Main.prototype = {
 				this.messages.insertBefore(message,this.messages.children[0]);
 				this.messages.insertBefore(this._makeSpan(true,id),this.messages.children[0]);
 				message.insertBefore(messageItem,message.children[0]);
+				offset = message.scrollHeight;
 			}
 		}
 		if(!hist) {
 			this._tryScroll();
 			this.lastUserID = id;
-		}
+		} else window.document.body.scrollTop += offset;
 		return messageItem;
 	}
 	,_parseMessage: function(raw) {
