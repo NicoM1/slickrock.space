@@ -283,9 +283,9 @@ Main.prototype = {
 					};
 				})($bind(this,this._parseMessages),true);
 				if(this.password == null) {
-					histHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex;
+					histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex;
 					console.log("first: " + this.firstIndex + " last: " + this.lastIndex);
-				} else histHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
+				} else histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
 				this.histRequestInProgress = true;
 				histHttp.request(true);
 			}

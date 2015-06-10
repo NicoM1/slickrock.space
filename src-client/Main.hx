@@ -191,11 +191,11 @@ class Main
 				}
 				histHttp.onData = _parseMessages.bind(_, true);
 				if(password == null) {
-					histHttp.url = basePath + 'api/' + room + '/' + lastIndex + '/' + firstIndex;
+					histHttp.url = basePath + 'api/hist/' + room + '/' + lastIndex + '/' + firstIndex;
 					trace('first: ' + firstIndex + ' last: ' + lastIndex);
 				}
 				else {
-					histHttp.url = basePath + 'api/' + room + '/' + password + '/' + lastIndex + '/' + firstIndex;
+					histHttp.url = basePath + 'api/hist/' + room + '/' + password + '/' + lastIndex + '/' + firstIndex;
 				}
 				histRequestInProgress = true;
 				histHttp.request(true);
