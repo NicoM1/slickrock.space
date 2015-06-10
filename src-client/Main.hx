@@ -696,17 +696,17 @@ class Main
 		else {
 			message = cast messages.children[1];
 			var last = message.getAttribute('data-id');
-			//if(last == id) {
+			if(last == id) {
 				message.insertBefore(messageItem, message.children[0]);
-			//}
-			//else {
-				/*message = Browser.document.createDivElement();
+			}
+			else {
+				message = Browser.document.createDivElement();
 				message.className = 'messageblock';
 				message.setAttribute('data-id', id);
 				
 				messages.insertBefore(message, messages.children[0]);
-				messages.insertBefore(_makeSpan(differentUser, id), messages.children[0]);*/
-			//}
+				messages.insertBefore(_makeSpan(differentUser, id), messages.children[0]);
+			}
 		}
 		
 		if(!hist) {
