@@ -192,6 +192,7 @@ class Main
 				histHttp.onData = _parseMessages.bind(_, true);
 				if(password == null) {
 					histHttp.url = basePath + 'api/' + room + '/' + lastIndex + '/' + firstIndex;
+					trace('first: ' + firstIndex + ' last: ' + lastIndex);
 				}
 				else {
 					histHttp.url = basePath + 'api/' + room + '/' + password + '/' + lastIndex + '/' + firstIndex;
@@ -281,6 +282,7 @@ class Main
 		}
 		if(password == null) {
 			getHttp.url = basePath + 'api/' + room + '/' + lastIndex;
+			trace('last: ' + lastIndex);
 		}
 		else {
 			getHttp.url = basePath + 'api/' + room + '/' + password + '/' + lastIndex;

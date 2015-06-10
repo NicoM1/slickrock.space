@@ -282,7 +282,10 @@ Main.prototype = {
 						f(a1,a2);
 					};
 				})($bind(this,this._parseMessages),true);
-				if(this.password == null) histHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
+				if(this.password == null) {
+					histHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex;
+					console.log("first: " + this.firstIndex + " last: " + this.lastIndex);
+				} else histHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
 				this.histRequestInProgress = true;
 				histHttp.request(true);
 			}
@@ -347,7 +350,10 @@ Main.prototype = {
 	}
 	,_update: function() {
 		if(this.requestInProgress) return;
-		if(this.password == null) this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex; else this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex;
+		if(this.password == null) {
+			this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.lastIndex;
+			console.log("last: " + this.lastIndex);
+		} else this.getHttp.url = this.basePath + "api/" + this.room + "/" + this.password + "/" + this.lastIndex;
 		this.requestInProgress = true;
 		this.getHttp.request(true);
 	}
