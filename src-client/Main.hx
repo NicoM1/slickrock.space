@@ -78,6 +78,8 @@ class Main
 	
 	var commandIndex: Int = -1;
 	
+	var lastY: Int = null;
+	
 	function new() {
 		room = untyped window.room;
 		_buildCommands();
@@ -180,6 +182,16 @@ class Main
 	
 	function _tryGetOldMessages() {
 		if (histRequestInProgress) return;
+		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
+		lastY = Browser.window.pageYOffset;
+		if (scrollY < 0) {
+			trace('scrolling down');
+			return;
+		}
+		else {
+			trace('scrolling up');
+		}
+		
 		if (messages.scrollTop < 500) {
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);

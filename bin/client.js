@@ -155,6 +155,7 @@ var Main = function() {
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
+	this.lastY = null;
 	this.commandIndex = -1;
 	this.sendLast = false;
 	this.lastMessage = "";
@@ -268,6 +269,13 @@ Main.prototype = {
 	,_tryGetOldMessages: function() {
 		var _g = this;
 		if(this.histRequestInProgress) return;
+		var scrollY;
+		scrollY = (this.lastY != null?this.lastY:window.pageYOffset) - window.pageYOffset;
+		this.lastY = window.pageYOffset;
+		if(scrollY < 0) {
+			console.log("scrolling down");
+			return;
+		} else console.log("scrolling up");
 		if(this.messages.scrollTop < 500) {
 			if(this.firstIndex > 0) {
 				var histHttp = new haxe_Http(this.basePath);
