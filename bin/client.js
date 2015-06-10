@@ -266,9 +266,12 @@ Main.prototype = {
 		this._loop();
 	}
 	,_tryGetOldMessages: function() {
+		var _g = this;
+		if(this.requestInProgress) return;
 		if(this.firstIndex > 0 && this.messages.scrollTop < 500) {
 			var histHttp = new haxe_Http(this.basePath);
 			histHttp.onError = function(e) {
+				_g.requestInProgress = false;
 				console.log(e);
 			};
 			histHttp.onData = (function(f,a2) {

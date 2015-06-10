@@ -179,9 +179,11 @@ class Main
 	}
 	
 	function _tryGetOldMessages() {
+		if (requestInProgress) return;
 		if (firstIndex > 0 && messages.scrollTop < 500) {
 			var histHttp: Http = new Http(basePath);
 			histHttp.onError = function(e) {
+				requestInProgress = false;
 				trace(e);
 			}
 			histHttp.onData = _parseMessages.bind(_, true);
