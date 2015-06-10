@@ -267,32 +267,22 @@ Main.prototype = {
 		this._setupPrivateID();
 		this._loop();
 	}
-	,_tryGetOldMessages: function() {
+	,_tryGetOldMessages: function(args) {
 		var _g = this;
-		if(this.histRequestInProgress || this.initialScroll) return;
-		var scrollY;
-		scrollY = (this.lastY != null?this.lastY:window.pageYOffset) - window.pageYOffset;
-		this.lastY = window.pageYOffset;
-		if(scrollY < 0) {
-			console.log("scrolling down ");
-			return;
-		} else console.log("scrolling up");
-		if(this.messages.scrollTop < 15) {
-			if(this.firstIndex > 0) {
-				var histHttp = new haxe_Http(this.basePath);
-				histHttp.onError = function(e) {
-					_g.histRequestInProgress = false;
-					console.log(e);
+		if(this.firstIndex > 0) {
+			var histHttp = new haxe_Http(this.basePath);
+			histHttp.onError = function(e) {
+				_g.histRequestInProgress = false;
+				console.log(e);
+			};
+			histHttp.onData = (function(f,a2) {
+				return function(a1) {
+					f(a1,a2);
 				};
-				histHttp.onData = (function(f,a2) {
-					return function(a1) {
-						f(a1,a2);
-					};
-				})($bind(this,this._parseMessages),true);
-				if(this.password == null) histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
-				this.histRequestInProgress = true;
-				histHttp.request(true);
-			}
+			})($bind(this,this._parseMessages),true);
+			if(this.password == null) histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
+			this.histRequestInProgress = true;
+			histHttp.request(true);
 		}
 	}
 	,_setupPrivateID: function() {
@@ -411,6 +401,7 @@ Main.prototype = {
 		this.commands.set("unfasten",$bind(this,this._unlockRoom));
 		this.commands.set("claim",$bind(this,this._claimRoom));
 		this.commands.set("entitle",$bind(this,this._authorizeRoom));
+		this.commands.set("load",$bind(this,this._tryGetOldMessages));
 		this.commands.set("",$bind(this,this._help));
 	}
 	,_parseCommand: function(commandString) {

@@ -181,8 +181,8 @@ class Main
 		_loop();
 	}
 	
-	function _tryGetOldMessages() {
-		if (histRequestInProgress || initialScroll) return;
+	function _tryGetOldMessages(?args) {
+		/*if (histRequestInProgress || initialScroll) return;
 		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
 		lastY = Browser.window.pageYOffset;
 		if (scrollY < 0) {
@@ -191,9 +191,9 @@ class Main
 		}
 		else {
 			trace('scrolling up');
-		}
+		}*/
 		
-		if (messages.scrollTop < 15) {
+		//if (messages.scrollTop < 15) {
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
 				histHttp.onError = function(e) {
@@ -210,7 +210,7 @@ class Main
 				histRequestInProgress = true;
 				histHttp.request(true);
 			}
-		}
+		//}
 	}
 	
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -354,6 +354,7 @@ class Main
 		commands.set('unfasten', _unlockRoom);
 		commands.set('claim', _claimRoom);
 		commands.set('entitle', _authorizeRoom);
+		commands.set('load', _tryGetOldMessages);
 		
 		commands.set('', _help);
 	}
