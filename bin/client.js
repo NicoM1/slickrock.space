@@ -673,7 +673,7 @@ Main.prototype = {
 		msg = this._parseMessage(msg);
 		var message;
 		var differentUser = false;
-		if(id == null || id == "-1" || id != this.lastUserID) differentUser = true;
+		if(!hist && (id == null || id == "-1" || id != this.lastUserID)) differentUser = true;
 		if(differentUser) {
 			var _this = window.document;
 			message = _this.createElement("div");

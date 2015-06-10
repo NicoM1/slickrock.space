@@ -668,7 +668,7 @@ class Main
 		var message: DivElement;
 		
 		var differentUser = false;
-		if (id == null || id == '-1' || id != lastUserID ) {
+		if (!hist && (id == null || id == '-1' || id != lastUserID)) {
 			differentUser = true;
 		}
 		
