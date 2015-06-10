@@ -618,7 +618,7 @@ class Main
 		}
 		
 		lastIndex = parsed.lastID;
-		firstIndex = parsed.firstID != null? parsed.firstID : 0;
+		firstIndex = parsed.firstID != null? parsed.firstID : firstIndex;
 		
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;

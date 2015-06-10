@@ -596,6 +596,7 @@ RouteHandler.prototype = {
 			if(firstID != null) {
 				start = firstID - this.maxMessageLoad;
 				if(lastID > 0) start = lastID; else start = 0;
+				messages.firstID = start;
 				end = firstID;
 			} else start = lastID + 1;
 			if(lastID == -1 && messages.lastID > this.maxMessageLoad) {
