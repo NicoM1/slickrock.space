@@ -273,7 +273,7 @@ Main.prototype = {
 		scrollY = (this.lastY != null?this.lastY:window.pageYOffset) - window.pageYOffset;
 		this.lastY = window.pageYOffset;
 		if(scrollY < 0) {
-			console.log("scrolling down");
+			console.log("scrolling down ");
 			return;
 		} else console.log("scrolling up");
 		if(this.messages.scrollTop < 500) {

@@ -185,7 +185,7 @@ class Main
 		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
 		lastY = Browser.window.pageYOffset;
 		if (scrollY < 0) {
-			trace('scrolling down');
+			trace('scrolling down ');
 			return;
 		}
 		else {
