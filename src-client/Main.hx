@@ -146,8 +146,8 @@ class Main
 			focussed = false;
 		};
 		
-		Browser.document.addEventListener('mousewheel', _tryGetOldMessages);
-		Browser.document.addEventListener('DOMMouseScroll', _tryGetOldMessages);
+		messages.addEventListener('mousewheel', _tryGetOldMessages);
+		messages.addEventListener('DOMMouseScroll', _tryGetOldMessages);
 		
 		_setupHelpbox();
 		

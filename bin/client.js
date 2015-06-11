@@ -250,8 +250,8 @@ Main.prototype = {
 		window.onblur = function() {
 			_g.focussed = false;
 		};
-		window.document.addEventListener("mousewheel",$bind(this,this._tryGetOldMessages));
-		window.document.addEventListener("DOMMouseScroll",$bind(this,this._tryGetOldMessages));
+		this.messages.addEventListener("mousewheel",$bind(this,this._tryGetOldMessages));
+		this.messages.addEventListener("DOMMouseScroll",$bind(this,this._tryGetOldMessages));
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
 			_g._getNotificationPermission();
