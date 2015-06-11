@@ -252,6 +252,7 @@ Main.prototype = {
 		};
 		this.messages.addEventListener("mousewheel",$bind(this,this._tryGetOldMessages));
 		this.messages.addEventListener("DOMMouseScroll",$bind(this,this._tryGetOldMessages));
+		this.messages.onkeydown = $bind(this,this._testScrolling);
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
 			_g._getNotificationPermission();
@@ -268,6 +269,11 @@ Main.prototype = {
 		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
 		this._setupPrivateID();
 		this._loop();
+	}
+	,_testScrolling: function(e) {
+		var code = null;
+		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
+		if(code == 38) this._tryGetOldMessages();
 	}
 	,_tryGetOldMessages: function(args) {
 		var _g = this;

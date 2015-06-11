@@ -148,6 +148,7 @@ class Main
 		
 		messages.addEventListener('mousewheel', _tryGetOldMessages);
 		messages.addEventListener('DOMMouseScroll', _tryGetOldMessages);
+		messages.onkeydown = _testScrolling;
 		
 		_setupHelpbox();
 		
@@ -184,6 +185,16 @@ class Main
 		_setupPrivateID();
 		
 		_loop();
+	}
+	
+	function _testScrolling(e) {
+		var code = null;
+		if(e != null) {
+			 code = (e.keyCode != null ? e.keyCode : e.which);
+		}
+		if (code == 38) {
+			_tryGetOldMessages();
+		}
 	}
 	
 	function _tryGetOldMessages(?args) {
