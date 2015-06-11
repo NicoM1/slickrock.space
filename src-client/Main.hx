@@ -193,6 +193,7 @@ class Main
 		if(e != null) {
 			 code = (e.keyCode != null ? e.keyCode : e.which);
 		}
+		trace(code);
 		if (code == 38) {
 			_tryGetOldMessages();
 		}
