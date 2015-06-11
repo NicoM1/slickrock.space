@@ -179,7 +179,7 @@ var Main = function() {
 	this.password = null;
 	this.token = null;
 	this.id = null;
-	this.basePath = "https://aqueous-dev.herokuapp.com/";
+	this.basePath = "https://aqueous-api.herokuapp.com/";
 	this.room = window.room;
 	this._buildCommands();
 	window.onload = $bind(this,this._windowLoaded);
