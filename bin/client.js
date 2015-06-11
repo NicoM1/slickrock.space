@@ -253,7 +253,7 @@ Main.prototype = {
 		this.messages.addEventListener("mousewheel",$bind(this,this._tryGetOldMessages));
 		this.messages.addEventListener("DOMMouseScroll",$bind(this,this._tryGetOldMessages));
 		this.messages.ontouchmove = $bind(this,this._tryGetOldMessages);
-		this.messages.onkeydown = $bind(this,this._testScrolling);
+		window.document.onkeydown = $bind(this,this._testScrolling);
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
 			_g._getNotificationPermission();

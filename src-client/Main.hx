@@ -149,7 +149,7 @@ class Main
 		messages.addEventListener('mousewheel', _tryGetOldMessages);
 		messages.addEventListener('DOMMouseScroll', _tryGetOldMessages);
 		messages.ontouchmove = _tryGetOldMessages;
-		messages.onkeydown = _testScrolling;
+		Browser.document.onkeydown = _testScrolling;
 		
 		_setupHelpbox();
 		
