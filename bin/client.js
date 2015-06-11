@@ -681,7 +681,7 @@ Main.prototype = {
 			var last = message.getAttribute("data-id");
 			if(last == id) {
 				message.insertBefore(messageItem,message.children[0]);
-				offset = messageItem.scrollHeight;
+				offset = $(messageItem).outerHeight(true);
 			} else {
 				var _this2 = window.document;
 				message = _this2.createElement("div");
@@ -690,13 +690,13 @@ Main.prototype = {
 				this.messages.insertBefore(message,this.messages.children[0]);
 				this.messages.insertBefore(this._makeSpan(true,id),this.messages.children[0]);
 				message.insertBefore(messageItem,message.children[0]);
-				offset = message.scrollHeight;
+				offset = $(message).outerHeight(true);
 			}
 		}
 		if(!hist) {
 			this._tryScroll();
 			this.lastUserID = id;
-		} else window.document.body.scrollTop += offset;
+		} else window.document.body.scrollTop += offset | 0;
 		return messageItem;
 	}
 	,_parseMessage: function(raw) {

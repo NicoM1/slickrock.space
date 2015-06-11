@@ -20,6 +20,8 @@ import js.html.Notification;
 import js.html.NotificationPermission;
 import js.html.NotificationOptions;
 
+import jQuery.*;
+
 import thx.color.Rgb;
 import thx.color.Hsl;
 import thx.math.random.PseudoRandom;
@@ -694,7 +696,7 @@ class Main
 		
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
 		
-		var offset = 0;
+		var offset: Float = 0;
 		if(!hist) {
 			message.appendChild(messageItem);
 		}
@@ -703,7 +705,7 @@ class Main
 			var last = message.getAttribute('data-id');
 			if(last == id) {
 				message.insertBefore(messageItem, message.children[0]);
-				offset = messageItem.scrollHeight;
+				offset = new JQuery(messageItem).outerHeight(true);
 			}
 			else {
 				message = Browser.document.createDivElement();
@@ -713,7 +715,7 @@ class Main
 				messages.insertBefore(message, messages.children[0]);
 				messages.insertBefore(_makeSpan(true, id), messages.children[0]);
 				message.insertBefore(messageItem, message.children[0]);
-				offset = message.scrollHeight;
+				offset = new JQuery(message).outerHeight(true);
 			}
 		}
 		
@@ -723,7 +725,7 @@ class Main
 			lastUserID = id;
 		}
 		else {
-			Browser.document.body.scrollTop += offset;
+			Browser.document.body.scrollTop += Std.int(offset);
 		}
 		
 		return messageItem;
