@@ -276,7 +276,7 @@ Main.prototype = {
 		scrollY = (this.lastY != null?this.lastY:window.pageYOffset) - window.pageYOffset;
 		this.lastY = window.pageYOffset;
 		console.log(this.messages.scrollTop);
-		if(this.messages.scrollTop < 15) {
+		if(this.lastY < 15) {
 			if(this.firstIndex > 0) {
 				var histHttp = new haxe_Http(this.basePath);
 				histHttp.onError = function(e) {

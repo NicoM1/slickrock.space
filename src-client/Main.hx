@@ -193,7 +193,7 @@ class Main
 		
 		trace(messages.scrollTop);
 		
-		if (messages.scrollTop < 15) {
+		if (lastY < 15) {
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
 				histHttp.onError = function(e) {
