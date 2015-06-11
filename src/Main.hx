@@ -200,7 +200,7 @@ class Main {
 
 class RouteHandler implements abe.IRoute {
 	
-	var maxMessageLoad: Int = 80;
+	var maxMessageLoad: Int = 10;
 	
 	@:get('/')
 	function index() {
