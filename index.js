@@ -414,7 +414,7 @@ abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
 	this.letters = "abcdefghijklmnopqrstuvwxyz";
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
-	this.maxMessageLoad = 10;
+	this.maxMessageLoad = 80;
 };
 RouteHandler.__name__ = ["RouteHandler"];
 RouteHandler.__interfaces__ = [abe_IRoute];
