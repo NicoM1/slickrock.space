@@ -193,7 +193,7 @@ class Main
 		
 		trace(lastY);
 		
-		if (lastY < 15) {
+		if (lastY < 500) {
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
 				histHttp.onError = function(e) {
