@@ -191,7 +191,9 @@ class Main
 		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
 		lastY = Browser.window.pageYOffset;
 		
-		if (messages.scrollTop < 15) {
+		trace(scrollY);
+		
+		if (messages.scrollTop < 500) {
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
 				histHttp.onError = function(e) {
