@@ -184,7 +184,7 @@ class Main
 	}
 	
 	function _tryGetOldMessages(?args) {
-		/*if (histRequestInProgress || initialScroll) return;
+		if (histRequestInProgress || initialScroll) return;
 		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
 		lastY = Browser.window.pageYOffset;
 		if (scrollY < 0) {
@@ -193,9 +193,9 @@ class Main
 		}
 		else {
 			trace('scrolling up');
-		}*/
+		}
 		
-		//if (messages.scrollTop < 15) {
+		if (messages.scrollTop < 15) {
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
 				histHttp.onError = function(e) {
@@ -212,7 +212,7 @@ class Main
 				histRequestInProgress = true;
 				histHttp.request(true);
 			}
-		//}
+		}
 	}
 	
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -652,7 +652,7 @@ class Main
 	function _tryScroll(force: Bool = false, img: ImageElement = null) {
 		if (force || _atBottom(img)) {
 			Browser.window.scrollTo(0, messages.scrollHeight);
-			//Browser.window.onscroll = _tryGetOldMessages;
+			Browser.window.onscroll = _tryGetOldMessages;
 			initialScroll = false;
 		}
 	}

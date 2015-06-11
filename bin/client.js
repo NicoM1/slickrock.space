@@ -269,20 +269,30 @@ Main.prototype = {
 	}
 	,_tryGetOldMessages: function(args) {
 		var _g = this;
-		if(this.firstIndex > 0) {
-			var histHttp = new haxe_Http(this.basePath);
-			histHttp.onError = function(e) {
-				_g.histRequestInProgress = false;
-				console.log(e);
-			};
-			histHttp.onData = (function(f,a2) {
-				return function(a1) {
-					f(a1,a2);
+		if(this.histRequestInProgress || this.initialScroll) return;
+		var scrollY;
+		scrollY = (this.lastY != null?this.lastY:window.pageYOffset) - window.pageYOffset;
+		this.lastY = window.pageYOffset;
+		if(scrollY < 0) {
+			console.log("scrolling down ");
+			return;
+		} else console.log("scrolling up");
+		if(this.messages.scrollTop < 15) {
+			if(this.firstIndex > 0) {
+				var histHttp = new haxe_Http(this.basePath);
+				histHttp.onError = function(e) {
+					_g.histRequestInProgress = false;
+					console.log(e);
 				};
-			})($bind(this,this._parseMessages),true);
-			if(this.password == null) histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
-			this.histRequestInProgress = true;
-			histHttp.request(true);
+				histHttp.onData = (function(f,a2) {
+					return function(a1) {
+						f(a1,a2);
+					};
+				})($bind(this,this._parseMessages),true);
+				if(this.password == null) histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
+				this.histRequestInProgress = true;
+				histHttp.request(true);
+			}
 		}
 	}
 	,_setupPrivateID: function() {
@@ -630,10 +640,12 @@ Main.prototype = {
 			if(!this.first) i1.onload = (function(f2,a11,a2) {
 				return function() {
 					f2(a11,a2);
+					return;
 				};
 			})($bind(this,this._tryScroll),false,i1); else i1.onload = (function(f3,a12) {
 				return function() {
 					f3(a12);
+					return;
 				};
 			})($bind(this,this._tryScroll),true);
 		}
@@ -646,6 +658,7 @@ Main.prototype = {
 		if(force == null) force = false;
 		if(force || this._atBottom(img)) {
 			window.scrollTo(0,this.messages.scrollHeight);
+			window.onscroll = $bind(this,this._tryGetOldMessages);
 			this.initialScroll = false;
 		}
 	}
