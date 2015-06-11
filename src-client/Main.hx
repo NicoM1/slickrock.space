@@ -187,13 +187,6 @@ class Main
 		if (histRequestInProgress || initialScroll) return;
 		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
 		lastY = Browser.window.pageYOffset;
-		if (scrollY < 0) {
-			trace('scrolling down ');
-			return;
-		}
-		else {
-			trace('scrolling up');
-		}
 		
 		if (messages.scrollTop < 15) {
 			if(firstIndex > 0) {
@@ -625,6 +618,9 @@ class Main
 		
 		lastIndex = parsed.lastID;
 		firstIndex = parsed.firstID != null? parsed.firstID : firstIndex;
+		if (parsed.firstID != null) {
+			trace(firstIndex);
+		}
 		
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
