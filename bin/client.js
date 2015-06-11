@@ -274,7 +274,6 @@ Main.prototype = {
 	,_testScrolling: function(e) {
 		var code = null;
 		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
-		console.log(code);
 		if(code == 38) this._tryGetOldMessages();
 	}
 	,_tryGetOldMessages: function(args) {
