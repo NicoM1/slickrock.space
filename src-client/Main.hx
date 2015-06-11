@@ -191,8 +191,6 @@ class Main
 		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
 		lastY = Browser.window.pageYOffset;
 		
-		trace(lastY);
-		
 		if (lastY < 500) {
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
@@ -623,9 +621,6 @@ class Main
 		
 		lastIndex = parsed.lastID;
 		firstIndex = parsed.firstID != null? parsed.firstID : firstIndex;
-		if (parsed.firstID != null) {
-			trace(firstIndex);
-		}
 		
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;

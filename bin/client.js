@@ -275,7 +275,6 @@ Main.prototype = {
 		var scrollY;
 		scrollY = (this.lastY != null?this.lastY:window.pageYOffset) - window.pageYOffset;
 		this.lastY = window.pageYOffset;
-		console.log(this.lastY);
 		if(this.lastY < 500) {
 			if(this.firstIndex > 0) {
 				var histHttp = new haxe_Http(this.basePath);
@@ -625,7 +624,6 @@ Main.prototype = {
 		}
 		this.lastIndex = parsed.lastID;
 		if(parsed.firstID != null) this.firstIndex = parsed.firstID; else this.firstIndex = this.firstIndex;
-		if(parsed.firstID != null) console.log(this.firstIndex);
 		var _g6 = 0;
 		var _g13 = window.document.getElementsByClassName("imgmessage");
 		while(_g6 < _g13.length) {
