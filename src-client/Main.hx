@@ -175,6 +175,12 @@ class Main
 			chatbox.classList.remove('helptip');
 			chatbox.value = '';
 		}
+		chatbox.oninput = function() {
+			if(chatbox.classList.contains('helptip')) {
+				chatbox.classList.remove('helptip');
+				chatbox.value = '';
+			}
+		}
 		
 		if(!Cookie.exists('id')) {
 			_getID();
