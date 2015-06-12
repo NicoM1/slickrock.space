@@ -264,6 +264,7 @@ Main.prototype = {
 			if(_g.token == null && !_g.hasTriedAuth) _g._tryAuth();
 		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
+		this.chatbox.focus();
 		this.chatbox.onfocus = function() {
 			_g.chatbox.classList.remove("helptip");
 			_g.chatbox.value = "";
