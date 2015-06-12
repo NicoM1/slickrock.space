@@ -180,6 +180,7 @@ class Main
 				var code = null;
 				if(e != null) {
 					 code = (e.keyCode != null ? e.keyCode : e.which);
+					 trace(code);
 				}
 				chatbox.classList.remove('helptip');
 				chatbox.value = '';
