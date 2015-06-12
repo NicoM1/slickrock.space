@@ -175,10 +175,15 @@ class Main
 			chatbox.classList.remove('helptip');
 			chatbox.value = '';
 		}
-		chatbox.oninput = function() {
-			if(chatbox.classList.contains('helptip')) {
+		chatbox.oninput = function(e) {
+			if (chatbox.classList.contains('helptip')) {
+				var code = null;
+				if(e != null) {
+					 code = (e.keyCode != null ? e.keyCode : e.which);
+				}
 				chatbox.classList.remove('helptip');
 				chatbox.value = '';
+				chatbox.value = String.fromCharCode(code);
 			}
 		}
 		
