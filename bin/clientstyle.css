@@ -129,10 +129,10 @@ span {
 
 @media screen and (max-width: 400px) {
 	#chatbox {
-        height: 31px;
+        height: 40px;
     }
 	#helpbox {
-		bottom: 31px;
+		bottom: 40px;
 	}
 }
 
