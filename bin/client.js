@@ -265,7 +265,11 @@ Main.prototype = {
 		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
-		this.chatbox.onclick = function() {
+		this.chatbox.onmousedown = function() {
+			_g.chatbox.classList.remove("helptip");
+			_g.chatbox.value = "";
+		};
+		this.chatbox.ontouchstart = function() {
 			_g.chatbox.classList.remove("helptip");
 			_g.chatbox.value = "";
 		};
