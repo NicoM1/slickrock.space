@@ -89,6 +89,10 @@ span {
 	border-top: solid;
 }
 
+.helptip {
+	color: #aaaaaa;
+}
+
 #chevron {
 	position: fixed;
 	left: 5px;

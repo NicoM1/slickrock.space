@@ -264,7 +264,10 @@ Main.prototype = {
 			if(_g.token == null && !_g.hasTriedAuth) _g._tryAuth();
 		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
-		this.chatbox.focus();
+		this.chatbox.onfocus = function() {
+			_g.chatbox.classList.remove("helptip");
+			_g.chatbox.value = "";
+		};
 		if(!js_Cookie.exists("id")) this._getID(); else this._setID(js_Cookie.get("id"));
 		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
 		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
