@@ -175,7 +175,7 @@ class Main
 			chatbox.classList.remove('helptip');
 			chatbox.value = '';
 		}
-		chatbox.oninput = function(e) {
+		chatbox.onkeydown = function(e) {
 			if (chatbox.classList.contains('helptip')) {
 				var code = null;
 				if(e != null) {
