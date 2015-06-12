@@ -275,14 +275,8 @@ Main.prototype = {
 		};
 		this.chatbox.onkeydown = function(e) {
 			if(_g.chatbox.classList.contains("helptip")) {
-				var code = null;
-				if(e != null) {
-					if(e.keyCode != null) code = e.keyCode; else code = e.which;
-					console.log(code);
-				}
 				_g.chatbox.classList.remove("helptip");
 				_g.chatbox.value = "";
-				_g.chatbox.value = String.fromCharCode(code);
 			}
 		};
 		if(!js_Cookie.exists("id")) this._getID(); else this._setID(js_Cookie.get("id"));

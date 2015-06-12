@@ -177,14 +177,8 @@ class Main
 		}
 		chatbox.onkeydown = function(e) {
 			if (chatbox.classList.contains('helptip')) {
-				var code = null;
-				if(e != null) {
-					 code = (e.keyCode != null ? e.keyCode : e.which);
-					 trace(code);
-				}
 				chatbox.classList.remove('helptip');
 				chatbox.value = '';
-				chatbox.value = String.fromCharCode(code);
 			}
 		}
 		
