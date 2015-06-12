@@ -167,7 +167,7 @@ class Main
 		}
 		chatbox.onkeyup = _checkKeyPress;
 		chatbox.focus();
-		chatbox.onfocus = function() {
+		chatbox.onclick = function() {
 			chatbox.classList.remove('helptip');
 			chatbox.value = '';
 		}
