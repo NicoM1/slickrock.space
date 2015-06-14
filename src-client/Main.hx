@@ -628,7 +628,10 @@ class Main
 	}
 	
 	function _formatHelp(?args) {
-		
+		_addMessage(null, null, '*italic.*');
+		_addMessage(null, null, '**bold.**');
+		_addMessage(null, null, '***bold-italic.***');
+		_addMessage(null, null, '#link/to.image#');
 	}
 	//}
 	

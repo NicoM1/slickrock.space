@@ -575,6 +575,10 @@ Main.prototype = {
 		lockHttp.request(true);
 	}
 	,_formatHelp: function(args) {
+		this._addMessage(null,null,"*italic.*");
+		this._addMessage(null,null,"**bold.**");
+		this._addMessage(null,null,"***bold-italic.***");
+		this._addMessage(null,null,"#link/to.image#");
 	}
 	,_parseMessages: function(data,hist) {
 		if(hist == null) hist = false;
