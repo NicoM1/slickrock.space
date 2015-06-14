@@ -399,6 +399,7 @@ Main.prototype = {
 			descDiv.innerHTML = c[0].description;
 			command.appendChild(identDiv);
 			command.appendChild(descDiv);
+			command.setAttribute("data-command",c[0].command);
 			command.onclick = (function(c) {
 				return function() {
 					_g2.chatbox.value = "/" + c[0].command;
