@@ -378,12 +378,12 @@ Main.prototype = {
 		this.getHttp.request(true);
 	}
 	,_setupHelpbox: function() {
-		var _g2 = this;
-		var _g = 0;
-		var _g1 = this.commandInfos;
-		while(_g < _g1.length) {
-			var c = [_g1[_g]];
-			++_g;
+		var _g = this;
+		var $it0 = this.commandInfos.keys();
+		while( $it0.hasNext() ) {
+			var k = $it0.next();
+			var k1 = [k];
+			var c = this.commandInfos.get(k1[0]);
 			var command;
 			var _this = window.document;
 			command = _this.createElement("li");
@@ -394,19 +394,19 @@ Main.prototype = {
 			var _this2 = window.document;
 			descDiv = _this2.createElement("div");
 			identDiv.classList.add("command");
-			identDiv.innerHTML = c[0].identifiers;
+			identDiv.innerHTML = c.identifiers;
 			descDiv.classList.add("description");
-			descDiv.innerHTML = c[0].description;
+			descDiv.innerHTML = c.description;
 			command.appendChild(identDiv);
 			command.appendChild(descDiv);
-			command.setAttribute("data-command",c[0].command);
-			command.onclick = (function(c) {
+			command.setAttribute("data-command",k1[0]);
+			command.onclick = (function(k1) {
 				return function() {
-					_g2.chatbox.value = "/" + c[0].command;
-					_g2.chatbox.onkeyup();
-					_g2.chatbox.focus();
+					_g.chatbox.value = "/" + k1[0];
+					_g.chatbox.onkeyup();
+					_g.chatbox.focus();
 				};
-			})(c);
+			})(k1);
 			this.helpbox.appendChild(command);
 		}
 	}
@@ -438,13 +438,23 @@ Main.prototype = {
 		this.notifications = [];
 	}
 	,_buildCommands: function() {
-		this.commandInfos = [{ command : "revivify", identifiers : "<strong>/revivify</strong>", description : "regenerate your ID, giving you a new color.", method : $bind(this,this._getID)},{ command : "oneself", identifiers : "<strong>/oneself</strong>", description : "print your current ID.", method : $bind(this,this._printID)},{ command : "impersonate", identifiers : "<strong>/impersonate</strong> <em>ID</em>", description : "set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).", method : $bind(this,this._setIDCommand)},{ command : "existent", identifiers : "<strong>/existent</strong>", description : "print the chat room you are currently in.", method : $bind(this,this._printRoom)},{ command : "survey", identifiers : "<strong>/survey</strong> <em>ROOM</em>", description : "move to a different chat room.", method : $bind(this,this._changeRoom)},{ command : "claim", identifiers : "<strong>/claim</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take ownership of the current room.", method : $bind(this,this._claimRoom)},{ command : "entitle", identifiers : "<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take authorize youself as admin of the current room.", method : $bind(this,this._authorizeRoom)},{ command : "fasten", identifiers : "<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>", description : "attempt to lock the current room.", method : $bind(this,this._lockRoom)},{ command : "unfasten", identifiers : "<strong>/unfasten</strong>", description : "attempt to unlock the current room.", method : $bind(this,this._unlockRoom)},{ command : "typesetting", identifiers : "<strong>/typesetting</strong>", description : "display formatting help.", method : $bind(this,this._formatHelp)}];
-		var _g = 0;
-		var _g1 = this.commandInfos;
-		while(_g < _g1.length) {
-			var c = _g1[_g];
-			++_g;
-			this.commands.set(c.command,c.method);
+		var _g = new haxe_ds_StringMap();
+		_g.set("revivify",{ identifiers : "<strong>/revivify</strong>", description : "regenerate your ID, giving you a new color.", method : $bind(this,this._getID)});
+		_g.set("oneself",{ identifiers : "<strong>/oneself</strong>", description : "print your current ID.", method : $bind(this,this._printID)});
+		_g.set("impersonate",{ identifiers : "<strong>/impersonate</strong> <em>ID</em>", description : "set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).", method : $bind(this,this._setIDCommand), requiresArgs : true});
+		_g.set("existent",{ identifiers : "<strong>/existent</strong>", description : "print the chat room you are currently in.", method : $bind(this,this._printRoom)});
+		_g.set("survey",{ identifiers : "<strong>/survey</strong> <em>ROOM</em>", description : "move to a different chat room.", method : $bind(this,this._changeRoom), requiresArgs : true});
+		_g.set("claim",{ identifiers : "<strong>/claim</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take ownership of the current room.", method : $bind(this,this._claimRoom), requiresArgs : true});
+		_g.set("entitle",{ identifiers : "<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take authorize youself as admin of the current room.", method : $bind(this,this._authorizeRoom), requiresArgs : true});
+		_g.set("fasten",{ identifiers : "<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>", description : "attempt to lock the current room.", method : $bind(this,this._lockRoom), requiresArgs : true});
+		_g.set("unfasten",{ identifiers : "<strong>/unfasten</strong>", description : "attempt to unlock the current room.", method : $bind(this,this._unlockRoom)});
+		_g.set("typesetting",{ identifiers : "<strong>/typesetting</strong>", description : "display formatting help.", method : $bind(this,this._formatHelp)});
+		this.commandInfos = _g;
+		var $it0 = this.commandInfos.keys();
+		while( $it0.hasNext() ) {
+			var c = $it0.next();
+			var value = this.commandInfos.get(c).method;
+			this.commands.set(c,value);
 		}
 	}
 	,_parseCommand: function(commandString) {
@@ -767,7 +777,10 @@ Main.prototype = {
 				var command = li.getAttribute("data-command");
 				if(li.classList.contains("selected")) {
 					var replacement = "/" + command + " ";
-					if(HxOverrides.substr(this.chatbox.value,0,replacement.length) != replacement && this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13 && this.chatbox.value.length < replacement.length) this.chatbox.value = replacement;
+					if(HxOverrides.substr(this.chatbox.value,0,replacement.length) != replacement && this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13 && this.chatbox.value.length < replacement.length) {
+						this.chatbox.value = replacement;
+						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
+					}
 				}
 				var sub = HxOverrides.substr(this.chatbox.value,1,null);
 				var trimmed = false;
@@ -1310,6 +1323,22 @@ haxe_ds_StringMap.prototype = {
 	,existsReserved: function(key) {
 		if(this.rh == null) return false;
 		return this.rh.hasOwnProperty("$" + key);
+	}
+	,keys: function() {
+		var _this = this.arrayKeys();
+		return HxOverrides.iter(_this);
+	}
+	,arrayKeys: function() {
+		var out = [];
+		for( var key in this.h ) {
+		if(this.h.hasOwnProperty(key)) out.push(key);
+		}
+		if(this.rh != null) {
+			for( var key in this.rh ) {
+			if(key.charCodeAt(0) == 36) out.push(key.substr(1));
+			}
+		}
+		return out;
 	}
 	,__class__: haxe_ds_StringMap
 };

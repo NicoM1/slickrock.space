@@ -35,10 +35,10 @@ typedef MessageDiv = {
 };
 
 typedef Command = {
-	command: String,
 	identifiers: String,
 	description: String,
-	method: Array<String> -> Void
+	method: Array<String> -> Void,
+	?requiresArgs: Bool
 }
 
 class Main 
@@ -332,7 +332,8 @@ class Main
 	}
 	//}
 	function _setupHelpbox() {
-		for (c in commandInfos) {
+		for (k in commandInfos.keys()) {
+			var c = commandInfos[k];
 			var command: LIElement = Browser.document.createLIElement();
 			var identDiv: DivElement = Browser.document.createDivElement();
 			var descDiv: DivElement = Browser.document.createDivElement();
@@ -346,10 +347,10 @@ class Main
 			command.appendChild(identDiv);
 			command.appendChild(descDiv);
 			
-			command.setAttribute('data-command', c.command);
+			command.setAttribute('data-command', k);
 			
 			command.onclick = function() {
-				chatbox.value = '/' + c.command;
+				chatbox.value = '/' + k;
 				chatbox.onkeyup();
 				chatbox.focus();
 			}
@@ -391,62 +392,67 @@ class Main
 	//}
 		
 	//{ commands
-	var commandInfos: Array<Command>;		
+	var commandInfos: Map<String, Command>;		
 	
 	function _buildCommands() {
-		commandInfos = [{
-			command: 'revivify',
+		commandInfos = [
+		'revivify' => {
 			identifiers: '<strong>/revivify</strong>',
 			description: 'regenerate your ID, giving you a new color.',
 			method: _getID
-		},{
-			command: 'oneself',
+		},
+		'oneself' => {
 			identifiers: '<strong>/oneself</strong>',
 			description: 'print your current ID.',
 			method: _printID
-		},{
-			command: 'impersonate',
+		},
+		'impersonate' => {
 			identifiers: '<strong>/impersonate</strong> <em>ID</em>',
 			description: 'set your ID explicitly, allows you to have all your devices share ID, or steal someone else\'s;).',
-			method: _setIDCommand
-		},{
-			command: 'existent',
+			method: _setIDCommand,
+			requiresArgs: true
+		},
+		'existent' => {
 			identifiers: '<strong>/existent</strong>',
 			description: 'print the chat room you are currently in.',
 			method: _printRoom
-		},{
-			command: 'survey',
+		},
+		'survey' => {
 			identifiers: '<strong>/survey</strong> <em>ROOM</em>',
 			description: 'move to a different chat room.',
-			method: _changeRoom
-		},{
-			command: 'claim',
+			method: _changeRoom,
+			requiresArgs: true
+		},
+		'claim' => {
 			identifiers: '<strong>/claim</strong> <em>ADMIN_PASSWORD</em>',
 			description: 'attempt to take ownership of the current room.',
-			method: _claimRoom
-		},{
-			command: 'entitle',
+			method: _claimRoom,
+			requiresArgs: true
+		},
+		'entitle' => {
 			identifiers: '<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>',
 			description: 'attempt to take authorize youself as admin of the current room.',
-			method: _authorizeRoom
-		},{
-			command: 'fasten',
+			method: _authorizeRoom,
+			requiresArgs: true
+		},
+		'fasten' => {
 			identifiers: '<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>',
 			description: 'attempt to lock the current room.',
-			method: _lockRoom
-		},{
-			command: 'unfasten',
+			method: _lockRoom,
+			requiresArgs: true
+		},
+		'unfasten' => {
 			identifiers: '<strong>/unfasten</strong>',
 			description: 'attempt to unlock the current room.',
 			method: _unlockRoom
-		},{
-			command: 'typesetting',
+		},
+		'typesetting' => {
 			identifiers: '<strong>/typesetting</strong>',
 			description: 'display formatting help.',
 			method: _formatHelp
 		}];
-		for (c in commandInfos) {
-			commands.set(c.command, c.method);
+		for (c in commandInfos.keys()) {
+			commands.set(c, commandInfos[c].method);
 		}
 	}
 	
@@ -857,6 +863,9 @@ class Main
 					var replacement = '/' + command + ' ';
 					if (chatbox.value.substr(0,replacement.length) != replacement && chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13 && chatbox.value.length < replacement.length) {
 						chatbox.value = replacement;
+						if (code == 13 && commandInfos[command].requiresArgs == true) {
+							return;
+						}
 					}
 				}
 				
