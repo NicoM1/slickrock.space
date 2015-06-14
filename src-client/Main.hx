@@ -842,7 +842,7 @@ class Main
 		}
 		
 		var selected: Bool = false;
-		if (chatbox.value.charAt(0) == '/') {
+		if (String.fromCharCode(code) == '/') {
 			if(helpbox.style.display != 'block') {
 				helpbox.style.display = 'block';
 				commandIndex = -1;
