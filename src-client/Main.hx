@@ -38,7 +38,7 @@ typedef Command = {
 	command: String,
 	identifiers: String,
 	description: String,
-	method: String
+	method: Array<String> -> Void
 }
 
 class Main 
@@ -331,14 +331,28 @@ class Main
 		getHttp.request(true);
 	}
 	//}
-	
 	function _setupHelpbox() {
-		for (command in helpbox.children) {
+		for (c in commandInfos) {
+			var command: LIElement = Browser.document.createLIElement();
+			var identDiv: DivElement = Browser.document.createDivElement();
+			var descDiv: DivElement = Browser.document.createDivElement();
+			
+			identDiv.classList.add('command');
+			identDiv.innerHTML = c.identifiers;
+			
+			descDiv.classList.add('description');
+			descDiv.innerHTML = c.description;
+			
+			command.appendChild(identDiv);
+			command.appendChild(descDiv);
+			
 			command.onclick = function() {
 				chatbox.value = '/' + command.getAttribute('data-command');
 				chatbox.onkeyup();
 				chatbox.focus();
 			}
+			
+			helpbox.appendChild(command);
 		}
 	}
 	
@@ -375,68 +389,63 @@ class Main
 	//}
 		
 	//{ commands
-	var commandInfos: Array<Command> = [{
+	var commandInfos: Array<Command>;		
+	
+	function _buildCommands() {
+		commandInfos = [{
 			command: 'revivify',
 			identifiers: '<strong>/revivify</strong>',
 			description: 'regenerate your ID, giving you a new color.',
-			method: '_getID'
+			method: _getID
 		},{
 			command: 'oneself',
 			identifiers: '<strong>/oneself</strong>',
 			description: 'print your current ID.',
-			method: '_printID'
+			method: _printID
 		},{
 			command: 'impersonate',
 			identifiers: '<strong>/impersonate</strong> <em>ID</em>',
 			description: 'set your ID explicitly, allows you to have all your devices share ID, or steal someone else\'s;).',
-			method: '_setIDCommand'
+			method: _setIDCommand
 		},{
 			command: 'existent',
 			identifiers: '<strong>/existent</strong>',
 			description: 'print the chat room you are currently in.',
-			method: '_printRoom'
+			method: _printRoom
 		},{
 			command: 'survey',
 			identifiers: '<strong>/survey</strong> <em>ROOM</em>',
 			description: 'move to a different chat room.',
-			method: '_changeRoom'
+			method: _changeRoom
 		},{
 			command: 'claim',
 			identifiers: '<strong>/claim</strong> <em>ADMIN_PASSWORD</em>',
 			description: 'attempt to take ownership of the current room.',
-			method: '_claimRoom'
+			method: _claimRoom
 		},{
 			command: 'entitle',
 			identifiers: '<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>',
 			description: 'attempt to take authorize youself as admin of the current room.',
-			method: '_authorizeRoom'
+			method: _authorizeRoom
 		},{
 			command: 'fasten',
 			identifiers: '<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>',
 			description: 'attempt to lock the current room.',
-			method: '_lockRoom'
+			method: _lockRoom
 		},{
 			command: 'unfasten',
 			identifiers: '<strong>/unfasten</strong>',
 			description: 'attempt to unlock the current room.',
-			method: '_unlockRoom'
+			method: _unlockRoom
 		},{
 			command: 'typesetting',
 			identifiers: '<strong>/typesetting</strong>',
 			description: 'display formatting help.',
-			method: '_formathelp'
-		},
-	];		
-	
-	function _buildCommands() {
+			method: _formatHelp
+		}];
 		for (c in commandInfos) {
-			var method = Reflect.field(this, c.method);
-			if (method == null) {
-				throw 'unknown command function: ${c.method}';
-			}
-			commands.set(c.command, method);
+			commands.set(c.command, c.method);
 		}
-		commands.set('', _help);
 	}
 	
 	function _parseCommand(commandString: String) {
@@ -460,8 +469,7 @@ class Main
 			commands.get(command)(args);
 		}
 		else {
-			_addMessage('Unrecognized command, did you mean one of these?');
-			_help();
+			_addMessage('unrecognized command, please try again.');
 		}
 	}
 	//}
@@ -607,25 +615,8 @@ class Main
 		lockHttp.request(true);
 	}
 	
-	function _help(?arguments: Array<String>) {
-		_addMessage('**/revivify**');
-		_addMessage('regenerate your ID, giving you a new color.');
-		_addMessage('**/oneself**');
-		_addMessage('print your current ID.');
-		_addMessage('**/impersonate** *ID*');
-		_addMessage('set your ID explicitly, allows you to have all your devices share ID, or steal someone else\'s;).');
-		_addMessage('**/existent**');
-		_addMessage('print the chat room you are currently in.');
-		_addMessage('**/survey** *ROOM*');
-		_addMessage('move to a different chat room.');
-		_addMessage('**/claim** *ADMIN_PASSWORD*');
-		_addMessage('attempt to take ownership of the current room.');
-		_addMessage('**/entitle** *ADMIN_PASSWORD*');
-		_addMessage('attempt to take authorize youself as admin of the current room.');
-		_addMessage('**/fasten** *PUBLIC_PASSWORD*');
-		_addMessage('attempt to lock the current room.');
-		_addMessage('**/unfasten**');
-		_addMessage('attempt to unlock the current room.');
+	function _formatHelp(?args) {
+		
 	}
 	//}
 	

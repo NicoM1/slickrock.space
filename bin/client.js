@@ -154,7 +154,6 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
-	this.commandInfos = [{ command : "revivify", identifiers : "<strong>/revivify</strong>", description : "regenerate your ID, giving you a new color.", method : "_getID"},{ command : "oneself", identifiers : "<strong>/oneself</strong>", description : "print your current ID.", method : "_printID"},{ command : "impersonate", identifiers : "<strong>/impersonate</strong> <em>ID</em>", description : "set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).", method : "_setIDCommand"},{ command : "existent", identifiers : "<strong>/existent</strong>", description : "print the chat room you are currently in.", method : "_printRoom"},{ command : "survey", identifiers : "<strong>/survey</strong> <em>ROOM</em>", description : "move to a different chat room.", method : "_changeRoom"},{ command : "claim", identifiers : "<strong>/claim</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take ownership of the current room.", method : "_claimRoom"},{ command : "entitle", identifiers : "<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take authorize youself as admin of the current room.", method : "_authorizeRoom"},{ command : "fasten", identifiers : "<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>", description : "attempt to lock the current room.", method : "_lockRoom"},{ command : "unfasten", identifiers : "<strong>/unfasten</strong>", description : "attempt to unlock the current room.", method : "_unlockRoom"},{ command : "typesetting", identifiers : "<strong>/typesetting</strong>", description : "display formatting help.", method : "_formathelp"}];
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
 	this.lastY = null;
 	this.commandIndex = -1;
@@ -381,10 +380,28 @@ Main.prototype = {
 	,_setupHelpbox: function() {
 		var _g2 = this;
 		var _g = 0;
-		var _g1 = this.helpbox.children;
+		var _g1 = this.commandInfos;
 		while(_g < _g1.length) {
-			var command = [_g1[_g]];
+			var c = _g1[_g];
 			++_g;
+			var command = [(function($this) {
+				var $r;
+				var _this = window.document;
+				$r = _this.createElement("li");
+				return $r;
+			}(this))];
+			var identDiv;
+			var _this1 = window.document;
+			identDiv = _this1.createElement("div");
+			var descDiv;
+			var _this2 = window.document;
+			descDiv = _this2.createElement("div");
+			identDiv.classList.add("command");
+			identDiv.innerHTML = c.identifiers;
+			descDiv.classList.add("description");
+			descDiv.innerHTML = c.description;
+			command[0].appendChild(identDiv);
+			command[0].appendChild(descDiv);
 			command[0].onclick = (function(command) {
 				return function() {
 					_g2.chatbox.value = "/" + command[0].getAttribute("data-command");
@@ -392,6 +409,7 @@ Main.prototype = {
 					_g2.chatbox.focus();
 				};
 			})(command);
+			this.helpbox.appendChild(command[0]);
 		}
 	}
 	,_getNotificationPermission: function() {
@@ -422,16 +440,14 @@ Main.prototype = {
 		this.notifications = [];
 	}
 	,_buildCommands: function() {
+		this.commandInfos = [{ command : "revivify", identifiers : "<strong>/revivify</strong>", description : "regenerate your ID, giving you a new color.", method : $bind(this,this._getID)},{ command : "oneself", identifiers : "<strong>/oneself</strong>", description : "print your current ID.", method : $bind(this,this._printID)},{ command : "impersonate", identifiers : "<strong>/impersonate</strong> <em>ID</em>", description : "set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).", method : $bind(this,this._setIDCommand)},{ command : "existent", identifiers : "<strong>/existent</strong>", description : "print the chat room you are currently in.", method : $bind(this,this._printRoom)},{ command : "survey", identifiers : "<strong>/survey</strong> <em>ROOM</em>", description : "move to a different chat room.", method : $bind(this,this._changeRoom)},{ command : "claim", identifiers : "<strong>/claim</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take ownership of the current room.", method : $bind(this,this._claimRoom)},{ command : "entitle", identifiers : "<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take authorize youself as admin of the current room.", method : $bind(this,this._authorizeRoom)},{ command : "fasten", identifiers : "<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>", description : "attempt to lock the current room.", method : $bind(this,this._lockRoom)},{ command : "unfasten", identifiers : "<strong>/unfasten</strong>", description : "attempt to unlock the current room.", method : $bind(this,this._unlockRoom)},{ command : "typesetting", identifiers : "<strong>/typesetting</strong>", description : "display formatting help.", method : $bind(this,this._formatHelp)}];
 		var _g = 0;
 		var _g1 = this.commandInfos;
 		while(_g < _g1.length) {
 			var c = _g1[_g];
 			++_g;
-			var method = Reflect.field(this,c.method);
-			if(method == null) throw new js__$Boot_HaxeError("unknown command function: " + c.method);
-			this.commands.set(c.command,method);
+			this.commands.set(c.command,c.method);
 		}
-		this.commands.set("",$bind(this,this._help));
 	}
 	,_parseCommand: function(commandString) {
 		var firstSpace = commandString.indexOf(" ");
@@ -449,10 +465,7 @@ Main.prototype = {
 		} else this._callCommand(StringTools.trim(commandString));
 	}
 	,_callCommand: function(command,args) {
-		if(this.commands.exists(command)) this.commands.get(command)(args); else {
-			this._addMessage("Unrecognized command, did you mean one of these?");
-			this._help();
-		}
+		if(this.commands.exists(command)) this.commands.get(command)(args); else this._addMessage("unrecognized command, please try again.");
 	}
 	,_getID: function($arguments) {
 		var _g = this;
@@ -549,25 +562,7 @@ Main.prototype = {
 		};
 		lockHttp.request(true);
 	}
-	,_help: function($arguments) {
-		this._addMessage("**/revivify**");
-		this._addMessage("regenerate your ID, giving you a new color.");
-		this._addMessage("**/oneself**");
-		this._addMessage("print your current ID.");
-		this._addMessage("**/impersonate** *ID*");
-		this._addMessage("set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).");
-		this._addMessage("**/existent**");
-		this._addMessage("print the chat room you are currently in.");
-		this._addMessage("**/survey** *ROOM*");
-		this._addMessage("move to a different chat room.");
-		this._addMessage("**/claim** *ADMIN_PASSWORD*");
-		this._addMessage("attempt to take ownership of the current room.");
-		this._addMessage("**/entitle** *ADMIN_PASSWORD*");
-		this._addMessage("attempt to take authorize youself as admin of the current room.");
-		this._addMessage("**/fasten** *PUBLIC_PASSWORD*");
-		this._addMessage("attempt to lock the current room.");
-		this._addMessage("**/unfasten**");
-		this._addMessage("attempt to unlock the current room.");
+	,_formatHelp: function(args) {
 	}
 	,_parseMessages: function(data,hist) {
 		if(hist == null) hist = false;
@@ -959,17 +954,6 @@ Random.prototype = {
 		return this.initial;
 	}
 	,__class__: Random
-};
-var Reflect = function() { };
-Reflect.__name__ = true;
-Reflect.field = function(o,field) {
-	try {
-		return o[field];
-	} catch( e ) {
-		haxe_CallStack.lastException = e;
-		if (e instanceof js__$Boot_HaxeError) e = e.val;
-		return null;
-	}
 };
 var Std = function() { };
 Std.__name__ = true;
