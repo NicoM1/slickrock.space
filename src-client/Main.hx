@@ -842,7 +842,7 @@ class Main
 		}
 		
 		var selected: Bool = false;
-		if (String.fromCharCode((96 <= code && code <= 105)? code-48 : code) == '/') {
+		if (code == 191) { // code for: /
 			if(helpbox.style.display != 'block') {
 				helpbox.style.display = 'block';
 				commandIndex = -1;
