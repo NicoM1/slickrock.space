@@ -799,10 +799,10 @@ class Main
 		return messageItem;
 	}
 	
-	var imgBB: EReg = ~/(?:\[img\]|(?<!\\)#)(.*?)(?:\[\/img\]|(?<!\\)#)/i;
-	var italicBB: EReg = ~/(?:\[i\]|(?<!\\)\*)(.*?)(?:\[\/i\]|(?<!\\)\*)/i;
-	var boldBB: EReg = ~/(?:\[b\]|(?<!\\)\*\*)(.*?)(?:\[\/b\]|(?<!\\)\*\*)/i;
-	var codeBB: EReg = ~/(?:\[code\]|(?<!\\)`)(.*?)(?:\[\/code\]|(?<!\\)`)/i;
+	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
+	var italicBB: EReg = ~/(?:\[i\]|\*)(.*?)(?:\[\/i\]|\*)/i;
+	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
+	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	
 	function _parseMessage(raw: String): String {
 		var parsed: String = raw.replace('\n', ' ');
