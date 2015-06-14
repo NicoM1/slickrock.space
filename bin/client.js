@@ -752,7 +752,7 @@ Main.prototype = {
 			this.chatbox.value = "";
 		}
 		var selected = false;
-		if(String.fromCharCode(code) == "/") {
+		if(String.fromCharCode(96 <= code && code <= 105?code - 48:code) == "/") {
 			if(this.helpbox.style.display != "block") {
 				this.helpbox.style.display = "block";
 				this.commandIndex = -1;
