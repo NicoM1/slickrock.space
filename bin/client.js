@@ -273,12 +273,7 @@ Main.prototype = {
 			_g.chatbox.classList.remove("helptip");
 			_g.chatbox.value = "";
 		};
-		this.chatbox.onkeydown = function(e) {
-			if(_g.chatbox.classList.contains("helptip")) {
-				_g.chatbox.classList.remove("helptip");
-				_g.chatbox.value = "";
-			}
-		};
+		this.chatbox.onkeydown = $bind(this,this._chatboxOnKeyDown);
 		if(!js_Cookie.exists("id")) this._getID(); else this._setID(js_Cookie.get("id"));
 		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
 		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
@@ -748,10 +743,14 @@ Main.prototype = {
 		}
 		return parsed;
 	}
-	,_checkKeyPress: function(e) {
+	,_chatboxOnKeyDown: function(e) {
 		var _g = this;
 		var code = null;
 		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
+		if(this.chatbox.classList.contains("helptip")) {
+			this.chatbox.classList.remove("helptip");
+			this.chatbox.value = "";
+		}
 		var selected = false;
 		if(this.chatbox.value.charAt(0) == "/") {
 			if(this.helpbox.style.display != "block") {
@@ -820,6 +819,10 @@ Main.prototype = {
 				}
 			}
 		}
+	}
+	,_checkKeyPress: function(e) {
+		var code = null;
+		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
 		if(code != null && code == 13) {
 			if(this.token == null) {
 				var t = this.chatbox.value;

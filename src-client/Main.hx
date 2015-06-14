@@ -182,12 +182,7 @@ class Main
 			chatbox.classList.remove('helptip');
 			chatbox.value = '';
 		}
-		chatbox.onkeydown = function(e) {
-			if (chatbox.classList.contains('helptip')) {
-				chatbox.classList.remove('helptip');
-				chatbox.value = '';
-			}
-		}
+		chatbox.onkeydown = _chatboxOnKeyDown;
 		
 		if(!Cookie.exists('id')) {
 			_getID();
@@ -836,10 +831,14 @@ class Main
 	//}
 
 	//{ message posting
-	function _checkKeyPress(e) {
+	 function _chatboxOnKeyDown(e) {
 		var code = null;
 		if(e != null) {
 			 code = (e.keyCode != null ? e.keyCode : e.which);
+		}
+		if (chatbox.classList.contains('helptip')) {
+			chatbox.classList.remove('helptip');
+			chatbox.value = '';
 		}
 		
 		var selected: Bool = false;
@@ -925,7 +924,14 @@ class Main
 				}
 			}
 		}
-
+	}
+	
+	function _checkKeyPress(e) {
+		var code = null;
+		if(e != null) {
+			 code = (e.keyCode != null ? e.keyCode : e.which);
+		}
+		
 		if (code != null && code == 13) { //ENTER
 			if (token == null) {
 				var t = chatbox.value;
