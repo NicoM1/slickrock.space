@@ -266,12 +266,16 @@ Main.prototype = {
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
 		this.chatbox.onmousedown = function() {
-			_g.chatbox.classList.remove("helptip");
-			_g.chatbox.value = "";
+			if(_g.chatbox.classList.contains("helptip")) {
+				_g.chatbox.classList.remove("helptip");
+				_g.chatbox.value = "";
+			}
 		};
 		this.chatbox.ontouchstart = function() {
-			_g.chatbox.classList.remove("helptip");
-			_g.chatbox.value = "";
+			if(_g.chatbox.classList.contains("helptip")) {
+				_g.chatbox.classList.remove("helptip");
+				_g.chatbox.value = "";
+			}
 		};
 		this.chatbox.onkeydown = function(e) {
 			if(_g.chatbox.classList.contains("helptip")) {
