@@ -822,8 +822,11 @@ class Main
 	function _parseMessage(raw: String): String {
 		var parsed: String = raw.replace('\n', ' ');
 		parsed = parsed.htmlEscape();
-		parsed = parsed.replace("\"", "&quot;");
-		parsed = parsed.replace(":", "&colon;");
+		parsed = parsed.replace('\"', '&quot;');
+		parsed = parsed.replace(':', '&colon;');
+		parsed = parsed.replace('\\*', '&#42;');
+		parsed = parsed.replace('\\#', '&#35;');
+		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
 			var imgTag = '<img src="$imgPath" class="imgmessage"></img>';
