@@ -154,6 +154,9 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.commandInfos = [{ command : "revivify", identifiers : "<strong>/revivify</strong>", description : "regenerate your ID, giving you a new color.", method : "_getID"},{ command : "oneself", identifiers : "<strong>/oneself</strong>", description : "print your current ID.", method : "_printID"},{ command : "impersonate", identifiers : "<strong>/impersonate</strong> <em>ID</em>", description : "set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).", method : "_setIDCommand"},{ command : "existent", identifiers : "<strong>/existent</strong>", description : "print the chat room you are currently in.", method : "_printRoom"},{ command : "survey", identifiers : "<strong>/survey</strong> <em>ROOM</em>", description : "move to a different chat room.", method : "_changeRoom"},{ command : "claim", identifiers : "<strong>/claim</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take ownership of the current room.", method : "_claimRoom"},{ command : "entitle", identifiers : "<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take authorize youself as admin of the current room.", method : "_authorizeRoom"},{ command : "fasten", identifiers : "<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>", description : "attempt to lock the current room.", method : "_lockRoom"},{ command : "unfasten", identifiers : "<strong>/unfasten</strong>", description : "attempt to unlock the current room.", method : "_unlockRoom"},{ command : "typesetting", identifiers : "<strong>/typesetting</strong>", description : "display formatting help.", method : "_formathelp"}];
+	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
+	this.lastY = null;
 	this.commandIndex = -1;
 	this.sendLast = false;
 	this.lastMessage = "";
@@ -165,61 +168,22 @@ var Main = function() {
 	this.hasTriedAuth = false;
 	this.locked = false;
 	this.focussed = true;
+	this.initialScroll = true;
 	this.first = true;
+	this.histRequestInProgress = false;
 	this.requestInProgress = false;
 	this.typings = [];
-	this.lastUserID = -2;
+	this.lastUserID = "-2";
+	this.firstIndex = -1;
 	this.lastIndex = -1;
+	this.adminPassword = "-1";
 	this.password = null;
 	this.token = null;
+	this.id = null;
 	this.basePath = "https://aqueous-api.herokuapp.com/";
-	var _g = this;
 	this.room = window.room;
 	this._buildCommands();
-	this.authHttp = new haxe_Http(this.basePath);
-	this.authHttp.onData = $bind(this,this._getAuth);
-	this.authHttp.onError = function(error) {
-		console.log(error);
-		_g._addMessage("Could not connect to authentication api, please refresh the page.");
-	};
-	this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
-	this.getHttp.onData = $bind(this,this._parseMessages);
-	this.getHttp.onError = function(error1) {
-		console.log(error1);
-		_g.requestInProgress = false;
-	};
-	this.postHttp = new haxe_Http(this.basePath);
-	this.postHttp.async = true;
-	this.postHttp.onData = function(data) {
-		if(data == "failed") {
-			_g.token = null;
-			_g.hasTriedAuth = false;
-			_g.sendLast = true;
-			_g._tryAuth();
-		}
-	};
-	this.postHttp.onError = function(error2) {
-		console.log(error2);
-		_g.requestInProgress = false;
-	};
 	window.onload = $bind(this,this._windowLoaded);
-	window.onfocus = function() {
-		_g.focussed = true;
-		window.document.title = "aqueous-basin.";
-		var _g1 = 0;
-		var _g2 = _g.favicons;
-		while(_g1 < _g2.length) {
-			var f = _g2[_g1];
-			++_g1;
-			f.href = "bin/faviconempty.ico";
-		}
-		_g._clearNotifications();
-		_g.numNotifications = 0;
-	};
-	window.onblur = function() {
-		_g.focussed = false;
-	};
-	this._loop();
 };
 Main.__name__ = true;
 Main.main = function() {
@@ -228,6 +192,36 @@ Main.main = function() {
 Main.prototype = {
 	_windowLoaded: function() {
 		var _g = this;
+		this.authHttp = new haxe_Http(this.basePath);
+		this.authHttp.onData = $bind(this,this._getAuth);
+		this.authHttp.onError = function(error) {
+			console.log(error);
+			_g._addMessage("Could not connect to authentication api, please refresh the page.");
+		};
+		this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
+		this.getHttp.onData = (function(f,a2) {
+			return function(a1) {
+				f(a1,a2);
+			};
+		})($bind(this,this._parseMessages),false);
+		this.getHttp.onError = function(error1) {
+			console.log(error1);
+			_g.requestInProgress = false;
+		};
+		this.postHttp = new haxe_Http(this.basePath);
+		this.postHttp.async = true;
+		this.postHttp.onData = function(data) {
+			if(data == "failed") {
+				_g.token = null;
+				_g.hasTriedAuth = false;
+				_g.sendLast = true;
+				_g._tryAuth();
+			}
+		};
+		this.postHttp.onError = function(error2) {
+			console.log(error2);
+			_g.requestInProgress = false;
+		};
 		this.chatbox = window.document.getElementById("chatbox");
 		this.messages = window.document.getElementById("messages");
 		this.helpbox = window.document.getElementById("helpbox");
@@ -236,11 +230,31 @@ Main.prototype = {
 		var _g1 = 0;
 		var _g11 = window.document.getElementsByClassName("favicon");
 		while(_g1 < _g11.length) {
-			var f = _g11[_g1];
+			var f1 = _g11[_g1];
 			++_g1;
-			this.favicons.push(f);
+			this.favicons.push(f1);
 		}
 		this.messageSound = window.document.getElementById("messagesound");
+		window.onfocus = function() {
+			_g.focussed = true;
+			window.document.title = "aqueous-basin.";
+			var _g12 = 0;
+			var _g2 = _g.favicons;
+			while(_g12 < _g2.length) {
+				var f2 = _g2[_g12];
+				++_g12;
+				f2.href = "bin/faviconempty.ico";
+			}
+			_g._clearNotifications();
+			_g.numNotifications = 0;
+		};
+		window.onblur = function() {
+			_g.focussed = false;
+		};
+		this.messages.addEventListener("mousewheel",$bind(this,this._tryGetOldMessages));
+		this.messages.addEventListener("DOMMouseScroll",$bind(this,this._tryGetOldMessages));
+		this.messages.ontouchmove = $bind(this,this._tryGetOldMessages);
+		window.document.onkeydown = $bind(this,this._testScrolling);
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
 			_g._getNotificationPermission();
@@ -252,25 +266,72 @@ Main.prototype = {
 		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
-		if(!js_Cookie.exists("id")) this._generateID(); else this._setID(Std.parseInt(js_Cookie.get("id")));
+		this.chatbox.onmousedown = function() {
+			_g.chatbox.classList.remove("helptip");
+			_g.chatbox.value = "";
+		};
+		this.chatbox.ontouchstart = function() {
+			_g.chatbox.classList.remove("helptip");
+			_g.chatbox.value = "";
+		};
+		this.chatbox.onkeydown = function(e) {
+			if(_g.chatbox.classList.contains("helptip")) {
+				_g.chatbox.classList.remove("helptip");
+				_g.chatbox.value = "";
+			}
+		};
+		if(!js_Cookie.exists("id")) this._getID(); else this._setID(js_Cookie.get("id"));
 		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
+		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
 		this._setupPrivateID();
+		this._loop();
+	}
+	,_testScrolling: function(e) {
+		var code = null;
+		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
+		if(code == 38) this._tryGetOldMessages();
+	}
+	,_tryGetOldMessages: function(args) {
+		var _g = this;
+		if(this.histRequestInProgress || this.initialScroll) return;
+		var scrollY;
+		scrollY = (this.lastY != null?this.lastY:window.pageYOffset) - window.pageYOffset;
+		this.lastY = window.pageYOffset;
+		if(this.lastY < 500) {
+			if(this.firstIndex > 0) {
+				var histHttp = new haxe_Http(this.basePath);
+				histHttp.onError = function(e) {
+					_g.histRequestInProgress = false;
+					console.log(e);
+				};
+				histHttp.onData = (function(f,a2) {
+					return function(a1) {
+						f(a1,a2);
+					};
+				})($bind(this,this._parseMessages),true);
+				if(this.password == null) histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.lastIndex + "/" + this.firstIndex; else histHttp.url = this.basePath + "api/hist/" + this.room + "/" + this.password + "/" + this.lastIndex + "/" + this.firstIndex;
+				this.histRequestInProgress = true;
+				histHttp.request(true);
+			}
+		}
 	}
 	,_setupPrivateID: function() {
 		if(!js_Cookie.exists("private")) {
-			this.privateID = Std["int"](Math.random() * 16777215);
-			js_Cookie.set("private",Std.string(this.privateID),315360000);
+			var rand = new Random(new Date().getTime());
+			var newPrivate = "";
+			while(newPrivate.length <= 40) newPrivate += this.alphanumeric.charAt(rand["int"](this.alphanumeric.length,null));
+			this.privateID = newPrivate;
+			js_Cookie.set("private",newPrivate,315360000);
 		} else {
-			this.privateID = Std.parseInt(js_Cookie.get("private"));
-			this.token = Std.parseInt(js_Cookie.get("token"));
+			this.privateID = js_Cookie.get("private");
+			this.token = js_Cookie.get("token");
 			if(this.token != null) this._checkValid();
 		}
 	}
 	,_setToken: function(_token) {
 		this.token = _token;
 		this._checkValid(true);
-		this.lastIndex = 0;
-		if(this.token != null) js_Cookie.set("token",Std.string(this.token),315360000);
+		if(this.token != null) js_Cookie.set("token",this.token,315360000);
 	}
 	,_checkValid: function(printValid) {
 		if(printValid == null) printValid = false;
@@ -361,14 +422,15 @@ Main.prototype = {
 		this.notifications = [];
 	}
 	,_buildCommands: function() {
-		this.commands.set("revivify",$bind(this,this._generateID));
-		this.commands.set("impersonate",$bind(this,this._setIDCommand));
-		this.commands.set("oneself",$bind(this,this._printID));
-		this.commands.set("existent",$bind(this,this._printRoom));
-		this.commands.set("survey",$bind(this,this._changeRoom));
-		this.commands.set("fasten",$bind(this,this._lockRoom));
-		this.commands.set("unfasten",$bind(this,this._unlockRoom));
-		this.commands.set("claim",$bind(this,this._claimRoom));
+		var _g = 0;
+		var _g1 = this.commandInfos;
+		while(_g < _g1.length) {
+			var c = _g1[_g];
+			++_g;
+			var method = Reflect.field(this,c.method);
+			if(method == null) throw new js__$Boot_HaxeError("unknown command function: " + c.method);
+			this.commands.set(c.command,method);
+		}
 		this.commands.set("",$bind(this,this._help));
 	}
 	,_parseCommand: function(commandString) {
@@ -392,12 +454,22 @@ Main.prototype = {
 			this._help();
 		}
 	}
-	,_generateID: function($arguments) {
-		this._setID(new Random(Math.random() * 16777215)["int"](0,16777215));
+	,_getID: function($arguments) {
+		var _g = this;
+		var idHttp = new haxe_Http(this.basePath + "api/getID");
+		idHttp.onData = function(d) {
+			_g._setID(d);
+			_g._printID();
+		};
+		idHttp.onError = function(e) {
+			console.log(e);
+			_g._addMessage("failed to connect to api, couldn't get ID.");
+		};
+		idHttp.request(true);
 	}
 	,_setIDCommand: function($arguments) {
 		if($arguments != null && $arguments[0] != null && $arguments[0] != "") {
-			var newID = Std.parseInt($arguments[0]);
+			var newID = $arguments[0];
 			if(newID != null) this._setID(newID); else this._addMessage("Could not parse argument: *ID*.");
 		} else this._addMessage("**/impersonate** requires argument: *ID*.");
 	}
@@ -406,13 +478,38 @@ Main.prototype = {
 	}
 	,_claimRoom: function($arguments) {
 		var _g = this;
-		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID));
+		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
+			this._addMessage("**/claim** requires argument: *ADMIN_PASSWORD*.");
+			return;
+		}
+		var newPassword = $arguments[0];
+		this._setAdminPassword(newPassword);
+		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
 		lockHttp.onData = function(d) {
 			if(d == "claimed") _g._addMessage("" + _g.room + " claimed."); else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
 			console.log(e);
 			_g._addMessage("failed to connect to api, couldn't claim room.");
+		};
+		lockHttp.request(true);
+	}
+	,_authorizeRoom: function($arguments) {
+		var _g = this;
+		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
+			this._addMessage("**/entitle** requires argument: *ADMIN_PASSWORD*.");
+			return;
+		}
+		var newPassword = $arguments[0];
+		this._setAdminPassword(newPassword);
+		this._addMessage("set admin password to: " + this.adminPassword);
+		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
+		lockHttp.onData = function(d) {
+			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
+		};
+		lockHttp.onError = function(e) {
+			console.log(e);
+			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
 	}
@@ -430,9 +527,9 @@ Main.prototype = {
 		}
 		var newPassword = $arguments[0];
 		this._setPassword(newPassword);
-		var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + newPassword));
+		var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + newPassword + "/" + this.adminPassword));
 		lockHttp.onData = function(d) {
-			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
+			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
 			console.log(e);
@@ -442,7 +539,7 @@ Main.prototype = {
 	}
 	,_unlockRoom: function($arguments) {
 		var _g = this;
-		var lockHttp = new haxe_Http(this.basePath + ("api/unlock/" + this.room + "/" + this.privateID));
+		var lockHttp = new haxe_Http(this.basePath + ("api/unlock/" + this.room + "/" + this.privateID + "/" + this.adminPassword));
 		lockHttp.onData = function(d) {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
@@ -463,14 +560,17 @@ Main.prototype = {
 		this._addMessage("print the chat room you are currently in.");
 		this._addMessage("**/survey** *ROOM*");
 		this._addMessage("move to a different chat room.");
-		this._addMessage("**/claim** *PASSWORD*");
+		this._addMessage("**/claim** *ADMIN_PASSWORD*");
 		this._addMessage("attempt to take ownership of the current room.");
-		this._addMessage("**/fasten** *PASSWORD*");
+		this._addMessage("**/entitle** *ADMIN_PASSWORD*");
+		this._addMessage("attempt to take authorize youself as admin of the current room.");
+		this._addMessage("**/fasten** *PUBLIC_PASSWORD*");
 		this._addMessage("attempt to lock the current room.");
 		this._addMessage("**/unfasten**");
 		this._addMessage("attempt to unlock the current room.");
 	}
-	,_parseMessages: function(data) {
+	,_parseMessages: function(data,hist) {
+		if(hist == null) hist = false;
 		if(data == "locked") {
 			if(!this.locked) this._addMessage("room is locked, please enter password.");
 			this.locked = true;
@@ -485,17 +585,23 @@ Main.prototype = {
 			this.wasLocked = true;
 			return;
 		}
+		if(data == "nomongo") {
+			this.requestInProgress = false;
+			return;
+		}
 		if(this.wasLocked) {
 			this._addMessage("successfully unlocked.");
 			this.wasLocked = false;
 		}
 		var parsed = JSON.parse(data);
-		var _g = 0;
-		var _g1 = parsed.messages.messages;
-		while(_g < _g1.length) {
-			var p = _g1[_g];
-			++_g;
-			var message = this._addMessage(p.text,p.id);
+		var _g1 = 0;
+		var _g = parsed.messages.messages.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var ii = i;
+			if(hist) ii = parsed.messages.messages.length - 1 - i;
+			var p = parsed.messages.messages[ii];
+			var message = this._addMessage(p.text,p.id,null,hist);
 			if(!this.focussed && !this.first) {
 				window.document.title = "# aqueous-basin.";
 				var _g2 = 0;
@@ -534,34 +640,61 @@ Main.prototype = {
 				this.typings.push(message1);
 				this.messages.appendChild(message1.chevron);
 				this.messages.appendChild(message1.message);
-				window.scrollTo(0,window.document.body.scrollHeight);
+				this._tryScroll();
 			}
 		}
 		this.lastIndex = parsed.lastID;
-		this.first = false;
+		if(parsed.firstID != null) this.firstIndex = parsed.firstID; else this.firstIndex = this.firstIndex;
 		var _g6 = 0;
 		var _g13 = window.document.getElementsByClassName("imgmessage");
 		while(_g6 < _g13.length) {
-			var i = _g13[_g6];
+			var i1 = _g13[_g6];
 			++_g6;
-			var image = i;
-			i.onclick = (function(f1,a1) {
+			var image = i1;
+			i1.onclick = (function(f1,a1) {
 				return function() {
 					f1(a1);
 				};
 			})($bind(this,this._openImageInNewTab),image.src);
+			if(!this.first) i1.onload = (function(f2,a11,a2) {
+				return function() {
+					f2(a11,a2);
+				};
+			})($bind(this,this._tryScroll),false,i1); else i1.onload = (function(f3,a12) {
+				return function() {
+					f3(a12);
+				};
+			})($bind(this,this._tryScroll),true);
 		}
+		if(this.first) this._tryScroll(true);
+		this.first = false;
 		this.requestInProgress = false;
+		if(hist) this.histRequestInProgress = false;
 	}
-	,_addMessage: function(msg,id,customHTML) {
+	,_tryScroll: function(force,img) {
+		if(force == null) force = false;
+		if(force || this._atBottom(img)) {
+			window.scrollTo(0,this.messages.scrollHeight);
+			this.initialScroll = false;
+		}
+	}
+	,_atBottom: function(img) {
+		var offset = 0;
+		if(img != null) offset = img.height;
+		if(window.innerHeight + window.scrollY + offset >= this.messages.offsetHeight) return true;
+		return false;
+	}
+	,_addMessage: function(msg,id,customHTML,hist) {
+		if(hist == null) hist = false;
 		msg = this._parseMessage(msg);
 		var message;
 		var differentUser = false;
-		if(id == null || id == -1 || id != this.lastUserID) differentUser = true;
+		if(!hist && (id == null || id == "-1" || id != this.lastUserID)) differentUser = true;
 		if(differentUser) {
 			var _this = window.document;
 			message = _this.createElement("div");
 			message.className = "messageblock";
+			message.setAttribute("data-id",id);
 			this.lastParagraph = message;
 			this.messages.appendChild(this._makeSpan(differentUser,id));
 			this.messages.appendChild(message);
@@ -571,9 +704,28 @@ Main.prototype = {
 		messageItem = _this1.createElement("div");
 		messageItem.className = "messageitem";
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
-		message.appendChild(messageItem);
-		window.scrollTo(0,window.document.body.scrollHeight);
-		this.lastUserID = id;
+		var offset = 0;
+		if(!hist) message.appendChild(messageItem); else {
+			message = this.messages.children[1];
+			var last = message.getAttribute("data-id");
+			if(last == id) {
+				message.insertBefore(messageItem,message.children[0]);
+				offset = $(messageItem).outerHeight(true);
+			} else {
+				var _this2 = window.document;
+				message = _this2.createElement("div");
+				message.className = "messageblock";
+				message.setAttribute("data-id",id);
+				this.messages.insertBefore(message,this.messages.children[0]);
+				this.messages.insertBefore(this._makeSpan(true,id),this.messages.children[0]);
+				message.insertBefore(messageItem,message.children[0]);
+				offset = $(message).outerHeight(true);
+			}
+		}
+		if(!hist) {
+			this._tryScroll();
+			this.lastUserID = id;
+		} else window.document.body.scrollTop += offset | 0;
 		return messageItem;
 	}
 	,_parseMessage: function(raw) {
@@ -641,28 +793,44 @@ Main.prototype = {
 				}
 			}
 			if(code == 40 || code == 38) {
+				var activeChilren = [];
 				var _g2 = 0;
 				var _g12 = this.helpbox.children;
 				while(_g2 < _g12.length) {
 					var c1 = _g12[_g2];
 					++_g2;
+					if(c1.style.display == "list-item") activeChilren.push(c1);
+					if(c1.classList.contains("selected") && this.commandIndex < 0) this.commandIndex = 0;
 					c1.classList.remove("selected");
 				}
 				if(code == 40) {
 					this.commandIndex++;
-					if(this.commandIndex >= this.helpbox.children.length) this.commandIndex = 0;
+					if(this.commandIndex >= activeChilren.length) this.commandIndex = 0;
 				} else if(code == 38) {
 					this.commandIndex--;
-					if(this.commandIndex <= -1) this.commandIndex = this.helpbox.children.length - 1;
+					if(this.commandIndex <= -1) this.commandIndex = activeChilren.length - 1;
 				}
-				this.helpbox.children[this.commandIndex].classList.add("selected");
-				this.helpbox.scrollTop = this.helpbox.children[this.commandIndex].offsetTop;
+				activeChilren[this.commandIndex].classList.add("selected");
+				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
 			}
-		} else this.helpbox.style.display = "none";
+		} else {
+			this.helpbox.style.display = "none";
+			if(!this.locked && this.token != null) {
+				if(this.canSendTypingNotification) {
+					var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
+					typingHttp.request(true);
+					this.canSendTypingNotification = false;
+					var timer = new haxe_Timer(2500);
+					timer.run = function() {
+						_g.canSendTypingNotification = true;
+					};
+				}
+			}
+		}
 		if(code != null && code == 13) {
 			if(this.token == null) {
-				var t = Std.parseInt(this.chatbox.value);
-				this._setToken(t != null?t:-1);
+				var t = this.chatbox.value;
+				this._setToken(t != null?t:"-1");
 				this.chatbox.value = "";
 				this.helpbox.style.display = "none";
 				return;
@@ -682,17 +850,6 @@ Main.prototype = {
 			}
 			this.chatbox.value = "";
 			this.helpbox.style.display = "none";
-		}
-		if(!this.locked && this.token != null) {
-			if(this.canSendTypingNotification) {
-				var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
-				typingHttp.request(true);
-				this.canSendTypingNotification = false;
-				var timer = new haxe_Timer(2500);
-				timer.run = function() {
-					_g.canSendTypingNotification = true;
-				};
-			}
 		}
 	}
 	,_postMessage: function(msg) {
@@ -720,23 +877,39 @@ Main.prototype = {
 	,_generateColorFromID: function(id,dark) {
 		if(dark == null) dark = false;
 		var hsl;
-		if(id != null && id != -1) {
-			var hue = new Random(id * 12189234)["float"](0,360);
-			var sat = new Random(id * 12189234)["float"](0.3,0.5);
-			var light = new Random(id * 12189234)["float"](0.3,0.5);
+		if(id != null && id != "-1") {
+			var intID = 0;
+			var _g1 = 0;
+			var _g = id.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				var s = HxOverrides.cca(id,i);
+				intID += s;
+			}
+			var hue = new Random(intID * 12189234)["float"](0,360);
+			var sat = new Random(intID * 12189234)["float"](0.3,0.5);
+			var light = new Random(intID * 12189234)["float"](0.3,0.5);
 			hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
 			if(dark) hsl = thx_color__$Hsl_Hsl_$Impl_$.darker(hsl,0.5);
 		} else hsl = thx_color__$Hsl_Hsl_$Impl_$.create(0,1,1);
 		return "#" + StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6);
 	}
 	,_setID: function(id_) {
+		if(Std.parseInt(id_) != null) {
+			this._getID();
+			return;
+		}
 		this.id = id_;
-		js_Cookie.set("id",Std.string(this.id),315360000);
-		this.chatbox.style.boxShadow = this._generateColorFromID(this.id,true);
+		js_Cookie.set("id",this.id,315360000);
+		this.chatbox.style.borderTopColor = this._generateColorFromID(this.id,true);
 	}
 	,_setPassword: function(password_) {
 		this.password = password_;
 		js_Cookie.set("" + this.room + "-password",this.password,315360000);
+	}
+	,_setAdminPassword: function(password_) {
+		this.adminPassword = password_;
+		js_Cookie.set("" + this.room + "admin-password",this.adminPassword,315360000);
 	}
 	,__class__: Main
 };
@@ -787,13 +960,21 @@ Random.prototype = {
 	}
 	,__class__: Random
 };
+var Reflect = function() { };
+Reflect.__name__ = true;
+Reflect.field = function(o,field) {
+	try {
+		return o[field];
+	} catch( e ) {
+		haxe_CallStack.lastException = e;
+		if (e instanceof js__$Boot_HaxeError) e = e.val;
+		return null;
+	}
+};
 var Std = function() { };
 Std.__name__ = true;
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
-};
-Std["int"] = function(x) {
-	return x | 0;
 };
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);

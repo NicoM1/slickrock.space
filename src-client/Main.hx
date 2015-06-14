@@ -34,6 +34,13 @@ typedef MessageDiv = {
 	chevron: Element
 };
 
+typedef Command = {
+	command: String,
+	identifiers: String,
+	description: String,
+	method: String
+}
+
 class Main 
 {
 	var room: String;
@@ -368,18 +375,67 @@ class Main
 	//}
 		
 	//{ commands
+	var commandInfos: Array<Command> = [{
+			command: 'revivify',
+			identifiers: '<strong>/revivify</strong>',
+			description: 'regenerate your ID, giving you a new color.',
+			method: '_getID'
+		},{
+			command: 'oneself',
+			identifiers: '<strong>/oneself</strong>',
+			description: 'print your current ID.',
+			method: '_printID'
+		},{
+			command: 'impersonate',
+			identifiers: '<strong>/impersonate</strong> <em>ID</em>',
+			description: 'set your ID explicitly, allows you to have all your devices share ID, or steal someone else\'s;).',
+			method: '_setIDCommand'
+		},{
+			command: 'existent',
+			identifiers: '<strong>/existent</strong>',
+			description: 'print the chat room you are currently in.',
+			method: '_printRoom'
+		},{
+			command: 'survey',
+			identifiers: '<strong>/survey</strong> <em>ROOM</em>',
+			description: 'move to a different chat room.',
+			method: '_changeRoom'
+		},{
+			command: 'claim',
+			identifiers: '<strong>/claim</strong> <em>ADMIN_PASSWORD</em>',
+			description: 'attempt to take ownership of the current room.',
+			method: '_claimRoom'
+		},{
+			command: 'entitle',
+			identifiers: '<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>',
+			description: 'attempt to take authorize youself as admin of the current room.',
+			method: '_authorizeRoom'
+		},{
+			command: 'fasten',
+			identifiers: '<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>',
+			description: 'attempt to lock the current room.',
+			method: '_lockRoom'
+		},{
+			command: 'unfasten',
+			identifiers: '<strong>/unfasten</strong>',
+			description: 'attempt to unlock the current room.',
+			method: '_unlockRoom'
+		},{
+			command: 'typesetting',
+			identifiers: '<strong>/typesetting</strong>',
+			description: 'display formatting help.',
+			method: '_formathelp'
+		},
+	];		
+	
 	function _buildCommands() {
-		commands.set('revivify', _getID);
-		commands.set('impersonate', _setIDCommand);
-		commands.set('oneself', _printID);
-		commands.set('existent', _printRoom);
-		commands.set('survey', _changeRoom);
-		commands.set('fasten', _lockRoom);
-		commands.set('unfasten', _unlockRoom);
-		commands.set('claim', _claimRoom);
-		commands.set('entitle', _authorizeRoom);
-		commands.set('load', _tryGetOldMessages);
-		
+		for (c in commandInfos) {
+			var method = Reflect.field(this, c.method);
+			if (method == null) {
+				throw 'unknown command function: ${c.method}';
+			}
+			commands.set(c.command, method);
+		}
 		commands.set('', _help);
 	}
 	
