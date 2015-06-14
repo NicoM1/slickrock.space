@@ -150,10 +150,10 @@ _$List_ListIterator.prototype = {
 	,__class__: _$List_ListIterator
 };
 var Main = function() {
-	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
-	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
-	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
-	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.codeBB = new EReg("(?:\\[code\\]|(?<!\\\\)`)(.*?)(?:\\[/code\\]|(?<!\\\\)`)","i");
+	this.boldBB = new EReg("(?:\\[b\\]|(?<!\\\\)\\*\\*)(.*?)(?:\\[/b\\]|(?<!\\\\)\\*\\*)","i");
+	this.italicBB = new EReg("(?:\\[i\\]|(?<!\\\\)\\*)(.*?)(?:\\[/i\\]|(?<!\\\\)\\*)","i");
+	this.imgBB = new EReg("(?:\\[img\\]|(?<!\\\\)#)(.*?)(?:\\[/img\\]|(?<!\\\\)#)","i");
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
 	this.lastY = null;
 	this.commandIndex = -1;
