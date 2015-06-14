@@ -347,7 +347,7 @@ class Main
 			command.appendChild(descDiv);
 			
 			command.onclick = function() {
-				chatbox.value = '/' + command.getAttribute('data-command');
+				chatbox.value = '/' + c.command;
 				chatbox.onkeyup();
 				chatbox.focus();
 			}

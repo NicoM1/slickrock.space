@@ -382,14 +382,11 @@ Main.prototype = {
 		var _g = 0;
 		var _g1 = this.commandInfos;
 		while(_g < _g1.length) {
-			var c = _g1[_g];
+			var c = [_g1[_g]];
 			++_g;
-			var command = [(function($this) {
-				var $r;
-				var _this = window.document;
-				$r = _this.createElement("li");
-				return $r;
-			}(this))];
+			var command;
+			var _this = window.document;
+			command = _this.createElement("li");
 			var identDiv;
 			var _this1 = window.document;
 			identDiv = _this1.createElement("div");
@@ -397,19 +394,19 @@ Main.prototype = {
 			var _this2 = window.document;
 			descDiv = _this2.createElement("div");
 			identDiv.classList.add("command");
-			identDiv.innerHTML = c.identifiers;
+			identDiv.innerHTML = c[0].identifiers;
 			descDiv.classList.add("description");
-			descDiv.innerHTML = c.description;
-			command[0].appendChild(identDiv);
-			command[0].appendChild(descDiv);
-			command[0].onclick = (function(command) {
+			descDiv.innerHTML = c[0].description;
+			command.appendChild(identDiv);
+			command.appendChild(descDiv);
+			command.onclick = (function(c) {
 				return function() {
-					_g2.chatbox.value = "/" + command[0].getAttribute("data-command");
+					_g2.chatbox.value = "/" + c[0].command;
 					_g2.chatbox.onkeyup();
 					_g2.chatbox.focus();
 				};
-			})(command);
-			this.helpbox.appendChild(command[0]);
+			})(c);
+			this.helpbox.appendChild(command);
 		}
 	}
 	,_getNotificationPermission: function() {
