@@ -824,8 +824,6 @@ class Main
 		parsed = parsed.htmlEscape();
 		parsed = parsed.replace('\"', '&quot;');
 		parsed = parsed.replace(':', '&colon;');
-		parsed = parsed.replace('\\*', '&#42;');
-		parsed = parsed.replace('\\#', '&#35;');
 		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
