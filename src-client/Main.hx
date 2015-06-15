@@ -833,7 +833,6 @@ class Main
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
 			var chunks = imgPath.split(' ');
-			trace(chunks);
 			
 			var imgTag: String;
 			switch(chunks.length) {
@@ -842,7 +841,7 @@ class Main
 				case 2:
 					imgTag = '<img src="${chunks[0]}" width="${chunks[1]}" class="imgmessage"></img>';
 				case 3:
-					imgTag = '<img src="${chunks[0]}" width="${chunks[1]}" width="${chunks[2]}" class="imgmessage"></img>';
+					imgTag = '<img src="${chunks[0]}" width="${chunks[1]}" height="${chunks[2]}" class="imgmessage"></img>';
 				default:
 					return '';
 			}
