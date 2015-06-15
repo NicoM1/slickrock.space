@@ -829,6 +829,7 @@ class Main
 		parsed = parsed.replace(':', '&colon;');
 		parsed = starReplace.replace(parsed, '&#42;');
 		parsed = hashReplace.replace(parsed, '&#35;');
+		trace(parsed);
 		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
