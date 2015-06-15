@@ -579,7 +579,7 @@ Main.prototype = {
 		this._addMessage("\\*italic.\\*");
 		this._addMessage("\\*\\*bold.\\*\\*");
 		this._addMessage("\\*\\*\\*bold-italic.\\*\\*\\*");
-		this._addMessage("\\#link/to.image ?(width) ?(height)\\#");
+		this._addMessage("\\#link/to.image (optional)[width] (optional)[height]\\#");
 		this._addMessage("escape markdown with \\\\*escaped\\\\*");
 	}
 	,_parseMessages: function(data,hist) {
