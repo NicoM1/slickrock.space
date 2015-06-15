@@ -745,7 +745,6 @@ Main.prototype = {
 		parsed = StringTools.htmlEscape(parsed);
 		parsed = StringTools.replace(parsed,"\"","&quot;");
 		parsed = StringTools.replace(parsed,":","&colon;");
-		parsed = StringTools.replace(parsed,"\\\\","&bsol;");
 		parsed = StringTools.replace(parsed,"\\*","&ast;");
 		parsed = StringTools.replace(parsed,"\\#","&num;");
 		while(this.imgBB.match(parsed)) {

@@ -825,7 +825,7 @@ class Main
 		parsed = parsed.htmlEscape();
 		parsed = parsed.replace('\"', '&quot;');
 		parsed = parsed.replace(':', '&colon;');
-		parsed = parsed.replace('\\\\', '&bsol;');
+		//parsed = parsed.replace('\\\\', '&bsol;');
 		parsed = parsed.replace('\\*', '&ast;');
 		parsed = parsed.replace('\\#', '&num;');
 		
