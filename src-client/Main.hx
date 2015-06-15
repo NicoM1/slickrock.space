@@ -833,6 +833,7 @@ class Main
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
 			var chunks = imgPath.split(' ');
+			trace(chunks);
 			
 			var imgTag: String;
 			switch(chunks.length) {

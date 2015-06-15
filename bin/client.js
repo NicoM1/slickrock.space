@@ -751,6 +751,7 @@ Main.prototype = {
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var chunks = imgPath.split(" ");
+			console.log(chunks);
 			var imgTag;
 			var _g = chunks.length;
 			switch(_g) {
