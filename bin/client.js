@@ -404,6 +404,7 @@ Main.prototype = {
 			command.appendChild(identDiv);
 			command.appendChild(descDiv);
 			command.setAttribute("data-command",k1[0]);
+			command.classList.add("commandTip");
 			command.onclick = (function(k1) {
 				return function() {
 					_g.chatbox.value = "/" + k1[0];

@@ -353,6 +353,8 @@ class Main
 			
 			command.setAttribute('data-command', k);
 			
+			command.classList.add('commandTip');
+			
 			command.onclick = function() {
 				chatbox.value = '/' + k;
 				chatbox.onkeyup();

@@ -147,7 +147,12 @@ li:hover {
 }
 
 .description {
-	margin-bottom: 20px;
+	
+}
+
+.commandTip {
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .selected {
