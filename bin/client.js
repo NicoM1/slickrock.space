@@ -150,8 +150,6 @@ _$List_ListIterator.prototype = {
 	,__class__: _$List_ListIterator
 };
 var Main = function() {
-	this.hashReplace = new EReg("\\\\#","ig");
-	this.starReplace = new EReg("\\\\*","ig");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
@@ -746,8 +744,8 @@ Main.prototype = {
 		parsed = StringTools.htmlEscape(parsed);
 		parsed = StringTools.replace(parsed,"\"","&quot;");
 		parsed = StringTools.replace(parsed,":","&colon;");
-		parsed = this.starReplace.replace(parsed,"&ast;");
-		parsed = this.hashReplace.replace(parsed,"&num;");
+		parsed = StringTools.replace(parsed,"\\*","&ast;");
+		parsed = StringTools.replace(parsed,"\\#","&num;");
 		console.log(parsed);
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
