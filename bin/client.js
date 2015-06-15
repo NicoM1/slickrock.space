@@ -746,8 +746,8 @@ Main.prototype = {
 		parsed = StringTools.htmlEscape(parsed);
 		parsed = StringTools.replace(parsed,"\"","&quot;");
 		parsed = StringTools.replace(parsed,":","&colon;");
-		parsed = this.starReplace.replace(parsed,"&#42;");
-		parsed = this.hashReplace.replace(parsed,"&#35;");
+		parsed = this.starReplace.replace(parsed,"&ast;");
+		parsed = this.hashReplace.replace(parsed,"&num;");
 		console.log(parsed);
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);

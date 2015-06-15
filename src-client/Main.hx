@@ -827,8 +827,8 @@ class Main
 		parsed = parsed.htmlEscape();
 		parsed = parsed.replace('\"', '&quot;');
 		parsed = parsed.replace(':', '&colon;');
-		parsed = starReplace.replace(parsed, '&#42;');
-		parsed = hashReplace.replace(parsed, '&#35;');
+		parsed = starReplace.replace(parsed, '&ast;');
+		parsed = hashReplace.replace(parsed, '&num;');
 		trace(parsed);
 		
 		while (imgBB.match(parsed)) {
