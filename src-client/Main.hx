@@ -819,15 +819,13 @@ class Main
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	
-	var backslash = '%5C';
-	
 	function _parseMessage(raw: String): String {
 		var parsed: String = raw.replace('\n', ' ');
 		parsed = parsed.htmlEscape();
 		parsed = parsed.replace('\"', '&quot;');
 		parsed = parsed.replace(':', '&colon;');
-		parsed = parsed.replace(backslash+'*', '&#42;');
-		parsed = parsed.replace(backslash+'#', '&#35;');
+		parsed = parsed.replace('\\\\*', '&#42;');
+		parsed = parsed.replace('\\\\#', '&#35;');
 		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
