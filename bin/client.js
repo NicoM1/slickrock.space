@@ -150,6 +150,8 @@ _$List_ListIterator.prototype = {
 	,__class__: _$List_ListIterator
 };
 var Main = function() {
+	this.hashReplace = new EReg("\\\\#","ig");
+	this.starReplace = new EReg("\\\\*","ig");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
@@ -744,8 +746,8 @@ Main.prototype = {
 		parsed = StringTools.htmlEscape(parsed);
 		parsed = StringTools.replace(parsed,"\"","&quot;");
 		parsed = StringTools.replace(parsed,":","&colon;");
-		parsed = StringTools.replace(parsed,"\\\\*","&#42;");
-		parsed = StringTools.replace(parsed,"\\\\#","&#35;");
+		parsed = this.starReplace.replace(parsed,"&#42;");
+		parsed = this.hashReplace.replace(parsed,"&#35;");
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var imgTag = "<img src=\"" + imgPath + "\" class=\"imgmessage\"></img>";

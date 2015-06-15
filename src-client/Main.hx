@@ -819,13 +819,16 @@ class Main
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	
+	var starReplace: EReg = ~/\\*/ig;
+	var hashReplace: EReg = ~/\\#/ig;
+	
 	function _parseMessage(raw: String): String {
 		var parsed: String = raw.replace('\n', ' ');
 		parsed = parsed.htmlEscape();
 		parsed = parsed.replace('\"', '&quot;');
 		parsed = parsed.replace(':', '&colon;');
-		parsed = parsed.replace('\\\\*', '&#42;');
-		parsed = parsed.replace('\\\\#', '&#35;');
+		parsed = starReplace.replace(parsed, '&#42;');
+		parsed = hashReplace.replace(parsed, '&#35;');
 		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
