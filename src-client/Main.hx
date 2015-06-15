@@ -628,10 +628,11 @@ class Main
 	}
 	
 	function _formatHelp(?args) {
-		_addMessage('', null, '*italic.*');
-		_addMessage('', null, '**bold.**');
-		_addMessage('', null, '***bold-italic.***');
-		_addMessage('', null, '#link/to.image#');
+		_addMessage('\\*italic.\\*');
+		_addMessage('\\*\\*bold.\\*\\*');
+		_addMessage('\\*\\*\\*bold-italic.\\*\\*\\*');
+		_addMessage('\\#link/to.image\\#');
+		_addMessage('escape markdown with \\\\*escaped\\\\*');
 	}
 	//}
 	
@@ -824,6 +825,7 @@ class Main
 		parsed = parsed.htmlEscape();
 		parsed = parsed.replace('\"', '&quot;');
 		parsed = parsed.replace(':', '&colon;');
+		parsed = parsed.replace('\\\\', '&bsol;');
 		parsed = parsed.replace('\\*', '&ast;');
 		parsed = parsed.replace('\\#', '&num;');
 		

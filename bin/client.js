@@ -575,10 +575,11 @@ Main.prototype = {
 		lockHttp.request(true);
 	}
 	,_formatHelp: function(args) {
-		this._addMessage("",null,"*italic.*");
-		this._addMessage("",null,"**bold.**");
-		this._addMessage("",null,"***bold-italic.***");
-		this._addMessage("",null,"#link/to.image#");
+		this._addMessage("\\*italic.\\*");
+		this._addMessage("\\*\\*bold.\\*\\*");
+		this._addMessage("\\*\\*\\*bold-italic.\\*\\*\\*");
+		this._addMessage("\\#link/to.image\\#");
+		this._addMessage("escape markdown with \\\\*escaped\\\\*");
 	}
 	,_parseMessages: function(data,hist) {
 		if(hist == null) hist = false;
@@ -744,6 +745,7 @@ Main.prototype = {
 		parsed = StringTools.htmlEscape(parsed);
 		parsed = StringTools.replace(parsed,"\"","&quot;");
 		parsed = StringTools.replace(parsed,":","&colon;");
+		parsed = StringTools.replace(parsed,"\\\\","&bsol;");
 		parsed = StringTools.replace(parsed,"\\*","&ast;");
 		parsed = StringTools.replace(parsed,"\\#","&num;");
 		while(this.imgBB.match(parsed)) {
