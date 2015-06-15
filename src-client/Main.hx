@@ -832,7 +832,20 @@ class Main
 		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
-			var imgTag = '<img src="$imgPath" class="imgmessage"></img>';
+			var chunks = imgPath.split(' ');
+			
+			var imgTag: String;
+			switch(chunks.length) {
+				case 1:
+					imgTag = '<img src="${chunks[0]}" class="imgmessage"></img>';
+				case 2:
+					imgTag = '<img src="${chunks[0]}" width="${chunks[1]}" class="imgmessage"></img>';
+				case 3:
+					imgTag = '<img src="${chunks[0]}" width="${chunks[1]}" width="${chunks[2]}" class="imgmessage"></img>';
+				default:
+					return '';
+			}
+			
 			parsed = imgBB.replace(parsed, imgTag);
 		}
 		while (boldBB.match(parsed)) {

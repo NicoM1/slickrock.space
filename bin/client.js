@@ -750,7 +750,22 @@ Main.prototype = {
 		parsed = StringTools.replace(parsed,"\\#","&num;");
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
-			var imgTag = "<img src=\"" + imgPath + "\" class=\"imgmessage\"></img>";
+			var chunks = imgPath.split(" ");
+			var imgTag;
+			var _g = chunks.length;
+			switch(_g) {
+			case 1:
+				imgTag = "<img src=\"" + chunks[0] + "\" class=\"imgmessage\"></img>";
+				break;
+			case 2:
+				imgTag = "<img src=\"" + chunks[0] + "\" width=\"" + chunks[1] + "\" class=\"imgmessage\"></img>";
+				break;
+			case 3:
+				imgTag = "<img src=\"" + chunks[0] + "\" width=\"" + chunks[1] + "\" width=\"" + chunks[2] + "\" class=\"imgmessage\"></img>";
+				break;
+			default:
+				return "";
+			}
 			parsed = this.imgBB.replace(parsed,imgTag);
 		}
 		while(this.boldBB.match(parsed)) {
