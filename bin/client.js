@@ -150,6 +150,7 @@ _$List_ListIterator.prototype = {
 	,__class__: _$List_ListIterator
 };
 var Main = function() {
+	this.backslash = "%5C";
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
@@ -744,6 +745,8 @@ Main.prototype = {
 		parsed = StringTools.htmlEscape(parsed);
 		parsed = StringTools.replace(parsed,"\"","&quot;");
 		parsed = StringTools.replace(parsed,":","&colon;");
+		parsed = StringTools.replace(parsed,this.backslash + "*","&#42;");
+		parsed = StringTools.replace(parsed,this.backslash + "#","&#35;");
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var imgTag = "<img src=\"" + imgPath + "\" class=\"imgmessage\"></img>";
