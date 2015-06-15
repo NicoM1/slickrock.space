@@ -826,7 +826,6 @@ class Main
 		parsed = parsed.replace(':', '&colon;');
 		parsed = parsed.replace('\\*', '&ast;');
 		parsed = parsed.replace('\\#', '&num;');
-		trace(parsed);
 		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);

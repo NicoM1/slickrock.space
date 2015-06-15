@@ -746,7 +746,6 @@ Main.prototype = {
 		parsed = StringTools.replace(parsed,":","&colon;");
 		parsed = StringTools.replace(parsed,"\\*","&ast;");
 		parsed = StringTools.replace(parsed,"\\#","&num;");
-		console.log(parsed);
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var imgTag = "<img src=\"" + imgPath + "\" class=\"imgmessage\"></img>";
