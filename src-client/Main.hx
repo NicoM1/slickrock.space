@@ -633,7 +633,7 @@ class Main
 		_addMessage('\\*italic.\\*');
 		_addMessage('\\*\\*bold.\\*\\*');
 		_addMessage('\\*\\*\\*bold-italic.\\*\\*\\*');
-		_addMessage('\\#link/to.image\\#');
+		_addMessage('\\#link/to.image ?(width) ?(height)\\#');
 		_addMessage('escape markdown with \\\\*escaped\\\\*');
 	}
 	//}
