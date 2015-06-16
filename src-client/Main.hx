@@ -947,7 +947,8 @@ class Main
 				
 				if (li.classList.contains('selected')) {
 					var replacement = '/' + command + ' ';
-					if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13)) {
+					if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13))) {
+						
 						chatbox.value = replacement;
 						if (code == 13 && commandInfos[command].requiresArgs == true) {
 							return;
