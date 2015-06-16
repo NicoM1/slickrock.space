@@ -939,6 +939,7 @@ class Main
 				}
 				activeChilren[commandIndex].classList.add('selected');
 				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
+				return;
 			}		
 			
 			for (c in helpbox.children) {

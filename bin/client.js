@@ -843,6 +843,7 @@ Main.prototype = {
 				}
 				activeChilren[this.commandIndex].classList.add("selected");
 				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
+				return;
 			}
 			var _g2 = 0;
 			var _g12 = this.helpbox.children;
@@ -860,8 +861,8 @@ Main.prototype = {
 					}
 					var end;
 					if(!trimmed) end = sub.length; else end = command.length;
-					haxe_Log.trace(sub,{ fileName : "Main.hx", lineNumber : 959, className : "Main", methodName : "_checkKeyPress", customParams : [command]});
-					haxe_Log.trace(HxOverrides.substr(command,0,end),{ fileName : "Main.hx", lineNumber : 960, className : "Main", methodName : "_checkKeyPress"});
+					haxe_Log.trace(sub,{ fileName : "Main.hx", lineNumber : 960, className : "Main", methodName : "_checkKeyPress", customParams : [command]});
+					haxe_Log.trace(HxOverrides.substr(command,0,end),{ fileName : "Main.hx", lineNumber : 961, className : "Main", methodName : "_checkKeyPress"});
 					if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
 						li.style.display = "list-item";
 						if(!selected && sub.length > 0) {
