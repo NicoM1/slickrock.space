@@ -845,6 +845,7 @@ Main.prototype = {
 				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
 				return;
 			}
+			var selectedElem = null;
 			var _g2 = 0;
 			var _g12 = this.helpbox.children;
 			while(_g2 < _g12.length) {
@@ -865,18 +866,19 @@ Main.prototype = {
 						li.style.display = "list-item";
 						if(!selected && sub.length > 0) {
 							li.classList.add("selected");
+							selectedElem = li;
 							selected = true;
 						} else li.classList.remove("selected");
 					}
 				}
-				if(li.classList.contains("selected")) {
-					var replacement = "/" + command + " ";
-					if(this.chatbox.value.indexOf(replacement) == -1 && (this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 979, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
-						this.chatbox.value = replacement;
-						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
-						break;
-					}
+			}
+			if(selectedElem != null) {
+				var command1 = selectedElem.getAttribute("data-command");
+				var replacement = "/" + command1 + " ";
+				if(this.chatbox.value.indexOf(replacement) == -1 && (this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13)) {
+					haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 984, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+					this.chatbox.value = replacement;
+					if(code == 13 && this.commandInfos.get(command1).requiresArgs == true) return;
 				}
 			}
 		} else {

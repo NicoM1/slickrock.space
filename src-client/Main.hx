@@ -943,6 +943,8 @@ class Main
 				return;
 			}		
 			
+			var selectedElem: LIElement = null;
+			
 			for (c in helpbox.children) {
 				var li: LIElement = cast c;
 				
@@ -965,6 +967,7 @@ class Main
 						li.style.display = 'list-item';
 						if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
 							li.classList.add('selected');
+							selectedElem = li;
 							selected = true;
 						}
 						else {
@@ -972,17 +975,17 @@ class Main
 						}
 					}
 				}
-				
-				if (li.classList.contains('selected')) {
-					var replacement = '/' + command + ' ';
-					if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13))) {
-						trace(chatbox.value, replacement);
-						
-						chatbox.value = replacement;
-						if (code == 13 && commandInfos[command].requiresArgs == true) {
-							return;
-						}
-						break;
+			}
+			
+			if (selectedElem != null) {	
+				var command = selectedElem.getAttribute('data-command');
+				var replacement = '/' + command + ' ';
+				if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13))) {
+					trace(chatbox.value, replacement);
+					
+					chatbox.value = replacement;
+					if (code == 13 && commandInfos[command].requiresArgs == true) {
+						return;
 					}
 				}
 			}
