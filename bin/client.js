@@ -853,30 +853,28 @@ Main.prototype = {
 				++_g2;
 				var li = c1;
 				var command = li.getAttribute("data-command");
-				if(!(code != null && code == 13 || this.chatbox.value.charAt(this.chatbox.value.length - 1) == " ")) {
-					var sub = HxOverrides.substr(this.chatbox.value,1,null);
-					var trimmed = false;
-					if(sub.indexOf(" ") != -1) {
-						trimmed = true;
-						sub = sub.substring(0,sub.indexOf(" "));
-					}
-					var end;
-					if(!trimmed) end = sub.length; else end = command.length;
-					if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
-						li.style.display = "list-item";
-						if(!selected && sub.length > 0) {
-							li.classList.add("selected");
-							selectedElem = li;
-							selected = true;
-						} else li.classList.remove("selected");
-					}
+				var sub = HxOverrides.substr(this.chatbox.value,1,null);
+				var trimmed = false;
+				if(sub.indexOf(" ") != -1) {
+					trimmed = true;
+					sub = sub.substring(0,sub.indexOf(" "));
+				}
+				var end;
+				if(!trimmed) end = sub.length; else end = command.length;
+				if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
+					li.style.display = "list-item";
+					if(!selected && sub.length > 0) {
+						li.classList.add("selected");
+						selectedElem = li;
+						selected = true;
+					} else li.classList.remove("selected");
 				}
 			}
 			if(selectedElem != null) {
 				var command1 = selectedElem.getAttribute("data-command");
 				var replacement = "/" + command1 + " ";
 				if(this.chatbox.value.indexOf(replacement) == -1 && (this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13)) {
-					haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 984, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+					haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 982, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 					this.chatbox.value = replacement;
 					if(code == 13 && this.commandInfos.get(command1).requiresArgs == true) return;
 				}

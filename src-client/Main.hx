@@ -950,29 +950,27 @@ class Main
 				
 				var command = li.getAttribute('data-command');
 				
-				if(!((code != null && code == 13) || chatbox.value.charAt(chatbox.value.length - 1) == ' ')) {	
-					var sub = chatbox.value.substr(1);
-					var trimmed: Bool = false;
-					if (sub.indexOf(' ') != -1) {
-						trimmed = true;
-						sub = sub.substring(0, sub.indexOf(' '));
-					}
+				var sub = chatbox.value.substr(1);
+				var trimmed: Bool = false;
+				if (sub.indexOf(' ') != -1) {
+					trimmed = true;
+					sub = sub.substring(0, sub.indexOf(' '));
+				}
 
-					var end: Int = (!trimmed? sub.length : command.length);
-					
-					if (command.substr(0, end) != sub) {
-						li.style.display = 'none';
+				var end: Int = (!trimmed? sub.length : command.length);
+				
+				if (command.substr(0, end) != sub) {
+					li.style.display = 'none';
+				}
+				else {
+					li.style.display = 'list-item';
+					if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
+						li.classList.add('selected');
+						selectedElem = li;
+						selected = true;
 					}
 					else {
-						li.style.display = 'list-item';
-						if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
-							li.classList.add('selected');
-							selectedElem = li;
-							selected = true;
-						}
-						else {
-							li.classList.remove('selected');
-						}
+						li.classList.remove('selected');
 					}
 				}
 			}
