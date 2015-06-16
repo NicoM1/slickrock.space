@@ -937,7 +937,10 @@ class Main
 
 				var end: Int = (!trimmed? sub.length : command.length);
 				
-				if (command.substr(0, end) != sub.substr(0, end)) {
+				trace(sub, command);
+				trace(command.substr(0, end)); 
+				
+				if (command.substr(0, end) != sub) {
 					li.style.display = 'none';
 				}
 				else {
