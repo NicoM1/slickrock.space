@@ -937,7 +937,7 @@ class Main
 
 				var end: Int = (!trimmed? sub.length : command.length);
 				
-				if (command.substr(0, end) != sub) {
+				if (command.substr(0, end) != sub.substr(0, end)) {
 					li.style.display = 'none';
 				}
 				else {

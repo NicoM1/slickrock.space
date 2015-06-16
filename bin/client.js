@@ -845,7 +845,7 @@ Main.prototype = {
 				}
 				var end;
 				if(!trimmed) end = sub.length; else end = command.length;
-				if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
+				if(HxOverrides.substr(command,0,end) != HxOverrides.substr(sub,0,end)) li.style.display = "none"; else {
 					li.style.display = "list-item";
 					if(!selected && sub.length > 0) {
 						li.classList.add("selected");
