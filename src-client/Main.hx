@@ -916,17 +916,8 @@ class Main
 			
 			for (c in helpbox.children) {
 				var li: LIElement = cast c;
-								
+				
 				var command = li.getAttribute('data-command');
-				if (li.classList.contains('selected')) {
-					var replacement = '/' + command + ' ';
-					if (chatbox.value.indexOf(replacement) == -1 && chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13 && chatbox.value.length < replacement.length) {
-						chatbox.value = replacement;
-						if (code == 13 && commandInfos[command].requiresArgs == true) {
-							return;
-						}
-					}
-				}
 				
 				var sub = chatbox.value.substr(1);
 				var trimmed: Bool = false;
@@ -951,6 +942,16 @@ class Main
 					}
 					else {
 						li.classList.remove('selected');
+					}
+				}
+				
+				if (li.classList.contains('selected')) {
+					var replacement = '/' + command + ' ';
+					if (chatbox.value.indexOf(replacement) == -1 && chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13 && chatbox.value.length < replacement.length) {
+						chatbox.value = replacement;
+						if (code == 13 && commandInfos[command].requiresArgs == true) {
+							return;
+						}
 					}
 				}
 			}
