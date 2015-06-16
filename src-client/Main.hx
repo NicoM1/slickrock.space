@@ -949,6 +949,7 @@ class Main
 					var replacement = '/' + command + ' ';
 					if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13)) {
 						chatbox.value = replacement;
+						_checkKeyPress(null);
 						if (code == 13 && commandInfos[command].requiresArgs == true) {
 							return;
 						}
