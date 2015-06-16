@@ -830,12 +830,28 @@ Main.prototype = {
 				++_g1;
 				var li = c;
 				var command = li.getAttribute("data-command");
-				selected = this._filterHelp(li,selected);
+				var sub = HxOverrides.substr(this.chatbox.value,1,null);
+				var trimmed = false;
+				if(sub.indexOf(" ") != -1) {
+					trimmed = true;
+					sub = sub.substring(0,sub.indexOf(" "));
+				}
+				var end;
+				if(!trimmed) end = sub.length; else end = command.length;
+				haxe_Log.trace(sub,{ fileName : "Main.hx", lineNumber : 931, className : "Main", methodName : "_checkKeyPress", customParams : [command]});
+				haxe_Log.trace(HxOverrides.substr(command,0,end),{ fileName : "Main.hx", lineNumber : 932, className : "Main", methodName : "_checkKeyPress"});
+				if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
+					li.style.display = "list-item";
+					if(!selected && sub.length > 0) {
+						li.classList.add("selected");
+						selected = true;
+						break;
+					} else li.classList.remove("selected");
+				}
 				if(li.classList.contains("selected")) {
 					var replacement = "/" + command + " ";
 					if(this.chatbox.value.indexOf(replacement) == -1 && (this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13)) {
 						this.chatbox.value = replacement;
-						selected = this._filterHelp(li,selected);
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
 					}
 				}
@@ -899,27 +915,6 @@ Main.prototype = {
 			this.chatbox.value = "";
 			this.helpbox.style.display = "none";
 		}
-	}
-	,_filterHelp: function(li,selected) {
-		var command = li.getAttribute("data-command");
-		var sub = HxOverrides.substr(this.chatbox.value,1,null);
-		var trimmed = false;
-		if(sub.indexOf(" ") != -1) {
-			trimmed = true;
-			sub = sub.substring(0,sub.indexOf(" "));
-		}
-		var end;
-		if(!trimmed) end = sub.length; else end = command.length;
-		haxe_Log.trace(sub,{ fileName : "Main.hx", lineNumber : 1022, className : "Main", methodName : "_filterHelp", customParams : [command]});
-		haxe_Log.trace(HxOverrides.substr(command,0,end),{ fileName : "Main.hx", lineNumber : 1023, className : "Main", methodName : "_filterHelp"});
-		if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
-			li.style.display = "list-item";
-			if(!selected && sub.length > 0) {
-				li.classList.add("selected");
-				selected = true;
-			} else li.classList.remove("selected");
-		}
-		return selected;
 	}
 	,_postMessage: function(msg) {
 		if(StringTools.trim(msg) != "") {
