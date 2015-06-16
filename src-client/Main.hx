@@ -520,6 +520,9 @@ class Main
 	
 	function _changeRoom(arguments: Array<String>) {
 		if (arguments != null && arguments[0] != null && arguments[0] != '') {
+			if (arguments[0].charAt(0) == '/') {
+				arguments[0] = arguments[0].substr(1);
+			}
 			Browser.window.location.href = arguments[0].urlEncode();
 		}
 		else {
