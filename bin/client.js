@@ -455,7 +455,7 @@ Main.prototype = {
 		_g.set("fasten",{ identifiers : "<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>", description : "attempt to lock the current room.", method : $bind(this,this._lockRoom), requiresArgs : true});
 		_g.set("unfasten",{ identifiers : "<strong>/unfasten</strong>", description : "attempt to unlock the current room.", method : $bind(this,this._unlockRoom)});
 		_g.set("typesetting",{ identifiers : "<strong>/typesetting</strong>", description : "display formatting help.", method : $bind(this,this._formatHelp)});
-		_g.set("encase",{ identifiers : "<strong>/encase</strong> <em>WIDTH</em> <em>HEIGHT</em>", description : "generates an embedable iframe with a simple default styling.", method : $bind(this,this._generateEmbed)});
+		_g.set("encase",{ identifiers : "<strong>/encase</strong> <em>WIDTH</em> <em>HEIGHT</em>", description : "generates an embedable iframe with a simple default styling.", method : $bind(this,this._generateEmbed), requiresArgs : true});
 		this.commandInfos = _g;
 		var $it0 = this.commandInfos.keys();
 		while( $it0.hasNext() ) {
@@ -490,7 +490,7 @@ Main.prototype = {
 			_g._printID();
 		};
 		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 504, className : "Main", methodName : "_getID"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 505, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
 		};
 		idHttp.request(true);
@@ -523,7 +523,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 556, className : "Main", methodName : "_claimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 557, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
 		};
 		lockHttp.request(true);
@@ -542,7 +542,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 581, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 582, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -583,7 +583,7 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 636, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 637, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
@@ -595,7 +595,7 @@ Main.prototype = {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 654, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 655, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
 		};
 		lockHttp.request(true);
@@ -861,8 +861,8 @@ Main.prototype = {
 					}
 					var end;
 					if(!trimmed) end = sub.length; else end = command.length;
-					haxe_Log.trace(sub,{ fileName : "Main.hx", lineNumber : 960, className : "Main", methodName : "_checkKeyPress", customParams : [command]});
-					haxe_Log.trace(HxOverrides.substr(command,0,end),{ fileName : "Main.hx", lineNumber : 961, className : "Main", methodName : "_checkKeyPress"});
+					haxe_Log.trace(sub,{ fileName : "Main.hx", lineNumber : 961, className : "Main", methodName : "_checkKeyPress", customParams : [command]});
+					haxe_Log.trace(HxOverrides.substr(command,0,end),{ fileName : "Main.hx", lineNumber : 962, className : "Main", methodName : "_checkKeyPress"});
 					if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
 						li.style.display = "list-item";
 						if(!selected && sub.length > 0) {

@@ -460,7 +460,8 @@ class Main
 		'encase' => {
 			identifiers: '<strong>/encase</strong> <em>WIDTH</em> <em>HEIGHT</em>',
 			description: 'generates an embedable iframe with a simple default styling.',
-			method: _generateEmbed
+			method: _generateEmbed,
+			requiresArgs: true
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
