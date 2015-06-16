@@ -456,6 +456,11 @@ class Main
 			identifiers: '<strong>/typesetting</strong>',
 			description: 'display formatting help.',
 			method: _formatHelp
+		},
+		'encase' => {
+			identifiers: '<strong>/encase</strong> <em>WIDTH</em> <em>HEIGHT</em>',
+			description: 'generates an embedable iframe with a simple default styling.',
+			method: _generateEmbed
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
@@ -578,6 +583,26 @@ class Main
 		}
 		
 		lockHttp.request(true);
+	}
+	
+	var embedTemplate = '<iframe src="[SRC]" width="[WIDTH]" height="[HEIGHT]" style="border-color: #333333; border-style: solid;"></iframe>';
+	function _generateEmbed(arguments: Array<String>) {
+		if (arguments.length != 2) {
+			_addMessage('**/encase** requires arguments: *WIDTH*, *HEIGHT*.');
+			return;
+		}
+		var width = Std.parseInt(arguments[0]);
+		var height = Std.parseInt(arguments[1]);
+		if (width == null || height == null) {
+			_addMessage('*WIDTH* and *HEIGHT* must be integer values.');
+			return;
+		}
+		var embed = embedTemplate;
+		embed = embed.replace('[SRC]', 'https://aqueous-basin.herokuapp.com/$room');
+		embed = embed.replace('[WIDTH]', Std.string(width));
+		embed = embed.replace('[HEIGHT]', Std.string(height));
+		
+		_addMessage('`$embed`');
 	}
 	
 	function _printID(?arguments: Array<String>) {

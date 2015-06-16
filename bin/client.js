@@ -154,6 +154,7 @@ var Main = function() {
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
+	this.embedTemplate = "<iframe src=\"[SRC]\" width=\"[WIDTH]\" height=\"[HEIGHT]\" style=\"border-color: #333333; border-style: solid;\"></iframe>";
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
 	this.lastY = null;
 	this.commandIndex = -1;
@@ -454,6 +455,7 @@ Main.prototype = {
 		_g.set("fasten",{ identifiers : "<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>", description : "attempt to lock the current room.", method : $bind(this,this._lockRoom), requiresArgs : true});
 		_g.set("unfasten",{ identifiers : "<strong>/unfasten</strong>", description : "attempt to unlock the current room.", method : $bind(this,this._unlockRoom)});
 		_g.set("typesetting",{ identifiers : "<strong>/typesetting</strong>", description : "display formatting help.", method : $bind(this,this._formatHelp)});
+		_g.set("encase",{ identifiers : "<strong>/encase</strong> <em>WIDTH</em> <em>HEIGHT</em>", description : "generates an embedable iframe with a simple default styling.", method : $bind(this,this._generateEmbed)});
 		this.commandInfos = _g;
 		var $it0 = this.commandInfos.keys();
 		while( $it0.hasNext() ) {
@@ -544,6 +546,23 @@ Main.prototype = {
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
+	}
+	,_generateEmbed: function($arguments) {
+		if($arguments.length != 2) {
+			this._addMessage("**/encase** requires arguments: *WIDTH*, *HEIGHT*.");
+			return;
+		}
+		var width = Std.parseInt($arguments[0]);
+		var height = Std.parseInt($arguments[1]);
+		if(width == null || height == null) {
+			this._addMessage("*WIDTH* and *HEIGHT* must be integer values.");
+			return;
+		}
+		var embed = this.embedTemplate;
+		embed = StringTools.replace(embed,"[SRC]","https://aqueous-basin.herokuapp.com/" + this.room);
+		embed = StringTools.replace(embed,"[WIDTH]",width == null?"null":"" + width);
+		embed = StringTools.replace(embed,"[HEIGHT]",height == null?"null":"" + height);
+		this._addMessage("`" + embed + "`");
 	}
 	,_printID: function($arguments) {
 		this._addMessage("*Currently impersonating*: " + this.id);
