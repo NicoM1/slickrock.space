@@ -844,7 +844,7 @@ Main.prototype = {
 					sub = sub.substring(0,sub.indexOf(" "));
 				}
 				var end;
-				if(trimmed) end = sub.length; else end = command.length;
+				if(!trimmed) end = sub.length; else end = command.length;
 				if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
 					li.style.display = "list-item";
 					if(!selected && sub.length > 0) {
