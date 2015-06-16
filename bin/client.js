@@ -849,7 +849,7 @@ Main.prototype = {
 				}
 				if(li.classList.contains("selected")) {
 					var replacement = "/" + command + " ";
-					if(this.chatbox.value.indexOf(replacement) == -1 && this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13 && this.chatbox.value.length < replacement.length) {
+					if(this.chatbox.value.indexOf(replacement) == -1 && (this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13)) {
 						this.chatbox.value = replacement;
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
 					}
