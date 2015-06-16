@@ -823,48 +823,16 @@ Main.prototype = {
 				this.helpbox.style.display = "block";
 				this.commandIndex = -1;
 			}
-			var _g1 = 0;
-			var _g11 = this.helpbox.children;
-			while(_g1 < _g11.length) {
-				var c = _g11[_g1];
-				++_g1;
-				var li = c;
-				var command = li.getAttribute("data-command");
-				var sub = HxOverrides.substr(this.chatbox.value,1,null);
-				var trimmed = false;
-				if(sub.indexOf(" ") != -1) {
-					trimmed = true;
-					sub = sub.substring(0,sub.indexOf(" "));
-				}
-				var end;
-				if(!trimmed) end = sub.length; else end = command.length;
-				haxe_Log.trace(sub,{ fileName : "Main.hx", lineNumber : 931, className : "Main", methodName : "_checkKeyPress", customParams : [command]});
-				haxe_Log.trace(HxOverrides.substr(command,0,end),{ fileName : "Main.hx", lineNumber : 932, className : "Main", methodName : "_checkKeyPress"});
-				if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
-					li.style.display = "list-item";
-					if(!selected && sub.length > 0) {
-						li.classList.add("selected");
-						selected = true;
-					} else li.classList.remove("selected");
-				}
-				if(li.classList.contains("selected")) {
-					var replacement = "/" + command + " ";
-					if(this.chatbox.value.indexOf(replacement) == -1 && (this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13)) {
-						this.chatbox.value = replacement;
-						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
-					}
-				}
-			}
 			if(code == 40 || code == 38) {
 				var activeChilren = [];
-				var _g2 = 0;
-				var _g12 = this.helpbox.children;
-				while(_g2 < _g12.length) {
-					var c1 = _g12[_g2];
-					++_g2;
-					if(c1.style.display == "list-item") activeChilren.push(c1);
-					if(c1.classList.contains("selected") && this.commandIndex < 0) this.commandIndex = 0;
-					c1.classList.remove("selected");
+				var _g1 = 0;
+				var _g11 = this.helpbox.children;
+				while(_g1 < _g11.length) {
+					var c = _g11[_g1];
+					++_g1;
+					if(c.style.display == "list-item") activeChilren.push(c);
+					if(c.classList.contains("selected") && this.commandIndex < 0) this.commandIndex = 0;
+					c.classList.remove("selected");
 				}
 				if(code == 40) {
 					this.commandIndex++;
@@ -875,6 +843,40 @@ Main.prototype = {
 				}
 				activeChilren[this.commandIndex].classList.add("selected");
 				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
+			}
+			var _g2 = 0;
+			var _g12 = this.helpbox.children;
+			while(_g2 < _g12.length) {
+				var c1 = _g12[_g2];
+				++_g2;
+				var li = c1;
+				var command = li.getAttribute("data-command");
+				if(!(code != null && code == 13 || this.chatbox.value.charAt(this.chatbox.value.length - 1) == " ")) {
+					var sub = HxOverrides.substr(this.chatbox.value,1,null);
+					var trimmed = false;
+					if(sub.indexOf(" ") != -1) {
+						trimmed = true;
+						sub = sub.substring(0,sub.indexOf(" "));
+					}
+					var end;
+					if(!trimmed) end = sub.length; else end = command.length;
+					haxe_Log.trace(sub,{ fileName : "Main.hx", lineNumber : 959, className : "Main", methodName : "_checkKeyPress", customParams : [command]});
+					haxe_Log.trace(HxOverrides.substr(command,0,end),{ fileName : "Main.hx", lineNumber : 960, className : "Main", methodName : "_checkKeyPress"});
+					if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
+						li.style.display = "list-item";
+						if(!selected && sub.length > 0) {
+							li.classList.add("selected");
+							selected = true;
+						} else li.classList.remove("selected");
+					}
+				}
+				if(li.classList.contains("selected")) {
+					var replacement = "/" + command + " ";
+					if(this.chatbox.value.indexOf(replacement) == -1 && (this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13)) {
+						this.chatbox.value = replacement;
+						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
+					}
+				}
 			}
 		} else {
 			this.helpbox.style.display = "none";

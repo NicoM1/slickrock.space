@@ -914,48 +914,6 @@ class Main
 				commandIndex = -1;
 			}
 			
-			for (c in helpbox.children) {
-				var li: LIElement = cast c;
-				
-				var command = li.getAttribute('data-command');
-				
-				var sub = chatbox.value.substr(1);
-				var trimmed: Bool = false;
-				if (sub.indexOf(' ') != -1) {
-					trimmed = true;
-					sub = sub.substring(0, sub.indexOf(' '));
-				}
-
-				var end: Int = (!trimmed? sub.length : command.length);
-				
-				trace(sub, command);
-				trace(command.substr(0, end)); 
-				
-				if (command.substr(0, end) != sub) {
-					li.style.display = 'none';
-				}
-				else {
-					li.style.display = 'list-item';
-					if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
-						li.classList.add('selected');
-						selected = true;
-					}
-					else {
-						li.classList.remove('selected');
-					}
-				}
-				
-				if (li.classList.contains('selected')) {
-					var replacement = '/' + command + ' ';
-					if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13))) {
-						
-						chatbox.value = replacement;
-						if (code == 13 && commandInfos[command].requiresArgs == true) {
-							return;
-						}
-					}
-				}
-			}
 			if (code == 40 || code == 38) {
 				var activeChilren = [];
 				for (c in helpbox.children) {
@@ -982,6 +940,51 @@ class Main
 				activeChilren[commandIndex].classList.add('selected');
 				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
 			}		
+			
+			for (c in helpbox.children) {
+				var li: LIElement = cast c;
+				
+				var command = li.getAttribute('data-command');
+				
+				if(!((code != null && code == 13) || chatbox.value.charAt(chatbox.value.length - 1) == ' ')) {	
+					var sub = chatbox.value.substr(1);
+					var trimmed: Bool = false;
+					if (sub.indexOf(' ') != -1) {
+						trimmed = true;
+						sub = sub.substring(0, sub.indexOf(' '));
+					}
+
+					var end: Int = (!trimmed? sub.length : command.length);
+					
+					trace(sub, command);
+					trace(command.substr(0, end)); 
+					
+					if (command.substr(0, end) != sub) {
+						li.style.display = 'none';
+					}
+					else {
+						li.style.display = 'list-item';
+						if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
+							li.classList.add('selected');
+							selected = true;
+						}
+						else {
+							li.classList.remove('selected');
+						}
+					}
+				}
+				
+				if (li.classList.contains('selected')) {
+					var replacement = '/' + command + ' ';
+					if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13))) {
+						
+						chatbox.value = replacement;
+						if (code == 13 && commandInfos[command].requiresArgs == true) {
+							return;
+						}
+					}
+				}
+			}
 		}
 		else {
 			helpbox.style.display = 'none';
