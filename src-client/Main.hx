@@ -939,7 +939,6 @@ class Main
 					if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
 						li.classList.add('selected');
 						selected = true;
-						break;
 					}
 					else {
 						li.classList.remove('selected');

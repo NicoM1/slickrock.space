@@ -845,7 +845,6 @@ Main.prototype = {
 					if(!selected && sub.length > 0) {
 						li.classList.add("selected");
 						selected = true;
-						break;
 					} else li.classList.remove("selected");
 				}
 				if(li.classList.contains("selected")) {
