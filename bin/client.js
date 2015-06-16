@@ -824,35 +824,12 @@ Main.prototype = {
 				this.helpbox.style.display = "block";
 				this.commandIndex = -1;
 			}
-			if(code == 40 || code == 38) {
-				var activeChilren = [];
-				var _g1 = 0;
-				var _g11 = this.helpbox.children;
-				while(_g1 < _g11.length) {
-					var c = _g11[_g1];
-					++_g1;
-					if(c.style.display == "list-item") activeChilren.push(c);
-					if(c.classList.contains("selected") && this.commandIndex < 0) this.commandIndex = 0;
-					c.classList.remove("selected");
-				}
-				if(code == 40) {
-					this.commandIndex++;
-					if(this.commandIndex >= activeChilren.length) this.commandIndex = 0;
-				} else if(code == 38) {
-					this.commandIndex--;
-					if(this.commandIndex <= -1) this.commandIndex = activeChilren.length - 1;
-				}
-				activeChilren[this.commandIndex].classList.add("selected");
-				selectedElem = activeChilren[this.commandIndex];
-				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
-				return;
-			}
-			var _g2 = 0;
-			var _g12 = this.helpbox.children;
-			while(_g2 < _g12.length) {
-				var c1 = _g12[_g2];
-				++_g2;
-				var li = c1;
+			var _g1 = 0;
+			var _g11 = this.helpbox.children;
+			while(_g1 < _g11.length) {
+				var c = _g11[_g1];
+				++_g1;
+				var li = c;
 				var command = li.getAttribute("data-command");
 				var sub = HxOverrides.substr(this.chatbox.value,1,null);
 				var trimmed = false;
@@ -871,11 +848,34 @@ Main.prototype = {
 					} else li.classList.remove("selected");
 				}
 			}
+			if(code == 40 || code == 38) {
+				var activeChilren = [];
+				var _g2 = 0;
+				var _g12 = this.helpbox.children;
+				while(_g2 < _g12.length) {
+					var c1 = _g12[_g2];
+					++_g2;
+					if(c1.style.display == "list-item") activeChilren.push(c1);
+					if(c1.classList.contains("selected") && this.commandIndex < 0) this.commandIndex = 0;
+					c1.classList.remove("selected");
+				}
+				if(code == 40) {
+					this.commandIndex++;
+					if(this.commandIndex >= activeChilren.length) this.commandIndex = 0;
+				} else if(code == 38) {
+					this.commandIndex--;
+					if(this.commandIndex <= -1) this.commandIndex = activeChilren.length - 1;
+				}
+				activeChilren[this.commandIndex].classList.add("selected");
+				selectedElem = activeChilren[this.commandIndex];
+				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
+				return;
+			}
 			if(selectedElem != null) {
 				var command1 = selectedElem.getAttribute("data-command");
 				haxe_Log.trace(command1,{ fileName : "Main.hx", lineNumber : 981, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command1 + " ";
-				if(this.chatbox.value.indexOf(replacement) == -1 && (this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13)) {
+				if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
 					haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 984, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 					this.chatbox.value = replacement;
 					if(code == 13 && this.commandInfos.get(command1).requiresArgs == true) return;

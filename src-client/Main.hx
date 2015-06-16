@@ -917,35 +917,6 @@ class Main
 				commandIndex = -1;
 			}
 			
-			if (code == 40 || code == 38) {
-				var activeChilren = [];
-				for (c in helpbox.children) {
-					if (c.style.display == 'list-item') {
-						activeChilren.push(c);
-					}
-					if (c.classList.contains('selected') && commandIndex < 0) {
-						commandIndex = 0;
-					}
-					c.classList.remove('selected');
-				}
-				if (code == 40) { //DOWN
-					commandIndex++;
-					if (commandIndex >= activeChilren.length) {
-						commandIndex = 0;
-					}
-				}
-				else if (code == 38) { //UP
-					commandIndex--;
-					if (commandIndex <= -1) {
-						commandIndex = activeChilren.length - 1;
-					}
-				}
-				activeChilren[commandIndex].classList.add('selected');
-				selectedElem = cast activeChilren[commandIndex];
-				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
-				return;
-			}		
-			
 			for (c in helpbox.children) {
 				var li: LIElement = cast c;
 				
@@ -976,11 +947,40 @@ class Main
 				}
 			}
 			
+			if (code == 40 || code == 38) {
+				var activeChilren = [];
+				for (c in helpbox.children) {
+					if (c.style.display == 'list-item') {
+						activeChilren.push(c);
+					}
+					if (c.classList.contains('selected') && commandIndex < 0) {
+						commandIndex = 0;
+					}
+					c.classList.remove('selected');
+				}
+				if (code == 40) { //DOWN
+					commandIndex++;
+					if (commandIndex >= activeChilren.length) {
+						commandIndex = 0;
+					}
+				}
+				else if (code == 38) { //UP
+					commandIndex--;
+					if (commandIndex <= -1) {
+						commandIndex = activeChilren.length - 1;
+					}
+				}
+				activeChilren[commandIndex].classList.add('selected');
+				selectedElem = cast activeChilren[commandIndex];
+				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
+				return;
+			}		
+			
 			if (selectedElem != null) {	
 				var command = selectedElem.getAttribute('data-command');
 				trace(command);
 				var replacement = '/' + command + ' ';
-				if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13))) {
+				if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13)) {
 					trace(chatbox.value, replacement);
 					
 					chatbox.value = replacement;
