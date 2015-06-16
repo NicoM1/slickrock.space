@@ -841,7 +841,7 @@ Main.prototype = {
 				var trimmed = false;
 				if(sub.indexOf(" ") != -1) {
 					trimmed = true;
-					sub = sub.substring(0,sub.indexOf(" "));
+					sub = sub.substring(0,sub.indexOf(" ") - 1);
 				}
 				var end;
 				if(!trimmed) end = sub.length; else end = command.length;

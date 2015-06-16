@@ -932,7 +932,7 @@ class Main
 				var trimmed: Bool = false;
 				if (sub.indexOf(' ') != -1) {
 					trimmed = true;
-					sub = sub.substring(0, sub.indexOf(' '));
+					sub = sub.substring(0, sub.indexOf(' ') - 1);
 				}
 
 				var end: Int = (!trimmed? sub.length : command.length);
@@ -976,7 +976,7 @@ class Main
 				}
 				activeChilren[commandIndex].classList.add('selected');
 				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
-			}
+			}		
 		}
 		else {
 			helpbox.style.display = 'none';
