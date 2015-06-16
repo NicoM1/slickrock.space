@@ -832,7 +832,7 @@ Main.prototype = {
 				var command = li.getAttribute("data-command");
 				if(li.classList.contains("selected")) {
 					var replacement = "/" + command + " ";
-					if(HxOverrides.substr(this.chatbox.value,0,replacement.length) != replacement && this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13 && this.chatbox.value.length < replacement.length) {
+					if(this.chatbox.value.indexOf(replacement) == -1 && this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13 && this.chatbox.value.length < replacement.length) {
 						this.chatbox.value = replacement;
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
 					}

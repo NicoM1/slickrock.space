@@ -920,7 +920,7 @@ class Main
 				var command = li.getAttribute('data-command');
 				if (li.classList.contains('selected')) {
 					var replacement = '/' + command + ' ';
-					if (chatbox.value.substr(0,replacement.length) != replacement && chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13 && chatbox.value.length < replacement.length) {
+					if (chatbox.value.indexOf(replacement) == -1 && chatbox.value.charAt(chatbox.value.length - 1) == ' ' || code != null && code == 13 && chatbox.value.length < replacement.length) {
 						chatbox.value = replacement;
 						if (code == 13 && commandInfos[command].requiresArgs == true) {
 							return;
