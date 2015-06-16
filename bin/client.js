@@ -861,8 +861,6 @@ Main.prototype = {
 					}
 					var end;
 					if(!trimmed) end = sub.length; else end = command.length;
-					haxe_Log.trace(sub,{ fileName : "Main.hx", lineNumber : 961, className : "Main", methodName : "_checkKeyPress", customParams : [command]});
-					haxe_Log.trace(HxOverrides.substr(command,0,end),{ fileName : "Main.hx", lineNumber : 962, className : "Main", methodName : "_checkKeyPress"});
 					if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
 						li.style.display = "list-item";
 						if(!selected && sub.length > 0) {
@@ -874,6 +872,7 @@ Main.prototype = {
 				if(li.classList.contains("selected")) {
 					var replacement = "/" + command + " ";
 					if(this.chatbox.value.indexOf(replacement) == -1 && (this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13)) {
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 979, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
 					}

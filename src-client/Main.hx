@@ -958,9 +958,6 @@ class Main
 
 					var end: Int = (!trimmed? sub.length : command.length);
 					
-					trace(sub, command);
-					trace(command.substr(0, end)); 
-					
 					if (command.substr(0, end) != sub) {
 						li.style.display = 'none';
 					}
@@ -979,6 +976,7 @@ class Main
 				if (li.classList.contains('selected')) {
 					var replacement = '/' + command + ' ';
 					if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13))) {
+						trace(chatbox.value, replacement);
 						
 						chatbox.value = replacement;
 						if (code == 13 && commandInfos[command].requiresArgs == true) {
