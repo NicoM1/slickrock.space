@@ -932,10 +932,10 @@ class Main
 				var trimmed: Bool = false;
 				if (sub.indexOf(' ') != -1) {
 					trimmed = true;
-					sub = sub.substring(0, sub.indexOf(' ') - 1);
+					sub = sub.substring(0, sub.indexOf(' '));
 				}
 
-				var end: Int = (!trimmed? sub.length : command.length);
+				var end: Int = (trimmed? sub.length : command.length);
 				
 				if (command.substr(0, end) != sub) {
 					li.style.display = 'none';
