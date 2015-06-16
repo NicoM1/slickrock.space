@@ -421,11 +421,15 @@ class RouteHandler implements abe.IRoute {
 		var roomE = Main.rooms.get(room);
 		if (roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt + password)) {
 			var roomE = Main.rooms.get(room);
+			var pass = null;
+			if (roomE.pw != null) {
+				pass = 'true';
+			}
 			var messages: MessageData = {
 				messages: {
 					messages: new Array<Message>(),
 					lock: null,
-					pw: null,
+					pw: pass,
 					typing: roomE.typing
 				},
 				lastID: roomE.messages.length - 1

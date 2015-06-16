@@ -515,7 +515,10 @@ Main.prototype = {
 		this._setAdminPassword(newPassword);
 		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
 		lockHttp.onData = function(d) {
-			if(d == "claimed") _g._addMessage("" + _g.room + " claimed."); else _g._addMessage("you are not authorized to claim " + _g.room + ".");
+			if(d == "claimed") {
+				_g._addMessage("" + _g.room + " claimed.");
+				_g._addMessage("you may consider ***/fasten***ing it at any time.");
+			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
 			console.log(e);
@@ -682,7 +685,10 @@ Main.prototype = {
 				};
 			})($bind(this,this._tryScroll),true);
 		}
-		if(this.first) this._tryScroll(true);
+		if(this.first) {
+			this._tryScroll(true);
+			if(parsed.messages.pw != null && parsed.messages.messages.length == 0) this._addMessage("*" + this.room + "* is unclaimed, consider ***/claim***ing it?");
+		}
 		this.first = false;
 		this.requestInProgress = false;
 		if(hist) this.histRequestInProgress = false;
