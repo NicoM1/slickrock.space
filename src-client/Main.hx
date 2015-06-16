@@ -909,6 +909,8 @@ class Main
 		}
 		
 		var selected: Bool = false;
+		var selectedElem: LIElement = null;
+		
 		if (chatbox.value.charAt(0) == '/') {
 			if(helpbox.style.display != 'block') {
 				helpbox.style.display = 'block';
@@ -939,11 +941,10 @@ class Main
 					}
 				}
 				activeChilren[commandIndex].classList.add('selected');
+				selectedElem = cast activeChilren[commandIndex];
 				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
 				return;
 			}		
-			
-			var selectedElem: LIElement = null;
 			
 			for (c in helpbox.children) {
 				var li: LIElement = cast c;
@@ -977,6 +978,7 @@ class Main
 			
 			if (selectedElem != null) {	
 				var command = selectedElem.getAttribute('data-command');
+				trace(command);
 				var replacement = '/' + command + ' ';
 				if (chatbox.value.indexOf(replacement) == -1 && (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13))) {
 					trace(chatbox.value, replacement);
