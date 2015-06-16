@@ -875,6 +875,7 @@ Main.prototype = {
 						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 979, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
+						break;
 					}
 				}
 			}

@@ -982,6 +982,7 @@ class Main
 						if (code == 13 && commandInfos[command].requiresArgs == true) {
 							return;
 						}
+						break;
 					}
 				}
 			}
