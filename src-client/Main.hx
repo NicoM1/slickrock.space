@@ -541,7 +541,7 @@ class Main
 		lockHttp.onData = function(d) {
 			if(d == 'claimed') {
 				_addMessage('$room claimed.');
-				_addMessage('you may consider ***/fasten***ing it at any time.');
+				_addMessage('you may consider ***/fasten***-ing it at any time.');
 			}
 			else {
 				_addMessage('you are not authorized to claim $room.');
@@ -731,8 +731,8 @@ class Main
 		if (first) {
 			_tryScroll(true);
 			
-			if (parsed.messages.pw != null && parsed.messages.messages.length == 0) {
-				_addMessage('*$room* is unclaimed, consider ***/claim***ing it?');
+			if (parsed.messages.pw == null && parsed.messages.messages.length == 0) {
+				_addMessage('*$room* is unclaimed, consider ***/claim***-ing it?');
 			}
 		}
 		

@@ -517,7 +517,7 @@ Main.prototype = {
 		lockHttp.onData = function(d) {
 			if(d == "claimed") {
 				_g._addMessage("" + _g.room + " claimed.");
-				_g._addMessage("you may consider ***/fasten***ing it at any time.");
+				_g._addMessage("you may consider ***/fasten***-ing it at any time.");
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
@@ -687,7 +687,7 @@ Main.prototype = {
 		}
 		if(this.first) {
 			this._tryScroll(true);
-			if(parsed.messages.pw != null && parsed.messages.messages.length == 0) this._addMessage("*" + this.room + "* is unclaimed, consider ***/claim***ing it?");
+			if(parsed.messages.pw == null && parsed.messages.messages.length == 0) this._addMessage("*" + this.room + "* is unclaimed, consider ***/claim***-ing it?");
 		}
 		this.first = false;
 		this.requestInProgress = false;
