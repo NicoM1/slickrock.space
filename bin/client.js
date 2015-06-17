@@ -845,7 +845,7 @@ Main.prototype = {
 				activeChilren[this.commandIndex].classList.add("selected");
 				this.selectedElem = activeChilren[this.commandIndex];
 				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
-			} else if(code != 13 && code != 32) {
+			} else if(code != 13 && code != 32 && this.chatbox.value.indexOf(" ") == -1) {
 				var _g2 = 0;
 				var _g12 = this.helpbox.children;
 				while(_g2 < _g12.length) {
