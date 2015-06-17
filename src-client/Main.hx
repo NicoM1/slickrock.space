@@ -945,7 +945,7 @@ class Main
 				selectedElem = cast activeChilren[commandIndex];
 				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
 			}
-			else if(code != 13 && code != 32 && chatbox.value.indexOf(' ') == -1) {
+			else if(code != 13 && code != 32) {
 				for (c in helpbox.children) {
 					var li: LIElement = cast c;
 					
@@ -981,12 +981,14 @@ class Main
 				var command = selectedElem.getAttribute('data-command');
 				trace(command);
 				var replacement = '/' + command + ' ';
-				if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13)) {
-					trace(chatbox.value, replacement);
-					
-					chatbox.value = replacement;
-					if (code == 13 && commandInfos[command].requiresArgs == true) {
-						return;
+				if(chatbox.value.indexOf(command) == -1) {
+					if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13)) {
+						trace(chatbox.value, replacement);
+						
+						chatbox.value = replacement;
+						if (code == 13 && commandInfos[command].requiresArgs == true) {
+							return;
+						}
 					}
 				}
 			}

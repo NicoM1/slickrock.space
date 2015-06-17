@@ -845,7 +845,7 @@ Main.prototype = {
 				activeChilren[this.commandIndex].classList.add("selected");
 				this.selectedElem = activeChilren[this.commandIndex];
 				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
-			} else if(code != 13 && code != 32 && this.chatbox.value.indexOf(" ") == -1) {
+			} else if(code != 13 && code != 32) {
 				var _g2 = 0;
 				var _g12 = this.helpbox.children;
 				while(_g2 < _g12.length) {
@@ -875,10 +875,12 @@ Main.prototype = {
 				var command1 = this.selectedElem.getAttribute("data-command");
 				haxe_Log.trace(command1,{ fileName : "Main.hx", lineNumber : 982, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command1 + " ";
-				if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-					haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 985, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
-					this.chatbox.value = replacement;
-					if(code == 13 && this.commandInfos.get(command1).requiresArgs == true) return;
+				if(this.chatbox.value.indexOf(command1) == -1) {
+					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 986, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						this.chatbox.value = replacement;
+						if(code == 13 && this.commandInfos.get(command1).requiresArgs == true) return;
+					}
 				}
 			}
 		} else {
