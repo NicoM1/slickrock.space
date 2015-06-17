@@ -425,7 +425,7 @@ RouteHandler.prototype = {
 			if(e == null) {
 				var withRoom = "";
 				var startBody = d.indexOf("head") + 6;
-				withRoom = d.substring(0,startBody) + "\n\t<script>var room = \"base\"</script>\n" + HxOverrides.substr(d,startBody + 1,null);
+				withRoom = d.substring(0,startBody) + "\n\t<script>var room = \"frontpage\"</script>\n" + HxOverrides.substr(d,startBody + 1,null);
 				response.setHeader("Access-Control-Allow-Origin","*");
 				response.send(withRoom);
 			}
@@ -452,6 +452,11 @@ RouteHandler.prototype = {
 		this._sendMessage(response,message,room,password,id,privateID,token);
 	}
 	,_sendMessage: function(response,message,room,password,id,privateID,token) {
+		if(room == "frontpage") {
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("failed");
+			return;
+		}
 		if(Main.tokens.get(privateID) == token) {
 			if(!Main.rooms.exists(room)) {
 				var value = { messages : [], lock : null, pw : null, typing : []};
@@ -494,6 +499,11 @@ RouteHandler.prototype = {
 		response.send(value);
 	}
 	,typing: function(room,id,request,response,next) {
+		if(room == "frontpage") {
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("failed");
+			return;
+		}
 		if((function($this) {
 			var $r;
 			var _this = Main.rooms.get(room).typing;
@@ -507,6 +517,11 @@ RouteHandler.prototype = {
 		response.send("needs a response");
 	}
 	,lockRoom: function(room,privateID,password,privatePass,request,response,next) {
+		if(room == "frontpage") {
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("failed");
+			return;
+		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.pw == null) {
@@ -529,6 +544,11 @@ RouteHandler.prototype = {
 		return this.letters.charAt(rand["int"](this.letters.length,null)) + this.letters.charAt(rand["int"](this.letters.length,null));
 	}
 	,unlockRoom: function(room,privateID,privatePass,request,response,next) {
+		if(room == "frontpage") {
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("failed");
+			return;
+		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.lock != null) {
@@ -548,6 +568,11 @@ RouteHandler.prototype = {
 		response.send("failed");
 	}
 	,claimRoom: function(room,privateID,privatePass,request,response,next) {
+		if(room == "frontpage") {
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("failed");
+			return;
+		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.pw == null && roomE.messages.length == 0 || haxe_crypto_Sha1.encode(roomE.salt + privatePass) == roomE.pw) {

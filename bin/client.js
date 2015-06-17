@@ -363,9 +363,11 @@ Main.prototype = {
 		checkValid.request(true);
 	}
 	,_tryAuth: function() {
-		this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);
-		this.authHttp.request(true);
-		this.hasTriedAuth = true;
+		if(this.room != "frontpage") {
+			this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);
+			this.authHttp.request(true);
+			this.hasTriedAuth = true;
+		}
 	}
 	,_getAuth: function(data) {
 		this._addMessage("please enter the following to authenticate.");
@@ -492,7 +494,7 @@ Main.prototype = {
 			_g._printID();
 		};
 		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 505, className : "Main", methodName : "_getID"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 507, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
 		};
 		idHttp.request(true);
@@ -525,7 +527,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 557, className : "Main", methodName : "_claimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 559, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
 		};
 		lockHttp.request(true);
@@ -544,7 +546,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 582, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 584, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -585,7 +587,7 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 637, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 639, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
@@ -597,7 +599,7 @@ Main.prototype = {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 655, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 657, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
 		};
 		lockHttp.request(true);
@@ -717,7 +719,7 @@ Main.prototype = {
 	}
 	,_tryScroll: function(force,img) {
 		if(force == null) force = false;
-		if(force || this._atBottom(img)) {
+		if(this.room != "frontpage" && (force || this._atBottom(img))) {
 			window.scrollTo(0,this.messages.scrollHeight);
 			this.initialScroll = false;
 		}
@@ -855,11 +857,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 960, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 962, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 964, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 966, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
@@ -933,10 +935,12 @@ Main.prototype = {
 		}
 	}
 	,_postMessage: function(msg) {
-		if(StringTools.trim(msg) != "") {
-			if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
-			this.postHttp.request(true);
-		}
+		if(this.room != "frontpage") {
+			if(StringTools.trim(msg) != "") {
+				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
+				this.postHttp.request(true);
+			}
+		} else this._addMessage("you may not chat on the front page, please try ***/survey***.");
 	}
 	,_openImageInNewTab: function(src) {
 		var win = window.open(src,"_blank");
