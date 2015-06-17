@@ -944,10 +944,8 @@ class Main
 				activeChilren[commandIndex].classList.add('selected');
 				selectedElem = cast activeChilren[commandIndex];
 				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
-				return;
 			}
-			
-			if(selectedElem == null) {
+			else {
 				for (c in helpbox.children) {
 					var li: LIElement = cast c;
 					
