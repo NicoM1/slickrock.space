@@ -902,6 +902,8 @@ class Main
 	//}
 
 	//{ message posting
+	var selectedElem: LIElement = null;
+	
 	function _checkKeyPress(e) {
 		var code = null;
 		if(e != null) {
@@ -909,7 +911,6 @@ class Main
 		}
 		
 		var selected: Bool = false;
-		var selectedElem: LIElement = null;
 		
 		if (chatbox.value.charAt(0) == '/') {
 			if(helpbox.style.display != 'block') {
