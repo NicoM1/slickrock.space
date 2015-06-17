@@ -910,8 +910,6 @@ class Main
 			 code = (e.keyCode != null ? e.keyCode : e.which);
 		}
 		
-		var selected: Bool = false;
-		
 		if (chatbox.value.charAt(0) == '/') {
 			if(helpbox.style.display != 'block') {
 				helpbox.style.display = 'block';
@@ -945,36 +943,8 @@ class Main
 				selectedElem = cast activeChilren[commandIndex];
 				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
 			}
-			else /*if(code != 13 && code != 32)*/ {
-				for (c in helpbox.children) {
-					var li: LIElement = cast c;
-					
-					var command = li.getAttribute('data-command');
-					
-					var sub = chatbox.value.substr(1);
-					var trimmed: Bool = false;
-					if (sub.indexOf(' ') != -1) {
-						trimmed = true;
-						sub = sub.substring(0, sub.indexOf(' '));
-					}
-
-					var end: Int = (!trimmed? sub.length : command.length);
-					
-					if (command.substr(0, end) != sub) {
-						li.style.display = 'none';
-					}
-					else {
-						li.style.display = 'list-item';
-						if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
-							li.classList.add('selected');
-							selectedElem = li;
-							selected = true;
-						}
-						else {
-							li.classList.remove('selected');
-						}
-					}
-				}	
+			else if(code != 13 && code != 32) {
+				_filterHelp();
 			}
 			
 			if (selectedElem != null) {	
@@ -986,6 +956,7 @@ class Main
 						trace(chatbox.value, replacement);
 						
 						chatbox.value = replacement;
+						_filterHelp();
 						if (code == 13 && commandInfos[command].requiresArgs == true) {
 							return;
 						}
@@ -1039,6 +1010,40 @@ class Main
 			chatbox.value = '';
 			helpbox.style.display = 'none';
 		}
+	}
+	
+	function _filterHelp() {
+		var selected: Bool = false;
+		
+		for (c in helpbox.children) {
+			var li: LIElement = cast c;
+			
+			var command = li.getAttribute('data-command');
+			
+			var sub = chatbox.value.substr(1);
+			var trimmed: Bool = false;
+			if (sub.indexOf(' ') != -1) {
+				trimmed = true;
+				sub = sub.substring(0, sub.indexOf(' '));
+			}
+
+			var end: Int = (!trimmed? sub.length : command.length);
+			
+			if (command.substr(0, end) != sub) {
+				li.style.display = 'none';
+			}
+			else {
+				li.style.display = 'list-item';
+				if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
+					li.classList.add('selected');
+					selectedElem = li;
+					selected = true;
+				}
+				else {
+					li.classList.remove('selected');
+				}
+			}
+		}	
 	}
 	
 	function _postMessage(msg: String) {

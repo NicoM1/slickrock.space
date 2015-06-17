@@ -818,7 +818,6 @@ Main.prototype = {
 		var _g = this;
 		var code = null;
 		if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
-		var selected = false;
 		if(this.chatbox.value.charAt(0) == "/") {
 			if(this.helpbox.style.display != "block") {
 				this.helpbox.style.display = "block";
@@ -845,41 +844,17 @@ Main.prototype = {
 				activeChilren[this.commandIndex].classList.add("selected");
 				this.selectedElem = activeChilren[this.commandIndex];
 				this.helpbox.scrollTop = activeChilren[this.commandIndex].offsetTop;
-			} else {
-				var _g2 = 0;
-				var _g12 = this.helpbox.children;
-				while(_g2 < _g12.length) {
-					var c1 = _g12[_g2];
-					++_g2;
-					var li = c1;
-					var command = li.getAttribute("data-command");
-					var sub = HxOverrides.substr(this.chatbox.value,1,null);
-					var trimmed = false;
-					if(sub.indexOf(" ") != -1) {
-						trimmed = true;
-						sub = sub.substring(0,sub.indexOf(" "));
-					}
-					var end;
-					if(!trimmed) end = sub.length; else end = command.length;
-					if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
-						li.style.display = "list-item";
-						if(!selected && sub.length > 0) {
-							li.classList.add("selected");
-							this.selectedElem = li;
-							selected = true;
-						} else li.classList.remove("selected");
-					}
-				}
-			}
+			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
-				var command1 = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command1,{ fileName : "Main.hx", lineNumber : 982, className : "Main", methodName : "_checkKeyPress"});
-				var replacement = "/" + command1 + " ";
-				if(this.chatbox.value.indexOf(command1) == -1) {
+				var command = this.selectedElem.getAttribute("data-command");
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 952, className : "Main", methodName : "_checkKeyPress"});
+				var replacement = "/" + command + " ";
+				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 986, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 956, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
-						if(code == 13 && this.commandInfos.get(command1).requiresArgs == true) return;
+						this._filterHelp();
+						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
 					}
 				}
 			}
@@ -920,6 +895,33 @@ Main.prototype = {
 			}
 			this.chatbox.value = "";
 			this.helpbox.style.display = "none";
+		}
+	}
+	,_filterHelp: function() {
+		var selected = false;
+		var _g = 0;
+		var _g1 = this.helpbox.children;
+		while(_g < _g1.length) {
+			var c = _g1[_g];
+			++_g;
+			var li = c;
+			var command = li.getAttribute("data-command");
+			var sub = HxOverrides.substr(this.chatbox.value,1,null);
+			var trimmed = false;
+			if(sub.indexOf(" ") != -1) {
+				trimmed = true;
+				sub = sub.substring(0,sub.indexOf(" "));
+			}
+			var end;
+			if(!trimmed) end = sub.length; else end = command.length;
+			if(HxOverrides.substr(command,0,end) != sub) li.style.display = "none"; else {
+				li.style.display = "list-item";
+				if(!selected && sub.length > 0) {
+					li.classList.add("selected");
+					this.selectedElem = li;
+					selected = true;
+				} else li.classList.remove("selected");
+			}
 		}
 	}
 	,_postMessage: function(msg) {
