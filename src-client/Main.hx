@@ -945,7 +945,7 @@ class Main
 				selectedElem = cast activeChilren[commandIndex];
 				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
 			}
-			else if(code != 13 && code != 32) {
+			else /*if(code != 13 && code != 32)*/ {
 				for (c in helpbox.children) {
 					var li: LIElement = cast c;
 					
