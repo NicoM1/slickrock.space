@@ -855,6 +855,7 @@ class Main
 	var italicBB: EReg = ~/(?:\[i\]|\*)(.*?)(?:\[\/i\]|\*)/i;
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
+	var headerMD: EReg = ~/\^(.*?)\^/i;
 	
 	function _parseMessage(raw: String): String {
 		var parsed: String = raw.replace('\n', ' ');
@@ -896,6 +897,11 @@ class Main
 			var text = codeBB.matched(1);
 			var preTag = '<pre>$text</pre>';
 			parsed = codeBB.replace(parsed, preTag);
+		}
+		while (headerMD.match(parsed)) {
+			var text = headerMD.matched(1);
+			var preTag = '<h1>$text</h1>';
+			parsed = headerMD.replace(parsed, preTag);
 		}
 		return parsed;
 	}

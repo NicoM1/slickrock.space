@@ -47,6 +47,10 @@ img {
 	padding:0px;
 }
 
+h1 {
+	font-size: 250%;
+}
+
 span {
 	float: left;
 	width: 0;
