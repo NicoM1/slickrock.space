@@ -916,37 +916,7 @@ class Main
 				helpbox.style.display = 'block';
 				commandIndex = -1;
 			}
-			
-			for (c in helpbox.children) {
-				var li: LIElement = cast c;
-				
-				var command = li.getAttribute('data-command');
-				
-				var sub = chatbox.value.substr(1);
-				var trimmed: Bool = false;
-				if (sub.indexOf(' ') != -1) {
-					trimmed = true;
-					sub = sub.substring(0, sub.indexOf(' '));
-				}
-
-				var end: Int = (!trimmed? sub.length : command.length);
-				
-				if (command.substr(0, end) != sub) {
-					li.style.display = 'none';
-				}
-				else {
-					li.style.display = 'list-item';
-					if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
-						li.classList.add('selected');
-						selectedElem = li;
-						selected = true;
-					}
-					else {
-						li.classList.remove('selected');
-					}
-				}
-			}
-			
+						
 			if (code == 40 || code == 38) {
 				var activeChilren = [];
 				for (c in helpbox.children) {
@@ -974,7 +944,39 @@ class Main
 				selectedElem = cast activeChilren[commandIndex];
 				helpbox.scrollTop = activeChilren[commandIndex].offsetTop;
 				return;
-			}		
+			}
+			
+			if(selectedElem == null) {
+				for (c in helpbox.children) {
+					var li: LIElement = cast c;
+					
+					var command = li.getAttribute('data-command');
+					
+					var sub = chatbox.value.substr(1);
+					var trimmed: Bool = false;
+					if (sub.indexOf(' ') != -1) {
+						trimmed = true;
+						sub = sub.substring(0, sub.indexOf(' '));
+					}
+
+					var end: Int = (!trimmed? sub.length : command.length);
+					
+					if (command.substr(0, end) != sub) {
+						li.style.display = 'none';
+					}
+					else {
+						li.style.display = 'list-item';
+						if (!selected && sub.length > 0) { //nothing selected, and must be filtered not a big list
+							li.classList.add('selected');
+							selectedElem = li;
+							selected = true;
+						}
+						else {
+							li.classList.remove('selected');
+						}
+					}
+				}	
+			}
 			
 			if (selectedElem != null) {	
 				var command = selectedElem.getAttribute('data-command');
