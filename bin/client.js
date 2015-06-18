@@ -158,7 +158,7 @@ var Main = function() {
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
 	this.embedTemplate = "<iframe src=\"[SRC]\" width=\"[WIDTH]\" height=\"[HEIGHT]\" style=\"border-color: #333333; border-style: solid;\"></iframe>";
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
-	this._frontpageHTML = "\r\n\t\t<span style=\"color: rgb(61, 138, 111);\">\r\n\t\t\t&gt;\t\r\n\t\t</span>\r\n\t\t<div class=\"messageblock\" data-id=\"NicoMay\">\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<h1>slickrock.io is:</h1>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<br>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<strong>simple.</strong>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; • no username, no password.\r\n\t\t\t</div><div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; • no room setup, just find something unclaimed and take it for yourself.\r\n\t\t\t</div><div class=\"messageitem\">\r\n\t\t\t\t<br>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<strong>private.</strong>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; • lock rooms with a password if you wish, unlock whenever you want.\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<br>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<strong>useful.</strong>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; • need to quickly talk to someone, without them needing some special app or account? just send a link, works anywhere, on anything.\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<br>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<strong>modern.</strong>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; • designed to look clean on every surface, slickrock.io scales gracefully with screen size:\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<img src = \"http://i.imgur.com/3tbWAph.jpg\" class = \"imgmessage\" width = \"700\">\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<br>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<strong>embeddable.</strong>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; • want a simple chat embedded in your website? slickrock.io works great for game jams, forums, and more.\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<img src = \"http://i.imgur.com/Kd1qa13.png\" class = \"imgmessage\" width = \"700\">\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<br>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<h1>info:</h1>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; - slickrock.io developed by Nico May (@nico_m__), completely in my free time.\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; - as well as time costs, there are unfortunately hosting costs.\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp;&nbsp;&nbsp;- while I will never show ads, nor sell your data, if you are well off enough to be able to contribute I would appreciate it immensely.\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; - I'm currently looking into donation methods, if you are interested in contributing please email me nico.may99(at) gmail.com, people showing interest may help me speed up sorting out a proper way of accepting donations. \r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<br>\r\n\t\t\t</div > \r\n\t\t\t<div class = \"messageitem\"> \r\n\t\t\t\t<h1> getting started: </h1>\r\n\t\t\t</div> \r\n\t\t\t<div class = \"messageitem\"> \r\n\t\t\t\t&nbsp; &nbsp; &nbsp; - you may use \"/survey chat\" to visit the main public room. \r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; - if you wish you may start your own room simply by finding something no one else has, you'll get a message if you do.\r\n\t\t\t</div >\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<br>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<h1>extra info:</h1>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp;&nbsp;&nbsp; - should you run into technical issues you may tweet at me (@nico_m__), email me (nico.may99(at)gmail.com), or send a message to /difficulties.\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t&nbsp; &nbsp; &nbsp; - slickrock.io is © Nico May 2015.\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<br>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"messageitem\">\r\n\t\t\t\t<h1>fin.</h1>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t";
+	this._frontpageHTML = "\r\n\t\t<span style=\"color: rgb(61, 138, 111);\">\r\n\t&gt;\t\r\n</span>\r\n<div class=\"messageblock\" data-id=\"NicoMay\">\r\n\t<h1>slickrock.io is:</h1>\r\n\t<div class=\"bulletlist\">\r\n\t\t<div class=\"label\">simple.</div>\r\n\t\t<ul>\r\n\t\t\t<li>no username, no password.</li>\r\n\t\t\t<li>no room setup, just find something unclaimed and take it for yourself.</li>\r\n\t\t</ul>\r\n\t</div>\r\n\t<div class=\"bulletlist\">\r\n\t\t<div class=\"label\">private.</div>\r\n\t\t<ul>\r\n\t\t\t<li>lock rooms with a password if you wish, unlock whenever you want.</li>\r\n\t\t</ul>\r\n\t</div>\r\n\t<div class=\"bulletlist\">\r\n\t\t<div class=\"label\">modern.</div>\r\n\t\t<ul>\r\n\t\t\t<li>designed to look clean on every surface, slickrock.io scales gracefully with screen size.</li>\r\n\t\t\t<li><img src=\"http://i.imgur.com/3tbWAph.jpg\" width=\"700\"></img></li>\r\n\t\t</ul>\r\n\t</div>\r\n\t<div class=\"bulletlist\">\r\n\t\t<div class=\"label\">embeddable</div>\r\n\t\t<ul>\r\n\t\t\t<li>want a simple chat embedded in your website? slickrock.io works great for game jams, forums, and more.</li>\r\n\t\t\t<li><img src=\"http://i.imgur.com/Kd1qa13.png\" width=\"700\"></img></li>\r\n\t\t</ul>\r\n\t</div>\r\n\t<h1>info:</h1>\r\n\t<div class=\"bulletlist\">\r\n\t\t<ul>\r\n\t\t\t<li>slickrock.io developed by Nico May (@nico_m__), completely in my free time.</li>\r\n\t\t\t<li>as well as time costs, there are unfortunately hosting costs.</li>\r\n\t\t\t<li>while I will never show ads, nor sell your data, if you are well off enough to be able to contribute I would appreciate it immensely.</li>\r\n\t\t\t<li> I'm currently looking into donation methods, if you are interested in contributing please email me nico.may99(at) gmail.com, people showing interest may help me speed up sorting out a proper way of accepting donations.</li>\r\n\t\t</ul>\r\n\t</div>\r\n\t<h1>getting started:</h1>\r\n\t<div class=\"bulletlist\">\r\n\t\t<ul>\r\n\t\t\t<li>you may use \"/survey chat\" to visit the main public room.</li>\r\n\t\t\t<li>if you wish you may start your own room simply by finding something no one else has, you'll get a message if you do.</li>\r\n\t\t</ul>\r\n\t</div>\r\n\t<h1>extra info:</h1>\r\n\t<div class=\"bulletlist\">\r\n\t\t<ul>\r\n\t\t\t<li>should you run into technical issues you may tweet at me (@nico_m__), email me (nico.may99(at)gmail.com), or send a message to /difficulties.</li>\r\n\t\t\t<li>slickrock.io is © Nico May 2015.</li>\r\n\t\t</ul>\r\n\t</div>\r\n\t<h1>fin.</h1>\r\n</div>\r\n\t";
 	this.lastY = null;
 	this.commandIndex = -1;
 	this.sendLast = false;
@@ -198,7 +198,7 @@ Main.prototype = {
 		this.authHttp = new haxe_Http(this.basePath);
 		this.authHttp.onData = $bind(this,this._getAuth);
 		this.authHttp.onError = function(error) {
-			haxe_Log.trace(error,{ fileName : "Main.hx", lineNumber : 216, className : "Main", methodName : "_windowLoaded"});
+			haxe_Log.trace(error,{ fileName : "Main.hx", lineNumber : 165, className : "Main", methodName : "_windowLoaded"});
 			_g._addMessage("Could not connect to authentication api, please refresh the page.");
 		};
 		this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
@@ -208,7 +208,7 @@ Main.prototype = {
 			};
 		})($bind(this,this._parseMessages),false);
 		this.getHttp.onError = function(error1) {
-			haxe_Log.trace(error1,{ fileName : "Main.hx", lineNumber : 223, className : "Main", methodName : "_windowLoaded"});
+			haxe_Log.trace(error1,{ fileName : "Main.hx", lineNumber : 172, className : "Main", methodName : "_windowLoaded"});
 			_g.requestInProgress = false;
 		};
 		this.postHttp = new haxe_Http(this.basePath);
@@ -222,7 +222,7 @@ Main.prototype = {
 			}
 		};
 		this.postHttp.onError = function(error2) {
-			haxe_Log.trace(error2,{ fileName : "Main.hx", lineNumber : 238, className : "Main", methodName : "_windowLoaded"});
+			haxe_Log.trace(error2,{ fileName : "Main.hx", lineNumber : 187, className : "Main", methodName : "_windowLoaded"});
 			_g.requestInProgress = false;
 		};
 		this.chatbox = window.document.getElementById("chatbox");
@@ -309,7 +309,7 @@ Main.prototype = {
 				var histHttp = new haxe_Http(this.basePath);
 				histHttp.onError = function(e) {
 					_g.histRequestInProgress = false;
-					haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 352, className : "Main", methodName : "_tryGetOldMessages"});
+					haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 301, className : "Main", methodName : "_tryGetOldMessages"});
 				};
 				histHttp.onData = (function(f,a2) {
 					return function(a1) {
@@ -495,7 +495,7 @@ Main.prototype = {
 			_g._printID();
 		};
 		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 623, className : "Main", methodName : "_getID"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 572, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
 		};
 		idHttp.request(true);
@@ -528,7 +528,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 675, className : "Main", methodName : "_claimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 624, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
 		};
 		lockHttp.request(true);
@@ -547,7 +547,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 700, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 649, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -588,7 +588,7 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 755, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 704, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
@@ -600,7 +600,7 @@ Main.prototype = {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 773, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 722, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
 		};
 		lockHttp.request(true);
@@ -862,11 +862,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1083, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1032, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1087, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1036, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;

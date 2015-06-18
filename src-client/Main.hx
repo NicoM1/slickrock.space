@@ -92,113 +92,62 @@ class Main
 	
 	var _frontpageHTML: String = '
 		<span style="color: rgb(61, 138, 111);">
-			&gt;	
-		</span>
-		<div class="messageblock" data-id="NicoMay">
-			<div class="messageitem">
-				<h1>slickrock.io is:</h1>
-			</div>
-			<div class="messageitem">
-				<br>
-			</div>
-			<div class="messageitem">
-				<strong>simple.</strong>
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; • no username, no password.
-			</div><div class="messageitem">
-				&nbsp; &nbsp; &nbsp; • no room setup, just find something unclaimed and take it for yourself.
-			</div><div class="messageitem">
-				<br>
-			</div>
-			<div class="messageitem">
-				<strong>private.</strong>
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; • lock rooms with a password if you wish, unlock whenever you want.
-			</div>
-			<div class="messageitem">
-				<br>
-			</div>
-			<div class="messageitem">
-				<strong>useful.</strong>
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; • need to quickly talk to someone, without them needing some special app or account? just send a link, works anywhere, on anything.
-			</div>
-			<div class="messageitem">
-				<br>
-			</div>
-			<div class="messageitem">
-				<strong>modern.</strong>
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; • designed to look clean on every surface, slickrock.io scales gracefully with screen size:
-			</div>
-			<div class="messageitem">
-				<img src = "http://i.imgur.com/3tbWAph.jpg" class = "imgmessage" width = "700">
-			</div>
-			<div class="messageitem">
-				<br>
-			</div>
-			<div class="messageitem">
-				<strong>embeddable.</strong>
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; • want a simple chat embedded in your website? slickrock.io works great for game jams, forums, and more.
-			</div>
-			<div class="messageitem">
-				<img src = "http://i.imgur.com/Kd1qa13.png" class = "imgmessage" width = "700">
-			</div>
-			<div class="messageitem">
-				<br>
-			</div>
-			<div class="messageitem">
-				<h1>info:</h1>
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; - slickrock.io developed by Nico May (@nico_m__), completely in my free time.
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; - as well as time costs, there are unfortunately hosting costs.
-			</div>
-			<div class="messageitem">
-				&nbsp;&nbsp;&nbsp;- while I will never show ads, nor sell your data, if you are well off enough to be able to contribute I would appreciate it immensely.
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; - I\'m currently looking into donation methods, if you are interested in contributing please email me nico.may99(at) gmail.com, people showing interest may help me speed up sorting out a proper way of accepting donations. 
-			</div>
-			<div class="messageitem">
-				<br>
-			</div > 
-			<div class = "messageitem"> 
-				<h1> getting started: </h1>
-			</div> 
-			<div class = "messageitem"> 
-				&nbsp; &nbsp; &nbsp; - you may use "/survey chat" to visit the main public room. 
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; - if you wish you may start your own room simply by finding something no one else has, you\'ll get a message if you do.
-			</div >
-			<div class="messageitem">
-				<br>
-			</div>
-			<div class="messageitem">
-				<h1>extra info:</h1>
-			</div>
-			<div class="messageitem">
-				&nbsp;&nbsp;&nbsp; - should you run into technical issues you may tweet at me (@nico_m__), email me (nico.may99(at)gmail.com), or send a message to /difficulties.
-			</div>
-			<div class="messageitem">
-				&nbsp; &nbsp; &nbsp; - slickrock.io is © Nico May 2015.
-			</div>
-			<div class="messageitem">
-				<br>
-			</div>
-			<div class="messageitem">
-				<h1>fin.</h1>
-			</div>
-		</div>
+	&gt;	
+</span>
+<div class="messageblock" data-id="NicoMay">
+	<h1>slickrock.io is:</h1>
+	<div class="bulletlist">
+		<div class="label">simple.</div>
+		<ul>
+			<li>no username, no password.</li>
+			<li>no room setup, just find something unclaimed and take it for yourself.</li>
+		</ul>
+	</div>
+	<div class="bulletlist">
+		<div class="label">private.</div>
+		<ul>
+			<li>lock rooms with a password if you wish, unlock whenever you want.</li>
+		</ul>
+	</div>
+	<div class="bulletlist">
+		<div class="label">modern.</div>
+		<ul>
+			<li>designed to look clean on every surface, slickrock.io scales gracefully with screen size.</li>
+			<li><img src="http://i.imgur.com/3tbWAph.jpg" width="700"></img></li>
+		</ul>
+	</div>
+	<div class="bulletlist">
+		<div class="label">embeddable</div>
+		<ul>
+			<li>want a simple chat embedded in your website? slickrock.io works great for game jams, forums, and more.</li>
+			<li><img src="http://i.imgur.com/Kd1qa13.png" width="700"></img></li>
+		</ul>
+	</div>
+	<h1>info:</h1>
+	<div class="bulletlist">
+		<ul>
+			<li>slickrock.io developed by Nico May (@nico_m__), completely in my free time.</li>
+			<li>as well as time costs, there are unfortunately hosting costs.</li>
+			<li>while I will never show ads, nor sell your data, if you are well off enough to be able to contribute I would appreciate it immensely.</li>
+			<li> I\'m currently looking into donation methods, if you are interested in contributing please email me nico.may99(at) gmail.com, people showing interest may help me speed up sorting out a proper way of accepting donations.</li>
+		</ul>
+	</div>
+	<h1>getting started:</h1>
+	<div class="bulletlist">
+		<ul>
+			<li>you may use "/survey chat" to visit the main public room.</li>
+			<li>if you wish you may start your own room simply by finding something no one else has, you\'ll get a message if you do.</li>
+		</ul>
+	</div>
+	<h1>extra info:</h1>
+	<div class="bulletlist">
+		<ul>
+			<li>should you run into technical issues you may tweet at me (@nico_m__), email me (nico.may99(at)gmail.com), or send a message to /difficulties.</li>
+			<li>slickrock.io is © Nico May 2015.</li>
+		</ul>
+	</div>
+	<h1>fin.</h1>
+</div>
 	';
 	
 	function new() {
