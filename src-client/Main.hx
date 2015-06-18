@@ -868,11 +868,8 @@ class Main
 		parsed = parsed.replace('\\*', '&ast;');
 		parsed = parsed.replace('\\#', '&num;');
 		parsed = parsed.replace('\\^', '&Hat;');
-		
-		switch(parsed) {
-			case '\\n': parsed = '<br/>';
-			case '\\t': parsed = '&nbsp;&nbsp;&nbsp;';
-		}
+		parsed = parsed.replace('\\n', '<br/>');
+		parsed = parsed.replace('\\t', '&nbsp;&nbsp;&nbsp;');
 		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
