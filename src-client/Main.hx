@@ -868,6 +868,9 @@ class Main
 		parsed = parsed.replace('\\*', '&ast;');
 		parsed = parsed.replace('\\#', '&num;');
 		parsed = parsed.replace('\\^', '&Hat;');
+		parsed = parsed.replace('\\\\n', '&bsol;n');
+		parsed = parsed.replace('\\\\t', '&bsol;t');
+		
 		parsed = parsed.replace('\\n', '<br/>');
 		parsed = parsed.replace('\\t', '&nbsp;&nbsp;&nbsp;');
 		
