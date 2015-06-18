@@ -773,8 +773,8 @@ class Main
 		}
 	}
 	
-	function _tryScroll(force: Bool = false, img: ImageElement = null) {
-		if (room != 'frontpage' && (force || _atBottom(img))) {
+	function _tryScroll(force: Bool = false, soft: Bool = false, img: ImageElement = null) {
+		if (!soft || (room != 'frontpage' && (force || _atBottom(img)))) {
 			Browser.window.scrollTo(0, messages.scrollHeight);
 			initialScroll = false;
 		}
@@ -843,7 +843,7 @@ class Main
 		}
 		
 		if(!hist) {
-			_tryScroll();
+			_tryScroll(false, true);
 					
 			lastUserID = id;
 		}

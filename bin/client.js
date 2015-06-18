@@ -717,9 +717,10 @@ Main.prototype = {
 		this.requestInProgress = false;
 		if(hist) this.histRequestInProgress = false;
 	}
-	,_tryScroll: function(force,img) {
+	,_tryScroll: function(force,soft,img) {
+		if(soft == null) soft = false;
 		if(force == null) force = false;
-		if(this.room != "frontpage" && (force || this._atBottom(img))) {
+		if(!soft || this.room != "frontpage" && (force || this._atBottom(img))) {
 			window.scrollTo(0,this.messages.scrollHeight);
 			this.initialScroll = false;
 		}
@@ -769,7 +770,7 @@ Main.prototype = {
 			}
 		}
 		if(!hist) {
-			this._tryScroll();
+			this._tryScroll(false,true);
 			this.lastUserID = id;
 		} else window.document.body.scrollTop += offset | 0;
 		return messageItem;
