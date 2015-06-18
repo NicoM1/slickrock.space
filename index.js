@@ -421,7 +421,7 @@ RouteHandler.__interfaces__ = [abe_IRoute];
 RouteHandler.prototype = {
 	maxMessageLoad: null
 	,index: function(request,response,next) {
-		this._serveHtml("bin/index.html",function(e,d) {
+		this._serveHtml("bin/frontpage.html",function(e,d) {
 			if(e == null) {
 				var withRoom = "";
 				var startBody = d.indexOf("head") + 6;

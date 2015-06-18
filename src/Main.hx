@@ -204,7 +204,7 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/')
 	function index() {
-		_serveHtml('bin/index.html', function(e, d) {
+		_serveHtml('bin/frontpage.html', function(e, d) {
 			if (e == null) {
 				var withRoom: String = '';
 				var startBody = d.indexOf('head') + 6;
