@@ -187,7 +187,7 @@ class Main
 				<h1>extra info:</h1>
 			</div>
 			<div class="messageitem">
-				&nbsp;&nbsp;&nbsp;- should you run into technical issues you may tweet at me (@nico_m__), email me (nico.may99(at)gmail.com), or send a message to /difficulties.
+				&nbsp;&nbsp;&nbsp; - should you run into technical issues you may tweet at me (@nico_m__), email me (nico.may99(at)gmail.com), or send a message to /difficulties.
 			</div>
 			<div class="messageitem">
 				&nbsp; &nbsp; &nbsp; - slickrock.io is © Nico May 2015.
