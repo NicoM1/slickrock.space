@@ -782,6 +782,14 @@ Main.prototype = {
 		parsed = StringTools.replace(parsed,"\\*","&ast;");
 		parsed = StringTools.replace(parsed,"\\#","&num;");
 		parsed = StringTools.replace(parsed,"\\^","&Hat;");
+		switch(parsed) {
+		case "\\n":
+			parsed = "<br/>";
+			break;
+		case "\\t":
+			parsed = "&nbsp;&nbsp;&nbsp;";
+			break;
+		}
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var chunks = imgPath.split(" ");
@@ -857,11 +865,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 962, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 967, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 966, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 971, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;

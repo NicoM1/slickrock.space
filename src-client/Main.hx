@@ -869,6 +869,11 @@ class Main
 		parsed = parsed.replace('\\#', '&num;');
 		parsed = parsed.replace('\\^', '&Hat;');
 		
+		switch(parsed) {
+			case '\\n': parsed = '<br/>';
+			case '\\t': parsed = '&nbsp;&nbsp;&nbsp;';
+		}
+		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
 			var chunks = imgPath.split(' ');
