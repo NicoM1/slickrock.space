@@ -14,7 +14,7 @@ body {
 	word-wrap: break-word;
 }
 
-div {
+#messages, .messageblock, .messageitem {
 	margin: 5px;
 	margin-top: 0px;
 }
@@ -143,13 +143,13 @@ span {
 	}
 }
 
-li {
+#helpbox > li {
 	margin: 0px;
 	padding-top: 1px;
 	padding-bottom: 1px;
 }
 
-li:hover {
+#helpbox > li:hover {
 	cursor: pointer;
 }
 
