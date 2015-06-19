@@ -869,7 +869,7 @@ Main.prototype = {
 			}
 		} else {
 			this.helpbox.style.display = "none";
-			if(!this.locked && this.token != null) {
+			if(code != 27 && !this.locked && this.token != null) {
 				if(this.canSendTypingNotification) {
 					var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
 					typingHttp.request(true);

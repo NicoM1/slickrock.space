@@ -982,7 +982,7 @@ class Main
 		else {
 			helpbox.style.display = 'none';
 					
-			if (!locked && token != null) {
+			if (code != 27 && !locked && token != null) {
 				if (canSendTypingNotification) {
 					var typingHttp: Http = new Http(basePath + 'api/typing/$room/$id');
 					typingHttp.request(true);
