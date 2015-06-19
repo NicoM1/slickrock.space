@@ -164,7 +164,6 @@ var Main = function() {
 	this.lastMessage = "";
 	this.commands = new haxe_ds_StringMap();
 	this.numNotifications = 0;
-	this.notifications = [];
 	this.canSendTypingNotification = true;
 	this.wasLocked = false;
 	this.hasTriedAuth = false;
@@ -248,7 +247,6 @@ Main.prototype = {
 				f2.href = "bin/faviconempty.ico";
 			}
 			_g._clearNotifications();
-			_g.numNotifications = 0;
 		};
 		window.onblur = function() {
 			_g.focussed = false;
@@ -308,7 +306,7 @@ Main.prototype = {
 				var histHttp = new haxe_Http(this.basePath);
 				histHttp.onError = function(e) {
 					_g.histRequestInProgress = false;
-					haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 238, className : "Main", methodName : "_tryGetOldMessages"});
+					haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 237, className : "Main", methodName : "_tryGetOldMessages"});
 				};
 				histHttp.onData = (function(f,a2) {
 					return function(a1) {
@@ -428,24 +426,22 @@ Main.prototype = {
 		if(Notification.permission == "granted") {
 			var options = { };
 			options.body = "aqueous-basin/" + this.room;
-			if(this.numNotifications <= 1) this.notifications.push(new Notification(text,options)); else {
+			if(this.notification == null) {
+				this.numNotifications = 1;
+				this.notification = new Notification(text,options);
+			} else {
 				this._clearNotifications();
-				this.notifications.push(new Notification("" + this.numNotifications + " new messages.",options));
+				this.numNotifications++;
+				this.notification = new Notification("" + this.numNotifications + " new messages.",options);
 			}
-			this.notifications[this.notifications.length - 1].onclick = function() {
+			this.notification.onclick = function() {
 				window.focus();
 			};
 		}
 	}
 	,_clearNotifications: function() {
-		var _g = 0;
-		var _g1 = this.notifications;
-		while(_g < _g1.length) {
-			var n = _g1[_g];
-			++_g;
-			n.close();
-		}
-		this.notifications = [];
+		this.notification.close();
+		this.notification = null;
 	}
 	,_buildCommands: function() {
 		var _g = new haxe_ds_StringMap();
@@ -494,7 +490,7 @@ Main.prototype = {
 			_g._printID();
 		};
 		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 509, className : "Main", methodName : "_getID"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 508, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
 		};
 		idHttp.request(true);
@@ -527,7 +523,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 561, className : "Main", methodName : "_claimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 560, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
 		};
 		lockHttp.request(true);
@@ -546,7 +542,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 586, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 585, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -587,7 +583,7 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 641, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 640, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
@@ -599,7 +595,7 @@ Main.prototype = {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 659, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 658, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
 		};
 		lockHttp.request(true);
@@ -655,7 +651,6 @@ Main.prototype = {
 					f.href = "bin/favicon.ico";
 				}
 				this.messageSound.play();
-				this.numNotifications++;
 				this._sendNotification(message.innerText != null?message.innerText:message.textContent);
 			}
 		}
@@ -861,11 +856,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 969, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 967, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 973, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 971, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;

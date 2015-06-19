@@ -78,7 +78,7 @@ class Main
 	var wasLocked: Bool = false;
 	var canSendTypingNotification: Bool = true;
 	
-	var notifications: Array<Notification> = new Array<Notification>();
+	var notification: Notification;
 	var numNotifications: Int = 0;
 	
 	var commands: Map<String, Array<String> -> Void> = new Map();
@@ -146,7 +146,6 @@ class Main
 				f.href = 'bin/faviconempty.ico';
 			}
 			_clearNotifications();
-			numNotifications = 0;
 		};
 		
 		Browser.window.onblur = function() {
@@ -380,24 +379,24 @@ class Main
 		if (Notification.permission == NotificationPermission.GRANTED) {
 			var options: NotificationOptions = { };
 			options.body = 'aqueous-basin/$room';
-			if (numNotifications <= 1) {
-				notifications.push(new Notification(text, options));
+			if (notification == null) {
+				numNotifications = 1;
+				notification = new Notification(text, options);
 			}
 			else {
 				_clearNotifications();
-				notifications.push(new Notification('$numNotifications new messages.', options));
+				numNotifications++;
+				notification = new Notification('$numNotifications new messages.', options);
 			}
-			notifications[notifications.length - 1].onclick = function(){ 
+			notification.onclick = function(){ 
 				Browser.window.focus();
 			};
 		}
 	}
 	
 	function _clearNotifications() {
-		for (n in notifications) {
-			n.close();
-		}
-		notifications = new Array<Notification>();
+		notification.close();
+		notification = null;
 	}
 	//}
 		
@@ -717,7 +716,6 @@ class Main
 					f.href = 'bin/favicon.ico';
 				}
 				messageSound.play();
-				numNotifications++;
 				_sendNotification(message.innerText != null? message.innerText : message.textContent);
 			}
 		}
