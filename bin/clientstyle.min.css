@@ -13,12 +13,11 @@ table{border-collapse:collapse;border-spacing:0;}
 hr{display:block;height:1px;border:0;border-top:1px solid #cccccc;margin:1em 0;padding:0;}
 input,select{vertical-align:middle;}
 body{margin:0px;margin-top:5px;font-family:'Lato',sans-serif;font-size:110%;color:#ecf0f1;background-color:#2b2b2b;overflow-x:hidden;word-wrap:break-word;}
-#messages,.messageblock,.messageitem{margin:5px;margin-top:0px;}
+div{margin:5px;margin-top:0px;}
 p{margin:5px;white-space:pre-line;}
 img{max-width:100%;cursor:pointer;display:block;}
 #messages{overflow-y:scroll;-webkit-overflow-scrolling:touch;}
 .messageitem{margin-left:25px;margin-bottom:5px;}
-.frontpage{margin-left:25px;}
 .messageblock{height:100%;margin:0px;margin-bottom:15px;padding:0px;}
 h1{font-size:250%;}
 span{float:left;width:0;height:0;}
@@ -29,8 +28,8 @@ span{float:left;width:0;height:0;}
 #helpbox{position:fixed;margin:0px;padding-left:5px;padding-top:5px;padding-bottom:5px;padding-right:5px;max-height:80%;overflow:scroll;-webkit-overflow-scrolling:touch;bottom:60px;width:70%;background-color:#1e1e1e;display:none;border-width:2px;border-right:solid;border-top:solid;border-color:#252525;list-style-type:none;}
 @media screen and (max-width:400px){#chatbox{height:40px;}
 #helpbox{bottom:40px;}}
-#helpbox>li{margin:0px;padding-top:1px;padding-bottom:1px;}
-#helpbox>li:hover{cursor:pointer;}
+li{margin:0px;padding-top:1px;padding-bottom:1px;}
+li:hover{cursor:pointer;}
 .description{}
 .commandTip{padding-top:10px;padding-bottom:10px;}
 .selected{background-color:hsl(282,45.9%,25.7%);}
