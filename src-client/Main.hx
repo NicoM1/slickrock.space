@@ -369,8 +369,8 @@ class Main
 	}
 	
 	//{ notifications
-	function _getNotificationPermission() {
-		if (Notification.permission == NotificationPermission.DEFAULT_) {
+	function _getNotificationPermission(force: Bool = false ) {
+		if (force || Notification.permission == NotificationPermission.DEFAULT_) {
 			Notification.requestPermission(function(permission) {});
 		}
 	}
@@ -465,6 +465,11 @@ class Main
 			description: 'generates an embedable iframe with a simple default styling.',
 			method: _generateEmbed,
 			requiresArgs: true
+		},
+		'inform' => {
+			identifiers: '<strong>/inform</strong>',
+			description: 'attempt to get notification permission if you denied it before.',
+			method: _notificationCommand
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
@@ -670,6 +675,11 @@ class Main
 		_addMessage('\\#link/to.image (optional)[width] (optional)[height]\\#');
 		_addMessage('escape markdown with \\\\*escaped\\\\*');
 	}
+	
+	function _notificationCommand(_) {
+		_getNotificationPermission(true);
+	}
+	
 	//}
 	
 	//{ messages
