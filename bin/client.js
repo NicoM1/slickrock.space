@@ -369,7 +369,7 @@ Main.prototype = {
 	}
 	,_getAuth: function(data) {
 		this._addMessage("please enter the following to authenticate.");
-		this._addMessage("#http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=" + data + " 200#");
+		this._addMessage("#http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=" + data + " 200#",null,null,false,false);
 	}
 	,_loop: function() {
 		var _g = this;
@@ -730,9 +730,10 @@ Main.prototype = {
 		if(window.innerHeight + window.scrollY + offset >= this.messages.offsetHeight) return true;
 		return false;
 	}
-	,_addMessage: function(msg,id,customHTML,hist) {
+	,_addMessage: function(msg,id,customHTML,hist,safe) {
+		if(safe == null) safe = true;
 		if(hist == null) hist = false;
-		msg = this._parseMessage(msg);
+		msg = this._parseMessage(msg,safe);
 		var message;
 		var differentUser = false;
 		if(!hist && (id == null || id == "-1" || id != this.lastUserID)) differentUser = true;
@@ -774,18 +775,21 @@ Main.prototype = {
 		} else window.document.body.scrollTop += offset | 0;
 		return messageItem;
 	}
-	,_parseMessage: function(raw) {
+	,_parseMessage: function(raw,safe) {
+		if(safe == null) safe = true;
 		var parsed = StringTools.replace(raw,"\n"," ");
-		parsed = StringTools.htmlEscape(parsed);
-		parsed = StringTools.replace(parsed,"\"","&quot;");
-		parsed = StringTools.replace(parsed,":","&colon;");
-		parsed = StringTools.replace(parsed,"\\*","&ast;");
-		parsed = StringTools.replace(parsed,"\\#","&num;");
-		parsed = StringTools.replace(parsed,"\\^","&Hat;");
-		parsed = StringTools.replace(parsed,"\\\\n","&bsol;n");
-		parsed = StringTools.replace(parsed,"\\\\t","&bsol;t");
-		parsed = StringTools.replace(parsed,"\\n","<br/>");
-		parsed = StringTools.replace(parsed,"\\t","&nbsp;&nbsp;&nbsp;");
+		if(safe) {
+			parsed = StringTools.htmlEscape(parsed);
+			parsed = StringTools.replace(parsed,"\"","&quot;");
+			parsed = StringTools.replace(parsed,":","&colon;");
+			parsed = StringTools.replace(parsed,"\\*","&ast;");
+			parsed = StringTools.replace(parsed,"\\#","&num;");
+			parsed = StringTools.replace(parsed,"\\^","&Hat;");
+			parsed = StringTools.replace(parsed,"\\\\n","&bsol;n");
+			parsed = StringTools.replace(parsed,"\\\\t","&bsol;t");
+			parsed = StringTools.replace(parsed,"\\n","<br/>");
+			parsed = StringTools.replace(parsed,"\\t","&nbsp;&nbsp;&nbsp;");
+		}
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var chunks = imgPath.split(" ");
@@ -861,11 +865,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 977, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 979, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 981, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 983, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;

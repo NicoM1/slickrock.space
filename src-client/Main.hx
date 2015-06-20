@@ -314,7 +314,7 @@ class Main
 	
 	function _getAuth(data: String) {
 		_addMessage('please enter the following to authenticate.');
-		_addMessage('#http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=$data 200#');
+		_addMessage('#http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=$data 200#', false, false);
 	}
 	
 	function _loop() {
@@ -801,8 +801,8 @@ class Main
 		return false;
 	}
 	
-	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false): DivElement {
-		msg = _parseMessage(msg);
+	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true): DivElement {
+		msg = _parseMessage(msg, safe);
 		
 		var message: DivElement;
 		
@@ -870,19 +870,21 @@ class Main
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;
 	
-	function _parseMessage(raw: String): String {
+	function _parseMessage(raw: String, safe: Bool = true): String {
 		var parsed: String = raw.replace('\n', ' ');
-		parsed = parsed.htmlEscape();
-		parsed = parsed.replace('\"', '&quot;');
-		parsed = parsed.replace(':', '&colon;');
-		parsed = parsed.replace('\\*', '&ast;');
-		parsed = parsed.replace('\\#', '&num;');
-		parsed = parsed.replace('\\^', '&Hat;');
-		parsed = parsed.replace('\\\\n', '&bsol;n');
-		parsed = parsed.replace('\\\\t', '&bsol;t');
-		
-		parsed = parsed.replace('\\n', '<br/>');
-		parsed = parsed.replace('\\t', '&nbsp;&nbsp;&nbsp;');
+		if(safe) {
+			parsed = parsed.htmlEscape();
+			parsed = parsed.replace('\"', '&quot;');
+			parsed = parsed.replace(':', '&colon;');
+			parsed = parsed.replace('\\*', '&ast;');
+			parsed = parsed.replace('\\#', '&num;');
+			parsed = parsed.replace('\\^', '&Hat;');
+			parsed = parsed.replace('\\\\n', '&bsol;n');
+			parsed = parsed.replace('\\\\t', '&bsol;t');
+			
+			parsed = parsed.replace('\\n', '<br/>');
+			parsed = parsed.replace('\\t', '&nbsp;&nbsp;&nbsp;');
+		}
 		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
