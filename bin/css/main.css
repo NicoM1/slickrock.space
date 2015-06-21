@@ -103,7 +103,7 @@ nav.scrolled-past{
 	background-position: 50%;
 	background-repeat: no-repeat;
 	background-size: cover;
-	background-image: url("../img/slickrocks.jpg");
+	background-image: url("../bin/img/slickrocks.jpg");
 	margin: 0;
 	padding: 0;
 }
@@ -189,7 +189,7 @@ nav.scrolled-past{
 	background-repeat: no-repeat;
 	background-size: cover;
 	margin: 0 auto;
-	background-image: url("../img/slickrocks.jpg");
+	background-image: url("../bin/img/slickrocks.jpg");
 }
 .footer .dim{
 	padding-bottom: 60px;

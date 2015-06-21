@@ -1,0 +1,52 @@
+html{position:relative;min-height:100%;}
+body{margin-bottom:60px;padding-bottom:300px;}
+.footer{position:absolute;bottom:0;width:100%;}
+.btn-block{width:100%;}
+*{font-family:'Roboto',sans-serif;-moz-transition:all .2s ease-out;-webkit-transition:all .2s ease-out;transition:all .2s ease-out;color:#444;}
+h3,.h3{font-family:'Gentium Basic',serif;}
+small{font-size:70%;}
+nav{position:fixed;top:0;width:100%;z-index:1000;border:none;background:transparent;border-radius:0;color:#fff;}
+nav.scrolled-past{background-color:#444;}
+nav .navbar-nav>li>a{color:#fff;opacity:.5;}
+nav .navbar-nav>li>a *{color:#fff;}
+nav .navbar-nav>li>a:hover,nav .navbar-nav>li>a:focus,nav .navbar-nav>li>a:active{color:#fff;opacity:1;background:none;}
+nav.scrolled-past{background-color:#2b2b2b;}
+@media (max-width:769px){nav .navbar-nav>li{display:inline-block;}
+nav .navbar-nav.navbar-right{width:100%;margin:0;text-align:center;}
+nav{background-color:#2b2b2b;}
+.smaller-xs{font-size:12px;}}
+.jumbotron h1{font-family:'Poiret One',cursive;color:#fff;margin-bottom:36px;}
+.jumbotron{background-position:50%;background-repeat:no-repeat;background-size:cover;background-image:url("../bin/img/slickrocks.jpg");margin:0;padding:0;}
+.jumbotron .dim{padding-left:0;padding-right:0;padding-top:64px;height:100%;background-color:rgba(35,30,30,.6);margin:auto;position:relative;}
+.jumbotron .subtitle{font-weight:100;}
+@media (max-width:769px){.jumbotron{background-size:800px 600px;}
+.jumbotron .subtitle{font-size:16px;}}
+.jumbotron{color:#fff;}
+.jumbotron .text-muted{color:#fff;opacity:.8;}
+.jumbotron .btn{border:2px solid #fff;background:none;border-radius:10px;}
+.jumbotron .btn:hover{background-color:#fff;color:#222;}
+.type-caret{border-left:1px solid #fff;}
+#scrolldown{text-align:center;bottom:0;width:100%;padding:15px;position:absolute;font-size:32px;}
+#scrolldown>a{color:#fff;opacity:.5;border:none;}
+#scrolldown>a:hover,#scrolldown>a:active,#scrolldown>a:focus{opacity:1;color:#fff;border:none;}
+@media (max-width:769px){#scrolldown{bottom:60px;}}
+.footer{background-position:bottom;background-repeat:no-repeat;background-size:cover;margin:0 auto;background-image:url("../bin/img/slickrocks.jpg");}
+.footer .dim{padding-bottom:60px;}
+.footer *{color:#fff;text-shadow:0px 1px 5px rgba(40,40,40,1);}
+.footer a{color:#fff;border-bottom:1px solid #fff;}
+.footer a:hover,.footer a:active,.footer a:focus{text-decoration:none;color:#fff;}
+.dim{padding:30px;background-color:rgba(40,40,40,.5);}
+.img-presponsive{display:block;width:100%;height:auto;}
+.hover-image{-webkit-box-shadow:0px 5px 10px 0px rgba(50,50,50,0.3);-moz-box-shadow:0px 5px 10px 0px rgba(50,50,50,0.3);box-shadow:0px 5px 10px 0px rgba(50,50,50,0.3);margin:15px 0 30px;}
+.hover-image:hover{-webkit-box-shadow:0px 5px 15px 0px rgba(50,50,50,0.6);-moz-box-shadow:0px 5px 15px 0px rgba(50,50,50,0.6);box-shadow:0px 5px 15px 0px rgba(50,50,50,0.6);}
+@media (min-width:800px){.img-presponsive{opacity:0.8;}
+.img-presponsive:hover{opacity:1;}}
+.disclaimer{margin-top:60px;color:#ccc;padding:15px 15px 12px;border:1px solid #ccc;}
+#lets-chat,#about,#embed,#moneyz{padding-top:80px;}
+.glyphicon.glyphicon-chevron-right,.glyphicon.glyphicon-chevron-left{font:normal normal normal 14px/1 FontAwesome;font-size:24px;}
+.glyphicon.glyphicon-chevron-left:before{content:"\f104";}
+.glyphicon.glyphicon-chevron-right:before{content:"\f105";}
+@media (max-width:769px){.mobile-container{width:100%;padding:0;}}
+.carousel{-webkit-box-shadow:0px 5px 10px 0px rgba(50,50,50,0.3);-moz-box-shadow:0px 5px 10px 0px rgba(50,50,50,0.3);box-shadow:0px 5px 10px 0px rgba(50,50,50,0.3);}
+#embed-iframe{border:none;width:100%;-webkit-box-shadow:0px 5px 10px 0px rgba(50,50,50,0.3);-moz-box-shadow:0px 5px 10px 0px rgba(50,50,50,0.3);box-shadow:0px 5px 10px 0px rgba(50,50,50,0.3);background-color:#2b2b2b;padding:5px;}
+

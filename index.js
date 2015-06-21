@@ -421,14 +421,8 @@ RouteHandler.__interfaces__ = [abe_IRoute];
 RouteHandler.prototype = {
 	maxMessageLoad: null
 	,index: function(request,response,next) {
-		this._serveHtml("bin/frontpage.html",function(e,d) {
-			if(e == null) {
-				var withRoom = "";
-				var startBody = d.indexOf("head") + 6;
-				withRoom = d.substring(0,startBody) + "\n\t<script>var room = \"frontpage\"</script>\n" + HxOverrides.substr(d,startBody + 1,null);
-				response.setHeader("Access-Control-Allow-Origin","*");
-				response.send(withRoom);
-			}
+		this._serveHtml("bin/home.html",function(e,d) {
+			if(e == null) response.send(d);
 		});
 	}
 	,chatroom: function(room,request,response,next) {

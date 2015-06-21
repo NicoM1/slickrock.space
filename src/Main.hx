@@ -204,13 +204,9 @@ class RouteHandler implements abe.IRoute {
 	
 	@:get('/')
 	function index() {
-		_serveHtml('bin/frontpage.html', function(e, d) {
-			if (e == null) {
-				var withRoom: String = '';
-				var startBody = d.indexOf('head') + 6;
-				withRoom = d.substring(0, startBody) + '\n\t<script>var room = "frontpage"</script>\n' + d.substr(startBody + 1);
-				response.setHeader('Access-Control-Allow-Origin', '*');
-				response.send(withRoom);
+		_serveHtml('bin/home.html', function(e, d) {
+			if(e == null) {
+				response.send(d);
 			}
 		});
 	}
