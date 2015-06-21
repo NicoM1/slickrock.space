@@ -128,6 +128,7 @@ class Main {
 					});
 				}
 				if (r.users != null) {
+					trace(r.users);
 					userCounts[r._id] = r.users;
 				}
 				rooms.get(r._id).lock = r.lock;

@@ -334,6 +334,7 @@ Main._parseMessages = function() {
 				Main.rooms.set(r1._id,value);
 			}
 			if(r1.users != null) {
+				console.log(r1.users);
 				var v = r1.users;
 				Main.userCounts.set(r1._id,v);
 				v;
