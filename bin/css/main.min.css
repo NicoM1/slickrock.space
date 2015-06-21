@@ -16,7 +16,7 @@ nav .navbar-nav.navbar-right{width:100%;margin:0;text-align:center;}
 nav{background-color:#2b2b2b;}
 .smaller-xs{font-size:12px;}}
 .jumbotron h1{font-family:'Poiret One',cursive;color:#fff;margin-bottom:36px;}
-.jumbotron{background-position:50%;background-repeat:no-repeat;background-size:cover;background-image:url("../bin/img/slickrocks.jpg");margin:0;padding:0;}
+.jumbotron{background-position:50%;background-repeat:no-repeat;background-size:cover;background-image:url("../img/slickrocks.jpg");margin:0;padding:0;}
 .jumbotron .dim{padding-left:0;padding-right:0;padding-top:64px;height:100%;background-color:rgba(35,30,30,.6);margin:auto;position:relative;}
 .jumbotron .subtitle{font-weight:100;}
 @media (max-width:769px){.jumbotron{background-size:800px 600px;}
@@ -30,7 +30,7 @@ nav{background-color:#2b2b2b;}
 #scrolldown>a{color:#fff;opacity:.5;border:none;}
 #scrolldown>a:hover,#scrolldown>a:active,#scrolldown>a:focus{opacity:1;color:#fff;border:none;}
 @media (max-width:769px){#scrolldown{bottom:60px;}}
-.footer{background-position:bottom;background-repeat:no-repeat;background-size:cover;margin:0 auto;background-image:url("../bin/img/slickrocks.jpg");}
+.footer{background-position:bottom;background-repeat:no-repeat;background-size:cover;margin:0 auto;background-image:url("../img/slickrocks.jpg");}
 .footer .dim{padding-bottom:60px;}
 .footer *{color:#fff;text-shadow:0px 1px 5px rgba(40,40,40,1);}
 .footer a{color:#fff;border-bottom:1px solid #fff;}
