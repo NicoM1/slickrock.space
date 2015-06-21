@@ -275,9 +275,23 @@ class RouteHandler implements abe.IRoute {
 	}
 	
 	@:get('/api/makeRandomRoom') 
-	function randomRoom() {
+	function makeRandomRoom() {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.redirect('http://slickrock.io/${Main.getUserID()}');
+	}
+	
+	@:get('/api/getRandomRoom') 
+	function getRandomRoom() {
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		var openRooms = [];
+		for (r in Main.rooms) {
+			if (r.lock == null) {
+				openRooms.push(r);
+			}
+		}
+		var rand = new Random(Date.now().getTime());
+		var room = openRooms[rand.int(openRooms.length)];
+		response.redirect('http://slickrock.io/$room');
 	}
 	
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
