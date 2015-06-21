@@ -498,7 +498,7 @@ RouteHandler.prototype = {
 		}
 		var rand = new Random(new Date().getTime());
 		var room = openRooms[rand["int"](openRooms.length,null)];
-		response.redirect("http://slickrock.io/" + room + ")");
+		response.redirect("http://slickrock.io/" + room);
 	}
 	,alphanumeric: null
 	,getToken: function(privateID,request,response,next) {

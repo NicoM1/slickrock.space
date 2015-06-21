@@ -292,7 +292,7 @@ class RouteHandler implements abe.IRoute {
 		}
 		var rand = new Random(Date.now().getTime());
 		var room = openRooms[rand.int(openRooms.length)];
-		response.redirect('http://slickrock.io/${room})');
+		response.redirect('http://slickrock.io/${room}');
 	}
 	
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
