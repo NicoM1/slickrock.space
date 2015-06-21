@@ -244,7 +244,7 @@ Main.prototype = {
 			while(_g12 < _g2.length) {
 				var f2 = _g2[_g12];
 				++_g12;
-				f2.href = "bin/faviconempty.ico";
+				f2.href = "bin/img/faviconempty.ico";
 			}
 			_g._clearNotifications();
 		};
@@ -665,7 +665,7 @@ Main.prototype = {
 				while(_g2 < _g3.length) {
 					var f = _g3[_g2];
 					++_g2;
-					f.href = "bin/favicon.ico";
+					f.href = "bin/img/favicon.ico";
 				}
 				this.messageSound.play();
 				this._sendNotification(message.innerText != null?message.innerText:message.textContent);
