@@ -333,6 +333,11 @@ Main._parseMessages = function() {
 				var value = { messages : [], lock : null, pw : null, typing : []};
 				Main.rooms.set(r1._id,value);
 			}
+			if(r1.users != null) {
+				var v = r1.users;
+				Main.userCounts.set(r1._id,v);
+				v;
+			}
 			Main.rooms.get(r1._id).lock = r1.lock;
 			Main.rooms.get(r1._id).pw = r1.pw;
 			Main.rooms.get(r1._id).salt = r1.salt;
@@ -365,9 +370,9 @@ Main._parseMessages = function() {
 		while(_g2 < tokenos.length) {
 			var t = tokenos[_g2];
 			++_g2;
-			var v = t.token;
-			Main.tokens.set(t._id,v);
-			v;
+			var v1 = t.token;
+			Main.tokens.set(t._id,v1);
+			v1;
 		}
 	});
 };
@@ -490,6 +495,7 @@ RouteHandler.prototype = {
 					if(Main.userCounts.get(room)[i].id == privateID) index = i;
 				}
 				if(index == -1) Main.userCounts.get(room).push({ id : privateID, timestamp : new Date()}); else Main.userCounts.get(room)[index].timestamp = new Date();
+				Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
 			}
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("success");
@@ -616,7 +622,7 @@ RouteHandler.prototype = {
 			return;
 		} else if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 			roomE.lock = haxe_crypto_Sha1.encode(roomE.salt + password);
-			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt});
+			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("locked");
 			return;
@@ -640,7 +646,7 @@ RouteHandler.prototype = {
 		if(roomE.lock != null) {
 			if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo({ _id : room, lock : null, pw : roomE.pw, salt : roomE.salt});
+				Main.roomInfo({ _id : room, lock : null, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
 				response.setHeader("Access-Control-Allow-Origin","*");
 				response.send("unlocked");
 				return;
@@ -664,7 +670,7 @@ RouteHandler.prototype = {
 		if(roomE.pw == null && roomE.messages.length == 0 || haxe_crypto_Sha1.encode(roomE.salt + privatePass) == roomE.pw) {
 			if(roomE.salt == null) roomE.salt = this.getSalt();
 			roomE.pw = haxe_crypto_Sha1.encode(roomE.salt + privatePass);
-			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt});
+			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("claimed");
 			return;

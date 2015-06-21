@@ -127,6 +127,9 @@ class Main {
 						typing: []
 					});
 				}
+				if (r.users != null) {
+					userCounts[r._id] = r.users;
+				}
 				rooms.get(r._id).lock = r.lock;
 				rooms.get(r._id).pw = r.pw;
 				rooms.get(r._id).salt = r.salt;
@@ -282,6 +285,7 @@ class RouteHandler implements abe.IRoute {
 				else {
 					Main.userCounts[room][index].timestamp = Date.now();
 				}
+				Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room] } );
 			}
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('success');
@@ -427,7 +431,7 @@ class RouteHandler implements abe.IRoute {
 		}
 		else if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
 			roomE.lock = Sha1.encode(roomE.salt+password);
-			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt } );
+			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room] } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('locked');
 			return;
@@ -454,7 +458,7 @@ class RouteHandler implements abe.IRoute {
 		if(roomE.lock != null) {
 			if (roomE.pw == Sha1.encode(roomE.salt+privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo( { _id: room, lock: null, pw: roomE.pw, salt: roomE.salt } );
+				Main.roomInfo( { _id: room, lock: null, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room]  } );
 				response.setHeader('Access-Control-Allow-Origin', '*');
 				response.send('unlocked');
 				return;
@@ -483,7 +487,7 @@ class RouteHandler implements abe.IRoute {
 				roomE.salt = getSalt();
 			}
 			roomE.pw = Sha1.encode(roomE.salt + privatePass);
-			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt } );
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room]  } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('claimed');
 			return;
