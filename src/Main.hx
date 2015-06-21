@@ -341,10 +341,10 @@ class RouteHandler implements abe.IRoute {
 		}
 		top10.sort(function(r1: RoomMetric, r2: RoomMetric) {
 			if (r1.count > r2.count) {
-				return 1;
+				return -1;
 			}
 			if (r1.count < r2.count) {
-				return -1;
+				return 1;
 			}
 			return 0;
 		});

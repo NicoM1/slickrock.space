@@ -546,8 +546,8 @@ RouteHandler.prototype = {
 			} else if(top10.length < 10) top10.push({ room : r, count : count.length});
 		}
 		top10.sort(function(r1,r2) {
-			if(r1.count > r2.count) return 1;
-			if(r1.count < r2.count) return -1;
+			if(r1.count > r2.count) return -1;
+			if(r1.count < r2.count) return 1;
 			return 0;
 		});
 		response.send(top10);
