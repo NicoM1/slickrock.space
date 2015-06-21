@@ -181,7 +181,7 @@ var Main = function() {
 	this.password = null;
 	this.token = null;
 	this.id = null;
-	this.basePath = "https://aqueous-api.herokuapp.com/";
+	this.basePath = "https://slickrock.io/";
 	this.room = window.room;
 	this._buildCommands();
 	window.onload = $bind(this,this._windowLoaded);
@@ -238,7 +238,7 @@ Main.prototype = {
 		this.messageSound = window.document.getElementById("messagesound");
 		window.onfocus = function() {
 			_g.focussed = true;
-			window.document.title = "aqueous-basin.";
+			window.document.title = "slickrock.io";
 			var _g12 = 0;
 			var _g2 = _g.favicons;
 			while(_g12 < _g2.length) {
@@ -426,7 +426,7 @@ Main.prototype = {
 	,_sendNotification: function(text) {
 		if(Notification.permission == "granted") {
 			var options = { };
-			options.body = "aqueous-basin/" + this.room;
+			options.body = "slickrock.io/" + this.room;
 			if(this.notification == null) {
 				this.numNotifications = 1;
 				this.notification = new Notification(text,options);
@@ -563,7 +563,7 @@ Main.prototype = {
 			return;
 		}
 		var embed = this.embedTemplate;
-		embed = StringTools.replace(embed,"[SRC]","https://aqueous-basin.herokuapp.com/" + this.room);
+		embed = StringTools.replace(embed,"[SRC]","http://slickrock.io/" + this.room);
 		embed = StringTools.replace(embed,"[WIDTH]",width == null?"null":"" + width);
 		embed = StringTools.replace(embed,"[HEIGHT]",height == null?"null":"" + height);
 		this._addMessage("`" + embed + "`");
@@ -659,7 +659,7 @@ Main.prototype = {
 			var p = parsed.messages.messages[ii];
 			var message = this._addMessage(p.text,p.id,null,hist);
 			if(!this.focussed && !this.first) {
-				window.document.title = "# aqueous-basin.";
+				window.document.title = "# slickrock.io";
 				var _g2 = 0;
 				var _g3 = this.favicons;
 				while(_g2 < _g3.length) {

@@ -44,7 +44,7 @@ typedef Command = {
 class Main 
 {
 	var room: String;
-	var basePath: String = 'https://aqueous-api.herokuapp.com/';
+	var basePath: String = 'https://slickrock.io/';
 	var id: String = null;
 	var privateID: String;
 	var token: String = null;
@@ -141,7 +141,7 @@ class Main
 				
 		Browser.window.onfocus = function() {
 			focussed = true;
-			Browser.document.title = 'aqueous-basin.';
+			Browser.document.title = 'slickrock.io';
 			for (f in favicons) {
 				f.href = 'bin/img/faviconempty.ico';
 			}
@@ -378,7 +378,7 @@ class Main
 	function _sendNotification(text: String) {
 		if (Notification.permission == NotificationPermission.GRANTED) {
 			var options: NotificationOptions = { };
-			options.body = 'aqueous-basin/$room';
+			options.body = 'slickrock.io/$room';
 			if (notification == null) {
 				numNotifications = 1;
 				notification = new Notification(text, options);
@@ -617,7 +617,7 @@ class Main
 			return;
 		}
 		var embed = embedTemplate;
-		embed = embed.replace('[SRC]', 'https://aqueous-basin.herokuapp.com/$room');
+		embed = embed.replace('[SRC]', 'http://slickrock.io/$room');
 		embed = embed.replace('[WIDTH]', Std.string(width));
 		embed = embed.replace('[HEIGHT]', Std.string(height));
 		
@@ -742,7 +742,7 @@ class Main
 			var message = _addMessage(p.text, p.id, hist);
 			
 			if (!focussed && !first) {
-				Browser.document.title = '# aqueous-basin.';
+				Browser.document.title = '# slickrock.io';
 				for (f in favicons) {
 					f.href = 'bin/img/favicon.ico';
 				}
