@@ -900,7 +900,7 @@ Main.prototype = {
 			}
 			if(this.chatbox.value.charAt(0) == "/") this._parseCommand(HxOverrides.substr(this.chatbox.value,1,null)); else {
 				if(this.locked) {
-					this._addMessage("attempting to unlock room with: " + this.password + ".");
+					this._addMessage("attempting to unlock room with: " + this.chatbox.value + ".");
 					this._setPassword(this.chatbox.value);
 					this.chatbox.value = "";
 					this.helpbox.style.display = "none";
