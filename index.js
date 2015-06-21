@@ -194,7 +194,7 @@ var Main = function() {
 		var processor5 = new abe_core_ArgumentProcessor(filters5,[]);
 		var process5 = new RouteHandler_$randomRoom_$RouteProcess({ },instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/api/randomRoom","get",process5,uses5,[]);
+		router.registerMethod("/api/makeRandomRoom","get",process5,uses5,[]);
 		var filters6 = new abe_core_ArgumentsFilter();
 		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "privateID", optional : false, type : "String", sources : ["params"]}]);
 		var process6 = new RouteHandler_$getToken_$RouteProcess({ privateID : null},instance,processor6);
