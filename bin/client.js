@@ -622,7 +622,7 @@ Main.prototype = {
 			this.wasLocked = true;
 			return;
 		}
-		if(data == "password") {
+		if(!this.wasLocked && data == "password") {
 			if(!this.locked) this._addMessage("incorrect password, please resend password.");
 			this.locked = true;
 			this.requestInProgress = false;
