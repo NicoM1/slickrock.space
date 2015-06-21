@@ -623,7 +623,7 @@ Main.prototype = {
 	}
 	,_credits: function(_) {
 		this._addMessage("Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).");
-		this._addMessage("Assorted help and testing: @dimensive @gamesbybeta @Zanzlanz");
+		this._addMessage("Assorted help and testing: @dimensive, @gamesbybeta, @Zanzlanz.");
 	}
 	,_parseMessages: function(data,hist) {
 		if(hist == null) hist = false;
