@@ -16,7 +16,7 @@ body{margin:0px;margin-top:5px;font-family:'Lato',sans-serif;font-size:110%;colo
 div{margin:5px;margin-top:0px;}
 p{margin:5px;white-space:pre-line;}
 img{max-width:100%;cursor:pointer;display:block;}
-#messages{overflow-y:scroll;-webkit-overflow-scrolling:touch;margin-bottom:80px;}
+#messages{overflow-y:scroll;-webkit-overflow-scrolling:touch;margin-bottom:68px;}
 .messageitem{margin-left:25px;margin-bottom:5px;}
 .messageblock{height:100%;margin:0px;margin-bottom:15px;padding:0px;}
 h1{font-size:250%;}
