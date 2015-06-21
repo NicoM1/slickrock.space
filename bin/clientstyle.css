@@ -33,7 +33,7 @@ img {
 #messages {
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
-	margin-bottom: 68px;
+	margin-bottom: 65px;
 }
 
 .messageitem {
