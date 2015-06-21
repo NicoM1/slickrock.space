@@ -470,6 +470,16 @@ class Main
 			identifiers: '<strong>/inform</strong>',
 			description: 'attempt to get notification permission if you denied it before.',
 			method: _notificationCommand
+		},
+		'legal' => {
+			identifiers: '<strong>/legal</strong>',
+			description: 'display legal notes.',
+			method: _legal
+		},
+		'commendation' => {
+			identifiers: '<strong>/commendation</strong>',
+			description: 'list some people that really deserve being listed.',
+			method: _credits
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
@@ -503,7 +513,7 @@ class Main
 	//}
 	
 	//{ command functions
-	function _getID(?arguments: Array<String>) {
+	function _getID(?_) {
 		var idHttp: Http = new Http(basePath + 'api/getID');
 		idHttp.onData = function(d) {
 			_setID(d);
@@ -614,11 +624,11 @@ class Main
 		_addMessage('`$embed`');
 	}
 	
-	function _printID(?arguments: Array<String>) {
+	function _printID(?_) {
 		_addMessage('*Currently impersonating*: $id');
 	}
 	
-	function _printRoom(?arguments: Array<String>) {
+	function _printRoom(?_) {
 		_addMessage('*Currently in*: $room');
 	}
 	
@@ -649,7 +659,7 @@ class Main
 		lockHttp.request(true);
 	}
 	
-	function _unlockRoom(?arguments: Array<String>) {
+	function _unlockRoom(_) {
 		var lockHttp: Http = new Http(basePath + 'api/unlock/$room/$privateID/$adminPassword');
 		lockHttp.onData = function(d) {
 			if(d == 'unlocked') {
@@ -671,6 +681,7 @@ class Main
 		_addMessage('\\*italic.\\*');
 		_addMessage('\\*\\*bold.\\*\\*');
 		_addMessage('\\*\\*\\*bold-italic.\\*\\*\\*');
+		_addMessage('\\`pre-formatted.\\`');
 		_addMessage('\\^header\\^');
 		_addMessage('\\#link/to.image (optional)[width] (optional)[height]\\#');
 		_addMessage('escape markdown with \\\\*escaped\\\\*');
@@ -680,6 +691,16 @@ class Main
 		_getNotificationPermission(true);
 	}
 	
+	function _legal(_) {
+		_addMessage('slickrock.io is (c) 2015 Nico May.');
+		_addMessage('wordlists used with permission from gfycat.com');
+		_addMessage('homepage background image taken by Nicholas A. Tonelli, licensed as https://creativecommons.org/licenses/by/2.0/. Image was edited (blurred).');
+	}
+	
+	function _credits(_) {
+		_addMessage('Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).');
+		_addMessage('Assorted help and testing: @dimensive @gamesbybeta @Zanzlanz');
+	}
 	//}
 	
 	//{ messages
@@ -879,6 +900,7 @@ class Main
 			parsed = parsed.replace('\\*', '&ast;');
 			parsed = parsed.replace('\\#', '&num;');
 			parsed = parsed.replace('\\^', '&Hat;');
+			parsed = parsed.replace('\\`', '&grave;');
 			parsed = parsed.replace('\\\\n', '&bsol;n');
 			parsed = parsed.replace('\\\\t', '&bsol;t');
 			

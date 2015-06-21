@@ -458,6 +458,8 @@ Main.prototype = {
 		_g.set("typesetting",{ identifiers : "<strong>/typesetting</strong>", description : "display formatting help.", method : $bind(this,this._formatHelp)});
 		_g.set("encase",{ identifiers : "<strong>/encase</strong> <em>WIDTH</em> <em>HEIGHT</em>", description : "generates an embedable iframe with a simple default styling.", method : $bind(this,this._generateEmbed), requiresArgs : true});
 		_g.set("inform",{ identifiers : "<strong>/inform</strong>", description : "attempt to get notification permission if you denied it before.", method : $bind(this,this._notificationCommand)});
+		_g.set("legal",{ identifiers : "<strong>/legal</strong>", description : "display legal notes.", method : $bind(this,this._legal)});
+		_g.set("commendation",{ identifiers : "<strong>/commendation</strong>", description : "list some people that really deserve being listed.", method : $bind(this,this._credits)});
 		this.commandInfos = _g;
 		var $it0 = this.commandInfos.keys();
 		while( $it0.hasNext() ) {
@@ -484,7 +486,7 @@ Main.prototype = {
 	,_callCommand: function(command,args) {
 		if(this.commands.exists(command)) this.commands.get(command)(args); else this._addMessage("unrecognized command, please try again.");
 	}
-	,_getID: function($arguments) {
+	,_getID: function(_) {
 		var _g = this;
 		var idHttp = new haxe_Http(this.basePath + "api/getID");
 		idHttp.onData = function(d) {
@@ -492,7 +494,7 @@ Main.prototype = {
 			_g._printID();
 		};
 		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 513, className : "Main", methodName : "_getID"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 523, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
 		};
 		idHttp.request(true);
@@ -525,7 +527,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 565, className : "Main", methodName : "_claimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 575, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
 		};
 		lockHttp.request(true);
@@ -544,7 +546,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 590, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 600, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -566,10 +568,10 @@ Main.prototype = {
 		embed = StringTools.replace(embed,"[HEIGHT]",height == null?"null":"" + height);
 		this._addMessage("`" + embed + "`");
 	}
-	,_printID: function($arguments) {
+	,_printID: function(_) {
 		this._addMessage("*Currently impersonating*: " + this.id);
 	}
-	,_printRoom: function($arguments) {
+	,_printRoom: function(_) {
 		this._addMessage("*Currently in*: " + this.room);
 	}
 	,_lockRoom: function($arguments) {
@@ -585,19 +587,19 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 645, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 655, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
 	}
-	,_unlockRoom: function($arguments) {
+	,_unlockRoom: function(_) {
 		var _g = this;
 		var lockHttp = new haxe_Http(this.basePath + ("api/unlock/" + this.room + "/" + this.privateID + "/" + this.adminPassword));
 		lockHttp.onData = function(d) {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 663, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 673, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
 		};
 		lockHttp.request(true);
@@ -606,12 +608,22 @@ Main.prototype = {
 		this._addMessage("\\*italic.\\*");
 		this._addMessage("\\*\\*bold.\\*\\*");
 		this._addMessage("\\*\\*\\*bold-italic.\\*\\*\\*");
+		this._addMessage("\\`pre-formatted.\\`");
 		this._addMessage("\\^header\\^");
 		this._addMessage("\\#link/to.image (optional)[width] (optional)[height]\\#");
 		this._addMessage("escape markdown with \\\\*escaped\\\\*");
 	}
 	,_notificationCommand: function(_) {
 		this._getNotificationPermission(true);
+	}
+	,_legal: function(_) {
+		this._addMessage("slickrock.io is (c) 2015 Nico May.");
+		this._addMessage("wordlists used with permission from gfycat.com");
+		this._addMessage("homepage background image taken by Nicholas A. Tonelli, licensed as https://creativecommons.org/licenses/by/2.0/. Image was edited (blurred).");
+	}
+	,_credits: function(_) {
+		this._addMessage("Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).");
+		this._addMessage("Assorted help and testing: @dimensive @gamesbybeta @Zanzlanz");
 	}
 	,_parseMessages: function(data,hist) {
 		if(hist == null) hist = false;
@@ -785,6 +797,7 @@ Main.prototype = {
 			parsed = StringTools.replace(parsed,"\\*","&ast;");
 			parsed = StringTools.replace(parsed,"\\#","&num;");
 			parsed = StringTools.replace(parsed,"\\^","&Hat;");
+			parsed = StringTools.replace(parsed,"\\`","&grave;");
 			parsed = StringTools.replace(parsed,"\\\\n","&bsol;n");
 			parsed = StringTools.replace(parsed,"\\\\t","&bsol;t");
 			parsed = StringTools.replace(parsed,"\\n","<br/>");
@@ -865,11 +878,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 979, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1001, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 983, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1005, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
