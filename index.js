@@ -480,7 +480,7 @@ RouteHandler.prototype = {
 	}
 	,randomRoom: function(request,response,next) {
 		response.setHeader("Access-Control-Allow-Origin","*");
-		response.redirect("slickrock.io/" + Main.getUserID());
+		response.redirect("http://slickrock.io/" + Main.getUserID());
 	}
 	,alphanumeric: null
 	,getToken: function(privateID,request,response,next) {
