@@ -1020,8 +1020,8 @@ class Main
 			}
 			else {
 				if (locked) {
-					_setPassword(chatbox.value);
 					_addMessage('attempting to unlock room with: $password.');
+					_setPassword(chatbox.value);
 					chatbox.value = '';
 					helpbox.style.display = 'none';
 					locked = false;
