@@ -143,7 +143,7 @@ class Main
 			focussed = true;
 			Browser.document.title = 'aqueous-basin.';
 			for (f in favicons) {
-				f.href = 'bin/faviconempty.ico';
+				f.href = 'bin/img/faviconempty.ico';
 			}
 			_clearNotifications();
 		};
@@ -744,7 +744,7 @@ class Main
 			if (!focussed && !first) {
 				Browser.document.title = '# aqueous-basin.';
 				for (f in favicons) {
-					f.href = 'bin/favicon.ico';
+					f.href = 'bin/img/favicon.ico';
 				}
 				messageSound.play();
 				_sendNotification(message.innerText != null? message.innerText : message.textContent);
