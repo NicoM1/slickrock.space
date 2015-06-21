@@ -274,6 +274,12 @@ class RouteHandler implements abe.IRoute {
 		response.send(Main.getUserID());
 	}
 	
+	@:get('/api/randomRoom') 
+	function randomRoom() {
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.redirect('slickrock.io/${Main.getUserID()}');
+	}
+	
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
 	
 	@:post('/api/gettoken/:privateID') 
