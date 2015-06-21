@@ -490,14 +490,15 @@ RouteHandler.prototype = {
 	,getRandomRoom: function(request,response,next) {
 		response.setHeader("Access-Control-Allow-Origin","*");
 		var openRooms = [];
-		var $it0 = Main.rooms.iterator();
+		var $it0 = Main.rooms.keys();
 		while( $it0.hasNext() ) {
 			var r = $it0.next();
-			if(r.lock == null) openRooms.push(r);
+			var room1 = Main.rooms.get(r);
+			if(room1.lock == null) openRooms.push(r);
 		}
 		var rand = new Random(new Date().getTime());
 		var room = openRooms[rand["int"](openRooms.length,null)];
-		response.redirect("http://slickrock.io/" + Std.string(room));
+		response.redirect("http://slickrock.io/" + room + ")");
 	}
 	,alphanumeric: null
 	,getToken: function(privateID,request,response,next) {
@@ -1721,26 +1722,6 @@ haxe_ds_Option.Some = function(v) { var $x = ["Some",0,v]; $x.__enum__ = haxe_ds
 haxe_ds_Option.None = ["None",1];
 haxe_ds_Option.None.toString = $estr;
 haxe_ds_Option.None.__enum__ = haxe_ds_Option;
-var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
-	this.map = map;
-	this.keys = keys;
-	this.index = 0;
-	this.count = keys.length;
-};
-haxe_ds__$StringMap_StringMapIterator.__name__ = ["haxe","ds","_StringMap","StringMapIterator"];
-haxe_ds__$StringMap_StringMapIterator.prototype = {
-	map: null
-	,keys: null
-	,index: null
-	,count: null
-	,hasNext: function() {
-		return this.index < this.count;
-	}
-	,next: function() {
-		return this.map.get(this.keys[this.index++]);
-	}
-	,__class__: haxe_ds__$StringMap_StringMapIterator
-};
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
@@ -1786,9 +1767,6 @@ haxe_ds_StringMap.prototype = {
 			}
 		}
 		return out;
-	}
-	,iterator: function() {
-		return new haxe_ds__$StringMap_StringMapIterator(this,this.arrayKeys());
 	}
 	,__class__: haxe_ds_StringMap
 };
