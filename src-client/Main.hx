@@ -44,7 +44,7 @@ typedef Command = {
 class Main 
 {
 	var room: String;
-	var basePath: String = 'https://slickrock.io/';
+	var basePath: String = 'https://aqueous-basin.herokuapp.com/';
 	var id: String = null;
 	var privateID: String;
 	var token: String = null;

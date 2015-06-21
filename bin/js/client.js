@@ -181,7 +181,7 @@ var Main = function() {
 	this.password = null;
 	this.token = null;
 	this.id = null;
-	this.basePath = "https://slickrock.io/";
+	this.basePath = "https://aqueous-basin.herokuapp.com/";
 	this.room = window.room;
 	this._buildCommands();
 	window.onload = $bind(this,this._windowLoaded);
