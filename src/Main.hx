@@ -18,6 +18,12 @@ import express.Express;
 
 using StringTools;
 
+	
+typedef RoomMetric = {
+	room: String,
+	count: Int
+}
+
 class Main {
 	public static var tokens: Map<String, String>;	
 	static var typingTimers: Map<String, Map<String, Timer>>;
@@ -25,6 +31,8 @@ class Main {
 	static var textDB: String = '';
 	
 	public static var rooms: Rooms;
+	
+	public static var userCounts: Map<String, Array<{id: String, timestamp: Date}>> = new Map();
 	
 	static var animalWords: Array<String>;
 	static var adjectives: Array<String>;
@@ -258,7 +266,22 @@ class RouteHandler implements abe.IRoute {
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt+password)) {
 				Main.rooms.get(room).messages.push( { text: message, id: id } );
-				Main.saveMessage( { text: message, id: id, room: room} );
+				Main.saveMessage( { text: message, id: id, room: room } );
+				if (Main.userCounts[room] == null) {
+					Main.userCounts[room] = [];
+				}
+				var index = -1;
+				for (i in 0...Main.userCounts[room].length) {
+					if (Main.userCounts[room][i].id == privateID) {
+						index = i;
+					}
+				}
+				if (index == -1) {
+					Main.userCounts[room].push({id: privateID, timestamp: Date.now()});
+				}
+				else {
+					Main.userCounts[room][index].timestamp = Date.now();
+				}
 			}
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('success');
@@ -278,6 +301,55 @@ class RouteHandler implements abe.IRoute {
 	function makeRandomRoom() {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.redirect('http://slickrock.io/${Main.getUserID()}');
+	}
+	
+	var oneWeek: Int = 60 * 60 * 24 * 7;
+	
+	@:get('/api/getTopRooms') 
+	function getTopRooms() {
+		var top10: Array<RoomMetric> = [];
+		var lowest: Int = 1000000000;
+		var lowestIndex: Int = 0;
+		
+		var toRemove: Array<{id: String, timestamp: Date}> = [];
+		
+		for (r in Main.userCounts.keys()) {
+			var count = Main.userCounts[r];
+			for (u in count) {
+				if ((Date.now().getTime() - u.timestamp.getTime()) > oneWeek) {
+					toRemove.push(u);
+				}
+			}
+			for (u in toRemove) {
+				Main.userCounts[r].remove(u);
+			}
+			toRemove = [];
+			for (i in 0...top10.length) {
+				var c = top10[i];
+				if (c.count < lowest) {
+					lowest = c.count;
+					lowestIndex = i;
+				}
+			}
+			if (top10.length > 10 && count.length > lowest) {
+				top10.remove(top10[lowestIndex]);
+				top10.push({room: r, count: count.length});
+			}
+			else if (top10.length < 10) {
+				top10.push({room: r, count: count.length});
+			}
+		}
+		top10.sort(function(r1: RoomMetric, r2: RoomMetric) {
+			if (r1.count > r2.count) {
+				return 1;
+			}
+			if (r1.count < r2.count) {
+				return -1;
+			}
+			return 0;
+		});
+		
+		response.send(top10);
 	}
 	
 	@:get('/api/getRandomRoom') 
