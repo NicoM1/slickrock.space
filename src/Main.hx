@@ -286,7 +286,7 @@ class RouteHandler implements abe.IRoute {
 		var openRooms = [];
 		for (r in Main.rooms.keys()) {
 			var room = Main.rooms[r];
-			if (room.lock == null) {
+			if (room.lock == null && room.messages.length > 0) {
 				openRooms.push(r);
 			}
 		}

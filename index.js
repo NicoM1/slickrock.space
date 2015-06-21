@@ -494,7 +494,7 @@ RouteHandler.prototype = {
 		while( $it0.hasNext() ) {
 			var r = $it0.next();
 			var room1 = Main.rooms.get(r);
-			if(room1.lock == null) openRooms.push(r);
+			if(room1.lock == null && room1.messages.length > 0) openRooms.push(r);
 		}
 		var rand = new Random(new Date().getTime());
 		var room = openRooms[rand["int"](openRooms.length,null)];
