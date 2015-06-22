@@ -535,6 +535,8 @@ RouteHandler.prototype = {
 				var _this = Main.userCounts.get(r);
 				HxOverrides.remove(_this,u1);
 			}
+			var roomE = Main.rooms.get(r);
+			Main.roomInfo({ _id : r, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(r)});
 			toRemove = [];
 			var _g11 = 0;
 			var _g2 = top10.length;

@@ -327,6 +327,8 @@ class RouteHandler implements abe.IRoute {
 			for (u in toRemove) {
 				Main.userCounts[r].remove(u);
 			}
+			var roomE = Main.rooms[r];
+			Main.roomInfo( { _id: r, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[r] } );
 			toRemove = [];
 			for (i in 0...top10.length) {
 				var c = top10[i];
