@@ -299,6 +299,7 @@ class Main
 		checkValid.onError = function(e) {
 			Cookie.remove('private');
 			Cookie.remove('token');
+			trace(e);
 			_addMessage('an error occured getting authentication, please refresh the page.');
 		}
 		checkValid.request(true);
@@ -434,6 +435,12 @@ class Main
 			identifiers: '<strong>/claim</strong> <em>ADMIN_PASSWORD</em>',
 			description: 'attempt to take ownership of the current room.',
 			method: _claimRoom,
+			requiresArgs: true
+		},
+		'reclaim' => {
+			identifiers: '<strong>/reclaim</strong> <em>OLD_ADMIN_PASSWORD</em> <em>NEW_ADMIN_PASSWORD</em>',
+			description: 'attempt to change the admin password.',
+			method: _reclaimRoom,
 			requiresArgs: true
 		},
 		'entitle' => {
@@ -572,6 +579,31 @@ class Main
 		lockHttp.onError = function(e) {
 			trace(e);
 			_addMessage('failed to connect to api, couldn\'t claim room.');
+		}
+		
+		lockHttp.request(true);
+	}
+	
+	function _reclaimRoom(arguments: Array<String>) {
+		if (arguments.length < 2 || arguments[0].trim() == '') {
+			_addMessage('**/reclaim** requires arguments: *OLD_ADMIN_PASSWORD* *NEW_ADMIN_PASSWORD*.');
+			return;
+		}
+		var oldPassword = arguments[0];
+		var newPassword = arguments[1];
+		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$oldPassword/$newPassword');
+		lockHttp.onData = function(d) {
+			if(d == 'claimed') {
+				_addMessage('$room reclaimed.');
+				_setAdminPassword(newPassword);
+			}
+			else {
+				_addMessage('you are not authorized to reclaim $room.');
+			}
+		}
+		lockHttp.onError = function(e) {
+			trace(e);
+			_addMessage('failed to connect to api, couldn\'t reclaim room.');
 		}
 		
 		lockHttp.request(true);

@@ -473,6 +473,24 @@ class RouteHandler implements abe.IRoute {
 		response.send('failed');
 	}
 	
+	@:post('/api/claim/:room/:privateID/:oldAdmin/:newAdmin')
+	function reclaimRoom(room: String, privateID: String, oldAdmin: String, newAdmin: String) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if ((roomE.pw == null && roomE.messages.length == 0) || Sha1.encode(roomE.salt + oldAdmin) == roomE.pw) {
+			if(roomE.salt == null) {
+				roomE.salt = getSalt();
+			}
+			roomE.pw = Sha1.encode(roomE.salt + newAdmin);
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room]  } );
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('claimed');
+			return;
+		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send('failed');
+	}
+	
 	@:post('/api/:room/:lastID')
 	function getMessages(room: String, lastID: Int) {
 		room = room.toLowerCase();
