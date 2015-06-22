@@ -356,6 +356,8 @@ Main.prototype = {
 			}
 		};
 		checkValid.onError = function(e) {
+			js_Cookie.remove("private");
+			js_Cookie.remove("token");
 			_g._addMessage("an error occured getting authentication, please refresh the page.");
 		};
 		checkValid.request(true);
@@ -492,7 +494,7 @@ Main.prototype = {
 			_g._printID();
 		};
 		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 519, className : "Main", methodName : "_getID"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 521, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
 		};
 		idHttp.request(true);
@@ -525,7 +527,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 571, className : "Main", methodName : "_claimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 573, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
 		};
 		lockHttp.request(true);
@@ -544,7 +546,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 596, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 598, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -585,7 +587,7 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 651, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 653, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
@@ -597,7 +599,7 @@ Main.prototype = {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 669, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 671, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
 		};
 		lockHttp.request(true);
@@ -876,11 +878,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 997, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 999, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1001, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1003, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
@@ -1645,6 +1647,9 @@ js_Cookie.get = function(name) {
 };
 js_Cookie.exists = function(name) {
 	return js_Cookie.all().exists(name);
+};
+js_Cookie.remove = function(name,path,domain) {
+	js_Cookie.set(name,"",-10,path,domain);
 };
 var thx_Arrays = function() { };
 thx_Arrays.__name__ = true;

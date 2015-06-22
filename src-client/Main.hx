@@ -297,6 +297,8 @@ class Main
 			}
 		}
 		checkValid.onError = function(e) {
+			Cookie.remove('private');
+			Cookie.remove('token');
 			_addMessage('an error occured getting authentication, please refresh the page.');
 		}
 		checkValid.request(true);
