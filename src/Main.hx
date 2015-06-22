@@ -128,7 +128,6 @@ class Main {
 					});
 				}
 				if (r.users != null) {
-					trace(r.users);
 					userCounts[r._id] = r.users;
 				}
 				rooms.get(r._id).lock = r.lock;
@@ -308,7 +307,7 @@ class RouteHandler implements abe.IRoute {
 		response.redirect('http://slickrock.io/${Main.getUserID()}');
 	}
 	
-	var oneWeek: Int = 60 * 60 * 24 * 7;
+	var oneWeek: Int = 1000 * 60 * 60 * 24 * 7;
 	
 	@:get('/api/getTopRooms') 
 	function getTopRooms() {

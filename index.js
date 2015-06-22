@@ -334,7 +334,6 @@ Main._parseMessages = function() {
 				Main.rooms.set(r1._id,value);
 			}
 			if(r1.users != null) {
-				console.log(r1.users);
 				var v = r1.users;
 				Main.userCounts.set(r1._id,v);
 				v;
@@ -435,7 +434,7 @@ abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
 	this.letters = "abcdefghijklmnopqrstuvwxyz";
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
-	this.oneWeek = 604800;
+	this.oneWeek = 604800000;
 	this.maxMessageLoad = 80;
 };
 RouteHandler.__name__ = ["RouteHandler"];
