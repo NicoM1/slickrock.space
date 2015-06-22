@@ -511,7 +511,7 @@ RouteHandler.prototype = {
 	,getTopRooms: function(request,response,next) {
 		var top10 = [];
 		var lowest = 1000000000;
-		var lowestIndex = 0;
+		var lowestIndex = -1;
 		var toRemove = [];
 		var $it0 = Main.userCounts.keys();
 		while( $it0.hasNext() ) {
@@ -543,7 +543,7 @@ RouteHandler.prototype = {
 					lowestIndex = i;
 				}
 			}
-			if(top10.length > 10 && count.length > lowest) {
+			if(top10.length >= 10 && count.length > lowest) {
 				HxOverrides.remove(top10,top10[lowestIndex]);
 				top10.push({ room : r, count : count.length});
 			} else if(top10.length < 10) top10.push({ room : r, count : count.length});

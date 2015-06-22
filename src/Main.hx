@@ -308,7 +308,7 @@ class RouteHandler implements abe.IRoute {
 	function getTopRooms() {
 		var top10: Array<RoomMetric> = [];
 		var lowest: Int = 1000000000;
-		var lowestIndex: Int = 0;
+		var lowestIndex: Int = -1;
 		
 		var toRemove: Array<{id: String, timestamp: Date}> = [];
 		
@@ -332,7 +332,7 @@ class RouteHandler implements abe.IRoute {
 					lowestIndex = i;
 				}
 			}
-			if (top10.length > 10 && count.length > lowest) {
+			if (top10.length >= 10 && count.length > lowest) {
 				top10.remove(top10[lowestIndex]);
 				top10.push({room: r, count: count.length});
 			}
