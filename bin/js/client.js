@@ -518,11 +518,11 @@ Main.prototype = {
 			return;
 		}
 		var newPassword = $arguments[0];
-		this._setAdminPassword(newPassword);
 		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
 		lockHttp.onData = function(d) {
 			if(d == "claimed") {
 				_g._addMessage("" + _g.room + " claimed.");
+				_g._setAdminPassword(newPassword);
 				_g._addMessage("you may consider ***/fasten***-ing it at any time.");
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};

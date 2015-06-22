@@ -558,11 +558,11 @@ class Main
 			return;
 		}
 		var newPassword = arguments[0];
-		_setAdminPassword(newPassword);
 		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$newPassword');
 		lockHttp.onData = function(d) {
 			if(d == 'claimed') {
 				_addMessage('$room claimed.');
+				_setAdminPassword(newPassword);
 				_addMessage('you may consider ***/fasten***-ing it at any time.');
 			}
 			else {
