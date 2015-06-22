@@ -585,13 +585,12 @@ class Main
 	}
 	
 	function _reclaimRoom(arguments: Array<String>) {
-		if (arguments.length < 2 || arguments[0].trim() == '') {
-			_addMessage('**/reclaim** requires arguments: *OLD_ADMIN_PASSWORD* *NEW_ADMIN_PASSWORD*.');
+		if (arguments.length == 0 || arguments[0].trim() == '') {
+			_addMessage('**/reclaim** requires argument: *NEW_ADMIN_PASSWORD*.');
 			return;
 		}
-		var oldPassword = arguments[0];
-		var newPassword = arguments[1];
-		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$oldPassword/$newPassword');
+		var newPassword = arguments[0];
+		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$adminPassword/$newPassword');
 		lockHttp.onData = function(d) {
 			if(d == 'claimed') {
 				_addMessage('$room reclaimed.');

@@ -536,13 +536,12 @@ Main.prototype = {
 	}
 	,_reclaimRoom: function($arguments) {
 		var _g = this;
-		if($arguments.length < 2 || StringTools.trim($arguments[0]) == "") {
-			this._addMessage("**/reclaim** requires arguments: *OLD_ADMIN_PASSWORD* *NEW_ADMIN_PASSWORD*.");
+		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
+			this._addMessage("**/reclaim** requires argument: *NEW_ADMIN_PASSWORD*.");
 			return;
 		}
-		var oldPassword = $arguments[0];
-		var newPassword = $arguments[1];
-		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + oldPassword + "/" + newPassword));
+		var newPassword = $arguments[0];
+		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + this.adminPassword + "/" + newPassword));
 		lockHttp.onData = function(d) {
 			if(d == "claimed") {
 				_g._addMessage("" + _g.room + " reclaimed.");
@@ -550,7 +549,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to reclaim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 605, className : "Main", methodName : "_reclaimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 604, className : "Main", methodName : "_reclaimRoom"});
 			_g._addMessage("failed to connect to api, couldn't reclaim room.");
 		};
 		lockHttp.request(true);
@@ -569,7 +568,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 630, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 629, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -610,7 +609,7 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 685, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 684, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
@@ -622,7 +621,7 @@ Main.prototype = {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 703, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 702, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
 		};
 		lockHttp.request(true);
@@ -901,11 +900,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1031, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1030, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1035, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1034, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
