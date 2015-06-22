@@ -249,11 +249,6 @@ class RouteHandler implements abe.IRoute {
 	}
 
 	function _sendMessage(response: Response, message: String, room: String, password: String, id: String, privateID: String, token: String) {
-		if (room == 'frontpage') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
-			return;
-		}
 		if(Main.tokens[privateID] == token) {
 			if (!Main.rooms.exists(room)) {
 				Main.rooms.set(room, {
@@ -401,11 +396,6 @@ class RouteHandler implements abe.IRoute {
 	@:get('/api/typing/:room/:id') 
 	@:post('/api/typing/:room/:id') 
 	function typing(room: String, id: String) {
-		if (room == 'frontpage') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
-			return;
-		}
 		if (Main.rooms.get(room).typing.indexOf(id) == -1) {
 			Main.rooms.get(room).typing.push(id);
 			Main.clearTyping(room, id);
@@ -419,11 +409,6 @@ class RouteHandler implements abe.IRoute {
 	
 	@:post('/api/lock/:room/:privateID/:password/:privatePass')
 	function lockRoom(room: String, privateID: String, password: String, privatePass: String) {
-		if (room == 'frontpage') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
-			return;
-		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.pw == null) {
@@ -450,11 +435,6 @@ class RouteHandler implements abe.IRoute {
 	
 	@:post('/api/unlock/:room/:privateID/:privatePass')
 	function unlockRoom(room: String, privateID: String, privatePass: String) {
-		if (room == 'frontpage') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
-			return;
-		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.lock != null) {
@@ -477,11 +457,6 @@ class RouteHandler implements abe.IRoute {
 	
 	@:post('/api/claim/:room/:privateID/:privatePass')
 	function claimRoom(room: String, privateID: String, privatePass: String) {
-		if (room == 'frontpage') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
-			return;
-		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if ((roomE.pw == null && roomE.messages.length == 0) || Sha1.encode(roomE.salt + privatePass) == roomE.pw) {

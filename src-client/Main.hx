@@ -209,9 +209,7 @@ class Main
 		
 		_setupPrivateID();
 		
-		if (room != 'frontpage') {
-			_loop();
-		}
+		_loop();
 	}
 	
 	function _testScrolling(e) {
@@ -305,11 +303,9 @@ class Main
 	}
 	
 	function _tryAuth() {
-		if (room != 'frontpage') {
-			authHttp.url = basePath + 'api/gettoken/$privateID';
-			authHttp.request(true);
-			hasTriedAuth = true;				
-		}
+		authHttp.url = basePath + 'api/gettoken/$privateID';
+		authHttp.request(true);
+		hasTriedAuth = true;				
 	}
 	
 	function _getAuth(data: String) {
@@ -805,7 +801,7 @@ class Main
 	}
 	
 	function _tryScroll(force: Bool = false, img: ImageElement = null) {
-		if (room != 'frontpage' && (force || _atBottom(img))) {
+		if (force || _atBottom(img)) {
 			Browser.window.scrollTo(0, messages.scrollHeight);
 			initialScroll = false;
 		}
@@ -1096,19 +1092,14 @@ class Main
 	}
 	
 	function _postMessage(msg: String) {
-		if(room != 'frontpage') {
-			if (msg.trim() != '') {
-				if(password == null) {
-					postHttp.url = basePath + 'chat/' + msg.urlEncode() +'/' + room + '/' + id + '/' + privateID + '/' + token;
-				}
-				else {
-					postHttp.url = basePath + 'chat/' + msg.urlEncode() +'/' + room + '/' + password +'/' + id + '/' + privateID + '/' + token;
-				}
-				postHttp.request(true);
+		if (msg.trim() != '') {
+			if(password == null) {
+				postHttp.url = basePath + 'chat/' + msg.urlEncode() +'/' + room + '/' + id + '/' + privateID + '/' + token;
 			}
-		}
-		else {
-			_addMessage('you may not chat on the front page, please try ***/survey***.');
+			else {
+				postHttp.url = basePath + 'chat/' + msg.urlEncode() +'/' + room + '/' + password +'/' + id + '/' + privateID + '/' + token;
+			}
+			postHttp.request(true);
 		}
 	}
 	//}
