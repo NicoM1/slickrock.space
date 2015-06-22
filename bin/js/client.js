@@ -453,7 +453,7 @@ Main.prototype = {
 		_g.set("existent",{ identifiers : "<strong>/existent</strong>", description : "print the chat room you are currently in.", method : $bind(this,this._printRoom)});
 		_g.set("survey",{ identifiers : "<strong>/survey</strong> <em>ROOM</em>", description : "move to a different chat room.", method : $bind(this,this._changeRoom), requiresArgs : true});
 		_g.set("claim",{ identifiers : "<strong>/claim</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take ownership of the current room.", method : $bind(this,this._claimRoom), requiresArgs : true});
-		_g.set("reclaim",{ identifiers : "<strong>/reclaim</strong> <em>OLD_ADMIN_PASSWORD</em> <em>NEW_ADMIN_PASSWORD</em>", description : "attempt to change the admin password.", method : $bind(this,this._reclaimRoom), requiresArgs : true});
+		_g.set("reclaim",{ identifiers : "<strong>/reclaim</strong> <em>NEW_ADMIN_PASSWORD</em>", description : "attempt to change the admin password.", method : $bind(this,this._reclaimRoom), requiresArgs : true});
 		_g.set("entitle",{ identifiers : "<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take authorize youself as admin of the current room.", method : $bind(this,this._authorizeRoom), requiresArgs : true});
 		_g.set("fasten",{ identifiers : "<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>", description : "attempt to lock the current room.", method : $bind(this,this._lockRoom), requiresArgs : true});
 		_g.set("unfasten",{ identifiers : "<strong>/unfasten</strong>", description : "attempt to unlock the current room.", method : $bind(this,this._unlockRoom)});

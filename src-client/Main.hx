@@ -438,7 +438,7 @@ class Main
 			requiresArgs: true
 		},
 		'reclaim' => {
-			identifiers: '<strong>/reclaim</strong> <em>OLD_ADMIN_PASSWORD</em> <em>NEW_ADMIN_PASSWORD</em>',
+			identifiers: '<strong>/reclaim</strong> <em>NEW_ADMIN_PASSWORD</em>',
 			description: 'attempt to change the admin password.',
 			method: _reclaimRoom,
 			requiresArgs: true
