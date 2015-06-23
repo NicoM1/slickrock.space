@@ -138,6 +138,9 @@ span {
 	#helpbox {
 		bottom: 40px;
 	}
+	#messages {
+		margin-bottom: 45px;
+	}
 }
 
 li {
