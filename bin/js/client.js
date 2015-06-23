@@ -287,7 +287,7 @@ Main.prototype = {
 		if(this._inIframe()) {
 			var maximize;
 			var _this = window.document;
-			maximize = _this.createElement("a");
+			maximize = _this.createElement("button");
 			maximize.textContent = "[X]";
 			maximize.onclick = function() {
 				window.top.location.href = "http://slickrock.io/" + _g.room;

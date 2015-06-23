@@ -193,7 +193,7 @@ class Main
 		}
 		
 		if (_inIframe()) {
-			var maximize = Browser.document.createAnchorElement();
+			var maximize = Browser.document.createButtonElement();
 			maximize.textContent = '[X]';
 			maximize.onclick = function() {
 				Browser.window.top.location.href = 'http://slickrock.io/$room';
