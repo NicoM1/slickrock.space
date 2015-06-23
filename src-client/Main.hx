@@ -199,7 +199,7 @@ class Main
 				Browser.window.top.location.href = 'http://slickrock.io/$room';
 			}
 			maximize.title = 'go to $room.';
-			maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton');
+			maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton', 'faa-passing', 'animated', 'faa-slow');
 			Browser.document.body.appendChild(maximize);
 		}
 		
