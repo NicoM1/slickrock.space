@@ -31,8 +31,8 @@ span{float:left;width:0;height:0;}
 li{margin:0px;padding-top:1px;padding-bottom:1px;}
 li:hover{cursor:pointer;}
 .description{}
-.commandTip{padding-top:10px;padding-bottom:10px;cursor:pointer;}
+.commandTip{padding-top:10px;padding-bottom:10px;}
 .selected{background-color:hsl(282,45.9%,25.7%);}
-.floatingbutton{position:fixed;top:5px;right:5px;}
+.floatingbutton{position:fixed;top:5px;right:5px;cursor:pointer;}
 ::-webkit-scrollbar{display:none;}
 
