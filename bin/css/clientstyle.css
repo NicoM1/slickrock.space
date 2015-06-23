@@ -170,6 +170,10 @@ li:hover {
 	cursor: pointer;
 	border: none;
 	background-color: rgba(0,0,0,0);
+	color: #aaaaaa;
+}
+
+.floatingbutton:hover {
 	color: #dddddd;
 }
 
