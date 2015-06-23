@@ -168,6 +168,7 @@ li:hover {
 	top: 5px;
 	right: 5px;
 	cursor: pointer;
+	background-color: rgba(0,0,0,0);
 }
 
 ::-webkit-scrollbar { 
