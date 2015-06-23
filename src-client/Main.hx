@@ -197,9 +197,10 @@ class Main
 			//maximize.textContent = '[X]';
 			maximize.onclick = function() {
 				Browser.window.top.location.href = 'http://slickrock.io/$room';
+				maximize.classList.add('faa-passing', 'animated', 'faa-fast');
 			}
 			maximize.title = 'go to $room.';
-			maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton', 'faa-passing', 'animated', 'faa-slow');
+			maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton');
 			Browser.document.body.appendChild(maximize);
 		}
 		
