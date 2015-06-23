@@ -33,6 +33,6 @@ li:hover{cursor:pointer;}
 .description{}
 .commandTip{padding-top:10px;padding-bottom:10px;}
 .selected{background-color:hsl(282,45.9%,25.7%);}
-.floatingbutton{position:fixed;top:5px;right:5px;cursor:pointer;background-color:rgba(0,0,0,0);}
+.floatingbutton{position:fixed;top:5px;right:5px;cursor:pointer;border:none;background-color:rgba(0,0,0,0);color:#dddddd;}
 ::-webkit-scrollbar{display:none;}
 
