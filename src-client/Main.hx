@@ -770,7 +770,7 @@ class Main
 			var p = parsed.messages.messages[ii];
 			var message = _addMessage(p.text, p.id, hist);
 			
-			if (!focussed && !first) {
+			if (!hist && !focussed && !first) {
 				Browser.document.title = '# slickrock.io';
 				for (f in favicons) {
 					f.href = 'bin/img/favicon.ico';

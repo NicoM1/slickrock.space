@@ -680,7 +680,7 @@ Main.prototype = {
 			if(hist) ii = parsed.messages.messages.length - 1 - i;
 			var p = parsed.messages.messages[ii];
 			var message = this._addMessage(p.text,p.id,null,hist);
-			if(!this.focussed && !this.first) {
+			if(!hist && !this.focussed && !this.first) {
 				window.document.title = "# slickrock.io";
 				var _g2 = 0;
 				var _g3 = this.favicons;
