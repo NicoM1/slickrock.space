@@ -173,11 +173,15 @@ li:hover {
 	color: #aaaaaa;
 }
 
-.floatingbutton:hover, .floatingbutton:active {
+.floatingbutton:hover {
 	color: #dddddd;
-	outline: none;
 }
 
+.floatingbutton:active {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #555555;
+}
 
 ::-webkit-scrollbar { 
 	display: none; 

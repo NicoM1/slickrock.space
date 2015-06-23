@@ -34,6 +34,7 @@ li:hover{cursor:pointer;}
 .commandTip{padding-top:10px;padding-bottom:10px;}
 .selected{background-color:hsl(282,45.9%,25.7%);}
 .floatingbutton{position:fixed;top:5px;right:5px;cursor:pointer;border:none;background-color:rgba(0,0,0,0);color:#aaaaaa;}
-.floatingbutton:hover,.floatingbutton:active{color:#dddddd;outline:none;}
+.floatingbutton:hover{color:#dddddd;}
+.floatingbutton:active{border-style:solid;border-width:1px;border-color:#555555;}
 ::-webkit-scrollbar{display:none;}
 
