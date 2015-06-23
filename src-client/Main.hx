@@ -390,7 +390,7 @@ class Main
 		if (Notification.permission == NotificationPermission.GRANTED) {
 			var options: NotificationOptions = { };
 			options.body = 'slickrock.io/$room';
-			options.icon = 'bin/favicon_new.ico';
+			options.icon = 'http://slickrock.io/bin/img/favicon.ico';
 			if (notification == null) {
 				numNotifications = 1;
 				notification = new Notification(text, options);
@@ -407,8 +407,10 @@ class Main
 	}
 	
 	function _clearNotifications() {
-		notification.close();
-		notification = null;
+		if(notification != null) {
+			notification.close();
+			notification = null;
+		}
 	}
 	//}
 		
