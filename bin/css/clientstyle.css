@@ -133,13 +133,13 @@ span {
 
 @media screen and (max-width: 400px), screen and (max-height: 500px) {
 	#chatbox {
-        height: 40px;
+        height: 50px;
     }
 	#helpbox {
-		bottom: 40px;
+		bottom: 50px;
 	}
 	#messages {
-		margin-bottom: 45px;
+		margin-bottom: 55px;
 	}
 }
 

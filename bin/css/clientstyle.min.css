@@ -26,9 +26,9 @@ span{float:left;width:0;height:0;}
 .helptip{color:#595959!important;}
 #chevron{position:fixed;left:5px;bottom:14px;width:15px;height:10px;font-family:'Lato',sans-serif;}
 #helpbox{position:fixed;margin:0px;padding-left:5px;padding-top:5px;padding-bottom:5px;padding-right:5px;max-height:80%;overflow:scroll;-webkit-overflow-scrolling:touch;bottom:60px;width:70%;background-color:#1e1e1e;display:none;border-width:2px;border-right:solid;border-top:solid;border-color:#252525;list-style-type:none;}
-@media screen and (max-width:400px),screen and (max-height:500px){#chatbox{height:40px;}
-#helpbox{bottom:40px;}
-#messages{margin-bottom:45px;}}
+@media screen and (max-width:400px),screen and (max-height:500px){#chatbox{height:50px;}
+#helpbox{bottom:50px;}
+#messages{margin-bottom:55px;}}
 li{margin:0px;padding-top:1px;padding-bottom:1px;}
 li:hover{cursor:pointer;}
 .description{}
