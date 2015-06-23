@@ -179,8 +179,9 @@ li:hover {
 
 .floatingbutton:active {
 	border-style: solid;
-	border-width: 1px;
+	border-width: 2px;
 	border-color: #555555;
+	border-radius: 5px;
 	outline: none;
 }
 
