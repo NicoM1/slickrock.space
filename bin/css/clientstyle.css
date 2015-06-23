@@ -184,6 +184,10 @@ li:hover {
 	outline: none;
 }
 
+.floatingbutton:focus {
+	outline: none;
+}
+
 ::-webkit-scrollbar { 
 	display: none; 
 }

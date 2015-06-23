@@ -36,5 +36,6 @@ li:hover{cursor:pointer;}
 .floatingbutton{position:fixed;top:5px;right:5px;cursor:pointer;border:none;background-color:rgba(0,0,0,0);color:#aaaaaa;}
 .floatingbutton:hover{color:#dddddd;}
 .floatingbutton:active{border-style:solid;border-width:1px;border-color:#555555;outline:none;}
+.floatingbutton:focus{outline:none;}
 ::-webkit-scrollbar{display:none;}
 
