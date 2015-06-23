@@ -195,7 +195,9 @@ class Main
 		if (_inIframe()) {
 			var maximize = Browser.document.createAnchorElement();
 			maximize.textContent = '[X]';
-			maximize.href = 'http://slickrock.io/$room';
+			maximize.onclick = function() {
+				Browser.window.top.location.href = 'http://slickrock.io/$room';
+			}
 			maximize.title = 'go to $room.';
 			maximize.classList.add('floatingbutton');
 			Browser.document.body.appendChild(maximize);
