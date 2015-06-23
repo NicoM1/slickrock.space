@@ -450,7 +450,7 @@ Main.prototype = {
 				this.notification = new Notification("" + this.numNotifications + " new messages.",options);
 			}
 			this.notification.onclick = function() {
-				window.focus();
+				window.top.focus();
 			};
 		}
 	}

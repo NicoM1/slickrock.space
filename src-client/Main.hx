@@ -401,7 +401,7 @@ class Main
 				notification = new Notification('$numNotifications new messages.', options);
 			}
 			notification.onclick = function(){ 
-				Browser.window.focus();
+				Browser.window.top.focus();
 			};
 		}
 	}
