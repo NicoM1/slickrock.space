@@ -440,7 +440,7 @@ Main.prototype = {
 		if(Notification.permission == "granted") {
 			var options = { };
 			options.body = "slickrock.io/" + this.room;
-			options.icon = "http://slickrock.io/bin/img/favicon.ico";
+			options.icon = "http://slickrock.io/bin/img/notification.png";
 			if(this.notification == null) {
 				this.numNotifications = 1;
 				this.notification = new Notification(text,options);

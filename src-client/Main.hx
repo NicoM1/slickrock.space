@@ -390,7 +390,7 @@ class Main
 		if (Notification.permission == NotificationPermission.GRANTED) {
 			var options: NotificationOptions = { };
 			options.body = 'slickrock.io/$room';
-			options.icon = 'http://slickrock.io/bin/img/favicon.ico';
+			options.icon = 'http://slickrock.io/bin/img/notification.png';
 			if (notification == null) {
 				numNotifications = 1;
 				notification = new Notification(text, options);
