@@ -15,7 +15,10 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    viewBox="0 0 64 64"
-   sodipodi:docname="favicon_new.svg">
+   sodipodi:docname="favicon_new.svg"
+   inkscape:export-filename="P:\Git-Projects\AbeSite\bin\img\favicon_new64.png"
+   inkscape:export-xdpi="91.39048"
+   inkscape:export-ydpi="91.39048">
   <defs
      id="defs3338" />
   <sodipodi:namedview
@@ -26,8 +29,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="8"
-     inkscape:cx="23.025324"
-     inkscape:cy="15.79396"
+     inkscape:cx="29.579283"
+     inkscape:cy="31.22346"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:document-units="px"
@@ -60,18 +63,18 @@
        height="63.02626"
        x="0.5078125"
        y="0.49609375"
-       ry="4" />
+       ry="11.75" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:93.38323975px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#7b7b7b;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-3.3206141"
-       y="59.55682"
+       style="font-style:normal;font-weight:normal;font-size:70.31397247px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#dedede;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       x="-0.16833864"
+       y="52.027458"
        id="text4174"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4176"
-         x="-3.3206141"
-         y="59.55682"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI';fill:#7b7b7b;fill-opacity:1">&gt;</tspan></text>
+         x="-0.16833864"
+         y="52.027458"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Segoe UI';-inkscape-font-specification:'Segoe UI Bold';fill:#dedede;fill-opacity:1;">&gt;</tspan></text>
   </g>
 </svg>
