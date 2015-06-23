@@ -195,6 +195,9 @@ class Main
 		if (_inIframe()) {
 			var maximize = Browser.document.createButtonElement();
 			//maximize.textContent = '[X]';
+			maximize.onmouseover = function() {
+				maximize.classList.add('faa-passing', 'animated', 'faa-slow');
+			}
 			maximize.onclick = function() {
 				Browser.window.top.location.href = 'http://slickrock.io/$room';
 				maximize.classList.add('faa-passing', 'animated', 'faa-fast');
