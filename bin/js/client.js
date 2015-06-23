@@ -288,7 +288,7 @@ Main.prototype = {
 			var maximize;
 			var _this = window.document;
 			maximize = _this.createElement("button");
-			maximize.value = "go to " + this.room + ".";
+			maximize.textContent = "go to " + this.room + ".";
 			maximize.classList.add("floatingbutton");
 			window.document.body.appendChild(maximize);
 		}
