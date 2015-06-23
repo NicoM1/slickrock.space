@@ -192,6 +192,13 @@ class Main
 			}
 		}
 		
+		if (_inIframe()) {
+			var maximize = Browser.document.createButtonElement();
+			maximize.value = 'go to $room.';
+			maximize.classList.add('floatingbutton');
+			Browser.document.body.appendChild(maximize);
+		}
+		
 		if(!Cookie.exists('id')) {
 			_getID();
 		}
@@ -1199,6 +1206,15 @@ class Main
 	function _setAdminPassword(password_: String) {
 		adminPassword = password_;
 		Cookie.set('${room}admin-password', adminPassword, 60 * 60 * 24 * 365 * 10);
+	}
+	
+	function _inIframe (): Bool {
+		try {
+			return Browser.window.self != Browser.window.top;
+		} 
+		catch (e: Dynamic) {
+			return true;
+		}
 	}
 	//}
 	
