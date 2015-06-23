@@ -165,8 +165,8 @@ li:hover {
 
 .floatingbutton {
 	position: fixed;
-	margin-top: 5px;
-	margin-right: 5px;
+	top: 5px;
+	right: 5px;
 }
 
 ::-webkit-scrollbar { 
