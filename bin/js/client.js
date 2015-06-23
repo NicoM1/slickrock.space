@@ -288,12 +288,11 @@ Main.prototype = {
 			var maximize;
 			var _this = window.document;
 			maximize = _this.createElement("button");
-			maximize.textContent = "[X]";
 			maximize.onclick = function() {
 				window.top.location.href = "http://slickrock.io/" + _g.room;
 			};
 			maximize.title = "go to " + this.room + ".";
-			maximize.classList.add("floatingbutton");
+			maximize.classList.add("fa","fa-angle-double-right","floatingbutton");
 			window.document.body.appendChild(maximize);
 		}
 		if(!js_Cookie.exists("id")) this._getID(); else this._setID(js_Cookie.get("id"));

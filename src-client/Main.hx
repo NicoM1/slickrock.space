@@ -194,12 +194,12 @@ class Main
 		
 		if (_inIframe()) {
 			var maximize = Browser.document.createButtonElement();
-			maximize.textContent = '[X]';
+			//maximize.textContent = '[X]';
 			maximize.onclick = function() {
 				Browser.window.top.location.href = 'http://slickrock.io/$room';
 			}
 			maximize.title = 'go to $room.';
-			maximize.classList.add('floatingbutton');
+			maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton');
 			Browser.document.body.appendChild(maximize);
 		}
 		
