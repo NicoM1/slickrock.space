@@ -90,6 +90,8 @@ class Main
 	
 	var lastY: Int = null;
 	
+	var maximizeClicked: Bool = false;
+	
 	function new() {
 		room = untyped window.room;
 		_buildCommands();
@@ -198,9 +200,15 @@ class Main
 			maximize.onmouseover = function() {
 				maximize.classList.add('faa-passing', 'animated', 'faa-slow');
 			}
+			maximize.onmouseleave = function() {
+				if (!maximizeClicked) {
+					maximize.classList.remove('faa-passing', 'animated', 'faa-slow');
+				}
+			}
 			maximize.onclick = function() {
 				Browser.window.top.location.href = 'http://slickrock.io/$room';
 				maximize.classList.add('faa-passing', 'animated', 'faa-fast');
+				maximizeClicked = true;
 			}
 			maximize.title = 'go to $room.';
 			maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton');
