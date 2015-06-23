@@ -163,6 +163,12 @@ li:hover {
 	background-color: hsl(282, 45.9%, 25.7%);
 }
 
+.floatingbutton {
+	position: fixed;
+	margin-top: 5px;
+	margin-right: 5px;
+}
+
 ::-webkit-scrollbar { 
 	display: none; 
 }

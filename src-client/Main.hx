@@ -194,7 +194,8 @@ class Main
 		
 		if (_inIframe()) {
 			var maximize = Browser.document.createButtonElement();
-			maximize.textContent = 'go to $room.';
+			maximize.textContent = '[X]';
+			maximize.title = 'go to $room.';
 			maximize.classList.add('floatingbutton');
 			Browser.document.body.appendChild(maximize);
 		}
