@@ -131,7 +131,7 @@ span {
 	list-style-type: none;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 400px), screen and (max-height: 500px) {
 	#chatbox {
         height: 40px;
     }
