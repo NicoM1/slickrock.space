@@ -746,8 +746,10 @@ class Main
 	//{ messages
 	function _parseMessages(data, hist: Bool = false ) {	
 		if (data == 'locked') {
-			if (token == null && !hasTriedAuth) {
-				_tryAuth();
+			if (token == null) {
+				if(!hasTriedAuth) {
+					_tryAuth();
+				}
 				requestInProgress = false;
 				return;
 			}
@@ -760,8 +762,10 @@ class Main
 			return;
 		}
 		if (data == 'password') {
-			if (token == null && !hasTriedAuth) {
-				_tryAuth();
+			if (token == null) {
+				if(!hasTriedAuth) {
+					_tryAuth();
+				}
 				requestInProgress = false;
 				return;
 			}

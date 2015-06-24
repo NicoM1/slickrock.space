@@ -662,8 +662,8 @@ Main.prototype = {
 	,_parseMessages: function(data,hist) {
 		if(hist == null) hist = false;
 		if(data == "locked") {
-			if(this.token == null && !this.hasTriedAuth) {
-				this._tryAuth();
+			if(this.token == null) {
+				if(!this.hasTriedAuth) this._tryAuth();
 				this.requestInProgress = false;
 				return;
 			}
@@ -674,8 +674,8 @@ Main.prototype = {
 			return;
 		}
 		if(data == "password") {
-			if(this.token == null && !this.hasTriedAuth) {
-				this._tryAuth();
+			if(this.token == null) {
+				if(!this.hasTriedAuth) this._tryAuth();
 				this.requestInProgress = false;
 				return;
 			}
@@ -927,11 +927,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1058, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1062, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1062, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1066, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
