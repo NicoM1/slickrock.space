@@ -751,6 +751,10 @@ class Main
 	//{ messages
 	function _parseMessages(data, hist: Bool = false ) {	
 		if (data == 'locked') {
+			if (token == null && !hasTriedAuth) {
+				_tryAuth();
+				return;
+			}
 			if(!locked) {
 				_addMessage('room is locked, please enter password.');
 			}
@@ -760,6 +764,10 @@ class Main
 			return;
 		}
 		if (data == 'password') {
+			if (token == null && !hasTriedAuth) {
+				_tryAuth();
+				return;
+			}
 			if(!locked) {
 				_addMessage('incorrect password, please resend password.');
 			}
