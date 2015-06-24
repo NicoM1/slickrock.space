@@ -1017,7 +1017,7 @@ Main.prototype = {
 			span.style.color = this._generateColorFromID(id);
 		}
 		span.innerHTML += "\t";
-		haxe_Timer.delay(function() {
+		if(!this.first) haxe_Timer.delay(function() {
 			span.classList.add("loaded");
 		},10);
 		return span;
