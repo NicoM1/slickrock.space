@@ -65,7 +65,7 @@ span {
 	width: 0;
 	height: 0;
 	position: relative;
-	left: -10px;
+	left: -100%;
 }
 
 span.loaded {
