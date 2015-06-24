@@ -1015,7 +1015,7 @@ Main.prototype = {
 		span.innerHTML += "\t";
 		haxe_Timer.delay(function() {
 			span.classList.add("loaded");
-		},10000);
+		},10);
 		return span;
 	}
 	,_generateColorFromID: function(id,dark) {
