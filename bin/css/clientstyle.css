@@ -53,9 +53,13 @@ h1 {
 }
 
 span {
+	transition: all 0.75s;
 	float: left;
 	width: 0;
 	height: 0;
+	position: relative;
+	left:-100%;
+	left:0px;
 }
 
 #chatbox {
