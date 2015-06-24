@@ -34,9 +34,11 @@ li:hover{cursor:pointer;}
 .description{}
 .commandTip{padding-top:10px;padding-bottom:10px;}
 .selected{background-color:hsl(282,45.9%,25.7%);}
-.floatingbutton{position:fixed;top:5px;right:5px;cursor:pointer;border:none;background-color:rgba(0,0,0,0);color:#aaaaaa;}
-.floatingbutton:hover{color:#dddddd;}
+.floatingbutton{transition:all 1s;position:fixed;top:5px;right:-62px;cursor:pointer;border:none;background-color:rgba(0,0,0,0);color:#aaaaaa;}
+.floatingbutton:hover{color:#dddddd;right:5px;}
 .floatingbutton:active{outline:none;}
 .floatingbutton:focus{outline:none;}
+.floatingbutton::after{transition:all 1s;position:relative;margin-left:10px;right:-100%;content:"expand";font-family:"Lato",Sans-serif;}
+.floatingbutton:hover::after{right:0px;}
 ::-webkit-scrollbar{display:none;}
 
