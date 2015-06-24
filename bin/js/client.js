@@ -1013,6 +1013,7 @@ Main.prototype = {
 			span.style.color = this._generateColorFromID(id);
 		}
 		span.innerHTML += "\t";
+		span.classList.add("loaded");
 		return span;
 	}
 	,_generateColorFromID: function(id,dark) {

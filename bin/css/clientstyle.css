@@ -61,7 +61,7 @@ span {
 	left: -100%;
 }
 
-span {
+span.loaded {
 	left: 0px;
 }
 
