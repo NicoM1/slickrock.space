@@ -879,7 +879,7 @@ class Main
 		
 		if (differentUser) {
 			message = Browser.document.createDivElement();
-			message.className = 'messageblock';
+			message.classList.add('messageblock');
 			message.setAttribute('data-id', id);
 			lastParagraph = message;
 					
@@ -891,7 +891,7 @@ class Main
 		}
 		
 		var messageItem: DivElement = Browser.document.createDivElement();
-		messageItem.className = 'messageitem';
+		messageItem.classList.add('messageitem');
 		
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
 		
@@ -908,7 +908,7 @@ class Main
 			}
 			else {
 				message = Browser.document.createDivElement();
-				message.className = 'messageblock';
+				message.classList.add('messageblock');
 				message.setAttribute('data-id', id);
 				
 				messages.insertBefore(message, messages.children[0]);
@@ -926,6 +926,8 @@ class Main
 		else {
 			Browser.document.body.scrollTop += Std.int(offset);
 		}
+		
+		Timer.delay(function() { messageItem.classList.add('loaded'); }, 10);
 		
 		return messageItem;
 	}

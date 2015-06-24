@@ -39,6 +39,13 @@ img {
 .messageitem {
 	margin-left: 25px;
 	margin-bottom: 5px;
+	position: relative;
+	left: -100%;
+	transition: all 0.4s;
+}
+
+.messageitem.loaded {
+	left: 0px;
 }
 
 .messageblock {

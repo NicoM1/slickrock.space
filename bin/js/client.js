@@ -790,7 +790,7 @@ Main.prototype = {
 		if(differentUser) {
 			var _this = window.document;
 			message = _this.createElement("div");
-			message.className = "messageblock";
+			message.classList.add("messageblock");
 			message.setAttribute("data-id",id);
 			this.lastParagraph = message;
 			this.messages.appendChild(this._makeSpan(differentUser,id));
@@ -799,7 +799,7 @@ Main.prototype = {
 		var messageItem;
 		var _this1 = window.document;
 		messageItem = _this1.createElement("div");
-		messageItem.className = "messageitem";
+		messageItem.classList.add("messageitem");
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		var offset = 0;
 		if(!hist) message.appendChild(messageItem); else {
@@ -811,7 +811,7 @@ Main.prototype = {
 			} else {
 				var _this2 = window.document;
 				message = _this2.createElement("div");
-				message.className = "messageblock";
+				message.classList.add("messageblock");
 				message.setAttribute("data-id",id);
 				this.messages.insertBefore(message,this.messages.children[0]);
 				this.messages.insertBefore(this._makeSpan(true,id),this.messages.children[0]);
@@ -823,6 +823,9 @@ Main.prototype = {
 			this._tryScroll();
 			this.lastUserID = id;
 		} else window.document.body.scrollTop += offset | 0;
+		haxe_Timer.delay(function() {
+			messageItem.classList.add("loaded");
+		},10);
 		return messageItem;
 	}
 	,_parseMessage: function(raw,safe) {
@@ -916,11 +919,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1046, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1048, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1050, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1052, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
