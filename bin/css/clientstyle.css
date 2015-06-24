@@ -58,8 +58,11 @@ span {
 	width: 0;
 	height: 0;
 	position: relative;
-	left:-100%;
-	left:0px;
+	left: -100%;
+}
+
+span {
+	left: 0px;
 }
 
 #chatbox {
