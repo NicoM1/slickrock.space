@@ -926,7 +926,7 @@ class Main
 				Timer.delay(function() { messageItem.classList.add('loaded'); }, 10);
 			}
 			else {
-				messageItem.classList.add('loaded');
+				messageItem.classList.add('non-anim');
 			}
 		}
 		else {

@@ -48,6 +48,11 @@ img {
 	bottom: 0px;
 }
 
+.messageitem.non-anim {
+	transition: none;
+	bottom: 0px;
+}
+
 .messageblock {
 	height: 100%;
 	margin: 0px;

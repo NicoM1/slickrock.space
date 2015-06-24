@@ -825,7 +825,7 @@ Main.prototype = {
 			this.lastUserID = id;
 			if(!first) haxe_Timer.delay(function() {
 				messageItem.classList.add("loaded");
-			},10); else messageItem.classList.add("loaded");
+			},10); else messageItem.classList.add("non-anim");
 		} else window.document.body.scrollTop += offset | 0;
 		return messageItem;
 	}

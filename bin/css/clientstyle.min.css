@@ -19,6 +19,7 @@ img{max-width:100%;cursor:pointer;display:block;}
 #messages{overflow-y:scroll;-webkit-overflow-scrolling:touch;margin-bottom:65px;}
 .messageitem{margin-left:25px;margin-bottom:5px;position:relative;bottom:-50px;transition:all 0.4s;}
 .messageitem.loaded{bottom:0px;}
+.messageitem.non-anim{transition:none;bottom:0px;}
 .messageblock{height:100%;margin:0px;margin-bottom:15px;padding:0px;}
 h1{font-size:250%;}
 span{transition:all 0.5s;float:left;width:0;height:0;position:relative;left:-100%;}
