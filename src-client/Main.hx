@@ -1167,7 +1167,7 @@ class Main
 			span.style.color = _generateColorFromID(id);
 		}
 		span.innerHTML += '\t';
-		span.classList.add('loaded');
+		Timer.delay(function() { span.classList.add('loaded'); }, 100);
 		
 		return span;
 	}
