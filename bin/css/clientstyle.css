@@ -77,7 +77,7 @@ span.loaded {
 	left: 0px;
 }
 
-span.no-anim {
+span.non-anim {
 	transition: none;
 	left: 0px;
 }
