@@ -1013,7 +1013,9 @@ Main.prototype = {
 			span.style.color = this._generateColorFromID(id);
 		}
 		span.innerHTML += "\t";
-		span.classList.add("loaded");
+		haxe_Timer.delay(function() {
+			span.classList.add("loaded");
+		},10000);
 		return span;
 	}
 	,_generateColorFromID: function(id,dark) {
