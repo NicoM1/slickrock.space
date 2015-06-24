@@ -299,11 +299,6 @@ class Main
 				if(printValid) {
 					_addMessage('authentication successful, chat away.');
 					hasTriedAuth = false;
-					
-					if (sendLast) {
-						_postMessage(lastMessage);
-						_update();
-					}
 				}
 			}
 		}
@@ -753,6 +748,7 @@ class Main
 		if (data == 'locked') {
 			if (token == null && !hasTriedAuth) {
 				_tryAuth();
+				requestInProgress = false;
 				return;
 			}
 			if(!locked) {
@@ -766,6 +762,7 @@ class Main
 		if (data == 'password') {
 			if (token == null && !hasTriedAuth) {
 				_tryAuth();
+				requestInProgress = false;
 				return;
 			}
 			if(!locked) {
@@ -1081,10 +1078,9 @@ class Main
 					var typingHttp: Http = new Http(basePath + 'api/typing/$room/$id');
 					typingHttp.request(true);
 					canSendTypingNotification = false;
-					var timer = new Timer(2500);
-					timer.run = function() {
+					Timer.delay(function() {
 						canSendTypingNotification = true;
-					}
+					}, 2500);
 				}
 			}
 		}
