@@ -925,6 +925,9 @@ class Main
 			if(!first) {
 				Timer.delay(function() { messageItem.classList.add('loaded'); }, 10);
 			}
+			else {
+				messageItem.classList.add('loaded');
+			}
 		}
 		else {
 			Browser.document.body.scrollTop += Std.int(offset);
