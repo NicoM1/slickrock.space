@@ -1176,6 +1176,9 @@ class Main
 		if(!first) {
 			Timer.delay(function() { span.classList.add('loaded'); }, 10);
 		}
+		else {
+			span.classList.add('non-anim');
+		}
 		
 		return span;
 	}

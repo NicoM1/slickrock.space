@@ -1019,7 +1019,7 @@ Main.prototype = {
 		span.innerHTML += "\t";
 		if(!this.first) haxe_Timer.delay(function() {
 			span.classList.add("loaded");
-		},10);
+		},10); else span.classList.add("non-anim");
 		return span;
 	}
 	,_generateColorFromID: function(id,dark) {
