@@ -40,12 +40,12 @@ img {
 	margin-left: 25px;
 	margin-bottom: 5px;
 	position: relative;
-	left: -100%;
+	bottom: -50px;
 	transition: all 0.4s;
 }
 
 .messageitem.loaded {
-	left: 0px;
+	bottom: 0px;
 }
 
 .messageblock {
