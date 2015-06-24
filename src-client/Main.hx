@@ -775,6 +775,7 @@ class Main
 		if (wasLocked) {
 			_addMessage('successfully unlocked.');
 			wasLocked = false;
+			locked = false;
 		}
 		
 		var parsed: MessageData = Json.parse(data);
@@ -1097,7 +1098,6 @@ class Main
 					_setPassword(chatbox.value);
 					chatbox.value = '';
 					helpbox.style.display = 'none';
-					locked = false;
 					return;
 				}
 			

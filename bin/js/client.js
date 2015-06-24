@@ -686,6 +686,7 @@ Main.prototype = {
 		if(this.wasLocked) {
 			this._addMessage("successfully unlocked.");
 			this.wasLocked = false;
+			this.locked = false;
 		}
 		var parsed = JSON.parse(data);
 		var _g1 = 0;
@@ -920,11 +921,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1052, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1053, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1056, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1057, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
@@ -959,7 +960,6 @@ Main.prototype = {
 					this._setPassword(this.chatbox.value);
 					this.chatbox.value = "";
 					this.helpbox.style.display = "none";
-					this.locked = false;
 					return;
 				}
 				this._postMessage(this.chatbox.value);
