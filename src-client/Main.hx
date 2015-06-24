@@ -759,7 +759,7 @@ class Main
 			wasLocked = true;
 			return;
 		}
-		if (!wasLocked && data == 'password') {
+		if (data == 'password') {
 			if(!locked) {
 				_addMessage('incorrect password, please resend password.');
 			}
