@@ -784,7 +784,7 @@ class Main
 				ii = parsed.messages.messages.length - 1 - i;
 			}
 			var p = parsed.messages.messages[ii];
-			var message = _addMessage(p.text, p.id, hist);
+			var message = _addMessage(p.text, p.id, hist, true, first);
 			
 			if (!hist && !focussed && !first) {
 				Browser.document.title = '# slickrock.io';
@@ -867,7 +867,7 @@ class Main
 		return false;
 	}
 	
-	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true): DivElement {
+	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false): DivElement {
 		msg = _parseMessage(msg, safe);
 		
 		var message: DivElement;
@@ -922,12 +922,13 @@ class Main
 			_tryScroll();
 					
 			lastUserID = id;
+			if(!first) {
+				Timer.delay(function() { messageItem.classList.add('loaded'); }, 10);
+			}
 		}
 		else {
 			Browser.document.body.scrollTop += Std.int(offset);
 		}
-		
-		Timer.delay(function() { messageItem.classList.add('loaded'); }, 10);
 		
 		return messageItem;
 	}

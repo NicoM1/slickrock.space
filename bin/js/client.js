@@ -695,7 +695,7 @@ Main.prototype = {
 			var ii = i;
 			if(hist) ii = parsed.messages.messages.length - 1 - i;
 			var p = parsed.messages.messages[ii];
-			var message = this._addMessage(p.text,p.id,null,hist);
+			var message = this._addMessage(p.text,p.id,null,hist,true,this.first);
 			if(!hist && !this.focussed && !this.first) {
 				window.document.title = "# slickrock.io";
 				var _g2 = 0;
@@ -780,7 +780,8 @@ Main.prototype = {
 		if(window.innerHeight + window.scrollY + offset >= this.messages.offsetHeight) return true;
 		return false;
 	}
-	,_addMessage: function(msg,id,customHTML,hist,safe) {
+	,_addMessage: function(msg,id,customHTML,hist,safe,first) {
+		if(first == null) first = false;
 		if(safe == null) safe = true;
 		if(hist == null) hist = false;
 		msg = this._parseMessage(msg,safe);
@@ -822,10 +823,10 @@ Main.prototype = {
 		if(!hist) {
 			this._tryScroll();
 			this.lastUserID = id;
+			if(!first) haxe_Timer.delay(function() {
+				messageItem.classList.add("loaded");
+			},10);
 		} else window.document.body.scrollTop += offset | 0;
-		haxe_Timer.delay(function() {
-			messageItem.classList.add("loaded");
-		},10);
 		return messageItem;
 	}
 	,_parseMessage: function(raw,safe) {
@@ -919,11 +920,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1048, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1049, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1052, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1053, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
