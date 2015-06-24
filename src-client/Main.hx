@@ -199,7 +199,7 @@ class Main
 				Browser.window.top.location.href = 'http://slickrock.io/$room';
 				maximize.classList.add('faa-passing', 'animated', 'faa-fast');
 			}
-			maximize.title = 'go to $room.';
+			maximize.title = 'expand room: $room.';
 			maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton');
 			Browser.document.body.appendChild(maximize);
 		}
@@ -744,6 +744,8 @@ class Main
 	function _credits(_) {
 		_addMessage('Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).');
 		_addMessage('Assorted help and testing: @dimensive, @gamesbybeta, @Zanzlanz.');
+		_addMessage('Additional images: @nathanwen.');
+		_addMessage('slickrock.io is crafted in Haxe, and the backend uses the Abe library.');
 	}
 	//}
 	
