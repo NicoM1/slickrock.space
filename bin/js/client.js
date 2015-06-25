@@ -661,7 +661,7 @@ Main.prototype = {
 		this._addMessage("Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).");
 		this._addMessage("Assorted help and testing: @dimensive, @gamesbybeta, @Zanzlanz.");
 		this._addMessage("Additional images: @nathanwentworth.");
-		this._addMessage("slickrock.io is crafted in Haxe, and the backend uses the Abe library.");
+		this._addMessage("slickrock.io is crafted in Haxe, the backend is helped by the Abe library.");
 	}
 	,_parseMessages: function(data,hist) {
 		if(hist == null) hist = false;
