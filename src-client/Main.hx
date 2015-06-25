@@ -817,14 +817,23 @@ class Main
 				var typeMessage = Browser.document.createDivElement();
 				typeMessage.className = 'messageitem';
 				typeMessage.innerHTML = 'typing...';
+				
+				var message: DivElement;
+				message = Browser.document.createDivElement();
+				message.classList.add('messageblock');
+				message.setAttribute('data-id', t);
+				
+				var chevron = _makeSpan(true, t);
+				messages.appendChild(chevron);
+				messages.appendChild(typeMessage);
+				
 				var message: MessageDiv = {
 					id: t,
-					chevron: _makeSpan(true, t),
+					chevron: chevron,
 					message: typeMessage
 				}
 				typings.push(message);
-				messages.appendChild(message.chevron);
-				messages.appendChild(message.message);
+
 				_tryScroll();
 			}
 		}
