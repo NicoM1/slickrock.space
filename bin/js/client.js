@@ -743,9 +743,10 @@ Main.prototype = {
 				message1.setAttribute("data-id",t1);
 				var chevron = this._makeSpan(true,t1);
 				this.messages.appendChild(chevron);
-				this.messages.appendChild(typeMessage);
-				var message2 = { id : t1, chevron : chevron, message : typeMessage};
-				this.typings.push(message2);
+				this.messages.appendChild(message1);
+				var messageD = { id : t1, chevron : chevron, message : message1};
+				message1.appendChild(typeMessage);
+				this.typings.push(messageD);
 				this._tryScroll();
 			}
 		}
@@ -933,11 +934,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1071, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1072, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1075, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1076, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;

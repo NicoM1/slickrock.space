@@ -825,14 +825,15 @@ class Main
 				
 				var chevron = _makeSpan(true, t);
 				messages.appendChild(chevron);
-				messages.appendChild(typeMessage);
+				messages.appendChild(message);
 				
-				var message: MessageDiv = {
+				var messageD: MessageDiv = {
 					id: t,
 					chevron: chevron,
-					message: typeMessage
+					message: message
 				}
-				typings.push(message);
+				message.appendChild(typeMessage);
+				typings.push(messageD);
 
 				_tryScroll();
 			}
