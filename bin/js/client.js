@@ -731,11 +731,14 @@ Main.prototype = {
 			var t1 = _g12[_g5];
 			++_g5;
 			if(t1 != this.id) {
-				var typeMessage;
-				var _this = window.document;
-				typeMessage = _this.createElement("div");
-				typeMessage.className = "messageitem";
-				typeMessage.innerHTML = "typing...";
+				var typeMessage = [(function($this) {
+					var $r;
+					var _this = window.document;
+					$r = _this.createElement("div");
+					return $r;
+				}(this))];
+				typeMessage[0].className = "messageitem";
+				typeMessage[0].innerHTML = "typing...";
 				var message1;
 				var _this1 = window.document;
 				message1 = _this1.createElement("div");
@@ -745,7 +748,12 @@ Main.prototype = {
 				this.messages.appendChild(chevron);
 				this.messages.appendChild(message1);
 				var messageD = { id : t1, chevron : chevron, message : message1};
-				message1.appendChild(typeMessage);
+				message1.appendChild(typeMessage[0]);
+				haxe_Timer.delay((function(typeMessage) {
+					return function() {
+						typeMessage[0].classList.add("loaded");
+					};
+				})(typeMessage),10);
 				this.typings.push(messageD);
 				this._tryScroll();
 			}
@@ -934,11 +942,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1072, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1073, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1076, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1077, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
