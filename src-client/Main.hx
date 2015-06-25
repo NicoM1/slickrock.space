@@ -376,7 +376,10 @@ class Main
 	//{ notifications
 	function _getNotificationPermission(force: Bool = false ) {
 		if (force || Notification.permission == NotificationPermission.DEFAULT_) {
-			Notification.requestPermission(function(permission) {});
+			var ua = Browser.window.navigator.userAgent;
+			if (!~/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile/i.match(ua)) {
+				Notification.requestPermission(function(permission) { } );
+			}
 		}
 	}
 	
