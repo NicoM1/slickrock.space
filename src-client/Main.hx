@@ -819,7 +819,7 @@ class Main
 			if(t != id) {
 				var typeMessage = Browser.document.createDivElement();
 				typeMessage.className = 'messageitem';
-				typeMessage.innerHTML = 'typing...';
+				typeMessage.innerHTML = '<br/>';
 				
 				var message: DivElement;
 				message = Browser.document.createDivElement();
@@ -835,8 +835,8 @@ class Main
 					chevron: chevron,
 					message: message
 				}
-				//message.appendChild(typeMessage);
-				//Timer.delay(function() { typeMessage.classList.add('loaded'); }, 10);
+				message.appendChild(typeMessage);
+				Timer.delay(function() { typeMessage.classList.add('loaded'); }, 10);
 				typings.push(messageD);
 
 				_tryScroll();
