@@ -178,7 +178,7 @@ class Main
 				 code = (e.keyCode != null ? e.keyCode : e.which);
 			}
 			
-			if (code == 9) {
+			if (code == 9 || code == 38 || code == 40) {
 				e.preventDefault();
 			}
 		}
