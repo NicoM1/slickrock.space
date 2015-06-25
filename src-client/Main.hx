@@ -1077,12 +1077,13 @@ class Main
 				trace(command);
 				var replacement = '/' + command + ' ';
 				if(chatbox.value.indexOf(command) == -1) {
-					if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && code == 13)) {
+					if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && (code == 13 || code == 9))) {
 						trace(chatbox.value, replacement);
 						
 						chatbox.value = replacement;
 						_filterHelp();
-						if (code == 13 && commandInfos[command].requiresArgs == true) {
+						if ((code == 13 || code == 9) && commandInfos[command].requiresArgs == true) {
+							chatbox.focus();
 							return;
 						}
 					}

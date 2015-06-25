@@ -949,11 +949,14 @@ Main.prototype = {
 				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1077, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
-					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
+					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
 						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1081, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
-						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
+						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
+							this.chatbox.focus();
+							return;
+						}
 					}
 				}
 			}
