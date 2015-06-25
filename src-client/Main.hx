@@ -139,7 +139,8 @@ class Main
 			favicons.push(cast f);
 		}
 		messageSound = cast Browser.document.getElementById('messagesound');
-				
+		
+		Browser.document.title = '/$room.';
 		Browser.window.onfocus = function() {
 			focussed = true;
 			Browser.document.title = '/$room.';
