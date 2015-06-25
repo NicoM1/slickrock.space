@@ -738,7 +738,7 @@ class Main
 	function _credits(_) {
 		_addMessage('Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).');
 		_addMessage('Assorted help and testing: @dimensive, @gamesbybeta, @Zanzlanz.');
-		_addMessage('Additional images: @nathanwen.');
+		_addMessage('Additional images: @nathanwentworth.');
 		_addMessage('slickrock.io is crafted in Haxe, and the backend uses the Abe library.');
 	}
 	//}
