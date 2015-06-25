@@ -239,7 +239,7 @@ Main.prototype = {
 		this.messageSound = window.document.getElementById("messagesound");
 		window.onfocus = function() {
 			_g.focussed = true;
-			window.document.title = "slickrock.io";
+			window.document.title = "/" + _g.room + ".";
 			var _g12 = 0;
 			var _g2 = _g.favicons;
 			while(_g12 < _g2.length) {
@@ -707,7 +707,7 @@ Main.prototype = {
 			var p = parsed.messages.messages[ii];
 			var message = this._addMessage(p.text,p.id,null,hist,true,this.first);
 			if(!hist && !this.focussed && !this.first) {
-				window.document.title = "# slickrock.io";
+				window.document.title = "# /" + this.room + ".";
 				var _g2 = 0;
 				var _g3 = this.favicons;
 				while(_g2 < _g3.length) {

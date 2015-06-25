@@ -142,7 +142,7 @@ class Main
 				
 		Browser.window.onfocus = function() {
 			focussed = true;
-			Browser.document.title = 'slickrock.io';
+			Browser.document.title = '/$room.';
 			for (f in favicons) {
 				f.href = 'bin/img/faviconempty.ico';
 			}
@@ -800,7 +800,7 @@ class Main
 			var message = _addMessage(p.text, p.id, hist, true, first);
 			
 			if (!hist && !focussed && !first) {
-				Browser.document.title = '# slickrock.io';
+				Browser.document.title = '# /$room.';
 				for (f in favicons) {
 					f.href = 'bin/img/favicon.ico';
 				}
