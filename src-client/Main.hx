@@ -210,6 +210,13 @@ class Main
 			}
 		}
 		
+		messages.onclick = function() {
+			if (chatbox.value == '/') {
+				chatbox.value = '';
+				_filterHelp();
+			}
+		}
+		
 		if (_inIframe()) {
 			var maximize = Browser.document.createButtonElement();
 			//maximize.textContent = '[X]';
