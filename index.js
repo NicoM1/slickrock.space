@@ -308,14 +308,20 @@ Main.resetTypingTimer = function(room,id) {
 		Main.typingTimers.set(room,v);
 		v;
 	}
+	((function($this) {
+		var $r;
+		var this1 = Main.typingTimers.get(room);
+		$r = this1.get(id);
+		return $r;
+	}(this))).stop();
 	var timer = new haxe_Timer(10000);
 	timer.run = (function(f,a1,id1) {
 		return function() {
 			f(a1,id1);
 		};
 	})(Main.emptyTyping,room,id);
-	var this1 = Main.typingTimers.get(room);
-	this1.set(id,timer);
+	var this2 = Main.typingTimers.get(room);
+	this2.set(id,timer);
 	timer;
 };
 Main.emptyTyping = function(room,id) {
@@ -1709,6 +1715,11 @@ var haxe_Timer = function(time_ms) {
 haxe_Timer.__name__ = ["haxe","Timer"];
 haxe_Timer.prototype = {
 	id: null
+	,stop: function() {
+		if(this.id == null) return;
+		clearInterval(this.id);
+		this.id = null;
+	}
 	,run: function() {
 	}
 	,__class__: haxe_Timer
