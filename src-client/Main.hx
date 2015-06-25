@@ -832,8 +832,8 @@ class Main
 					chevron: chevron,
 					message: message
 				}
-				message.appendChild(typeMessage);
-				Timer.delay(function() { typeMessage.classList.add('loaded'); }, 10);
+				//message.appendChild(typeMessage);
+				//Timer.delay(function() { typeMessage.classList.add('loaded'); }, 10);
 				typings.push(messageD);
 
 				_tryScroll();

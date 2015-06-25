@@ -731,14 +731,11 @@ Main.prototype = {
 			var t1 = _g12[_g5];
 			++_g5;
 			if(t1 != this.id) {
-				var typeMessage = [(function($this) {
-					var $r;
-					var _this = window.document;
-					$r = _this.createElement("div");
-					return $r;
-				}(this))];
-				typeMessage[0].className = "messageitem";
-				typeMessage[0].innerHTML = "typing...";
+				var typeMessage;
+				var _this = window.document;
+				typeMessage = _this.createElement("div");
+				typeMessage.className = "messageitem";
+				typeMessage.innerHTML = "typing...";
 				var message1;
 				var _this1 = window.document;
 				message1 = _this1.createElement("div");
@@ -748,12 +745,6 @@ Main.prototype = {
 				this.messages.appendChild(chevron);
 				this.messages.appendChild(message1);
 				var messageD = { id : t1, chevron : chevron, message : message1};
-				message1.appendChild(typeMessage[0]);
-				haxe_Timer.delay((function(typeMessage) {
-					return function() {
-						typeMessage[0].classList.add("loaded");
-					};
-				})(typeMessage),10);
 				this.typings.push(messageD);
 				this._tryScroll();
 			}
