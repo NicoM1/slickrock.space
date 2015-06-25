@@ -201,6 +201,13 @@ class Main
 			if (code == 9 || code == 38 || code == 40) {
 				e.preventDefault();
 			}
+			
+			if (code == 27) {
+				if (chatbox.value == '/') {
+					chatbox.value = '';
+					_filterHelp();
+				}
+			}
 		}
 		
 		if (_inIframe()) {
