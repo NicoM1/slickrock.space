@@ -167,10 +167,19 @@ class Main
 				_tryAuth();
 			}
 		}
-		chatbox.oninput = function() {
+		chatbox.oninput = function(e) {
 			_getNotificationPermission();
 			if (token == null && !hasTriedAuth) {
 				_tryAuth();
+			}
+			
+			var code = null;
+			if(e != null) {
+				 code = (e.keyCode != null ? e.keyCode : e.which);
+			}
+			
+			if (code == 9) {
+				e.preventDefault();
 			}
 		}
 		chatbox.onkeyup = _checkKeyPress;
