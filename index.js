@@ -308,16 +308,15 @@ Main.resetTypingTimer = function(room,id) {
 		Main.typingTimers.set(room,v);
 		v;
 	}
-	((function($this) {
-		var $r;
-		var this1 = Main.typingTimers.get(room);
-		$r = this1.get(id);
-		return $r;
-	}(this))).run = (function(f,a1,id1) {
+	var timer = new haxe_Timer(10000);
+	timer.run = (function(f,a1,id1) {
 		return function() {
 			f(a1,id1);
 		};
 	})(Main.emptyTyping,room,id);
+	var this1 = Main.typingTimers.get(room);
+	this1.set(id,timer);
+	timer;
 };
 Main.emptyTyping = function(room,id) {
 	var _this = Main.rooms.get(room).typing;

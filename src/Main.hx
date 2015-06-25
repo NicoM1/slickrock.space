@@ -104,7 +104,9 @@ class Main {
 		if (typingTimers[room] == null) {
 			typingTimers[room] = new Map();
 		}
-		typingTimers[room][id].run = emptyTyping.bind(room, id);
+		var timer = new Timer(10000);
+		timer.run = emptyTyping.bind(room, id);
+		typingTimers[room][id] = timer;
 	}
 	
 	public static function emptyTyping(room: String, id: String) {
