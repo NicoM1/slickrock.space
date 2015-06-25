@@ -736,7 +736,6 @@ class Main
 	function _legal(_) {
 		_addMessage('slickrock.io is (c) 2015 Nico May.');
 		_addMessage('wordlists used with permission from gfycat.com');
-		_addMessage('homepage background image taken by Nicholas A. Tonelli, licensed as https://creativecommons.org/licenses/by/2.0/. Image was edited (blurred).');
 	}
 	
 	function _credits(_) {
