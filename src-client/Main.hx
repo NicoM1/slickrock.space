@@ -89,6 +89,7 @@ class Main
 	var commandIndex: Int = -1;
 	
 	var lastY: Int = null;
+	var lastChatboxValue: String = '';
 	
 	function new() {
 		room = untyped window.room;
@@ -1091,14 +1092,17 @@ class Main
 		else {
 			helpbox.style.display = 'none';
 					
-			if (code != 27 && !locked && token != null) {
+			if (!locked && token != null) {
 				if (canSendTypingNotification) {
-					var typingHttp: Http = new Http(basePath + 'api/typing/$room/$id');
-					typingHttp.request(true);
-					canSendTypingNotification = false;
-					Timer.delay(function() {
-						canSendTypingNotification = true;
-					}, 2500);
+					if(chatbox.value != lastChatboxValue) {
+						var typingHttp: Http = new Http(basePath + 'api/typing/$room/$id');
+						typingHttp.request(true);
+						canSendTypingNotification = false;
+						Timer.delay(function() {
+							canSendTypingNotification = true;
+						}, 2500);
+					}
+					lastChatboxValue = chatbox.value;
 				}
 			}
 		}
