@@ -265,9 +265,6 @@ Main.prototype = {
 		this.chatbox.oninput = function(e) {
 			_g._getNotificationPermission();
 			if(_g.token == null && !_g.hasTriedAuth) _g._tryAuth();
-			var code = null;
-			if(e != null) if(e.keyCode != null) code = e.keyCode; else code = e.which;
-			if(code == 9 || code == 38 || code == 40) e.preventDefault();
 		};
 		this.chatbox.onkeyup = $bind(this,this._checkKeyPress);
 		this.chatbox.focus();
@@ -288,6 +285,9 @@ Main.prototype = {
 				_g.chatbox.classList.remove("helptip");
 				_g.chatbox.value = "";
 			}
+			var code = null;
+			if(e1 != null) if(e1.keyCode != null) code = e1.keyCode; else code = e1.which;
+			if(code == 9 || code == 38 || code == 40) e1.preventDefault();
 		};
 		if(this._inIframe()) {
 			var maximize;

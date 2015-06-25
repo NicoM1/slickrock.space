@@ -172,15 +172,6 @@ class Main
 			if (token == null && !hasTriedAuth) {
 				_tryAuth();
 			}
-			
-			var code = null;
-			if(e != null) {
-				 code = (e.keyCode != null ? e.keyCode : e.which);
-			}
-			
-			if (code == 9 || code == 38 || code == 40) {
-				e.preventDefault();
-			}
 		}
 		chatbox.onkeyup = _checkKeyPress;
 		chatbox.focus();
@@ -200,6 +191,15 @@ class Main
 			if (chatbox.classList.contains('helptip')) {
 				chatbox.classList.remove('helptip');
 				chatbox.value = '';
+			}
+						
+			var code = null;
+			if(e != null) {
+				 code = (e.keyCode != null ? e.keyCode : e.which);
+			}
+			
+			if (code == 9 || code == 38 || code == 40) {
+				e.preventDefault();
 			}
 		}
 		
