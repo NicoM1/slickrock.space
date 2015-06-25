@@ -298,7 +298,7 @@ Main.prototype = {
 		this.messages.onclick = function() {
 			if(_g.chatbox.value == "/") {
 				_g.chatbox.value = "";
-				_g._filterHelp();
+				_g._checkKeyPress({ which : 9, keyCode : 9});
 			}
 		};
 		if(this._inIframe()) {

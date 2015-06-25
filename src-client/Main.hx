@@ -213,7 +213,7 @@ class Main
 		messages.onclick = function() {
 			if (chatbox.value == '/') {
 				chatbox.value = '';
-				_filterHelp();
+				_checkKeyPress({which: 9, keyCode: 9});//hack but should work
 			}
 		}
 		
