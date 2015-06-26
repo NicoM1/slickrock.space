@@ -904,8 +904,13 @@ Main.prototype = {
 			parsed = StringTools.replace(parsed,"\\n","<br/>");
 			parsed = StringTools.replace(parsed,"\\t","&nbsp;&nbsp;&nbsp;");
 		}
-		var i = 0;
-		while(this.sitelink.match(parsed)) parsed = this.sitelink.replace(parsed,"<a href=\"slickrock.io" + this.sitelink.matched(0) + ">" + this.sitelink.matched(0) + "</a>");
+		while(this.sitelink.match(parsed)) {
+			var link;
+			var _this = this.sitelink.matched(0);
+			link = HxOverrides.substr(_this,1,null);
+			link = "&sol;" + link;
+			parsed = this.sitelink.replace(parsed,"<a href=\"slickrock.io" + link + ">" + link + "</a>");
+		}
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var chunks = imgPath.split(" ");
