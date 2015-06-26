@@ -1016,9 +1016,15 @@ class Main
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;
+	var linkParser: EReg = ~/(http|https|ftp|ftps):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/;
 	
 	function _parseMessage(raw: String, safe: Bool = true): String {
 		var parsed: String = raw.replace('\n', ' ');
+		
+		while (linkParser.match(parsed)) {
+			parsed = linkParser.replace(parsed, '<a href="${linkParser.matched(0)}">${linkParser.matched(0)}</a>');
+		}
+		
 		if(safe) {
 			parsed = parsed.htmlEscape();
 			parsed = parsed.replace('\"', '&quot;');
