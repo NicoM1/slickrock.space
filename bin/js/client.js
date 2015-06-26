@@ -151,7 +151,7 @@ _$List_ListIterator.prototype = {
 };
 var Main = function() {
 	this.selectedElem = null;
-	this.sitelink = new EReg(" /[^\\s]+( |$)","i");
+	this.sitelink = new EReg(" /[^\\s]+?( |$)","i");
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
