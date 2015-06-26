@@ -522,6 +522,11 @@ class Main
 			identifiers: '<strong>/commendation</strong>',
 			description: 'list some people that really deserve being listed.',
 			method: _credits
+		},
+		'bestow' => {
+			identifiers: '<strong>/bestow</strong>',
+			description: 'open a page where you may donate to keep the site afloat, if you are able.',
+			method: _donate
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
@@ -768,6 +773,10 @@ class Main
 		_addMessage('Additional images: @nathanwentworth.');
 		_addMessage('slickrock.io is crafted in Haxe, the backend is helped by the Abe library.');
 	}
+	
+	function _donate(_) {
+		_openInNewTab('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=nico%2emay99%40gmail%2ecom&lc=CA&item_name=slickrock%2eio&currency_code=CAD&bn=PP%2dDonationsBF%3a%26text%3ddonate%2e%3aNonHosted');
+	}
 	//}
 	
 	//{ messages
@@ -872,7 +881,7 @@ class Main
 		
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
-			i.onclick = _openImageInNewTab.bind(image.src);
+			i.onclick = _openInNewTab.bind(image.src);
 			if(!first) {
 				i.onload = _tryScroll.bind(false, cast i);
 			}
@@ -1211,7 +1220,7 @@ class Main
 	//}
 	
 	//{ util
-	function _openImageInNewTab(src: String) {
+	function _openInNewTab(src: String) {
 		var win = Browser.window.open(src, '_blank');
 		win.focus();
 	}
