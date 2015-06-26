@@ -904,7 +904,7 @@ Main.prototype = {
 			parsed = StringTools.replace(parsed,"\\n","<br/>");
 			parsed = StringTools.replace(parsed,"\\t","&nbsp;&nbsp;&nbsp;");
 		}
-		while(this.sitelink.match(parsed)) parsed = StringTools.replace(parsed,parsed,"<a href=\"slickrock.io" + this.sitelink.matched(0) + ">" + this.sitelink.matched(0) + "</a>");
+		while(this.sitelink.match(parsed)) parsed = this.sitelink.replace(parsed,"<a href=\"slickrock.io" + this.sitelink.matched(0) + ">" + this.sitelink.matched(0) + "</a>");
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var chunks = imgPath.split(" ");

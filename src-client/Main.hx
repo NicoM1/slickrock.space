@@ -1037,7 +1037,7 @@ class Main
 		}
 		
 		while (sitelink.match(parsed)) {
-			parsed = parsed.replace(parsed, '<a href="slickrock.io${sitelink.matched(0)}>${sitelink.matched(0)}</a>');
+			parsed = sitelink.replace(parsed, '<a href="slickrock.io${sitelink.matched(0)}>${sitelink.matched(0)}</a>');
 		}
 		
 		while (imgBB.match(parsed)) {
