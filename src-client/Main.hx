@@ -1036,6 +1036,8 @@ class Main
 			parsed = parsed.replace('\\t', '&nbsp;&nbsp;&nbsp;');
 		}
 		
+		var i = 0;
+		
 		while (sitelink.match(parsed)) {
 			parsed = sitelink.replace(parsed, '<a href="slickrock.io${sitelink.matched(0)}>${sitelink.matched(0)}</a>');
 		}

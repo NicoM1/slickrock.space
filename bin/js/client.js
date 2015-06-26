@@ -904,6 +904,7 @@ Main.prototype = {
 			parsed = StringTools.replace(parsed,"\\n","<br/>");
 			parsed = StringTools.replace(parsed,"\\t","&nbsp;&nbsp;&nbsp;");
 		}
+		var i = 0;
 		while(this.sitelink.match(parsed)) parsed = this.sitelink.replace(parsed,"<a href=\"slickrock.io" + this.sitelink.matched(0) + ">" + this.sitelink.matched(0) + "</a>");
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
@@ -980,11 +981,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1133, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1135, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1137, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1139, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
