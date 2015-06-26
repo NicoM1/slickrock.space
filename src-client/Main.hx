@@ -518,6 +518,11 @@ class Main
 			description: 'display legal notes.',
 			method: _legal
 		},
+		'etiquette' => {
+			identifiers: '<strong>/etiquette</strong>',
+			description: 'display guidelines for site usage, I recommend reading these before destroying this website, thank you.',
+			method: _rules
+		},
 		'commendation' => {
 			identifiers: '<strong>/commendation</strong>',
 			description: 'list some people that really deserve being listed.',
@@ -772,6 +777,15 @@ class Main
 		_addMessage('Assorted help and testing: @dimensive, @gamesbybeta, @Zanzlanz.');
 		_addMessage('Additional images: @nathanwentworth.');
 		_addMessage('slickrock.io is crafted in Haxe, the backend is helped by the Abe library.');
+	}
+	
+	function _rules(_) {
+		_addMessage('slickrock.io is not meant to allow people to say or show horrible things.');
+		_addMessage('should your intention in coming to this site be to say or show inappropriate things, please go somewhere else, there are plenty of well established dirty corners of the internet, this doesn\'t need to become one.');
+		_addMessage('rooms, especially public ones, displaying content deemed unacceptable, under my own personal judgment, will be removed.');
+		_addMessage('should the content of these rooms warrant it, your IP address will be reported to the proper authorities, you have been warned.');
+		_addMessage('apologies for that, to all the genuine users of this site, I hope you enjoy it, and don\'t worry about subtle things like swear words or the like, but if it seems like you should make something private, preferably make it private.');
+		_addMessage('thank you, and enjoy the site.');
 	}
 	
 	function _donate(_) {

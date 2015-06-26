@@ -491,6 +491,7 @@ Main.prototype = {
 		_g.set("encase",{ identifiers : "<strong>/encase</strong> <em>WIDTH</em> <em>HEIGHT</em>", description : "generates an embedable iframe with a simple default styling.", method : $bind(this,this._generateEmbed), requiresArgs : true});
 		_g.set("inform",{ identifiers : "<strong>/inform</strong>", description : "attempt to get notification permission if you denied it before.", method : $bind(this,this._notificationCommand)});
 		_g.set("legal",{ identifiers : "<strong>/legal</strong>", description : "display legal notes.", method : $bind(this,this._legal)});
+		_g.set("etiquette",{ identifiers : "<strong>/etiquette</strong>", description : "display guidelines for site usage, I recommend reading these before destroying this website, thank you.", method : $bind(this,this._rules)});
 		_g.set("commendation",{ identifiers : "<strong>/commendation</strong>", description : "list some people that really deserve being listed.", method : $bind(this,this._credits)});
 		_g.set("bestow",{ identifiers : "<strong>/bestow</strong>", description : "open a page where you may donate to keep the site afloat, if you are able.", method : $bind(this,this._donate)});
 		this.commandInfos = _g;
@@ -527,7 +528,7 @@ Main.prototype = {
 			_g._printID();
 		};
 		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 570, className : "Main", methodName : "_getID"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 575, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
 		};
 		idHttp.request(true);
@@ -560,7 +561,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 622, className : "Main", methodName : "_claimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 627, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
 		};
 		lockHttp.request(true);
@@ -580,7 +581,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to reclaim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 646, className : "Main", methodName : "_reclaimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 651, className : "Main", methodName : "_reclaimRoom"});
 			_g._addMessage("failed to connect to api, couldn't reclaim room.");
 		};
 		lockHttp.request(true);
@@ -599,7 +600,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 671, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 676, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -640,7 +641,7 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 726, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 731, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
@@ -652,7 +653,7 @@ Main.prototype = {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 744, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 749, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
 		};
 		lockHttp.request(true);
@@ -678,6 +679,14 @@ Main.prototype = {
 		this._addMessage("Assorted help and testing: @dimensive, @gamesbybeta, @Zanzlanz.");
 		this._addMessage("Additional images: @nathanwentworth.");
 		this._addMessage("slickrock.io is crafted in Haxe, the backend is helped by the Abe library.");
+	}
+	,_rules: function(_) {
+		this._addMessage("slickrock.io is not meant to allow people to say or show horrible things.");
+		this._addMessage("should your intention in coming to this site be to say or show inappropriate things, please go somewhere else, there are plenty of well established dirty corners of the internet, this doesn't need to become one.");
+		this._addMessage("rooms, especially public ones, displaying content deemed unacceptable, under my own personal judgment, will be removed.");
+		this._addMessage("should the content of these rooms warrant it, your IP address will be reported to the proper authorities, you have been warned.");
+		this._addMessage("apologies for that, to all the genuine users of this site, I hope you enjoy it, and don't worry about subtle things like swear words or the like, but if it seems like you should make something private, preferably make it private.");
+		this._addMessage("thank you, and enjoy the site.");
 	}
 	,_donate: function(_) {
 		this._openInNewTab("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=nico%2emay99%40gmail%2ecom&lc=CA&item_name=slickrock%2eio&currency_code=CAD&bn=PP%2dDonationsBF%3a%26text%3ddonate%2e%3aNonHosted");
@@ -968,11 +977,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1110, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1124, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1114, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1128, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
