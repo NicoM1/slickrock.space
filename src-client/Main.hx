@@ -1039,7 +1039,7 @@ class Main
 		while (sitelink.match(parsed)) {
 			var link = sitelink.matched(0).substr(1);
 			link = '&sol;' + link;
-			parsed = sitelink.replace(parsed, '<a href="slickrock.io$link>$link</a>');
+			parsed = sitelink.replace(parsed, ' <a href="slickrock.io$link>$link</a>');
 		}
 		
 		while (imgBB.match(parsed)) {
