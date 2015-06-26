@@ -151,7 +151,6 @@ _$List_ListIterator.prototype = {
 };
 var Main = function() {
 	this.selectedElem = null;
-	this.linkParser = new EReg("(http|https|ftp|ftps)://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,3}(/\\S*)?","");
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
@@ -891,7 +890,6 @@ Main.prototype = {
 	,_parseMessage: function(raw,safe) {
 		if(safe == null) safe = true;
 		var parsed = StringTools.replace(raw,"\n"," ");
-		while(this.linkParser.match(parsed)) parsed = this.linkParser.replace(parsed,"<a href=\"" + this.linkParser.matched(0) + "\">" + this.linkParser.matched(0) + "</a>");
 		if(safe) {
 			parsed = StringTools.htmlEscape(parsed);
 			parsed = StringTools.replace(parsed,"\"","&quot;");
@@ -980,11 +978,11 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1133, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1128, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1137, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1132, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
