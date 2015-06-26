@@ -251,7 +251,16 @@ class RouteHandler implements abe.IRoute {
 		_sendMessage(response, message, room, password, id, privateID, token);
 	}
 
+	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
+	
 	function _sendMessage(response: Response, message: String, room: String, password: String, id: String, privateID: String, token: String) {
+		if (room == 'homepage') {
+			if (imgBB.match(message)) {
+				response.setHeader('Access-Control-Allow-Origin', '*');
+				response.send('failed-image');
+				return;
+			}
+		}
 		if(Main.tokens[privateID] == token) {
 			if (!Main.rooms.exists(room)) {
 				Main.rooms.set(room, {

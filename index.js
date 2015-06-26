@@ -445,6 +445,7 @@ var RouteHandler = function() {
 	this.letters = "abcdefghijklmnopqrstuvwxyz";
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
 	this.oneWeek = 604800000;
+	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
 	this.maxMessageLoad = 80;
 };
 RouteHandler.__name__ = ["RouteHandler"];
@@ -476,7 +477,15 @@ RouteHandler.prototype = {
 		room = room.toLowerCase();
 		this._sendMessage(response,message,room,password,id,privateID,token);
 	}
+	,imgBB: null
 	,_sendMessage: function(response,message,room,password,id,privateID,token) {
+		if(room == "homepage") {
+			if(this.imgBB.match(message)) {
+				response.setHeader("Access-Control-Allow-Origin","*");
+				response.send("failed-image");
+				return;
+			}
+		}
 		if(Main.tokens.get(privateID) == token) {
 			if(!Main.rooms.exists(room)) {
 				var value = { messages : [], lock : null, pw : null, typing : []};

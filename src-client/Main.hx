@@ -123,6 +123,9 @@ class Main
 				sendLast = true;
 				_tryAuth();
 			}
+			if (data == 'failed-image') {
+				_addMessage('to prevent spam, images are disabled on this chatroom, you may ***/survey*** another chat where this restriction is not active.');
+			}
 		}
 		postHttp.onError = function(error) { 
 			trace(error); 
