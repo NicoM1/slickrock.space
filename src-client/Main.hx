@@ -1016,7 +1016,7 @@ class Main
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;
-	var sitelink: EReg = ~/ \/[^\s]+/i;
+	var sitelink: EReg = ~/ \/[^\s]+( |$)/i;
 	
 	function _parseMessage(raw: String, safe: Bool = true): String {
 		var parsed: String = raw.replace('\n', ' ');
@@ -1036,11 +1036,11 @@ class Main
 			parsed = parsed.replace('\\t', '&nbsp;&nbsp;&nbsp;');
 		}
 		
-		/*while (sitelink.match(parsed)) {
+		while (sitelink.match(parsed)) {
 			var link = sitelink.matched(0).substr(1);
 			link = '&sol;' + link;
 			parsed = sitelink.replace(parsed, ' <a href="slickrock.io$link>$link</a>');
-		}*/
+		}
 		
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);

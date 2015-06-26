@@ -151,7 +151,7 @@ _$List_ListIterator.prototype = {
 };
 var Main = function() {
 	this.selectedElem = null;
-	this.sitelink = new EReg(" /[^\\s]+","i");
+	this.sitelink = new EReg(" /[^\\s]+( |$)","i");
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
@@ -903,6 +903,13 @@ Main.prototype = {
 			parsed = StringTools.replace(parsed,"\\\\t","&bsol;t");
 			parsed = StringTools.replace(parsed,"\\n","<br/>");
 			parsed = StringTools.replace(parsed,"\\t","&nbsp;&nbsp;&nbsp;");
+		}
+		while(this.sitelink.match(parsed)) {
+			var link;
+			var _this = this.sitelink.matched(0);
+			link = HxOverrides.substr(_this,1,null);
+			link = "&sol;" + link;
+			parsed = this.sitelink.replace(parsed," <a href=\"slickrock.io" + link + ">" + link + "</a>");
 		}
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
