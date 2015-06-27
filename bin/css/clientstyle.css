@@ -39,6 +39,18 @@ img {
 .messageitem {
 	margin-left: 25px;
 	margin-bottom: 5px;
+	position: relative;
+	bottom: -50px;
+	transition: all 0.4s;
+}
+
+.messageitem.loaded {
+	bottom: 0px;
+}
+
+.messageitem.non-anim {
+	transition: none;
+	bottom: 0px;
 }
 
 .messageblock {
@@ -53,9 +65,21 @@ h1 {
 }
 
 span {
+	transition: all 0.5s;
 	float: left;
 	width: 0;
 	height: 0;
+	position: relative;
+	left: -100%;
+}
+
+span.loaded {
+	left: 0px;
+}
+
+span.non-anim {
+	transition: none;
+	left: 0px;
 }
 
 #chatbox {
@@ -131,12 +155,15 @@ span {
 	list-style-type: none;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 400px), screen and (max-height: 500px) {
 	#chatbox {
-        height: 40px;
+        height: 50px;
     }
 	#helpbox {
-		bottom: 40px;
+		bottom: 50px;
+	}
+	#messages {
+		margin-bottom: 55px;
 	}
 }
 
@@ -161,6 +188,43 @@ li:hover {
 
 .selected {
 	background-color: hsl(282, 45.9%, 25.7%);
+}
+
+.floatingbutton {
+	transition: all 0.75s;
+	position: fixed;
+	top: 5px;
+	right: -62px;
+	cursor: pointer;
+	border: none;
+	background-color: rgba(0,0,0,0);
+	color: #aaaaaa;
+}
+
+.floatingbutton:hover {
+	color: #dddddd;
+	right: 5px;
+}
+
+.floatingbutton:active {
+	outline: none;
+}
+
+.floatingbutton:focus {
+	outline: none;
+}
+
+.floatingbutton::after {
+  transition: all 0.75s;
+  position: relative;
+  margin-left: 10px;
+  right: -100%;
+  content: "expand.";
+  font-family: "Lato", Sans-serif;
+}
+
+.floatingbutton:hover::after {
+  right: 0px;
 }
 
 ::-webkit-scrollbar { 

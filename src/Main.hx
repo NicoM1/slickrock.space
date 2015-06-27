@@ -14,25 +14,36 @@ import js.node.Fs;
 import js.Error;
 import js.Node;
 
+import js.node.mongodb.MongoClient;
+import js.node.mongodb.MongoDatabase;
+import js.node.mongodb.ObjectID;
+
 import express.Express;
 
 using StringTools;
 
+typedef RoomMetric = {
+	room: String,
+	count: Int
+}
+
 class Main {
-	public static var tokens: Map<String, String>;	
+	public static var tokens: Map<String, String>;
 	static var typingTimers: Map<String, Map<String, Timer>>;
-	
+
 	static var textDB: String = '';
-	
+
 	public static var rooms: Rooms;
-	
+
+	public static var userCounts: Map<String, Array<{id: String, timestamp: Date}>> = new Map();
+
 	static var animalWords: Array<String>;
 	static var adjectives: Array<String>;
-	
-	var MongoClient: Dynamic;
+
+	var MongoClient: MongoClient;
 	var mongoUrl = '';
-	static var mongodb: Dynamic;
-		
+	static var mongodb: MongoDatabase;
+
 	function new() {
 		animalWords = Fs.readFileSync('bin/animals.txt', { encoding: 'utf8' } ).split('\n');
 		adjectives = Fs.readFileSync('bin/adjectives.txt', { encoding: 'utf8' }).split('\n');
@@ -40,20 +51,20 @@ class Main {
 		rooms = new Rooms();
 		typingTimers = new Map();
 		tokens = new Map();
-		
+
 		var app = new App();
 		app.router.register(new RouteHandler());
 		var port = Node.process.env.get('PORT');
 		app.http(port != null? Std.parseInt(port) : 9998);
-		
+
 		app.router.serve('/bin', './bin');
 	}
-	
+
 	function _setupMongo() {
 		MongoClient = Lib.require('mongodb').MongoClient;
-		
+
 		mongoUrl = Node.process.env['MONGOLAB_URL'];
-		MongoClient.connect(mongoUrl, function(err, db) {
+		MongoClient.Connect(mongoUrl, function(err, db) {
 			if (err != null) {
 				trace(err);
 			}
@@ -61,23 +72,7 @@ class Main {
 			_parseMessages();
 		});
 	}
-	
-	function _test(room: String, id: String, message: String) {
-		if (!Main.rooms.exists(room)) {
-			Main.rooms.set(room, {
-				messages: new Array<Message>(),
-				lock: null,
-				pw: null,
-				typing: []
-			});
-		}
-		
-		Main.emptyTyping(room, id);
-		
-		Main.rooms.get(room).messages.push( { text: message, id: id } );
-		Main.saveMessage( { text: message, id: id, room: room} );
-	}
-	
+
 	public static function clearTyping(room: String, id: String) {
 		if (typingTimers[room] == null) {
 			typingTimers[room] = new Map();
@@ -91,74 +86,126 @@ class Main {
 			resetTypingTimer(room, id);
 		}
 	}
-	
+
 	public static function resetTypingTimer(room: String, id: String) {
 		if (typingTimers[room] == null) {
 			typingTimers[room] = new Map();
 		}
-		typingTimers[room][id].run = emptyTyping.bind(room, id);
+		typingTimers[room][id].stop();
+		var timer = new Timer(10000);
+		timer.run = emptyTyping.bind(room, id);
+		typingTimers[room][id] = timer;
 	}
-	
+
 	public static function emptyTyping(room: String, id: String) {
 		rooms[room].typing.remove(id);
 	}
-	
-	static function _parseMessages() {
-		mongodb.collection('roominfo').find().toArray(function(e, r) {
-			if (e != null) {
-				trace(e);
-				return;
-			}
-			var roominfo: Array<RoomInfo> = cast r;
-			for (r in roominfo) {
-				if (!rooms.exists(r._id)) {
-					rooms.set(r._id, {
-						messages: new Array<Message>(),
-						lock: null,
-						pw: null,
-						typing: []
-					});
-				}
-				rooms.get(r._id).lock = r.lock;
-				rooms.get(r._id).pw = r.pw;
-				rooms.get(r._id).salt = r.salt;
-			}
-		});
-		mongodb.collection('messages').find().sort( { _id:1 } ).toArray(function(e, r) {
-			if (e != null) {
-				trace(e);
-				return;
-			}
-			var messages: Array<MessageObject> = cast r;
-			for (m in messages) {
-				if (!rooms.exists(m.room)) {
-					rooms.set(m.room, {
-						messages: new Array<Message>(),
-						lock: null,
-						pw: null,
-						typing: []
-					});
-				}
-				rooms.get(m.room).messages.push( { text: m.text, id: m.id } );
-			}
-		});
-		mongodb.collection('tokens').find().toArray(function(e, r) {
-			if (e != null) {
-				trace(e);
-				return;
-			}
-			var tokenos: Array<TokenObject> = cast r;
-			for (t in tokenos) {
-				tokens[t._id] = t.token;
+
+	public static function emptyRoom(room: String) {
+		rooms[room].messages = [];
+		mongodb.collection('messages', function(e, database) {
+			if(e == null) {
+				database.remove({
+					room: room
+				});
 			}
 		});
 	}
-	
+
+	public static function deleteMessage(room: String, id: ObjectID) {
+		if(rooms[room] == null) return;
+		for(m in rooms[room].messages) {
+			if(m._id == id) {
+				rooms[room].messages.remove(m);
+				break;
+			}
+		}
+		mongodb.collection('messages', function(e, database) {
+			if(e == null) {
+				database.remove({
+					room: room,
+					_id: id
+				});
+			}
+		});
+	}
+
+	static function _parseMessages() {
+		mongodb.collection('roominfo', function(e, database) {
+			if(e == null) {
+				database.find({}).toArray(function(e, r) {
+					if (e != null) {
+						trace(e);
+						return;
+					}
+					var roominfo: Array<RoomInfo> = cast r;
+					for (r in roominfo) {
+						if (!rooms.exists(r._id)) {
+							rooms.set(r._id, {
+								messages: new Array<Message>(),
+								lock: null,
+								pw: null,
+								typing: []
+							});
+						}
+						if (r.users != null) {
+							userCounts[r._id] = r.users;
+						}
+						rooms.get(r._id).lock = r.lock;
+						rooms.get(r._id).pw = r.pw;
+						rooms.get(r._id).salt = r.salt;
+					}
+				});
+			}
+		});
+		mongodb.collection('messages', function(e, database) {
+			if(e == null) {
+				database.find({}).sort( { _id:1 } ).toArray(function(e, r) {
+					if (e != null) {
+						trace(e);
+						return;
+					}
+					var messages: Array<MessageObject> = cast r;
+					for (m in messages) {
+						if (!rooms.exists(m.room)) {
+							rooms.set(m.room, {
+								messages: new Array<Message>(),
+								lock: null,
+								pw: null,
+								typing: []
+							});
+						}
+						rooms.get(m.room).messages.push( { text: m.text, id: m.id, _id: m._id } );
+					}
+				});
+			}
+		});
+
+		mongodb.collection('tokens', function(e, database) {
+			if(e == null) {
+				database.find({}).toArray(function(e, r) {
+					if (e != null) {
+						trace(e);
+						return;
+					}
+					var tokenos: Array<TokenObject> = cast r;
+					for (t in tokenos) {
+						tokens[t._id] = t.token;
+					}
+				});
+			}
+		});
+	}
+
 	public static function saveMessage(msg: MessageObject) {
 		if (mongodb != null) {
-			mongodb.collection('messages').insertOne(msg, function(e, r) {
-				if (e != null) {
-					trace(e);
+			mongodb.collection('messages', function(e, database) {
+				if(e == null) {
+					database.insertOne(msg, {}, function(e, r) {
+						if (e != null) {
+							trace(e);
+						}
+					});
 				}
 			});
 		}
@@ -166,15 +213,23 @@ class Main {
 			trace('mongo null');
 		}
 	}
-	
+
 	public static function roomInfo(roomInfo: RoomInfo) {
-		mongodb.collection('roominfo').save(roomInfo);
+		mongodb.collection('roominfo', function(e, database) {
+			if(e == null) {
+				database.save(roomInfo);
+			}
+		});
 	}
-	
+
 	public static function saveToken(token: TokenObject) {
-		mongodb.collection('tokens').save(token);
+		mongodb.collection('tokens', function(e, database) {
+			if(e == null) {
+				database.save(token);
+			}
+		});
 	}
-	
+
 	public static function getUserID(): String {
 		var rand = new Random(Date.now().getTime());
 		var ID: String = '';
@@ -185,23 +240,23 @@ class Main {
 		var third = animalWords[rand.int(animalWords.length)];
 		third = third.charAt(0).toUpperCase() + third.substr(1);
 		ID += third;
-		
+
 		return ID;
 	}
-	
+
 	public static function hasMongo() {
 		return mongodb != null;
 	}
-	
+
 	public static function main() {
 		new Main();
 	}
 }
 
 class RouteHandler implements abe.IRoute {
-	
+
 	var maxMessageLoad: Int = 80;
-	
+
 	@:get('/')
 	function index() {
 		_serveHtml('bin/home.html', function(e, d) {
@@ -210,7 +265,7 @@ class RouteHandler implements abe.IRoute {
 			}
 		});
 	}
-	
+
 	@:get('/:room')
 	function chatroom(room: String) {
 		room = room.toLowerCase();
@@ -224,24 +279,28 @@ class RouteHandler implements abe.IRoute {
 			}
 		});
 	}
-	
+
 	@:post('/chat/:message/:room/:id/:privateID/:token')
 	function sendMessage(message: String, room: String, id: String, privateID: String, token: String) {
 		room = room.toLowerCase();
 		_sendMessage(response, message, room, null, id, privateID, token);
 	}
-	
+
 	@:post('/chat/:message/:room/:password/:id/:privateID/:token')
 	function sendMessageWithPass(message: String, room: String, password: String, id: String, privateID: String, token: String) {
 		room = room.toLowerCase();
 		_sendMessage(response, message, room, password, id, privateID, token);
 	}
 
+	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
+
 	function _sendMessage(response: Response, message: String, room: String, password: String, id: String, privateID: String, token: String) {
-		if (room == 'frontpage') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
-			return;
+		if (room == 'homepage') {
+			if (imgBB.match(message)) {
+				response.setHeader('Access-Control-Allow-Origin', '*');
+				response.send('failed-image');
+				return;
+			}
 		}
 		if(Main.tokens[privateID] == token) {
 			if (!Main.rooms.exists(room)) {
@@ -252,13 +311,30 @@ class RouteHandler implements abe.IRoute {
 					typing: []
 				});
 			}
-			
+
 			Main.emptyTyping(room, id);
-			
+
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt+password)) {
-				Main.rooms.get(room).messages.push( { text: message, id: id } );
-				Main.saveMessage( { text: message, id: id, room: room} );
+				var objectid = new ObjectID();
+				Main.rooms.get(room).messages.push( { text: message, id: id,  _id: objectid} );
+				Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
+				if (Main.userCounts[room] == null) {
+					Main.userCounts[room] = [];
+				}
+				var index = -1;
+				for (i in 0...Main.userCounts[room].length) {
+					if (Main.userCounts[room][i].id == privateID) {
+						index = i;
+					}
+				}
+				if (index == -1) {
+					Main.userCounts[room].push({id: privateID, timestamp: Date.now()});
+				}
+				else {
+					Main.userCounts[room][index].timestamp = Date.now();
+				}
+				Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room] } );
 			}
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('success');
@@ -267,16 +343,88 @@ class RouteHandler implements abe.IRoute {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('failed');
 	}
-	
-	@:post('/api/getID') 
+
+	@:post('/api/getID')
 	function getID() {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send(Main.getUserID());
 	}
-	
+
+	@:get('/api/makeRandomRoom')
+	function makeRandomRoom() {
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.redirect('http://slickrock.io/${Main.getUserID()}');
+	}
+
+	var oneWeek: Int = 1000 * 60 * 60 * 24 * 7;
+
+	@:get('/api/getTopRooms')
+	function getTopRooms() {
+		var top10: Array<RoomMetric> = [];
+		var lowest: Int = 1000000000;
+		var lowestIndex: Int = -1;
+
+		var toRemove: Array<{id: String, timestamp: Date}> = [];
+
+		for (r in Main.userCounts.keys()) {
+			var count = Main.userCounts[r];
+			for (u in count) {
+				if ((Date.now().getTime() - u.timestamp.getTime()) > oneWeek) {
+					toRemove.push(u);
+				}
+			}
+			for (u in toRemove) {
+				Main.userCounts[r].remove(u);
+			}
+			var roomE = Main.rooms[r];
+			Main.roomInfo( { _id: r, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[r] } );
+			toRemove = [];
+			for (i in 0...top10.length) {
+				var c = top10[i];
+				if (c.count < lowest) {
+					lowest = c.count;
+					lowestIndex = i;
+				}
+			}
+			if (top10.length >= 10 && count.length > lowest) {
+				top10.remove(top10[lowestIndex]);
+				top10.push({room: r, count: count.length});
+			}
+			else if (top10.length < 10) {
+				top10.push({room: r, count: count.length});
+			}
+		}
+		top10.sort(function(r1: RoomMetric, r2: RoomMetric) {
+			if (r1.count > r2.count) {
+				return -1;
+			}
+			if (r1.count < r2.count) {
+				return 1;
+			}
+			return 0;
+		});
+
+		response.send(top10);
+	}
+
+	@:get('/api/getRandomRoom')
+	function getRandomRoom() {
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		var openRooms = [];
+		for (r in Main.rooms.keys()) {
+			var room = Main.rooms[r];
+			if (room.lock == null && room.messages.length > 0) {
+				openRooms.push(r);
+			}
+		}
+		var rand = new Random(Date.now().getTime());
+		var room = openRooms[rand.int(openRooms.length)];
+		response.redirect('http://slickrock.io/${room}');
+	}
+
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
-	
-	@:post('/api/gettoken/:privateID') 
+
+	@:post('/api/gettoken/:privateID')
 	function getToken(privateID: String) {
 		var rand = new Random(Date.now().getTime());
 		var token: String = '';
@@ -288,8 +436,8 @@ class RouteHandler implements abe.IRoute {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send(token);
 	}
-	
-	@:post('/api/checkvalid/:privateID/:token') 
+
+	@:post('/api/checkvalid/:privateID/:token')
 	function checkValid(privateID: String, token: String) {
 		var value = 'invalid';
 		if (Main.tokens[privateID] == token) {
@@ -298,15 +446,10 @@ class RouteHandler implements abe.IRoute {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send(value);
 	}
-	
-	@:get('/api/typing/:room/:id') 
-	@:post('/api/typing/:room/:id') 
+
+	@:get('/api/typing/:room/:id')
+	@:post('/api/typing/:room/:id')
 	function typing(room: String, id: String) {
-		if (room == 'frontpage') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
-			return;
-		}
 		if (Main.rooms.get(room).typing.indexOf(id) == -1) {
 			Main.rooms.get(room).typing.push(id);
 			Main.clearTyping(room, id);
@@ -317,14 +460,9 @@ class RouteHandler implements abe.IRoute {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('needs a response');
 	}
-	
+
 	@:post('/api/lock/:room/:privateID/:password/:privatePass')
 	function lockRoom(room: String, privateID: String, password: String, privatePass: String) {
-		if (room == 'frontpage') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
-			return;
-		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.pw == null) {
@@ -334,7 +472,7 @@ class RouteHandler implements abe.IRoute {
 		}
 		else if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
 			roomE.lock = Sha1.encode(roomE.salt+password);
-			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt } );
+			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room] } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('locked');
 			return;
@@ -342,26 +480,49 @@ class RouteHandler implements abe.IRoute {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('failed');
 	}
-	
+
 	var letters = 'abcdefghijklmnopqrstuvwxyz';
 	function getSalt(): String {
 		var rand = new Random(Date.now().getTime());
 		return letters.charAt(rand.int(letters.length)) + letters.charAt(rand.int(letters.length));
 	}
-	
-	@:post('/api/unlock/:room/:privateID/:privatePass')
-	function unlockRoom(room: String, privateID: String, privatePass: String) {
-		if (room == 'frontpage') {
+
+	@:post('/api/empty/:room/:privatePass')
+	function emptyRoom(room: String, privatePass: String) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
+			Main.emptyRoom(room);
 			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
+			response.send('emptied');
 			return;
 		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send('failed');
+	}
+
+	@:post('/api/deleteMessage/:room/:privatePass/:id')
+	function deleteMessage(room: String, privatePass: String, id: String) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
+			Main.deleteMessage(room, ObjectID.createFromHexString(id));
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('deleted');
+			return;
+		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send('failed');
+	}
+
+	@:post('/api/unlock/:room/:privateID/:privatePass')
+	function unlockRoom(room: String, privateID: String, privatePass: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.lock != null) {
 			if (roomE.pw == Sha1.encode(roomE.salt+privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo( { _id: room, lock: null, pw: roomE.pw, salt: roomE.salt } );
+				Main.roomInfo( { _id: room, lock: null, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room]  } );
 				response.setHeader('Access-Control-Allow-Origin', '*');
 				response.send('unlocked');
 				return;
@@ -375,14 +536,9 @@ class RouteHandler implements abe.IRoute {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('failed');
 	}
-	
+
 	@:post('/api/claim/:room/:privateID/:privatePass')
 	function claimRoom(room: String, privateID: String, privatePass: String) {
-		if (room == 'frontpage') {
-			response.setHeader('Access-Control-Allow-Origin', '*');
-			response.send('failed');
-			return;
-		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if ((roomE.pw == null && roomE.messages.length == 0) || Sha1.encode(roomE.salt + privatePass) == roomE.pw) {
@@ -390,7 +546,7 @@ class RouteHandler implements abe.IRoute {
 				roomE.salt = getSalt();
 			}
 			roomE.pw = Sha1.encode(roomE.salt + privatePass);
-			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt } );
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room]  } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('claimed');
 			return;
@@ -398,32 +554,50 @@ class RouteHandler implements abe.IRoute {
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('failed');
 	}
-	
+
+	@:post('/api/claim/:room/:privateID/:oldAdmin/:newAdmin')
+	function reclaimRoom(room: String, privateID: String, oldAdmin: String, newAdmin: String) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if ((roomE.pw == null && roomE.messages.length == 0) || Sha1.encode(roomE.salt + oldAdmin) == roomE.pw) {
+			if(roomE.salt == null) {
+				roomE.salt = getSalt();
+			}
+			roomE.pw = Sha1.encode(roomE.salt + newAdmin);
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room]  } );
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('claimed');
+			return;
+		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send('failed');
+	}
+
 	@:post('/api/:room/:lastID')
 	function getMessages(room: String, lastID: Int) {
 		room = room.toLowerCase();
 		_getMessages(response, room, null, lastID);
 	}
-	
+
 	@:post('/api/:room/:password/:lastID')
 	function getMessagesWithPass(room: String, password: String, lastID: Int) {
 		room = room.toLowerCase();
 		_getMessages(response, room, password, lastID);
 	}
-	
+
 	@:get('/api/hist/:room/:lastID/:firstID')
 	@:post('/api/hist/:room/:lastID/:firstID')
 	function getMessagesHist(room: String, lastID: Int, firstID: Int) {
 		room = room.toLowerCase();
 		_getMessages(response, room, null, lastID, firstID);
 	}
-	
+
 	@:post('/api/hist/:room/:password/:lastID/:firstID')
 	function getMessagesHistWithPass(room: String, password: String, lastID: Int, firstID: Int) {
 		room = room.toLowerCase();
 		_getMessages(response, room, password, lastID, firstID);
 	}
-	
+
 	function _getMessages(response: Response, room: String, password: String, lastID: Int, ?firstID: Int) {
 		if (!Main.hasMongo()) {
 			response.setHeader('Access-Control-Allow-Origin', '*');
@@ -438,7 +612,7 @@ class RouteHandler implements abe.IRoute {
 				typing: []
 			});
 		}
-		
+
 		var roomE = Main.rooms.get(room);
 		if (roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt + password)) {
 			var roomE = Main.rooms.get(room);
@@ -455,10 +629,10 @@ class RouteHandler implements abe.IRoute {
 				},
 				lastID: roomE.messages.length - 1
 			};
-			
+
 			var start = 0;
 			var end = roomE.messages.length;
-			
+
 			if (firstID != null) {
 				start = firstID - maxMessageLoad;
 				start = start > 0? start : 0;
@@ -468,7 +642,7 @@ class RouteHandler implements abe.IRoute {
 			else {
 				start = lastID + 1;
 			}
-			
+
 			if (lastID == -1 && messages.lastID > maxMessageLoad) {
 				start = messages.lastID - maxMessageLoad;
 				messages.firstID = start;
@@ -485,7 +659,7 @@ class RouteHandler implements abe.IRoute {
 		}
 		else {
 			response.setHeader('Access-Control-Allow-Origin', '*');
-			if(password != null) { 
+			if(password != null) {
 				response.send('password');
 			}
 			else {
@@ -493,7 +667,7 @@ class RouteHandler implements abe.IRoute {
 			}
 		}
 	}
-	
+
 	function _serveHtml(path: String, handler: Error->String->Void) {
 		Fs.readFile(path, { encoding: 'utf8' }, handler);
 	}

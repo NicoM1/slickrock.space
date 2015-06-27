@@ -1,6 +1,9 @@
 package;
 
+import js.node.mongodb.ObjectID;
+
 typedef Message = {
 	text: String,
-	id: String
+	id: String,
+	?_id: ObjectID
 }

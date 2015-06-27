@@ -191,65 +191,95 @@ var Main = function() {
 		var uses4 = [];
 		router.registerMethod("/api/getID","post",process4,uses4,[]);
 		var filters5 = new abe_core_ArgumentsFilter();
-		var processor5 = new abe_core_ArgumentProcessor(filters5,[{ name : "privateID", optional : false, type : "String", sources : ["params"]}]);
-		var process5 = new RouteHandler_$getToken_$RouteProcess({ privateID : null},instance,processor5);
+		var processor5 = new abe_core_ArgumentProcessor(filters5,[]);
+		var process5 = new RouteHandler_$makeRandomRoom_$RouteProcess({ },instance,processor5);
 		var uses5 = [];
-		router.registerMethod("/api/gettoken/:privateID","post",process5,uses5,[]);
+		router.registerMethod("/api/makeRandomRoom","get",process5,uses5,[]);
 		var filters6 = new abe_core_ArgumentsFilter();
-		var processor6 = new abe_core_ArgumentProcessor(filters6,[{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "token", optional : false, type : "String", sources : ["params"]}]);
-		var process6 = new RouteHandler_$checkValid_$RouteProcess({ privateID : null, token : null},instance,processor6);
+		var processor6 = new abe_core_ArgumentProcessor(filters6,[]);
+		var process6 = new RouteHandler_$getTopRooms_$RouteProcess({ },instance,processor6);
 		var uses6 = [];
-		router.registerMethod("/api/checkvalid/:privateID/:token","post",process6,uses6,[]);
+		router.registerMethod("/api/getTopRooms","get",process6,uses6,[]);
 		var filters7 = new abe_core_ArgumentsFilter();
-		var processor7 = new abe_core_ArgumentProcessor(filters7,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "String", sources : ["params"]}]);
-		var process7 = new RouteHandler_$typing_$RouteProcess({ room : null, id : null},instance,processor7);
+		var processor7 = new abe_core_ArgumentProcessor(filters7,[]);
+		var process7 = new RouteHandler_$getRandomRoom_$RouteProcess({ },instance,processor7);
 		var uses7 = [];
-		router.registerMethod("/api/typing/:room/:id","get",process7,uses7,[]);
+		router.registerMethod("/api/getRandomRoom","get",process7,uses7,[]);
 		var filters8 = new abe_core_ArgumentsFilter();
-		var processor8 = new abe_core_ArgumentProcessor(filters8,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "String", sources : ["params"]}]);
-		var process8 = new RouteHandler_$typing_$RouteProcess({ room : null, id : null},instance,processor8);
+		var processor8 = new abe_core_ArgumentProcessor(filters8,[{ name : "privateID", optional : false, type : "String", sources : ["params"]}]);
+		var process8 = new RouteHandler_$getToken_$RouteProcess({ privateID : null},instance,processor8);
 		var uses8 = [];
-		router.registerMethod("/api/typing/:room/:id","post",process8,uses8,[]);
+		router.registerMethod("/api/gettoken/:privateID","post",process8,uses8,[]);
 		var filters9 = new abe_core_ArgumentsFilter();
-		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
-		var process9 = new RouteHandler_$lockRoom_$RouteProcess({ room : null, privateID : null, password : null, privatePass : null},instance,processor9);
+		var processor9 = new abe_core_ArgumentProcessor(filters9,[{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "token", optional : false, type : "String", sources : ["params"]}]);
+		var process9 = new RouteHandler_$checkValid_$RouteProcess({ privateID : null, token : null},instance,processor9);
 		var uses9 = [];
-		router.registerMethod("/api/lock/:room/:privateID/:password/:privatePass","post",process9,uses9,[]);
+		router.registerMethod("/api/checkvalid/:privateID/:token","post",process9,uses9,[]);
 		var filters10 = new abe_core_ArgumentsFilter();
-		var processor10 = new abe_core_ArgumentProcessor(filters10,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
-		var process10 = new RouteHandler_$unlockRoom_$RouteProcess({ room : null, privateID : null, privatePass : null},instance,processor10);
+		var processor10 = new abe_core_ArgumentProcessor(filters10,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "String", sources : ["params"]}]);
+		var process10 = new RouteHandler_$typing_$RouteProcess({ room : null, id : null},instance,processor10);
 		var uses10 = [];
-		router.registerMethod("/api/unlock/:room/:privateID/:privatePass","post",process10,uses10,[]);
+		router.registerMethod("/api/typing/:room/:id","get",process10,uses10,[]);
 		var filters11 = new abe_core_ArgumentsFilter();
-		var processor11 = new abe_core_ArgumentProcessor(filters11,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
-		var process11 = new RouteHandler_$claimRoom_$RouteProcess({ room : null, privateID : null, privatePass : null},instance,processor11);
+		var processor11 = new abe_core_ArgumentProcessor(filters11,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "String", sources : ["params"]}]);
+		var process11 = new RouteHandler_$typing_$RouteProcess({ room : null, id : null},instance,processor11);
 		var uses11 = [];
-		router.registerMethod("/api/claim/:room/:privateID/:privatePass","post",process11,uses11,[]);
+		router.registerMethod("/api/typing/:room/:id","post",process11,uses11,[]);
 		var filters12 = new abe_core_ArgumentsFilter();
-		var processor12 = new abe_core_ArgumentProcessor(filters12,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
-		var process12 = new RouteHandler_$getMessages_$RouteProcess({ room : null, lastID : null},instance,processor12);
+		var processor12 = new abe_core_ArgumentProcessor(filters12,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
+		var process12 = new RouteHandler_$lockRoom_$RouteProcess({ room : null, privateID : null, password : null, privatePass : null},instance,processor12);
 		var uses12 = [];
-		router.registerMethod("/api/:room/:lastID","post",process12,uses12,[]);
+		router.registerMethod("/api/lock/:room/:privateID/:password/:privatePass","post",process12,uses12,[]);
 		var filters13 = new abe_core_ArgumentsFilter();
-		var processor13 = new abe_core_ArgumentProcessor(filters13,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
-		var process13 = new RouteHandler_$getMessagesWithPass_$RouteProcess({ room : null, password : null, lastID : null},instance,processor13);
+		var processor13 = new abe_core_ArgumentProcessor(filters13,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
+		var process13 = new RouteHandler_$emptyRoom_$RouteProcess({ room : null, privatePass : null},instance,processor13);
 		var uses13 = [];
-		router.registerMethod("/api/:room/:password/:lastID","post",process13,uses13,[]);
+		router.registerMethod("/api/empty/:room/:privatePass","post",process13,uses13,[]);
 		var filters14 = new abe_core_ArgumentsFilter();
-		var processor14 = new abe_core_ArgumentProcessor(filters14,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
-		var process14 = new RouteHandler_$getMessagesHist_$RouteProcess({ room : null, lastID : null, firstID : null},instance,processor14);
+		var processor14 = new abe_core_ArgumentProcessor(filters14,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "String", sources : ["params"]}]);
+		var process14 = new RouteHandler_$deleteMessage_$RouteProcess({ room : null, privatePass : null, id : null},instance,processor14);
 		var uses14 = [];
-		router.registerMethod("/api/hist/:room/:lastID/:firstID","get",process14,uses14,[]);
+		router.registerMethod("/api/deleteMessage/:room/:privatePass/:id","post",process14,uses14,[]);
 		var filters15 = new abe_core_ArgumentsFilter();
-		var processor15 = new abe_core_ArgumentProcessor(filters15,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
-		var process15 = new RouteHandler_$getMessagesHist_$RouteProcess({ room : null, lastID : null, firstID : null},instance,processor15);
+		var processor15 = new abe_core_ArgumentProcessor(filters15,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
+		var process15 = new RouteHandler_$unlockRoom_$RouteProcess({ room : null, privateID : null, privatePass : null},instance,processor15);
 		var uses15 = [];
-		router.registerMethod("/api/hist/:room/:lastID/:firstID","post",process15,uses15,[]);
+		router.registerMethod("/api/unlock/:room/:privateID/:privatePass","post",process15,uses15,[]);
 		var filters16 = new abe_core_ArgumentsFilter();
-		var processor16 = new abe_core_ArgumentProcessor(filters16,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
-		var process16 = new RouteHandler_$getMessagesHistWithPass_$RouteProcess({ room : null, password : null, lastID : null, firstID : null},instance,processor16);
+		var processor16 = new abe_core_ArgumentProcessor(filters16,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
+		var process16 = new RouteHandler_$claimRoom_$RouteProcess({ room : null, privateID : null, privatePass : null},instance,processor16);
 		var uses16 = [];
-		router.registerMethod("/api/hist/:room/:password/:lastID/:firstID","post",process16,uses16,[]);
+		router.registerMethod("/api/claim/:room/:privateID/:privatePass","post",process16,uses16,[]);
+		var filters17 = new abe_core_ArgumentsFilter();
+		var processor17 = new abe_core_ArgumentProcessor(filters17,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "oldAdmin", optional : false, type : "String", sources : ["params"]},{ name : "newAdmin", optional : false, type : "String", sources : ["params"]}]);
+		var process17 = new RouteHandler_$reclaimRoom_$RouteProcess({ room : null, privateID : null, oldAdmin : null, newAdmin : null},instance,processor17);
+		var uses17 = [];
+		router.registerMethod("/api/claim/:room/:privateID/:oldAdmin/:newAdmin","post",process17,uses17,[]);
+		var filters18 = new abe_core_ArgumentsFilter();
+		var processor18 = new abe_core_ArgumentProcessor(filters18,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process18 = new RouteHandler_$getMessages_$RouteProcess({ room : null, lastID : null},instance,processor18);
+		var uses18 = [];
+		router.registerMethod("/api/:room/:lastID","post",process18,uses18,[]);
+		var filters19 = new abe_core_ArgumentsFilter();
+		var processor19 = new abe_core_ArgumentProcessor(filters19,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process19 = new RouteHandler_$getMessagesWithPass_$RouteProcess({ room : null, password : null, lastID : null},instance,processor19);
+		var uses19 = [];
+		router.registerMethod("/api/:room/:password/:lastID","post",process19,uses19,[]);
+		var filters20 = new abe_core_ArgumentsFilter();
+		var processor20 = new abe_core_ArgumentProcessor(filters20,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
+		var process20 = new RouteHandler_$getMessagesHist_$RouteProcess({ room : null, lastID : null, firstID : null},instance,processor20);
+		var uses20 = [];
+		router.registerMethod("/api/hist/:room/:lastID/:firstID","get",process20,uses20,[]);
+		var filters21 = new abe_core_ArgumentsFilter();
+		var processor21 = new abe_core_ArgumentProcessor(filters21,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
+		var process21 = new RouteHandler_$getMessagesHist_$RouteProcess({ room : null, lastID : null, firstID : null},instance,processor21);
+		var uses21 = [];
+		router.registerMethod("/api/hist/:room/:lastID/:firstID","post",process21,uses21,[]);
+		var filters22 = new abe_core_ArgumentsFilter();
+		var processor22 = new abe_core_ArgumentProcessor(filters22,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
+		var process22 = new RouteHandler_$getMessagesHistWithPass_$RouteProcess({ room : null, password : null, lastID : null, firstID : null},instance,processor22);
+		var uses22 = [];
+		router.registerMethod("/api/hist/:room/:password/:lastID/:firstID","post",process22,uses22,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -293,79 +323,124 @@ Main.resetTypingTimer = function(room,id) {
 		var this1 = Main.typingTimers.get(room);
 		$r = this1.get(id);
 		return $r;
-	}(this))).run = (function(f,a1,id1) {
+	}(this))).stop();
+	var timer = new haxe_Timer(10000);
+	timer.run = (function(f,a1,id1) {
 		return function() {
 			f(a1,id1);
 		};
 	})(Main.emptyTyping,room,id);
+	var this2 = Main.typingTimers.get(room);
+	this2.set(id,timer);
+	timer;
 };
 Main.emptyTyping = function(room,id) {
 	var _this = Main.rooms.get(room).typing;
 	HxOverrides.remove(_this,id);
 };
+Main.emptyRoom = function(room) {
+	Main.rooms.get(room).messages = [];
+	Main.mongodb.collection("messages",function(e,database) {
+		if(e == null) database.remove({ room : room});
+	});
+};
+Main.deleteMessage = function(room,id) {
+	if(Main.rooms.get(room) == null) return;
+	var _g = 0;
+	var _g1 = Main.rooms.get(room).messages;
+	while(_g < _g1.length) {
+		var m = _g1[_g];
+		++_g;
+		if(m._id == id) {
+			var _this = Main.rooms.get(room).messages;
+			HxOverrides.remove(_this,m);
+			break;
+		}
+	}
+	Main.mongodb.collection("messages",function(e,database) {
+		if(e == null) database.remove({ room : room, _id : id});
+	});
+};
 Main._parseMessages = function() {
-	Main.mongodb.collection("roominfo").find().toArray(function(e,r) {
-		if(e != null) {
-			console.log(e);
-			return;
-		}
-		var roominfo = r;
-		var _g = 0;
-		while(_g < roominfo.length) {
-			var r1 = roominfo[_g];
-			++_g;
-			if(!Main.rooms.exists(r1._id)) {
-				var value = { messages : [], lock : null, pw : null, typing : []};
-				Main.rooms.set(r1._id,value);
+	Main.mongodb.collection("roominfo",function(e,database) {
+		if(e == null) database.find({ }).toArray(function(e1,r) {
+			if(e1 != null) {
+				console.log(e1);
+				return;
 			}
-			Main.rooms.get(r1._id).lock = r1.lock;
-			Main.rooms.get(r1._id).pw = r1.pw;
-			Main.rooms.get(r1._id).salt = r1.salt;
-		}
-	});
-	Main.mongodb.collection("messages").find().sort({ _id : 1}).toArray(function(e1,r2) {
-		if(e1 != null) {
-			console.log(e1);
-			return;
-		}
-		var messages = r2;
-		var _g1 = 0;
-		while(_g1 < messages.length) {
-			var m = messages[_g1];
-			++_g1;
-			if(!Main.rooms.exists(m.room)) {
-				var value1 = { messages : [], lock : null, pw : null, typing : []};
-				Main.rooms.set(m.room,value1);
+			var roominfo = r;
+			var _g = 0;
+			while(_g < roominfo.length) {
+				var r1 = roominfo[_g];
+				++_g;
+				if(!Main.rooms.exists(r1._id)) {
+					var value = { messages : [], lock : null, pw : null, typing : []};
+					Main.rooms.set(r1._id,value);
+				}
+				if(r1.users != null) {
+					var v = r1.users;
+					Main.userCounts.set(r1._id,v);
+					v;
+				}
+				Main.rooms.get(r1._id).lock = r1.lock;
+				Main.rooms.get(r1._id).pw = r1.pw;
+				Main.rooms.get(r1._id).salt = r1.salt;
 			}
-			Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id});
-		}
+		});
 	});
-	Main.mongodb.collection("tokens").find().toArray(function(e2,r3) {
-		if(e2 != null) {
-			console.log(e2);
-			return;
-		}
-		var tokenos = r3;
-		var _g2 = 0;
-		while(_g2 < tokenos.length) {
-			var t = tokenos[_g2];
-			++_g2;
-			var v = t.token;
-			Main.tokens.set(t._id,v);
-			v;
-		}
+	Main.mongodb.collection("messages",function(e2,database1) {
+		if(e2 == null) database1.find({ }).sort({ _id : 1}).toArray(function(e3,r2) {
+			if(e3 != null) {
+				console.log(e3);
+				return;
+			}
+			var messages = r2;
+			var _g1 = 0;
+			while(_g1 < messages.length) {
+				var m = messages[_g1];
+				++_g1;
+				if(!Main.rooms.exists(m.room)) {
+					var value1 = { messages : [], lock : null, pw : null, typing : []};
+					Main.rooms.set(m.room,value1);
+				}
+				Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id, _id : m._id});
+			}
+		});
+	});
+	Main.mongodb.collection("tokens",function(e4,database2) {
+		if(e4 == null) database2.find({ }).toArray(function(e5,r3) {
+			if(e5 != null) {
+				console.log(e5);
+				return;
+			}
+			var tokenos = r3;
+			var _g2 = 0;
+			while(_g2 < tokenos.length) {
+				var t = tokenos[_g2];
+				++_g2;
+				var v1 = t.token;
+				Main.tokens.set(t._id,v1);
+				v1;
+			}
+		});
 	});
 };
 Main.saveMessage = function(msg) {
-	if(Main.mongodb != null) Main.mongodb.collection("messages").insertOne(msg,function(e,r) {
-		if(e != null) console.log(e);
+	if(Main.mongodb != null) Main.mongodb.collection("messages",function(e,database) {
+		if(e == null) database.insertOne(msg,{ },function(e1,r) {
+			if(e1 != null) console.log(e1);
+		});
 	}); else console.log("mongo null");
 };
 Main.roomInfo = function(roomInfo) {
-	Main.mongodb.collection("roominfo").save(roomInfo);
+	Main.mongodb.collection("roominfo",function(e,database) {
+		if(e == null) database.save(roomInfo);
+	});
 };
 Main.saveToken = function(token) {
-	Main.mongodb.collection("tokens").save(token);
+	Main.mongodb.collection("tokens",function(e,database) {
+		if(e == null) database.save(token);
+	});
 };
 Main.getUserID = function() {
 	var rand = new Random(new Date().getTime());
@@ -398,15 +473,6 @@ Main.prototype = {
 			Main._parseMessages();
 		});
 	}
-	,_test: function(room,id,message) {
-		if(!Main.rooms.exists(room)) {
-			var value = { messages : [], lock : null, pw : null, typing : []};
-			Main.rooms.set(room,value);
-		}
-		Main.emptyTyping(room,id);
-		Main.rooms.get(room).messages.push({ text : message, id : id});
-		Main.saveMessage({ text : message, id : id, room : room});
-	}
 	,__class__: Main
 };
 var abe_IRoute = function() { };
@@ -414,6 +480,8 @@ abe_IRoute.__name__ = ["abe","IRoute"];
 var RouteHandler = function() {
 	this.letters = "abcdefghijklmnopqrstuvwxyz";
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
+	this.oneWeek = 604800000;
+	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
 	this.maxMessageLoad = 80;
 };
 RouteHandler.__name__ = ["RouteHandler"];
@@ -445,11 +513,14 @@ RouteHandler.prototype = {
 		room = room.toLowerCase();
 		this._sendMessage(response,message,room,password,id,privateID,token);
 	}
+	,imgBB: null
 	,_sendMessage: function(response,message,room,password,id,privateID,token) {
-		if(room == "frontpage") {
-			response.setHeader("Access-Control-Allow-Origin","*");
-			response.send("failed");
-			return;
+		if(room == "homepage") {
+			if(this.imgBB.match(message)) {
+				response.setHeader("Access-Control-Allow-Origin","*");
+				response.send("failed-image");
+				return;
+			}
 		}
 		if(Main.tokens.get(privateID) == token) {
 			if(!Main.rooms.exists(room)) {
@@ -459,8 +530,23 @@ RouteHandler.prototype = {
 			Main.emptyTyping(room,id);
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
-				Main.rooms.get(room).messages.push({ text : message, id : id});
-				Main.saveMessage({ text : message, id : id, room : room});
+				var objectid = new js_node_mongodb_ObjectID();
+				Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid});
+				Main.saveMessage({ text : message, id : id, room : room, _id : objectid});
+				if(Main.userCounts.get(room) == null) {
+					var v = [];
+					Main.userCounts.set(room,v);
+					v;
+				}
+				var index = -1;
+				var _g1 = 0;
+				var _g = Main.userCounts.get(room).length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					if(Main.userCounts.get(room)[i].id == privateID) index = i;
+				}
+				if(index == -1) Main.userCounts.get(room).push({ id : privateID, timestamp : new Date()}); else Main.userCounts.get(room)[index].timestamp = new Date();
+				Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
 			}
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("success");
@@ -472,6 +558,71 @@ RouteHandler.prototype = {
 	,getID: function(request,response,next) {
 		response.setHeader("Access-Control-Allow-Origin","*");
 		response.send(Main.getUserID());
+	}
+	,makeRandomRoom: function(request,response,next) {
+		response.setHeader("Access-Control-Allow-Origin","*");
+		response.redirect("http://slickrock.io/" + Main.getUserID());
+	}
+	,oneWeek: null
+	,getTopRooms: function(request,response,next) {
+		var top10 = [];
+		var lowest = 1000000000;
+		var lowestIndex = -1;
+		var toRemove = [];
+		var $it0 = Main.userCounts.keys();
+		while( $it0.hasNext() ) {
+			var r = $it0.next();
+			var count = Main.userCounts.get(r);
+			var _g = 0;
+			while(_g < count.length) {
+				var u = count[_g];
+				++_g;
+				if(new Date().getTime() - u.timestamp.getTime() > this.oneWeek) toRemove.push(u);
+			}
+			var _g1 = 0;
+			while(_g1 < toRemove.length) {
+				var u1 = toRemove[_g1];
+				++_g1;
+				var _this = Main.userCounts.get(r);
+				HxOverrides.remove(_this,u1);
+			}
+			var roomE = Main.rooms.get(r);
+			Main.roomInfo({ _id : r, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(r)});
+			toRemove = [];
+			var _g11 = 0;
+			var _g2 = top10.length;
+			while(_g11 < _g2) {
+				var i = _g11++;
+				var c = top10[i];
+				if(c.count < lowest) {
+					lowest = c.count;
+					lowestIndex = i;
+				}
+			}
+			if(top10.length >= 10 && count.length > lowest) {
+				HxOverrides.remove(top10,top10[lowestIndex]);
+				top10.push({ room : r, count : count.length});
+			} else if(top10.length < 10) top10.push({ room : r, count : count.length});
+		}
+		top10.sort(function(r1,r2) {
+			if(r1.count > r2.count) return -1;
+			if(r1.count < r2.count) return 1;
+			return 0;
+		});
+		response.send(top10);
+	}
+	,getRandomRoom: function(request,response,next) {
+		response.setHeader("Access-Control-Allow-Origin","*");
+		var openRooms = [];
+		var $it0 = Main.rooms.keys();
+		while( $it0.hasNext() ) {
+			var r = $it0.next();
+			var room1 = Main.rooms.get(r);
+			if(room1.lock == null && room1.messages.length > 0) openRooms.push(r);
+		}
+		var rand = new Random(new Date().getTime());
+		var room = openRooms[rand["int"](openRooms.length,null)];
+		response.redirect("http://slickrock.io/" + room);
 	}
 	,alphanumeric: null
 	,getToken: function(privateID,request,response,next) {
@@ -493,11 +644,6 @@ RouteHandler.prototype = {
 		response.send(value);
 	}
 	,typing: function(room,id,request,response,next) {
-		if(room == "frontpage") {
-			response.setHeader("Access-Control-Allow-Origin","*");
-			response.send("failed");
-			return;
-		}
 		if((function($this) {
 			var $r;
 			var _this = Main.rooms.get(room).typing;
@@ -511,11 +657,6 @@ RouteHandler.prototype = {
 		response.send("needs a response");
 	}
 	,lockRoom: function(room,privateID,password,privatePass,request,response,next) {
-		if(room == "frontpage") {
-			response.setHeader("Access-Control-Allow-Origin","*");
-			response.send("failed");
-			return;
-		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.pw == null) {
@@ -524,7 +665,7 @@ RouteHandler.prototype = {
 			return;
 		} else if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 			roomE.lock = haxe_crypto_Sha1.encode(roomE.salt + password);
-			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt});
+			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("locked");
 			return;
@@ -537,18 +678,37 @@ RouteHandler.prototype = {
 		var rand = new Random(new Date().getTime());
 		return this.letters.charAt(rand["int"](this.letters.length,null)) + this.letters.charAt(rand["int"](this.letters.length,null));
 	}
-	,unlockRoom: function(room,privateID,privatePass,request,response,next) {
-		if(room == "frontpage") {
+	,emptyRoom: function(room,privatePass,request,response,next) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
+			Main.emptyRoom(room);
 			response.setHeader("Access-Control-Allow-Origin","*");
-			response.send("failed");
+			response.send("emptied");
 			return;
 		}
+		response.setHeader("Access-Control-Allow-Origin","*");
+		response.send("failed");
+	}
+	,deleteMessage: function(room,privatePass,id,request,response,next) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
+			Main.deleteMessage(room,js_node_mongodb_ObjectID.createFromHexString(id));
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("deleted");
+			return;
+		}
+		response.setHeader("Access-Control-Allow-Origin","*");
+		response.send("failed");
+	}
+	,unlockRoom: function(room,privateID,privatePass,request,response,next) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.lock != null) {
 			if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo({ _id : room, lock : null, pw : roomE.pw, salt : roomE.salt});
+				Main.roomInfo({ _id : room, lock : null, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
 				response.setHeader("Access-Control-Allow-Origin","*");
 				response.send("unlocked");
 				return;
@@ -562,17 +722,26 @@ RouteHandler.prototype = {
 		response.send("failed");
 	}
 	,claimRoom: function(room,privateID,privatePass,request,response,next) {
-		if(room == "frontpage") {
-			response.setHeader("Access-Control-Allow-Origin","*");
-			response.send("failed");
-			return;
-		}
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.pw == null && roomE.messages.length == 0 || haxe_crypto_Sha1.encode(roomE.salt + privatePass) == roomE.pw) {
 			if(roomE.salt == null) roomE.salt = this.getSalt();
 			roomE.pw = haxe_crypto_Sha1.encode(roomE.salt + privatePass);
-			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt});
+			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("claimed");
+			return;
+		}
+		response.setHeader("Access-Control-Allow-Origin","*");
+		response.send("failed");
+	}
+	,reclaimRoom: function(room,privateID,oldAdmin,newAdmin,request,response,next) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if(roomE.pw == null && roomE.messages.length == 0 || haxe_crypto_Sha1.encode(roomE.salt + oldAdmin) == roomE.pw) {
+			if(roomE.salt == null) roomE.salt = this.getSalt();
+			roomE.pw = haxe_crypto_Sha1.encode(roomE.salt + newAdmin);
+			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("claimed");
 			return;
@@ -797,6 +966,28 @@ RouteHandler_$claimRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.
 	}
 	,__class__: RouteHandler_$claimRoom_$RouteProcess
 });
+var RouteHandler_$deleteMessage_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$deleteMessage_$RouteProcess.__name__ = ["RouteHandler_deleteMessage_RouteProcess"];
+RouteHandler_$deleteMessage_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$deleteMessage_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.deleteMessage(this.args.room,this.args.privatePass,this.args.id,request,response,next);
+	}
+	,__class__: RouteHandler_$deleteMessage_$RouteProcess
+});
+var RouteHandler_$emptyRoom_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$emptyRoom_$RouteProcess.__name__ = ["RouteHandler_emptyRoom_RouteProcess"];
+RouteHandler_$emptyRoom_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$emptyRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.emptyRoom(this.args.room,this.args.privatePass,request,response,next);
+	}
+	,__class__: RouteHandler_$emptyRoom_$RouteProcess
+});
 var RouteHandler_$getID_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
 };
@@ -852,6 +1043,17 @@ RouteHandler_$getMessages_$RouteProcess.prototype = $extend(abe_core_RouteProces
 	}
 	,__class__: RouteHandler_$getMessages_$RouteProcess
 });
+var RouteHandler_$getRandomRoom_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$getRandomRoom_$RouteProcess.__name__ = ["RouteHandler_getRandomRoom_RouteProcess"];
+RouteHandler_$getRandomRoom_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$getRandomRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.getRandomRoom(request,response,next);
+	}
+	,__class__: RouteHandler_$getRandomRoom_$RouteProcess
+});
 var RouteHandler_$getToken_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
 };
@@ -862,6 +1064,17 @@ RouteHandler_$getToken_$RouteProcess.prototype = $extend(abe_core_RouteProcess.p
 		this.instance.getToken(this.args.privateID,request,response,next);
 	}
 	,__class__: RouteHandler_$getToken_$RouteProcess
+});
+var RouteHandler_$getTopRooms_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$getTopRooms_$RouteProcess.__name__ = ["RouteHandler_getTopRooms_RouteProcess"];
+RouteHandler_$getTopRooms_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$getTopRooms_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.getTopRooms(request,response,next);
+	}
+	,__class__: RouteHandler_$getTopRooms_$RouteProcess
 });
 var RouteHandler_$index_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
@@ -884,6 +1097,28 @@ RouteHandler_$lockRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.p
 		this.instance.lockRoom(this.args.room,this.args.privateID,this.args.password,this.args.privatePass,request,response,next);
 	}
 	,__class__: RouteHandler_$lockRoom_$RouteProcess
+});
+var RouteHandler_$makeRandomRoom_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$makeRandomRoom_$RouteProcess.__name__ = ["RouteHandler_makeRandomRoom_RouteProcess"];
+RouteHandler_$makeRandomRoom_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$makeRandomRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.makeRandomRoom(request,response,next);
+	}
+	,__class__: RouteHandler_$makeRandomRoom_$RouteProcess
+});
+var RouteHandler_$reclaimRoom_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$reclaimRoom_$RouteProcess.__name__ = ["RouteHandler_reclaimRoom_RouteProcess"];
+RouteHandler_$reclaimRoom_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$reclaimRoom_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.reclaimRoom(this.args.room,this.args.privateID,this.args.oldAdmin,this.args.newAdmin,request,response,next);
+	}
+	,__class__: RouteHandler_$reclaimRoom_$RouteProcess
 });
 var RouteHandler_$sendMessageWithPass_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
@@ -1572,6 +1807,11 @@ var haxe_Timer = function(time_ms) {
 haxe_Timer.__name__ = ["haxe","Timer"];
 haxe_Timer.prototype = {
 	id: null
+	,stop: function() {
+		if(this.id == null) return;
+		clearInterval(this.id);
+		this.id = null;
+	}
 	,run: function() {
 	}
 	,__class__: haxe_Timer
@@ -2113,6 +2353,15 @@ js_html_compat_Uint8Array._subarray = function(start,end) {
 var js_node_Fs = require("fs");
 var js_node_Http = require("http");
 var js_node_Https = require("https");
+var js_node_mongodb_MongoAuthOption = function() {
+	this.authMechanism = "MONGODB - CR";
+};
+js_node_mongodb_MongoAuthOption.__name__ = ["js","node","mongodb","MongoAuthOption"];
+js_node_mongodb_MongoAuthOption.prototype = {
+	authMechanism: null
+	,__class__: js_node_mongodb_MongoAuthOption
+};
+var js_node_mongodb_ObjectID = require("mongodb").ObjectID;
 var npm_QS = require("qs");
 var thx_Arrays = function() { };
 thx_Arrays.__name__ = ["thx","Arrays"];
@@ -5465,6 +5714,7 @@ if(typeof(scope.performance.now) == "undefined") {
 }
 DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 Main.textDB = "";
+Main.userCounts = new haxe_ds_StringMap();
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
 abe_core_ArgumentsFilter.globalFilters = (function() {
 	var filters = [];
@@ -5496,6 +5746,8 @@ haxe_io_FPHelper.i64tmp = (function($this) {
 }(this));
 js_Boot.__toStr = {}.toString;
 js_html_compat_Uint8Array.BYTES_PER_ELEMENT = 1;
+js_node_mongodb_MongoAuthOption.MONGO_CR = "MONGODB - CR";
+js_node_mongodb_MongoAuthOption.GSSAPI = "GSSAPI";
 thx_Floats.TOLERANCE = 10e-5;
 thx_Floats.EPSILON = 10e-10;
 thx_Floats.pattern_parse = new EReg("^(\\+|-)?\\d+(\\.\\d+)?(e-?\\d+)?$","");

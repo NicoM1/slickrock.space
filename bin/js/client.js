@@ -151,6 +151,7 @@ _$List_ListIterator.prototype = {
 };
 var Main = function() {
 	this.selectedElem = null;
+	this.sitelink = new EReg(" /[^\\s]+?( |$)","i");
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
@@ -158,6 +159,7 @@ var Main = function() {
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
 	this.embedTemplate = "<iframe src=\"[SRC]\" width=\"[WIDTH]\" height=\"[HEIGHT]\" style=\"border-color: #333333; border-style: solid;\"></iframe>";
 	this.alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
+	this.lastChatboxValue = "";
 	this.lastY = null;
 	this.commandIndex = -1;
 	this.sendLast = false;
@@ -181,7 +183,7 @@ var Main = function() {
 	this.password = null;
 	this.token = null;
 	this.id = null;
-	this.basePath = "https://aqueous-api.herokuapp.com/";
+	this.basePath = "https://aqueous-basin.herokuapp.com/";
 	this.room = window.room;
 	this._buildCommands();
 	window.onload = $bind(this,this._windowLoaded);
@@ -196,7 +198,7 @@ Main.prototype = {
 		this.authHttp = new haxe_Http(this.basePath);
 		this.authHttp.onData = $bind(this,this._getAuth);
 		this.authHttp.onError = function(error) {
-			haxe_Log.trace(error,{ fileName : "Main.hx", lineNumber : 105, className : "Main", methodName : "_windowLoaded"});
+			haxe_Log.trace(error,{ fileName : "Main.hx", lineNumber : 109, className : "Main", methodName : "_windowLoaded"});
 			_g._addMessage("Could not connect to authentication api, please refresh the page.");
 		};
 		this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
@@ -206,7 +208,7 @@ Main.prototype = {
 			};
 		})($bind(this,this._parseMessages),false);
 		this.getHttp.onError = function(error1) {
-			haxe_Log.trace(error1,{ fileName : "Main.hx", lineNumber : 112, className : "Main", methodName : "_windowLoaded"});
+			haxe_Log.trace(error1,{ fileName : "Main.hx", lineNumber : 116, className : "Main", methodName : "_windowLoaded"});
 			_g.requestInProgress = false;
 		};
 		this.postHttp = new haxe_Http(this.basePath);
@@ -218,9 +220,10 @@ Main.prototype = {
 				_g.sendLast = true;
 				_g._tryAuth();
 			}
+			if(data == "failed-image") _g._addMessage("to prevent spam, images are disabled on this chatroom, you may ***/survey*** another chat where this restriction is not active.");
 		};
 		this.postHttp.onError = function(error2) {
-			haxe_Log.trace(error2,{ fileName : "Main.hx", lineNumber : 127, className : "Main", methodName : "_windowLoaded"});
+			haxe_Log.trace(error2,{ fileName : "Main.hx", lineNumber : 134, className : "Main", methodName : "_windowLoaded"});
 			_g.requestInProgress = false;
 		};
 		this.chatbox = window.document.getElementById("chatbox");
@@ -236,15 +239,16 @@ Main.prototype = {
 			this.favicons.push(f1);
 		}
 		this.messageSound = window.document.getElementById("messagesound");
+		window.document.title = "/" + this.room + ".";
 		window.onfocus = function() {
 			_g.focussed = true;
-			window.document.title = "aqueous-basin.";
+			window.document.title = "/" + _g.room + ".";
 			var _g12 = 0;
 			var _g2 = _g.favicons;
 			while(_g12 < _g2.length) {
 				var f2 = _g2[_g12];
 				++_g12;
-				f2.href = "bin/faviconempty.ico";
+				f2.href = "bin/img/faviconempty.ico";
 			}
 			_g._clearNotifications();
 		};
@@ -260,7 +264,7 @@ Main.prototype = {
 			_g._getNotificationPermission();
 			if(_g.token == null && !_g.hasTriedAuth) _g._tryAuth();
 		};
-		this.chatbox.oninput = function() {
+		this.chatbox.oninput = function(e) {
 			_g._getNotificationPermission();
 			if(_g.token == null && !_g.hasTriedAuth) _g._tryAuth();
 		};
@@ -278,17 +282,43 @@ Main.prototype = {
 				_g.chatbox.value = "";
 			}
 		};
-		this.chatbox.onkeydown = function(e) {
+		this.chatbox.onkeydown = function(e1) {
 			if(_g.chatbox.classList.contains("helptip")) {
 				_g.chatbox.classList.remove("helptip");
 				_g.chatbox.value = "";
 			}
+			var code = null;
+			if(e1 != null) if(e1.keyCode != null) code = e1.keyCode; else code = e1.which;
+			if(code == 9 || code == 38 || code == 40) e1.preventDefault();
+			if(code == 27) {
+				if(_g.chatbox.value == "/") {
+					_g.chatbox.value = "";
+					_g._filterHelp();
+				}
+			}
 		};
+		this.messages.onclick = function() {
+			if(_g.chatbox.value == "/") {
+				_g.chatbox.value = "";
+				_g._checkKeyPress({ which : 9, keyCode : 9});
+			}
+		};
+		if(this._inIframe()) {
+			var maximize;
+			var _this = window.document;
+			maximize = _this.createElement("button");
+			maximize.onclick = function() {
+				window.top.location.href = "http://slickrock.io/" + _g.room;
+				maximize.classList.add("faa-passing","animated","faa-fast");
+			};
+			maximize.classList.add("fa","fa-angle-double-right","floatingbutton");
+			window.document.body.appendChild(maximize);
+		}
 		if(!js_Cookie.exists("id")) this._getID(); else this._setID(js_Cookie.get("id"));
 		if(js_Cookie.exists("" + this.room + "-password")) this._setPassword(js_Cookie.get("" + this.room + "-password"));
 		if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
 		this._setupPrivateID();
-		if(this.room != "frontpage") this._loop();
+		this._loop();
 	}
 	,_testScrolling: function(e) {
 		var code = null;
@@ -306,7 +336,7 @@ Main.prototype = {
 				var histHttp = new haxe_Http(this.basePath);
 				histHttp.onError = function(e) {
 					_g.histRequestInProgress = false;
-					haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 237, className : "Main", methodName : "_tryGetOldMessages"});
+					haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 277, className : "Main", methodName : "_tryGetOldMessages"});
 				};
 				histHttp.onData = (function(f,a2) {
 					return function(a1) {
@@ -349,23 +379,20 @@ Main.prototype = {
 			} else if(printValid) {
 				_g._addMessage("authentication successful, chat away.");
 				_g.hasTriedAuth = false;
-				if(_g.sendLast) {
-					_g._postMessage(_g.lastMessage);
-					_g._update();
-				}
 			}
 		};
 		checkValid.onError = function(e) {
+			js_Cookie.remove("private");
+			js_Cookie.remove("token");
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 339, className : "Main", methodName : "_checkValid"});
 			_g._addMessage("an error occured getting authentication, please refresh the page.");
 		};
 		checkValid.request(true);
 	}
 	,_tryAuth: function() {
-		if(this.room != "frontpage") {
-			this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);
-			this.authHttp.request(true);
-			this.hasTriedAuth = true;
-		}
+		this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);
+		this.authHttp.request(true);
+		this.hasTriedAuth = true;
 	}
 	,_getAuth: function(data) {
 		this._addMessage("please enter the following to authenticate.");
@@ -420,13 +447,17 @@ Main.prototype = {
 	}
 	,_getNotificationPermission: function(force) {
 		if(force == null) force = false;
-		if(force || Notification.permission == "default") Notification.requestPermission(function(permission) {
-		});
+		if(force || Notification.permission == "default") {
+			var ua = window.navigator.userAgent;
+			if(!new EReg("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile","i").match(ua)) Notification.requestPermission(function(permission) {
+			});
+		}
 	}
 	,_sendNotification: function(text) {
 		if(Notification.permission == "granted") {
 			var options = { };
-			options.body = "aqueous-basin/" + this.room;
+			options.body = "slickrock.io/" + this.room;
+			options.icon = "http://slickrock.io/bin/img/notification.png";
 			if(this.notification == null) {
 				this.numNotifications = 1;
 				this.notification = new Notification(text,options);
@@ -436,13 +467,15 @@ Main.prototype = {
 				this.notification = new Notification("" + this.numNotifications + " new messages.",options);
 			}
 			this.notification.onclick = function() {
-				window.focus();
+				window.top.focus();
 			};
 		}
 	}
 	,_clearNotifications: function() {
-		this.notification.close();
-		this.notification = null;
+		if(this.notification != null) {
+			this.notification.close();
+			this.notification = null;
+		}
 	}
 	,_buildCommands: function() {
 		var _g = new haxe_ds_StringMap();
@@ -452,14 +485,18 @@ Main.prototype = {
 		_g.set("existent",{ identifiers : "<strong>/existent</strong>", description : "print the chat room you are currently in.", method : $bind(this,this._printRoom)});
 		_g.set("survey",{ identifiers : "<strong>/survey</strong> <em>ROOM</em>", description : "move to a different chat room.", method : $bind(this,this._changeRoom), requiresArgs : true});
 		_g.set("claim",{ identifiers : "<strong>/claim</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take ownership of the current room.", method : $bind(this,this._claimRoom), requiresArgs : true});
+		_g.set("reclaim",{ identifiers : "<strong>/reclaim</strong> <em>NEW_ADMIN_PASSWORD</em>", description : "attempt to change the admin password.", method : $bind(this,this._reclaimRoom), requiresArgs : true});
 		_g.set("entitle",{ identifiers : "<strong>/entitle</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take authorize youself as admin of the current room.", method : $bind(this,this._authorizeRoom), requiresArgs : true});
 		_g.set("fasten",{ identifiers : "<strong>/fasten</strong> <em>PUBLIC_PASSWORD</em>", description : "attempt to lock the current room.", method : $bind(this,this._lockRoom), requiresArgs : true});
 		_g.set("unfasten",{ identifiers : "<strong>/unfasten</strong>", description : "attempt to unlock the current room.", method : $bind(this,this._unlockRoom)});
+		_g.set("decontaminate",{ identifiers : "<strong>/decontaminate</strong> <em>ADMIN_PASSWORD</em>", description : "nuke all messages in the current room, use only in the case of extreme spam. <strong>THERE IS NO WAY TO UNDO THIS. ALL MESSAGES ARE GONE FOREVER.</strong>", method : $bind(this,this._emptyRoom)});
 		_g.set("typesetting",{ identifiers : "<strong>/typesetting</strong>", description : "display formatting help.", method : $bind(this,this._formatHelp)});
 		_g.set("encase",{ identifiers : "<strong>/encase</strong> <em>WIDTH</em> <em>HEIGHT</em>", description : "generates an embedable iframe with a simple default styling.", method : $bind(this,this._generateEmbed), requiresArgs : true});
 		_g.set("inform",{ identifiers : "<strong>/inform</strong>", description : "attempt to get notification permission if you denied it before.", method : $bind(this,this._notificationCommand)});
 		_g.set("legal",{ identifiers : "<strong>/legal</strong>", description : "display legal notes.", method : $bind(this,this._legal)});
+		_g.set("etiquette",{ identifiers : "<strong>/etiquette</strong>", description : "display guidelines for site usage, I recommend reading these before destroying this website, thank you.", method : $bind(this,this._rules)});
 		_g.set("commendation",{ identifiers : "<strong>/commendation</strong>", description : "list some people that really deserve being listed.", method : $bind(this,this._credits)});
+		_g.set("bestow",{ identifiers : "<strong>/bestow</strong>", description : "open a page where you may donate to keep the site afloat, if you are able.", method : $bind(this,this._donate)});
 		this.commandInfos = _g;
 		var $it0 = this.commandInfos.keys();
 		while( $it0.hasNext() ) {
@@ -494,7 +531,7 @@ Main.prototype = {
 			_g._printID();
 		};
 		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 523, className : "Main", methodName : "_getID"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 586, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
 		};
 		idHttp.request(true);
@@ -518,17 +555,37 @@ Main.prototype = {
 			return;
 		}
 		var newPassword = $arguments[0];
-		this._setAdminPassword(newPassword);
 		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
 		lockHttp.onData = function(d) {
 			if(d == "claimed") {
 				_g._addMessage("" + _g.room + " claimed.");
+				_g._setAdminPassword(newPassword);
 				_g._addMessage("you may consider ***/fasten***-ing it at any time.");
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 575, className : "Main", methodName : "_claimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 638, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
+		};
+		lockHttp.request(true);
+	}
+	,_reclaimRoom: function($arguments) {
+		var _g = this;
+		if($arguments.length == 0 || StringTools.trim($arguments[0]) == "") {
+			this._addMessage("**/reclaim** requires argument: *NEW_ADMIN_PASSWORD*.");
+			return;
+		}
+		var newPassword = $arguments[0];
+		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + this.adminPassword + "/" + newPassword));
+		lockHttp.onData = function(d) {
+			if(d == "claimed") {
+				_g._addMessage("" + _g.room + " reclaimed.");
+				_g._setAdminPassword(newPassword);
+			} else _g._addMessage("you are not authorized to reclaim " + _g.room + ".");
+		};
+		lockHttp.onError = function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 662, className : "Main", methodName : "_reclaimRoom"});
+			_g._addMessage("failed to connect to api, couldn't reclaim room.");
 		};
 		lockHttp.request(true);
 	}
@@ -546,7 +603,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 600, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 687, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -563,7 +620,7 @@ Main.prototype = {
 			return;
 		}
 		var embed = this.embedTemplate;
-		embed = StringTools.replace(embed,"[SRC]","https://aqueous-basin.herokuapp.com/" + this.room);
+		embed = StringTools.replace(embed,"[SRC]","http://slickrock.io/" + this.room);
 		embed = StringTools.replace(embed,"[WIDTH]",width == null?"null":"" + width);
 		embed = StringTools.replace(embed,"[HEIGHT]",height == null?"null":"" + height);
 		this._addMessage("`" + embed + "`");
@@ -587,7 +644,7 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 655, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 742, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
@@ -599,8 +656,21 @@ Main.prototype = {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 673, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 760, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
+		};
+		lockHttp.request(true);
+	}
+	,_emptyRoom: function(args) {
+		var _g = this;
+		if(args.length == 0) this._addMessage("**/decontaminate** requires argument: *ADMIN_PASSWORD*, this is to ensure you understand what you are doing.");
+		var lockHttp = new haxe_Http(this.basePath + ("api/empty/" + this.room + "/" + args[0]));
+		lockHttp.onData = function(d) {
+			if(d == "emptied") _g._addMessage("" + _g.room + " emptied."); else _g._addMessage("you are not authorized to empty " + _g.room + ".");
+		};
+		lockHttp.onError = function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 781, className : "Main", methodName : "_emptyRoom"});
+			_g._addMessage("failed to connect to api, couldn't empty room.");
 		};
 		lockHttp.request(true);
 	}
@@ -619,22 +689,44 @@ Main.prototype = {
 	,_legal: function(_) {
 		this._addMessage("slickrock.io is (c) 2015 Nico May.");
 		this._addMessage("wordlists used with permission from gfycat.com");
-		this._addMessage("homepage background image taken by Nicholas A. Tonelli, licensed as https://creativecommons.org/licenses/by/2.0/. Image was edited (blurred).");
 	}
 	,_credits: function(_) {
 		this._addMessage("Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).");
 		this._addMessage("Assorted help and testing: @dimensive, @gamesbybeta, @Zanzlanz.");
+		this._addMessage("Additional images: @nathanwentworth.");
+		this._addMessage("slickrock.io is crafted in Haxe, the backend is helped by the Abe library.");
+	}
+	,_rules: function(_) {
+		this._addMessage("slickrock.io is not meant to allow people to say or show horrible things.");
+		this._addMessage("should your intention in coming to this site be to say or show inappropriate things, please go somewhere else, there are plenty of well established dirty corners of the internet, this doesn't need to become one.");
+		this._addMessage("rooms, especially public ones, displaying content deemed unacceptable, under my own personal judgment, will be removed.");
+		this._addMessage("should the content of these rooms warrant it, your IP address will be reported to the proper authorities, you have been warned.");
+		this._addMessage("apologies for that, to all the genuine users of this site, I hope you enjoy it, and don't worry about subtle things like swear words or the like, but if it seems like you should make something private, preferably make it private.");
+		this._addMessage("thank you, and enjoy the site.");
+	}
+	,_donate: function(_) {
+		this._openInNewTab("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=nico%2emay99%40gmail%2ecom&lc=CA&item_name=slickrock%2eio&currency_code=CAD&bn=PP%2dDonationsBF%3a%26text%3ddonate%2e%3aNonHosted");
 	}
 	,_parseMessages: function(data,hist) {
 		if(hist == null) hist = false;
 		if(data == "locked") {
+			if(this.token == null) {
+				if(!this.hasTriedAuth) this._tryAuth();
+				this.requestInProgress = false;
+				return;
+			}
 			if(!this.locked) this._addMessage("room is locked, please enter password.");
 			this.locked = true;
 			this.requestInProgress = false;
 			this.wasLocked = true;
 			return;
 		}
-		if(!this.wasLocked && data == "password") {
+		if(data == "password") {
+			if(this.token == null) {
+				if(!this.hasTriedAuth) this._tryAuth();
+				this.requestInProgress = false;
+				return;
+			}
 			if(!this.locked) this._addMessage("incorrect password, please resend password.");
 			this.locked = true;
 			this.requestInProgress = false;
@@ -648,6 +740,7 @@ Main.prototype = {
 		if(this.wasLocked) {
 			this._addMessage("successfully unlocked.");
 			this.wasLocked = false;
+			this.locked = false;
 		}
 		var parsed = JSON.parse(data);
 		var _g1 = 0;
@@ -657,15 +750,15 @@ Main.prototype = {
 			var ii = i;
 			if(hist) ii = parsed.messages.messages.length - 1 - i;
 			var p = parsed.messages.messages[ii];
-			var message = this._addMessage(p.text,p.id,null,hist);
-			if(!this.focussed && !this.first) {
-				window.document.title = "# aqueous-basin.";
+			var message = this._addMessage(p.text,p.id,null,hist,true,this.first,p._id);
+			if(!hist && !this.focussed && !this.first) {
+				window.document.title = "# /" + this.room + ".";
 				var _g2 = 0;
 				var _g3 = this.favicons;
 				while(_g2 < _g3.length) {
 					var f = _g3[_g2];
 					++_g2;
-					f.href = "bin/favicon.ico";
+					f.href = "bin/img/favicon.ico";
 				}
 				this.messageSound.play();
 				this._sendNotification(message.innerText != null?message.innerText:message.textContent);
@@ -686,15 +779,30 @@ Main.prototype = {
 			var t1 = _g12[_g5];
 			++_g5;
 			if(t1 != this.id) {
-				var typeMessage;
-				var _this = window.document;
-				typeMessage = _this.createElement("div");
-				typeMessage.className = "messageitem";
-				typeMessage.innerHTML = "typing...";
-				var message1 = { id : t1, chevron : this._makeSpan(true,t1), message : typeMessage};
-				this.typings.push(message1);
-				this.messages.appendChild(message1.chevron);
-				this.messages.appendChild(message1.message);
+				var typeMessage = [(function($this) {
+					var $r;
+					var _this = window.document;
+					$r = _this.createElement("div");
+					return $r;
+				}(this))];
+				typeMessage[0].className = "messageitem";
+				typeMessage[0].innerHTML = "<br/>";
+				var message1;
+				var _this1 = window.document;
+				message1 = _this1.createElement("div");
+				message1.classList.add("messageblock");
+				message1.setAttribute("data-id",t1);
+				var chevron = this._makeSpan(true,t1);
+				this.messages.appendChild(chevron);
+				this.messages.appendChild(message1);
+				var messageD = { id : t1, chevron : chevron, message : message1};
+				message1.appendChild(typeMessage[0]);
+				haxe_Timer.delay((function(typeMessage) {
+					return function() {
+						typeMessage[0].classList.add("loaded");
+					};
+				})(typeMessage),10);
+				this.typings.push(messageD);
 				this._tryScroll();
 			}
 		}
@@ -710,7 +818,7 @@ Main.prototype = {
 				return function() {
 					f1(a1);
 				};
-			})($bind(this,this._openImageInNewTab),image.src);
+			})($bind(this,this._openInNewTab),image.src);
 			if(!this.first) i1.onload = (function(f2,a11,a2) {
 				return function() {
 					f2(a11,a2);
@@ -731,7 +839,7 @@ Main.prototype = {
 	}
 	,_tryScroll: function(force,img) {
 		if(force == null) force = false;
-		if(this.room != "frontpage" && (force || this._atBottom(img))) {
+		if(force || this._atBottom(img)) {
 			window.scrollTo(0,this.messages.scrollHeight);
 			this.initialScroll = false;
 		}
@@ -742,7 +850,8 @@ Main.prototype = {
 		if(window.innerHeight + window.scrollY + offset >= this.messages.offsetHeight) return true;
 		return false;
 	}
-	,_addMessage: function(msg,id,customHTML,hist,safe) {
+	,_addMessage: function(msg,id,customHTML,hist,safe,first,_id) {
+		if(first == null) first = false;
 		if(safe == null) safe = true;
 		if(hist == null) hist = false;
 		msg = this._parseMessage(msg,safe);
@@ -752,8 +861,14 @@ Main.prototype = {
 		if(differentUser) {
 			var _this = window.document;
 			message = _this.createElement("div");
-			message.className = "messageblock";
+			message.classList.add("messageblock");
 			message.setAttribute("data-id",id);
+			message.setAttribute("data-objectid",_id);
+			if(_id != null) message.onclick = (function(f,id1) {
+				return function(e) {
+					f(e,id1);
+				};
+			})($bind(this,this._tryDeleteMessage),_id);
 			this.lastParagraph = message;
 			this.messages.appendChild(this._makeSpan(differentUser,id));
 			this.messages.appendChild(message);
@@ -761,7 +876,7 @@ Main.prototype = {
 		var messageItem;
 		var _this1 = window.document;
 		messageItem = _this1.createElement("div");
-		messageItem.className = "messageitem";
+		messageItem.classList.add("messageitem");
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		var offset = 0;
 		if(!hist) message.appendChild(messageItem); else {
@@ -773,7 +888,7 @@ Main.prototype = {
 			} else {
 				var _this2 = window.document;
 				message = _this2.createElement("div");
-				message.className = "messageblock";
+				message.classList.add("messageblock");
 				message.setAttribute("data-id",id);
 				this.messages.insertBefore(message,this.messages.children[0]);
 				this.messages.insertBefore(this._makeSpan(true,id),this.messages.children[0]);
@@ -784,8 +899,28 @@ Main.prototype = {
 		if(!hist) {
 			this._tryScroll();
 			this.lastUserID = id;
-		} else window.document.body.scrollTop += offset | 0;
+			if(!first) haxe_Timer.delay(function() {
+				messageItem.classList.add("loaded");
+			},10); else messageItem.classList.add("non-anim");
+		} else {
+			window.document.body.scrollTop += offset | 0;
+			messageItem.classList.add("non-anim");
+		}
 		return messageItem;
+	}
+	,_tryDeleteMessage: function(e,id) {
+		var _g = this;
+		if(e.ctrlKey && e.shiftKey && e.altKey) {
+			var lockHttp = new haxe_Http(this.basePath + ("api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + id));
+			lockHttp.onData = function(d) {
+				if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
+			};
+			lockHttp.onError = function(e1) {
+				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1061, className : "Main", methodName : "_tryDeleteMessage"});
+				_g._addMessage("failed to connect to api, couldn't delete message.");
+			};
+			lockHttp.request(true);
+		}
 	}
 	,_parseMessage: function(raw,safe) {
 		if(safe == null) safe = true;
@@ -878,28 +1013,33 @@ Main.prototype = {
 			} else if(code != 13 && code != 32) this._filterHelp();
 			if(this.selectedElem != null) {
 				var command = this.selectedElem.getAttribute("data-command");
-				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1001, className : "Main", methodName : "_checkKeyPress"});
+				haxe_Log.trace(command,{ fileName : "Main.hx", lineNumber : 1190, className : "Main", methodName : "_checkKeyPress"});
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
-					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && code == 13) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1005, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1194, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
-						if(code == 13 && this.commandInfos.get(command).requiresArgs == true) return;
+						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
+							this.chatbox.focus();
+							return;
+						}
 					}
 				}
 			}
 		} else {
 			this.helpbox.style.display = "none";
-			if(code != 27 && !this.locked && this.token != null) {
+			if(!this.locked && this.token != null) {
 				if(this.canSendTypingNotification) {
-					var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
-					typingHttp.request(true);
-					this.canSendTypingNotification = false;
-					var timer = new haxe_Timer(2500);
-					timer.run = function() {
-						_g.canSendTypingNotification = true;
-					};
+					if(this.chatbox.value != this.lastChatboxValue) {
+						var typingHttp = new haxe_Http(this.basePath + ("api/typing/" + this.room + "/" + this.id));
+						typingHttp.request(true);
+						this.canSendTypingNotification = false;
+						haxe_Timer.delay(function() {
+							_g.canSendTypingNotification = true;
+						},2500);
+					}
+					this.lastChatboxValue = this.chatbox.value;
 				}
 			}
 		}
@@ -917,7 +1057,6 @@ Main.prototype = {
 					this._setPassword(this.chatbox.value);
 					this.chatbox.value = "";
 					this.helpbox.style.display = "none";
-					this.locked = false;
 					return;
 				}
 				this._postMessage(this.chatbox.value);
@@ -956,14 +1095,12 @@ Main.prototype = {
 		}
 	}
 	,_postMessage: function(msg) {
-		if(this.room != "frontpage") {
-			if(StringTools.trim(msg) != "") {
-				if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
-				this.postHttp.request(true);
-			}
-		} else this._addMessage("you may not chat on the front page, please try ***/survey***.");
+		if(StringTools.trim(msg) != "") {
+			if(this.password == null) this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.id + "/" + this.privateID + "/" + this.token; else this.postHttp.url = this.basePath + "chat/" + encodeURIComponent(msg) + "/" + this.room + "/" + this.password + "/" + this.id + "/" + this.privateID + "/" + this.token;
+			this.postHttp.request(true);
+		}
 	}
-	,_openImageInNewTab: function(src) {
+	,_openInNewTab: function(src) {
 		var win = window.open(src,"_blank");
 		win.focus();
 	}
@@ -977,6 +1114,9 @@ Main.prototype = {
 			span.style.color = this._generateColorFromID(id);
 		}
 		span.innerHTML += "\t";
+		if(!this.first) haxe_Timer.delay(function() {
+			span.classList.add("loaded");
+		},10); else span.classList.add("non-anim");
 		return span;
 	}
 	,_generateColorFromID: function(id,dark) {
@@ -1015,6 +1155,15 @@ Main.prototype = {
 	,_setAdminPassword: function(password_) {
 		this.adminPassword = password_;
 		js_Cookie.set("" + this.room + "admin-password",this.adminPassword,315360000);
+	}
+	,_inIframe: function() {
+		try {
+			return window.self != window.top;
+		} catch( e ) {
+			haxe_CallStack.lastException = e;
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+			return true;
+		}
 	}
 	,__class__: Main
 };
@@ -1649,6 +1798,9 @@ js_Cookie.get = function(name) {
 };
 js_Cookie.exists = function(name) {
 	return js_Cookie.all().exists(name);
+};
+js_Cookie.remove = function(name,path,domain) {
+	js_Cookie.set(name,"",-10,path,domain);
 };
 var thx_Arrays = function() { };
 thx_Arrays.__name__ = true;
