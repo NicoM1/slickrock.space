@@ -508,8 +508,9 @@ RouteHandler.prototype = {
 			Main.emptyTyping(room,id);
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
-				Main.rooms.get(room).messages.push({ text : message, id : id});
-				Main.saveMessage({ text : message, id : id, room : room, _id : new js_node_mongodb_ObjectID()});
+				var objectid = new js_node_mongodb_ObjectID();
+				Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid});
+				Main.saveMessage({ text : message, id : id, room : room, _id : objectid});
 				if(Main.userCounts.get(room) == null) {
 					var v = [];
 					Main.userCounts.set(room,v);

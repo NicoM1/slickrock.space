@@ -298,8 +298,9 @@ class RouteHandler implements abe.IRoute {
 
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt+password)) {
-				Main.rooms.get(room).messages.push( { text: message, id: id } );
-				Main.saveMessage( { text: message, id: id, room: room, _id: new ObjectID() } );
+				var objectid = new ObjectID();
+				Main.rooms.get(room).messages.push( { text: message, id: id,  _id: objectid} );
+				Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
 				if (Main.userCounts[room] == null) {
 					Main.userCounts[room] = [];
 				}

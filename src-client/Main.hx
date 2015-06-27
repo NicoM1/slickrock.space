@@ -875,6 +875,8 @@ class Main
 			var p = parsed.messages.messages[ii];
 			var message = _addMessage(p.text, p.id, hist, true, first);
 
+			trace(p._id);
+
 			if (!hist && !focussed && !first) {
 				Browser.document.title = '# /$room.';
 				for (f in favicons) {
