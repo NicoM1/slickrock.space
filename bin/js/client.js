@@ -911,7 +911,7 @@ Main.prototype = {
 	,_tryDeleteMessage: function(e,id) {
 		var _g = this;
 		if(e.ctrlKey && e.shiftKey && e.altKey) {
-			var lockHttp = new haxe_Http(this.basePath + ("/api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + Std.string(id)));
+			var lockHttp = new haxe_Http(this.basePath + ("api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + id));
 			lockHttp.onData = function(d) {
 				if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 			};
