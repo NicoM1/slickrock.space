@@ -82,14 +82,14 @@ h3{
 /* buttons */
 
 .btn-block{
-	border: 2px solid #ddd;
+	border: 2px solid #fefefe;
 	background: none;
 	border-radius: 5px;
 	color: #ddd;
 }
 .btn-block:hover{
 	background-color: #fefefe;
-	border-color: #fefefe;
+	border: 2px solid #fefefe;
 	color: #222;
 }
 
