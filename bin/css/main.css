@@ -141,12 +141,15 @@ nav.scrolled-past{
 	opacity: .8;
 }
 
-.jumbotron .btn{
+#header .btn,
+#header .btn:active,
+#header .btn:active:not(:active){
 	border: 2px solid #fff;
 	background: none;
 	border-radius: 10px;
 }
-.jumbotron .btn:hover{
+#header .btn:hover,
+#header .btn:hover:active{
 	background-color: #fff;
 	color: #222;
 }
