@@ -381,7 +381,7 @@ Main._parseMessages = function() {
 					var value1 = { messages : [], lock : null, pw : null, typing : []};
 					Main.rooms.set(m.room,value1);
 				}
-				Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id});
+				Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id, _id : m._id});
 			}
 		});
 	});
@@ -451,15 +451,6 @@ Main.prototype = {
 			Main._parseMessages();
 		});
 	}
-	,_test: function(room,id,message) {
-		if(!Main.rooms.exists(room)) {
-			var value = { messages : [], lock : null, pw : null, typing : []};
-			Main.rooms.set(room,value);
-		}
-		Main.emptyTyping(room,id);
-		Main.rooms.get(room).messages.push({ text : message, id : id});
-		Main.saveMessage({ text : message, id : id, room : room});
-	}
 	,__class__: Main
 };
 var abe_IRoute = function() { };
@@ -518,7 +509,7 @@ RouteHandler.prototype = {
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
 				Main.rooms.get(room).messages.push({ text : message, id : id});
-				Main.saveMessage({ text : message, id : id, room : room});
+				Main.saveMessage({ text : message, id : id, room : room, _id : new js_node_mongodb_ObjectID()});
 				if(Main.userCounts.get(room) == null) {
 					var v = [];
 					Main.userCounts.set(room,v);
@@ -2324,6 +2315,7 @@ js_node_mongodb_MongoAuthOption.prototype = {
 	authMechanism: null
 	,__class__: js_node_mongodb_MongoAuthOption
 };
+var js_node_mongodb_ObjectID = require("mongodb").ObjectID;
 var npm_QS = require("qs");
 var thx_Arrays = function() { };
 thx_Arrays.__name__ = ["thx","Arrays"];

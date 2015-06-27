@@ -16,6 +16,7 @@ import js.Node;
 
 import js.node.mongodb.MongoClient;
 import js.node.mongodb.MongoDatabase;
+import js.node.mongodb.ObjectID;
 
 import express.Express;
 
@@ -70,22 +71,6 @@ class Main {
 			mongodb = db;
 			_parseMessages();
 		});
-	}
-
-	function _test(room: String, id: String, message: String) {
-		if (!Main.rooms.exists(room)) {
-			Main.rooms.set(room, {
-				messages: new Array<Message>(),
-				lock: null,
-				pw: null,
-				typing: []
-			});
-		}
-
-		Main.emptyTyping(room, id);
-
-		Main.rooms.get(room).messages.push( { text: message, id: id } );
-		Main.saveMessage( { text: message, id: id, room: room} );
 	}
 
 	public static function clearTyping(room: String, id: String) {
@@ -172,7 +157,7 @@ class Main {
 								typing: []
 							});
 						}
-						rooms.get(m.room).messages.push( { text: m.text, id: m.id } );
+						rooms.get(m.room).messages.push( { text: m.text, id: m.id, _id: m._id } );
 					}
 				});
 			}
@@ -314,7 +299,7 @@ class RouteHandler implements abe.IRoute {
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt+password)) {
 				Main.rooms.get(room).messages.push( { text: message, id: id } );
-				Main.saveMessage( { text: message, id: id, room: room } );
+				Main.saveMessage( { text: message, id: id, room: room, _id: new ObjectID() } );
 				if (Main.userCounts[room] == null) {
 					Main.userCounts[room] = [];
 				}
