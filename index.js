@@ -691,16 +691,6 @@ RouteHandler.prototype = {
 		response.send("failed");
 	}
 	,deleteMessage: function(room,privatePass,id,request,response,next) {
-		room = room.toLowerCase();
-		var roomE = Main.rooms.get(room);
-		if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
-			Main.deleteMessage(room,id);
-			response.setHeader("Access-Control-Allow-Origin","*");
-			response.send("deleted");
-			return;
-		}
-		response.setHeader("Access-Control-Allow-Origin","*");
-		response.send("failed");
 	}
 	,unlockRoom: function(room,privateID,privatePass,request,response,next) {
 		room = room.toLowerCase();

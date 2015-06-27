@@ -503,7 +503,7 @@ class RouteHandler implements abe.IRoute {
 
 	@:post('/api/deleteMessage/:room/:privatePass/:id')
 	function deleteMessage(room: String, privatePass: String, id: ObjectID) {
-		room = room.toLowerCase();
+		/*room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
 			Main.deleteMessage(room, id);
@@ -512,7 +512,7 @@ class RouteHandler implements abe.IRoute {
 			return;
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');
-		response.send('failed');
+		response.send('failed');*/
 	}
 
 	@:post('/api/unlock/:room/:privateID/:privatePass')
