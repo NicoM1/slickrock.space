@@ -339,6 +339,23 @@ Main.emptyRoom = function(room) {
 		if(e == null) database.remove({ room : room});
 	});
 };
+Main.deleteMessage = function(room,id) {
+	if(Main.rooms.get(room) == null) return;
+	var _g = 0;
+	var _g1 = Main.rooms.get(room).messages;
+	while(_g < _g1.length) {
+		var m = _g1[_g];
+		++_g;
+		if(m._id == id) {
+			var _this = Main.rooms.get(room).messages;
+			HxOverrides.remove(_this,m);
+			break;
+		}
+	}
+	Main.mongodb.collection("messages",function(e,database) {
+		if(e == null) database.remove({ room : room, _id : id});
+	});
+};
 Main._parseMessages = function() {
 	Main.mongodb.collection("roominfo",function(e,database) {
 		if(e == null) database.find({ }).toArray(function(e1,r) {
