@@ -239,7 +239,7 @@ var Main = function() {
 		var processor14 = new abe_core_ArgumentProcessor(filters14,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]},{ name : "id", optional : false, type : "js.node.mongodb.ObjectID", sources : ["params"]}]);
 		var process14 = new RouteHandler_$deleteMessage_$RouteProcess({ room : null, privatePass : null, id : null},instance,processor14);
 		var uses14 = [];
-		router.registerMethod("/api/empty/:room/:privatePass","post",process14,uses14,[]);
+		router.registerMethod("/api/deleteMessage/:room/:privatePass/:id","post",process14,uses14,[]);
 		var filters15 = new abe_core_ArgumentsFilter();
 		var processor15 = new abe_core_ArgumentProcessor(filters15,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "privateID", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
 		var process15 = new RouteHandler_$unlockRoom_$RouteProcess({ room : null, privateID : null, privatePass : null},instance,processor15);
