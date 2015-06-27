@@ -863,7 +863,7 @@ Main.prototype = {
 			message = _this.createElement("div");
 			message.classList.add("messageblock");
 			message.setAttribute("data-id",id);
-			message.setAttribute("data-objectid",_id.toHexString());
+			message.setAttribute("data-objectid",_id);
 			this.lastParagraph = message;
 			this.messages.appendChild(this._makeSpan(differentUser,id));
 			this.messages.appendChild(message);

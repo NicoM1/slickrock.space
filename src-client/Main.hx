@@ -983,7 +983,7 @@ class Main
 			message = Browser.document.createDivElement();
 			message.classList.add('messageblock');
 			message.setAttribute('data-id', id);
-			message.setAttribute('data-objectid', _id.toHexString());
+			message.setAttribute('data-objectid', cast _id);
 
 			lastParagraph = message;
 
