@@ -79,17 +79,22 @@ h3{
 	font-weight: 100;
 }
 
+.container.mobile-container h2{
+	margin-bottom: 45px;
+	margin-top: 30px;
+}
+
 /* buttons */
 
 .btn-block{
-	border: 2px solid #ddd;
+	border: 2px solid #fefefe;
 	background: none;
 	border-radius: 5px;
 	color: #ddd;
 }
 .btn-block:hover{
 	background-color: #fefefe;
-	border-color: #fefefe;
+	border: 2px solid #fefefe;
 	color: #222;
 }
 
