@@ -112,7 +112,7 @@ class Main {
 		});
 	}
 
-	public static function deleteMessage(room: String, id: ObjectID) {
+	/*public static function deleteMessage(room: String, id: ObjectID) {
 		for(m in rooms[room].messages) {
 			if(m._id == id) {
 				rooms[room].messages.remove(m);
@@ -127,7 +127,7 @@ class Main {
 				});
 			}
 		});
-	}
+	}*/
 
 	static function _parseMessages() {
 		mongodb.collection('roominfo', function(e, database) {
@@ -500,7 +500,7 @@ class RouteHandler implements abe.IRoute {
 		response.send('failed');
 	}
 
-	@:post('/api/deleteMessage/:room/:privatePass/:id')
+	/*@:post('/api/deleteMessage/:room/:privatePass/:id')
 	function deleteMessage(room: String, privatePass: String, id: ObjectID) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
@@ -512,7 +512,7 @@ class RouteHandler implements abe.IRoute {
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('failed');
-	}
+	}*/
 
 	@:post('/api/unlock/:room/:privateID/:privatePass')
 	function unlockRoom(room: String, privateID: String, privatePass: String) {
