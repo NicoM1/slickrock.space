@@ -335,76 +335,90 @@ Main.emptyTyping = function(room,id) {
 };
 Main.emptyRoom = function(room) {
 	Main.rooms.get(room).messages = [];
-	Main.mongodb.collection("messages").remove({ room : room});
+	Main.mongodb.collection("messages",function(e,database) {
+		if(e == null) database.remove({ room : room});
+	});
 };
 Main._parseMessages = function() {
-	Main.mongodb.collection("roominfo").find().toArray(function(e,r) {
-		if(e != null) {
-			console.log(e);
-			return;
-		}
-		var roominfo = r;
-		var _g = 0;
-		while(_g < roominfo.length) {
-			var r1 = roominfo[_g];
-			++_g;
-			if(!Main.rooms.exists(r1._id)) {
-				var value = { messages : [], lock : null, pw : null, typing : []};
-				Main.rooms.set(r1._id,value);
+	Main.mongodb.collection("roominfo",function(e,database) {
+		if(e == null) database.find({ }).toArray(function(e1,r) {
+			if(e1 != null) {
+				console.log(e1);
+				return;
 			}
-			if(r1.users != null) {
-				var v = r1.users;
-				Main.userCounts.set(r1._id,v);
-				v;
+			var roominfo = r;
+			var _g = 0;
+			while(_g < roominfo.length) {
+				var r1 = roominfo[_g];
+				++_g;
+				if(!Main.rooms.exists(r1._id)) {
+					var value = { messages : [], lock : null, pw : null, typing : []};
+					Main.rooms.set(r1._id,value);
+				}
+				if(r1.users != null) {
+					var v = r1.users;
+					Main.userCounts.set(r1._id,v);
+					v;
+				}
+				Main.rooms.get(r1._id).lock = r1.lock;
+				Main.rooms.get(r1._id).pw = r1.pw;
+				Main.rooms.get(r1._id).salt = r1.salt;
 			}
-			Main.rooms.get(r1._id).lock = r1.lock;
-			Main.rooms.get(r1._id).pw = r1.pw;
-			Main.rooms.get(r1._id).salt = r1.salt;
-		}
+		});
 	});
-	Main.mongodb.collection("messages").find().sort({ _id : 1}).toArray(function(e1,r2) {
-		if(e1 != null) {
-			console.log(e1);
-			return;
-		}
-		var messages = r2;
-		var _g1 = 0;
-		while(_g1 < messages.length) {
-			var m = messages[_g1];
-			++_g1;
-			if(!Main.rooms.exists(m.room)) {
-				var value1 = { messages : [], lock : null, pw : null, typing : []};
-				Main.rooms.set(m.room,value1);
+	Main.mongodb.collection("messages",function(e2,database1) {
+		if(e2 == null) database1.find({ }).sort({ _id : 1}).toArray(function(e3,r2) {
+			if(e3 != null) {
+				console.log(e3);
+				return;
 			}
-			Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id});
-		}
+			var messages = r2;
+			var _g1 = 0;
+			while(_g1 < messages.length) {
+				var m = messages[_g1];
+				++_g1;
+				if(!Main.rooms.exists(m.room)) {
+					var value1 = { messages : [], lock : null, pw : null, typing : []};
+					Main.rooms.set(m.room,value1);
+				}
+				Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id});
+			}
+		});
 	});
-	Main.mongodb.collection("tokens").find().toArray(function(e2,r3) {
-		if(e2 != null) {
-			console.log(e2);
-			return;
-		}
-		var tokenos = r3;
-		var _g2 = 0;
-		while(_g2 < tokenos.length) {
-			var t = tokenos[_g2];
-			++_g2;
-			var v1 = t.token;
-			Main.tokens.set(t._id,v1);
-			v1;
-		}
+	Main.mongodb.collection("tokens",function(e4,database2) {
+		if(e4 == null) database2.find({ }).toArray(function(e5,r3) {
+			if(e5 != null) {
+				console.log(e5);
+				return;
+			}
+			var tokenos = r3;
+			var _g2 = 0;
+			while(_g2 < tokenos.length) {
+				var t = tokenos[_g2];
+				++_g2;
+				var v1 = t.token;
+				Main.tokens.set(t._id,v1);
+				v1;
+			}
+		});
 	});
 };
 Main.saveMessage = function(msg) {
-	if(Main.mongodb != null) Main.mongodb.collection("messages").insertOne(msg,function(e,r) {
-		if(e != null) console.log(e);
+	if(Main.mongodb != null) Main.mongodb.collection("messages",function(e,database) {
+		if(e == null) database.insertOne(msg,{ },function(e1,r) {
+			if(e1 != null) console.log(e1);
+		});
 	}); else console.log("mongo null");
 };
 Main.roomInfo = function(roomInfo) {
-	Main.mongodb.collection("roominfo").save(roomInfo);
+	Main.mongodb.collection("roominfo",function(e,database) {
+		if(e == null) database.save(roomInfo);
+	});
 };
 Main.saveToken = function(token) {
-	Main.mongodb.collection("tokens").save(token);
+	Main.mongodb.collection("tokens",function(e,database) {
+		if(e == null) database.save(token);
+	});
 };
 Main.getUserID = function() {
 	var rand = new Random(new Date().getTime());
@@ -2302,6 +2316,14 @@ js_html_compat_Uint8Array._subarray = function(start,end) {
 var js_node_Fs = require("fs");
 var js_node_Http = require("http");
 var js_node_Https = require("https");
+var js_node_mongodb_MongoAuthOption = function() {
+	this.authMechanism = "MONGODB - CR";
+};
+js_node_mongodb_MongoAuthOption.__name__ = ["js","node","mongodb","MongoAuthOption"];
+js_node_mongodb_MongoAuthOption.prototype = {
+	authMechanism: null
+	,__class__: js_node_mongodb_MongoAuthOption
+};
 var npm_QS = require("qs");
 var thx_Arrays = function() { };
 thx_Arrays.__name__ = ["thx","Arrays"];
@@ -5686,6 +5708,8 @@ haxe_io_FPHelper.i64tmp = (function($this) {
 }(this));
 js_Boot.__toStr = {}.toString;
 js_html_compat_Uint8Array.BYTES_PER_ELEMENT = 1;
+js_node_mongodb_MongoAuthOption.MONGO_CR = "MONGODB - CR";
+js_node_mongodb_MongoAuthOption.GSSAPI = "GSSAPI";
 thx_Floats.TOLERANCE = 10e-5;
 thx_Floats.EPSILON = 10e-10;
 thx_Floats.pattern_parse = new EReg("^(\\+|-)?\\d+(\\.\\d+)?(e-?\\d+)?$","");

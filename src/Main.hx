@@ -14,10 +14,12 @@ import js.node.Fs;
 import js.Error;
 import js.Node;
 
+import js.node.mongodb.MongoClient;
+import js.node.mongodb.MongoDatabase;
+
 import express.Express;
 
 using StringTools;
-
 
 typedef RoomMetric = {
 	room: String,
@@ -37,9 +39,9 @@ class Main {
 	static var animalWords: Array<String>;
 	static var adjectives: Array<String>;
 
-	var MongoClient: Dynamic;
+	var MongoClient: MongoClient;
 	var mongoUrl = '';
-	static var mongodb: Dynamic;
+	static var mongodb: MongoDatabase;
 
 	function new() {
 		animalWords = Fs.readFileSync('bin/animals.txt', { encoding: 'utf8' } ).split('\n');
@@ -61,7 +63,7 @@ class Main {
 		MongoClient = Lib.require('mongodb').MongoClient;
 
 		mongoUrl = Node.process.env['MONGOLAB_URL'];
-		MongoClient.connect(mongoUrl, function(err, db) {
+		MongoClient.Connect(mongoUrl, function(err, db) {
 			if (err != null) {
 				trace(err);
 			}
@@ -116,70 +118,91 @@ class Main {
 
 	public static function emptyRoom(room: String) {
 		rooms[room].messages = [];
-		mongodb.collection('messages').remove({
-			room: room
+		mongodb.collection('messages', function(e, database) {
+			if(e == null) {
+				database.remove({
+					room: room
+				});
+			}
 		});
 	}
 
 	static function _parseMessages() {
-		mongodb.collection('roominfo').find().toArray(function(e, r) {
-			if (e != null) {
-				trace(e);
-				return;
-			}
-			var roominfo: Array<RoomInfo> = cast r;
-			for (r in roominfo) {
-				if (!rooms.exists(r._id)) {
-					rooms.set(r._id, {
-						messages: new Array<Message>(),
-						lock: null,
-						pw: null,
-						typing: []
-					});
-				}
-				if (r.users != null) {
-					userCounts[r._id] = r.users;
-				}
-				rooms.get(r._id).lock = r.lock;
-				rooms.get(r._id).pw = r.pw;
-				rooms.get(r._id).salt = r.salt;
-			}
-		});
-		mongodb.collection('messages').find().sort( { _id:1 } ).toArray(function(e, r) {
-			if (e != null) {
-				trace(e);
-				return;
-			}
-			var messages: Array<MessageObject> = cast r;
-			for (m in messages) {
-				if (!rooms.exists(m.room)) {
-					rooms.set(m.room, {
-						messages: new Array<Message>(),
-						lock: null,
-						pw: null,
-						typing: []
-					});
-				}
-				rooms.get(m.room).messages.push( { text: m.text, id: m.id } );
+		mongodb.collection('roominfo', function(e, database) {
+			if(e == null) {
+				database.find({}).toArray(function(e, r) {
+					if (e != null) {
+						trace(e);
+						return;
+					}
+					var roominfo: Array<RoomInfo> = cast r;
+					for (r in roominfo) {
+						if (!rooms.exists(r._id)) {
+							rooms.set(r._id, {
+								messages: new Array<Message>(),
+								lock: null,
+								pw: null,
+								typing: []
+							});
+						}
+						if (r.users != null) {
+							userCounts[r._id] = r.users;
+						}
+						rooms.get(r._id).lock = r.lock;
+						rooms.get(r._id).pw = r.pw;
+						rooms.get(r._id).salt = r.salt;
+					}
+				});
 			}
 		});
-		mongodb.collection('tokens').find().toArray(function(e, r) {
-			if (e != null) {
-				trace(e);
-				return;
+		mongodb.collection('messages', function(e, database) {
+			if(e == null) {
+				database.find({}).sort( { _id:1 } ).toArray(function(e, r) {
+					if (e != null) {
+						trace(e);
+						return;
+					}
+					var messages: Array<MessageObject> = cast r;
+					for (m in messages) {
+						if (!rooms.exists(m.room)) {
+							rooms.set(m.room, {
+								messages: new Array<Message>(),
+								lock: null,
+								pw: null,
+								typing: []
+							});
+						}
+						rooms.get(m.room).messages.push( { text: m.text, id: m.id } );
+					}
+				});
 			}
-			var tokenos: Array<TokenObject> = cast r;
-			for (t in tokenos) {
-				tokens[t._id] = t.token;
+		});
+
+		mongodb.collection('tokens', function(e, database) {
+			if(e == null) {
+				database.find({}).toArray(function(e, r) {
+					if (e != null) {
+						trace(e);
+						return;
+					}
+					var tokenos: Array<TokenObject> = cast r;
+					for (t in tokenos) {
+						tokens[t._id] = t.token;
+					}
+				});
 			}
 		});
 	}
 
 	public static function saveMessage(msg: MessageObject) {
 		if (mongodb != null) {
-			mongodb.collection('messages').insertOne(msg, function(e, r) {
-				if (e != null) {
-					trace(e);
+			mongodb.collection('messages', function(e, database) {
+				if(e == null) {
+					database.insertOne(msg, {}, function(e, r) {
+						if (e != null) {
+							trace(e);
+						}
+					});
 				}
 			});
 		}
@@ -189,11 +212,19 @@ class Main {
 	}
 
 	public static function roomInfo(roomInfo: RoomInfo) {
-		mongodb.collection('roominfo').save(roomInfo);
+		mongodb.collection('roominfo', function(e, database) {
+			if(e == null) {
+				database.save(roomInfo);
+			}
+		});
 	}
 
 	public static function saveToken(token: TokenObject) {
-		mongodb.collection('tokens').save(token);
+		mongodb.collection('tokens', function(e, database) {
+			if(e == null) {
+				database.save(token);
+			}
+		});
 	}
 
 	public static function getUserID(): String {

@@ -5,6 +5,7 @@
 
 -lib abe
 -lib hxnodejs
+-lib hxmongodb
 -lib thx.core
 -lib thx.promise
 
