@@ -112,6 +112,23 @@ class Main {
 		});
 	}
 
+	public static function deleteMessage(room: String, id: ObjectID) {
+		for(m in rooms[room].messages) {
+			if(m._id == id) {
+				rooms[room].messages.remove(m);
+				break;
+			}
+		}
+		mongodb.collection('messages', function(e, database) {
+			if(e == null) {
+				database.remove({
+					room: room,
+					_id: id
+				});
+			}
+		});
+	}
+
 	static function _parseMessages() {
 		mongodb.collection('roominfo', function(e, database) {
 			if(e == null) {
@@ -477,6 +494,20 @@ class RouteHandler implements abe.IRoute {
 			Main.emptyRoom(room);
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('emptied');
+			return;
+		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send('failed');
+	}
+
+	@:post('/api/deleteMessage/:room/:privatePass/:id')
+	function deleteMessage(room: String, privatePass: String, id: ObjectID) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
+			Main.deleteMessage(room, id);
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('deleted');
 			return;
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');

@@ -14,6 +14,7 @@ import js.html.SpanElement;
 import js.html.UListElement;
 import js.Lib;
 import js.Browser;
+import js.html.MouseEvent;
 import haxe.Http;
 import haxe.Json;
 import js.html.Notification;
@@ -985,6 +986,10 @@ class Main
 			message.setAttribute('data-id', id);
 			message.setAttribute('data-objectid', cast _id);
 
+			if(_id != null) {
+				message.onclick = _tryDeleteMessage.bind(_, _id);
+			}
+
 			lastParagraph = message;
 
 			messages.appendChild(_makeSpan(differentUser, id));
@@ -1039,6 +1044,26 @@ class Main
 		}
 
 		return messageItem;
+	}
+
+	function _tryDeleteMessage(e: MouseEvent, id: ObjectID) {
+		if(e.ctrlKey && e.shiftKey && e.altKey) {
+			var lockHttp: Http = new Http(basePath + '/api/deleteMessage/$room/$adminPassword/$id');
+			lockHttp.onData = function(d) {
+				if(d == 'deleted') {
+					_addMessage('message deleted.');
+				}
+				else {
+					_addMessage('you are not authorized to moderate $room.');
+				}
+			}
+			lockHttp.onError = function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t delete message.');
+			}
+
+			lockHttp.request(true);
+		}
 	}
 
 	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
