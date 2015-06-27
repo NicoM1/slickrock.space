@@ -22,6 +22,8 @@ import js.html.NotificationOptions;
 
 import jQuery.*;
 
+import js.node.mongodb.ObjectID;
+
 import thx.color.Rgb;
 import thx.color.Hsl;
 import thx.math.random.PseudoRandom;
@@ -873,9 +875,7 @@ class Main
 				ii = parsed.messages.messages.length - 1 - i;
 			}
 			var p = parsed.messages.messages[ii];
-			var message = _addMessage(p.text, p.id, hist, true, first);
-
-			trace(p._id);
+			var message = _addMessage(p.text, p.id, hist, true, first,p._id);
 
 			if (!hist && !focussed && !first) {
 				Browser.document.title = '# /$room.';
@@ -969,7 +969,7 @@ class Main
 		return false;
 	}
 
-	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false): DivElement {
+	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false, ?_id: ObjectID): DivElement {
 		msg = _parseMessage(msg, safe);
 
 		var message: DivElement;
@@ -983,6 +983,8 @@ class Main
 			message = Browser.document.createDivElement();
 			message.classList.add('messageblock');
 			message.setAttribute('data-id', id);
+			message.setAttribute('data-objectid', _id.toHexString());
+
 			lastParagraph = message;
 
 			messages.appendChild(_makeSpan(differentUser, id));
