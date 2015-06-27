@@ -1048,7 +1048,7 @@ class Main
 
 	function _tryDeleteMessage(e: MouseEvent, id: String) {
 		if(e.ctrlKey && e.shiftKey && e.altKey) {
-			var lockHttp: Http = new Http(basePath + '/api/deleteMessage/$room/$adminPassword/$id');
+			var lockHttp: Http = new Http(basePath + 'api/deleteMessage/$room/$adminPassword/$id');
 			lockHttp.onData = function(d) {
 				if(d == 'deleted') {
 					_addMessage('message deleted.');
