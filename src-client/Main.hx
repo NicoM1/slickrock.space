@@ -987,7 +987,7 @@ class Main
 			message.setAttribute('data-objectid', cast _id);
 
 			if(_id != null) {
-				//message.onclick = _tryDeleteMessage.bind(_, _id);
+				message.onclick = _tryDeleteMessage.bind(_, cast _id);
 			}
 
 			lastParagraph = message;
