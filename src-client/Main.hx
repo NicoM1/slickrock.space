@@ -41,7 +41,7 @@ typedef Command = {
 	?requiresArgs: Bool
 }
 
-class Main 
+class Main
 {
 	var room: String;
 	var basePath: String = 'https://aqueous-basin.herokuapp.com/';
@@ -54,11 +54,11 @@ class Main
 	var lastIndex: Int = -1;
 	var firstIndex: Int = -1;
 	var lastUserID: String = '-2';
-	
-	var getHttp: Http; 
+
+	var getHttp: Http;
 	var postHttp: Http;
 	var authHttp: Http;
-	
+
 	var chatbox: InputElement;
 	var helpbox: UListElement;
 	var messages: DivElement;
@@ -67,7 +67,7 @@ class Main
 	var lastParagraph: DivElement;
 	var favicons: Array<LinkElement>;
 	var typings: Array<MessageDiv> = new Array<MessageDiv>();
-	
+
 	var requestInProgress: Bool = false;
 	var histRequestInProgress: Bool = false;
 	var first: Bool = true;
@@ -77,43 +77,43 @@ class Main
 	var hasTriedAuth: Bool = false;
 	var wasLocked: Bool = false;
 	var canSendTypingNotification: Bool = true;
-	
+
 	var notification: Notification;
 	var numNotifications: Int = 0;
-	
+
 	var commands: Map<String, Array<String> -> Void> = new Map();
-	
+
 	var lastMessage: String = '';
 	var sendLast: Bool = false;
-	
+
 	var commandIndex: Int = -1;
-	
+
 	var lastY: Int = null;
 	var lastChatboxValue: String = '';
-	
+
 	function new() {
 		room = untyped window.room;
 		_buildCommands();
-		
+
 		Browser.window.onload = _windowLoaded;
 	}
-		
+
 	//{ startup and message loop
-	function _windowLoaded() {	
+	function _windowLoaded() {
 		authHttp = new Http(basePath);
 		authHttp.onData = _getAuth;
-		authHttp.onError = function(error) { 
-			trace(error); 
+		authHttp.onError = function(error) {
+			trace(error);
 			_addMessage('Could not connect to authentication api, please refresh the page.');
 		}
-		
+
 		getHttp = new Http(basePath + lastIndex);
 		getHttp.onData = _parseMessages.bind(_, false);
-		getHttp.onError = function(error) { 
-			trace(error); 
-			requestInProgress = false; 
+		getHttp.onError = function(error) {
+			trace(error);
+			requestInProgress = false;
 		}
-		
+
 		postHttp = new Http(basePath);
 		postHttp.async = true;
 		postHttp.onData = function(data) {
@@ -127,10 +127,10 @@ class Main
 				_addMessage('to prevent spam, images are disabled on this chatroom, you may ***/survey*** another chat where this restriction is not active.');
 			}
 		}
-		postHttp.onError = function(error) { 
-			trace(error); 
-			requestInProgress = false; 
-			//chatbox.value = lastMessage; 
+		postHttp.onError = function(error) {
+			trace(error);
+			requestInProgress = false;
+			//chatbox.value = lastMessage;
 		}
 
 		chatbox = cast Browser.document.getElementById('chatbox');
@@ -142,7 +142,7 @@ class Main
 			favicons.push(cast f);
 		}
 		messageSound = cast Browser.document.getElementById('messagesound');
-		
+
 		Browser.document.title = '/$room.';
 		Browser.window.onfocus = function() {
 			focussed = true;
@@ -152,18 +152,18 @@ class Main
 			}
 			_clearNotifications();
 		};
-		
+
 		Browser.window.onblur = function() {
 			focussed = false;
 		};
-		
+
 		messages.addEventListener('mousewheel', _tryGetOldMessages);
 		messages.addEventListener('DOMMouseScroll', _tryGetOldMessages);
 		messages.ontouchmove = _tryGetOldMessages;
 		Browser.document.onkeydown = _testScrolling;
-		
+
 		_setupHelpbox();
-		
+
 		chatbox.onclick = function() {
 			_getNotificationPermission();
 			if (token == null && !hasTriedAuth) {
@@ -195,16 +195,16 @@ class Main
 				chatbox.classList.remove('helptip');
 				chatbox.value = '';
 			}
-						
+
 			var code = null;
 			if(e != null) {
 				 code = (e.keyCode != null ? e.keyCode : e.which);
 			}
-			
+
 			if (code == 9 || code == 38 || code == 40) {
 				e.preventDefault();
 			}
-			
+
 			if (code == 27) {
 				if (chatbox.value == '/') {
 					chatbox.value = '';
@@ -212,14 +212,14 @@ class Main
 				}
 			}
 		}
-		
+
 		messages.onclick = function() {
 			if (chatbox.value == '/') {
 				chatbox.value = '';
 				_checkKeyPress({which: 9, keyCode: 9});//hack but should work
 			}
 		}
-		
+
 		if (_inIframe()) {
 			var maximize = Browser.document.createButtonElement();
 			//maximize.textContent = '[X]';
@@ -230,27 +230,27 @@ class Main
 			maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton');
 			Browser.document.body.appendChild(maximize);
 		}
-		
+
 		if(!Cookie.exists('id')) {
 			_getID();
 		}
 		else {
 			_setID(Cookie.get('id'));
 		}
-		
+
 		if (Cookie.exists('$room-password')) {
 			_setPassword(Cookie.get('$room-password'));
 		}
-		
+
 		if (Cookie.exists('${room}admin-password')) {
 			_setAdminPassword(Cookie.get('${room}admin-password'));
 		}
-		
+
 		_setupPrivateID();
-		
+
 		_loop();
 	}
-	
+
 	function _testScrolling(e) {
 		var code = null;
 		if(e != null) {
@@ -260,12 +260,12 @@ class Main
 			_tryGetOldMessages();
 		}
 	}
-	
+
 	function _tryGetOldMessages(?args) {
 		if (histRequestInProgress || initialScroll) return;
 		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
 		lastY = Browser.window.pageYOffset;
-		
+
 		if (lastY < 500) {
 			if(firstIndex > 0) {
 				var histHttp: Http = new Http(basePath);
@@ -285,9 +285,9 @@ class Main
 			}
 		}
 	}
-	
+
 	var alphanumeric = '0123456789abcdefghijklmnopqrstuvwxyz';
-	
+
 	function _setupPrivateID() {
 		if (!Cookie.exists('private')) {
 			var rand = new Random(Date.now().getTime());
@@ -306,7 +306,7 @@ class Main
 			}
 		}
 	}
-	
+
 	function _setToken(_token: String) {
 		token = _token;
 		_checkValid(true);
@@ -314,7 +314,7 @@ class Main
 			Cookie.set('token', token, 60 * 60 * 24 * 365 * 10);
 		}
 	}
-	
+
 	function _checkValid(printValid: Bool = false) {
 		var checkValid = new Http(basePath + 'api/checkvalid/$privateID/$token');
 		checkValid.onData = function(data: String) {
@@ -338,18 +338,18 @@ class Main
 		}
 		checkValid.request(true);
 	}
-	
+
 	function _tryAuth() {
 		authHttp.url = basePath + 'api/gettoken/$privateID';
 		authHttp.request(true);
-		hasTriedAuth = true;				
+		hasTriedAuth = true;
 	}
-	
+
 	function _getAuth(data: String) {
 		_addMessage('please enter the following to authenticate.');
 		_addMessage('#http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=$data 200#', false, false);
 	}
-	
+
 	function _loop() {
 		Timer.delay(function() {
 			_update();
@@ -377,30 +377,30 @@ class Main
 			var command: LIElement = Browser.document.createLIElement();
 			var identDiv: DivElement = Browser.document.createDivElement();
 			var descDiv: DivElement = Browser.document.createDivElement();
-			
+
 			identDiv.classList.add('command');
 			identDiv.innerHTML = c.identifiers;
-			
+
 			descDiv.classList.add('description');
 			descDiv.innerHTML = c.description;
-			
+
 			command.appendChild(identDiv);
 			command.appendChild(descDiv);
-			
+
 			command.setAttribute('data-command', k);
-			
+
 			command.classList.add('commandTip');
-			
+
 			command.onclick = function() {
 				chatbox.value = '/' + k;
 				chatbox.onkeyup();
 				chatbox.focus();
 			}
-			
+
 			helpbox.appendChild(command);
 		}
 	}
-	
+
 	//{ notifications
 	function _getNotificationPermission(force: Bool = false ) {
 		if (force || Notification.permission == NotificationPermission.DEFAULT_) {
@@ -410,7 +410,7 @@ class Main
 			}
 		}
 	}
-	
+
 	function _sendNotification(text: String) {
 		if (Notification.permission == NotificationPermission.GRANTED) {
 			var options: NotificationOptions = { };
@@ -425,12 +425,12 @@ class Main
 				numNotifications++;
 				notification = new Notification('$numNotifications new messages.', options);
 			}
-			notification.onclick = function(){ 
+			notification.onclick = function(){
 				Browser.window.top.focus();
 			};
 		}
 	}
-	
+
 	function _clearNotifications() {
 		if(notification != null) {
 			notification.close();
@@ -438,10 +438,10 @@ class Main
 		}
 	}
 	//}
-		
+
 	//{ commands
-	var commandInfos: Map<String, Command>;		
-	
+	var commandInfos: Map<String, Command>;
+
 	function _buildCommands() {
 		commandInfos = [
 		'revivify' => {
@@ -500,6 +500,11 @@ class Main
 			description: 'attempt to unlock the current room.',
 			method: _unlockRoom
 		},
+		'decontaminate' => {
+			identifiers: '<strong>/decontaminate</strong> <em>ADMIN_PASSWORD</em>',
+			description: 'nuke all messages in the current room, use only in the case of extreme spam. <strong>THERE IS NO WAY TO UNDO THIS. ALL MESSAGES ARE GONE FOREVER.</strong>',
+			method: _emptyRoom
+		},
 		'typesetting' => {
 			identifiers: '<strong>/typesetting</strong>',
 			description: 'display formatting help.',
@@ -540,7 +545,7 @@ class Main
 			commands.set(c, commandInfos[c].method);
 		}
 	}
-	
+
 	function _parseCommand(commandString: String) {
 		var firstSpace = commandString.indexOf(' ');
 		var command: String;
@@ -556,7 +561,7 @@ class Main
 			_callCommand(commandString.trim());
 		}
 	}
-	
+
 	function _callCommand(command: String, ?args: Array<String>) {
 		if(commands.exists(command)) {
 			commands.get(command)(args);
@@ -566,7 +571,7 @@ class Main
 		}
 	}
 	//}
-	
+
 	//{ command functions
 	function _getID(?_) {
 		var idHttp: Http = new Http(basePath + 'api/getID');
@@ -578,10 +583,10 @@ class Main
 			trace(e);
 			_addMessage('failed to connect to api, couldn\'t get ID.');
 		}
-		
+
 		idHttp.request(true);
 	}
-	
+
 	function _setIDCommand(arguments: Array<String>) {
 		if (arguments != null && arguments[0] != null && arguments[0] != '') {
 			var newID = arguments[0];
@@ -596,7 +601,7 @@ class Main
 			_addMessage('**/impersonate** requires argument: *ID*.');
 		}
 	}
-	
+
 	function _changeRoom(arguments: Array<String>) {
 		if (arguments != null && arguments[0] != null && arguments[0] != '') {
 			if (arguments[0].charAt(0) == '/') {
@@ -608,7 +613,7 @@ class Main
 			_addMessage('**/survey** requires argument: *ROOM*.');
 		}
 	}
-	
+
 	function _claimRoom(arguments: Array<String>) {
 		if (arguments.length == 0 || arguments[0].trim() == '') {
 			_addMessage('**/claim** requires argument: *ADMIN_PASSWORD*.');
@@ -630,10 +635,10 @@ class Main
 			trace(e);
 			_addMessage('failed to connect to api, couldn\'t claim room.');
 		}
-		
+
 		lockHttp.request(true);
 	}
-	
+
 	function _reclaimRoom(arguments: Array<String>) {
 		if (arguments.length == 0 || arguments[0].trim() == '') {
 			_addMessage('**/reclaim** requires argument: *NEW_ADMIN_PASSWORD*.');
@@ -654,10 +659,10 @@ class Main
 			trace(e);
 			_addMessage('failed to connect to api, couldn\'t reclaim room.');
 		}
-		
+
 		lockHttp.request(true);
 	}
-	
+
 	function _authorizeRoom(arguments: Array<String>) {
 		if (arguments.length == 0 || arguments[0].trim() == '') {
 			_addMessage('**/entitle** requires argument: *ADMIN_PASSWORD*.');
@@ -679,10 +684,10 @@ class Main
 			trace(e);
 			_addMessage('failed to connect to api, couldn\'t authorize admin.');
 		}
-		
+
 		lockHttp.request(true);
 	}
-	
+
 	var embedTemplate = '<iframe src="[SRC]" width="[WIDTH]" height="[HEIGHT]" style="border-color: #333333; border-style: solid;"></iframe>';
 	function _generateEmbed(arguments: Array<String>) {
 		if (arguments.length != 2) {
@@ -699,18 +704,18 @@ class Main
 		embed = embed.replace('[SRC]', 'http://slickrock.io/$room');
 		embed = embed.replace('[WIDTH]', Std.string(width));
 		embed = embed.replace('[HEIGHT]', Std.string(height));
-		
+
 		_addMessage('`$embed`');
 	}
-	
+
 	function _printID(?_) {
 		_addMessage('*Currently impersonating*: $id');
 	}
-	
+
 	function _printRoom(?_) {
 		_addMessage('*Currently in*: $room');
 	}
-	
+
 	function _lockRoom(arguments: Array<String>) {
 		if (arguments.length == 0 || arguments[0].trim() == '') {
 			_addMessage('**/fasten** requires argument: *PASSWORD*.');
@@ -734,10 +739,10 @@ class Main
 			trace(e);
 			_addMessage('failed to connect to api, couldn\'t lock room.');
 		}
-		
+
 		lockHttp.request(true);
 	}
-	
+
 	function _unlockRoom(_) {
 		var lockHttp: Http = new Http(basePath + 'api/unlock/$room/$privateID/$adminPassword');
 		lockHttp.onData = function(d) {
@@ -752,10 +757,31 @@ class Main
 			trace(e);
 			_addMessage('failed to connect to api, couldn\'t unlock room.');
 		}
-		
+
 		lockHttp.request(true);
 	}
-	
+
+	function _emptyRoom(args: Array<String>) {
+		if(args.length == 0) {
+			_addMessage('**/decontaminate** requires argument: *ADMIN_PASSWORD*, this is to ensure you understand what you are doing.');
+		}
+		var lockHttp: Http = new Http(basePath + 'api/empty/$room/${args[0]}');
+		lockHttp.onData = function(d) {
+			if(d == 'emptied') {
+				_addMessage('$room emptied.');
+			}
+			else {
+				_addMessage('you are not authorized to empty $room.');
+			}
+		}
+		lockHttp.onError = function(e) {
+			trace(e);
+			_addMessage('failed to connect to api, couldn\'t empty room.');
+		}
+
+		lockHttp.request(true);
+	}
+
 	function _formatHelp(?args) {
 		_addMessage('\\*italic.\\*');
 		_addMessage('\\*\\*bold.\\*\\*');
@@ -765,23 +791,23 @@ class Main
 		_addMessage('\\#link/to.image (optional)[width] (optional)[height]\\#');
 		_addMessage('escape markdown with \\\\*escaped\\\\*');
 	}
-	
+
 	function _notificationCommand(_) {
 		_getNotificationPermission(true);
 	}
-	
+
 	function _legal(_) {
 		_addMessage('slickrock.io is (c) 2015 Nico May.');
 		_addMessage('wordlists used with permission from gfycat.com');
 	}
-	
+
 	function _credits(_) {
 		_addMessage('Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).');
 		_addMessage('Assorted help and testing: @dimensive, @gamesbybeta, @Zanzlanz.');
 		_addMessage('Additional images: @nathanwentworth.');
 		_addMessage('slickrock.io is crafted in Haxe, the backend is helped by the Abe library.');
 	}
-	
+
 	function _rules(_) {
 		_addMessage('slickrock.io is not meant to allow people to say or show horrible things.');
 		_addMessage('should your intention in coming to this site be to say or show inappropriate things, please go somewhere else, there are plenty of well established dirty corners of the internet, this doesn\'t need to become one.');
@@ -790,14 +816,14 @@ class Main
 		_addMessage('apologies for that, to all the genuine users of this site, I hope you enjoy it, and don\'t worry about subtle things like swear words or the like, but if it seems like you should make something private, preferably make it private.');
 		_addMessage('thank you, and enjoy the site.');
 	}
-	
+
 	function _donate(_) {
 		_openInNewTab('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=nico%2emay99%40gmail%2ecom&lc=CA&item_name=slickrock%2eio&currency_code=CAD&bn=PP%2dDonationsBF%3a%26text%3ddonate%2e%3aNonHosted');
 	}
 	//}
-	
+
 	//{ messages
-	function _parseMessages(data, hist: Bool = false ) {	
+	function _parseMessages(data, hist: Bool = false ) {
 		if (data == 'locked') {
 			if (token == null) {
 				if(!hasTriedAuth) {
@@ -839,7 +865,7 @@ class Main
 			wasLocked = false;
 			locked = false;
 		}
-		
+
 		var parsed: MessageData = Json.parse(data);
 		for (i in 0...parsed.messages.messages.length) {
 			var ii = i;
@@ -848,7 +874,7 @@ class Main
 			}
 			var p = parsed.messages.messages[ii];
 			var message = _addMessage(p.text, p.id, hist, true, first);
-			
+
 			if (!hist && !focussed && !first) {
 				Browser.document.title = '# /$room.';
 				for (f in favicons) {
@@ -858,28 +884,28 @@ class Main
 				_sendNotification(message.innerText != null? message.innerText : message.textContent);
 			}
 		}
-		
+
 		for (t in typings) {
 			messages.removeChild(t.chevron);
 			messages.removeChild(t.message);
 		}
 		typings = [];
-		
+
 		for (t in parsed.messages.typing) {
 			if(t != id) {
 				var typeMessage = Browser.document.createDivElement();
 				typeMessage.className = 'messageitem';
 				typeMessage.innerHTML = '<br/>';
-				
+
 				var message: DivElement;
 				message = Browser.document.createDivElement();
 				message.classList.add('messageblock');
 				message.setAttribute('data-id', t);
-				
+
 				var chevron = _makeSpan(true, t);
 				messages.appendChild(chevron);
 				messages.appendChild(message);
-				
+
 				var messageD: MessageDiv = {
 					id: t,
 					chevron: chevron,
@@ -892,10 +918,10 @@ class Main
 				_tryScroll();
 			}
 		}
-		
+
 		lastIndex = parsed.lastID;
 		firstIndex = parsed.firstID != null? parsed.firstID : firstIndex;
-		
+
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
 			i.onclick = _openInNewTab.bind(image.src);
@@ -906,69 +932,69 @@ class Main
 				i.onload = _tryScroll.bind(true);
 			}
 		}
-		
+
 		if (first) {
 			_tryScroll(true);
-			
+
 			if (parsed.messages.pw == null && parsed.messages.messages.length == 0) {
 				_addMessage('*$room* is unclaimed, consider ***/claim***-ing it?');
 			}
 		}
-		
+
 		first = false;
-		
+
 		requestInProgress = false;
 		if(hist) {
 			histRequestInProgress = false;
 		}
 	}
-	
+
 	function _tryScroll(force: Bool = false, img: ImageElement = null) {
 		if (force || _atBottom(img)) {
 			Browser.window.scrollTo(0, messages.scrollHeight);
 			initialScroll = false;
 		}
 	}
-	
+
 	function _atBottom(img: ImageElement = null): Bool {
 		var offset: Float = 0;
 		if (img != null) {
 			offset = img.height;
 		}
-		if ((Browser.window.innerHeight + Browser.window.scrollY + offset) >= messages.offsetHeight) { 
+		if ((Browser.window.innerHeight + Browser.window.scrollY + offset) >= messages.offsetHeight) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false): DivElement {
 		msg = _parseMessage(msg, safe);
-		
+
 		var message: DivElement;
-		
+
 		var differentUser = false;
 		if (!hist && (id == null || id == '-1' || id != lastUserID)) {
 			differentUser = true;
 		}
-		
+
 		if (differentUser) {
 			message = Browser.document.createDivElement();
 			message.classList.add('messageblock');
 			message.setAttribute('data-id', id);
 			lastParagraph = message;
-					
+
 			messages.appendChild(_makeSpan(differentUser, id));
 			messages.appendChild(message);
 		}
 		else {
 			message = lastParagraph;
 		}
-		
+
 		var messageItem: DivElement = Browser.document.createDivElement();
 		messageItem.classList.add('messageitem');
-		
+
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
-		
+
 		var offset: Float = 0;
 		if(!hist) {
 			message.appendChild(messageItem);
@@ -984,17 +1010,17 @@ class Main
 				message = Browser.document.createDivElement();
 				message.classList.add('messageblock');
 				message.setAttribute('data-id', id);
-				
+
 				messages.insertBefore(message, messages.children[0]);
 				messages.insertBefore(_makeSpan(true, id), messages.children[0]);
 				message.insertBefore(messageItem, message.children[0]);
 				offset = new JQuery(message).outerHeight(true);
 			}
 		}
-		
+
 		if(!hist) {
 			_tryScroll();
-					
+
 			lastUserID = id;
 			if(!first) {
 				Timer.delay(function() { messageItem.classList.add('loaded'); }, 10);
@@ -1007,17 +1033,17 @@ class Main
 			Browser.document.body.scrollTop += Std.int(offset);
 			messageItem.classList.add('non-anim');
 		}
-		
+
 		return messageItem;
 	}
-	
+
 	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
 	var italicBB: EReg = ~/(?:\[i\]|\*)(.*?)(?:\[\/i\]|\*)/i;
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;
 	var sitelink: EReg = ~/ \/[^\s]+?( |$)/i;
-	
+
 	function _parseMessage(raw: String, safe: Bool = true): String {
 		var parsed: String = raw.replace('\n', ' ');
 
@@ -1031,21 +1057,21 @@ class Main
 			parsed = parsed.replace('\\`', '&grave;');
 			parsed = parsed.replace('\\\\n', '&bsol;n');
 			parsed = parsed.replace('\\\\t', '&bsol;t');
-			
+
 			parsed = parsed.replace('\\n', '<br/>');
 			parsed = parsed.replace('\\t', '&nbsp;&nbsp;&nbsp;');
 		}
-		
+
 		/*while (sitelink.match(parsed)) {
 			var link = sitelink.matched(0).substr(1);
 			link = '&sol;' + link;
 			parsed = sitelink.replace(parsed, ' <a href="slickrock.io$link>$link</a>');
 		}*/
-		
+
 		while (imgBB.match(parsed)) {
 			var imgPath = imgBB.matched(1);
 			var chunks = imgPath.split(' ');
-			
+
 			var imgTag: String;
 			switch(chunks.length) {
 				case 1:
@@ -1057,7 +1083,7 @@ class Main
 				default:
 					return '';
 			}
-			
+
 			parsed = imgBB.replace(parsed, imgTag);
 		}
 		while (boldBB.match(parsed)) {
@@ -1086,19 +1112,19 @@ class Main
 
 	//{ message posting
 	var selectedElem: LIElement = null;
-	
+
 	function _checkKeyPress(e) {
 		var code = null;
 		if(e != null) {
 			 code = (e.keyCode != null ? e.keyCode : e.which);
 		}
-		
+
 		if (chatbox.value.charAt(0) == '/') {
 			if(helpbox.style.display != 'block') {
 				helpbox.style.display = 'block';
 				commandIndex = -1;
 			}
-						
+
 			if (code == 40 || code == 38) {
 				var activeChilren = [];
 				for (c in helpbox.children) {
@@ -1129,15 +1155,15 @@ class Main
 			else if(code != 13 && code != 32) {
 				_filterHelp();
 			}
-			
-			if (selectedElem != null) {	
+
+			if (selectedElem != null) {
 				var command = selectedElem.getAttribute('data-command');
 				trace(command);
 				var replacement = '/' + command + ' ';
 				if(chatbox.value.indexOf(command) == -1) {
 					if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && (code == 13 || code == 9))) {
 						trace(chatbox.value, replacement);
-						
+
 						chatbox.value = replacement;
 						_filterHelp();
 						if ((code == 13 || code == 9) && commandInfos[command].requiresArgs == true) {
@@ -1150,7 +1176,7 @@ class Main
 		}
 		else {
 			helpbox.style.display = 'none';
-					
+
 			if (!locked && token != null) {
 				if (canSendTypingNotification) {
 					if(chatbox.value != lastChatboxValue) {
@@ -1185,26 +1211,26 @@ class Main
 					helpbox.style.display = 'none';
 					return;
 				}
-			
+
 				_postMessage(chatbox.value);
-				
+
 				lastMessage = chatbox.value;
-				
+
 				_update();
 			}
 			chatbox.value = '';
 			helpbox.style.display = 'none';
 		}
 	}
-	
+
 	function _filterHelp() {
 		var selected: Bool = false;
-		
+
 		for (c in helpbox.children) {
 			var li: LIElement = cast c;
-			
+
 			var command = li.getAttribute('data-command');
-			
+
 			var sub = chatbox.value.substr(1);
 			var trimmed: Bool = false;
 			if (sub.indexOf(' ') != -1) {
@@ -1213,7 +1239,7 @@ class Main
 			}
 
 			var end: Int = (!trimmed? sub.length : command.length);
-			
+
 			if (command.substr(0, end) != sub) {
 				li.style.display = 'none';
 			}
@@ -1228,9 +1254,9 @@ class Main
 					li.classList.remove('selected');
 				}
 			}
-		}	
+		}
 	}
-	
+
 	function _postMessage(msg: String) {
 		if (msg.trim() != '') {
 			if(password == null) {
@@ -1243,18 +1269,18 @@ class Main
 		}
 	}
 	//}
-	
+
 	//{ util
 	function _openInNewTab(src: String) {
 		var win = Browser.window.open(src, '_blank');
 		win.focus();
 	}
-	
+
 	function _makeSpan(?pointer: Bool = false, ?id: String): Element {
 		var span = Browser.document.createSpanElement();
 		if (pointer) {
 			span.innerHTML = '>';
-			
+
 			span.style.color = _generateColorFromID(id);
 		}
 		span.innerHTML += '\t';
@@ -1264,10 +1290,10 @@ class Main
 		else {
 			span.classList.add('non-anim');
 		}
-		
+
 		return span;
 	}
-	
+
 	function _generateColorFromID(?id: String, ?dark: Bool = false): String {
 		var hsl: Hsl;
 		if (id != null && id != '-1') {
@@ -1280,7 +1306,7 @@ class Main
 			var sat = new Random(intID * 12189234).float(0.3, 0.5);
 			var light = new Random(intID * 12189234).float(0.3, 0.5);
 			hsl = Hsl.create(hue, sat, light);
-			
+
 			if (dark) {
 				hsl = hsl.darker(0.5);
 			}
@@ -1288,10 +1314,10 @@ class Main
 		else {
 			hsl = Hsl.create(0, 1, 1);
 		}
-		
+
 		return '#' + hsl.hex(6);
 	}
-	
+
 	function _setID(id_: String) {
 		if (Std.parseInt(id_) != null) {
 			_getID();
@@ -1303,28 +1329,28 @@ class Main
 		//chatbox.style.boxShadow.replace = _generateColorFromID(id, true);
 		//chevron.style.color = _generateColorFromID(id);
 	}
-	
+
 	function _setPassword(password_: String) {
 		password = password_;
 		Cookie.set('$room-password', password, 60 * 60 * 24 * 365 * 10);
 	}
-	
+
 	function _setAdminPassword(password_: String) {
 		adminPassword = password_;
 		Cookie.set('${room}admin-password', adminPassword, 60 * 60 * 24 * 365 * 10);
 	}
-	
-	function _inIframe (): Bool {
+
+	function _inIframe(): Bool {
 		try {
 			return Browser.window.self != Browser.window.top;
-		} 
+		}
 		catch (e: Dynamic) {
 			return true;
 		}
 	}
 	//}
-	
+
 	static function main() {
 		new Main();
-	}	
+	}
 }

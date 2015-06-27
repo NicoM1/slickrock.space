@@ -1,0 +1,11 @@
+-cp src
+-cp shared
+
+-js index.js
+
+-lib abe
+-lib hxnodejs
+-lib thx.core
+-lib thx.promise
+
+-main Main

@@ -1,0 +1,11 @@
+-cp src-client
+-cp shared
+
+-js bin/js/client.js
+
+-lib thx.core
+-lib thx.color
+-lib thx.math
+-lib jQueryExtern
+
+-main Main
