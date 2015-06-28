@@ -970,7 +970,7 @@ class Main
 		return false;
 	}
 
-	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false, ?_id: ObjectID): DivElement {
+	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false, ?_id: String): DivElement {
 		msg = _parseMessage(msg, safe);
 
 		var message: DivElement;
@@ -984,11 +984,6 @@ class Main
 			message = Browser.document.createDivElement();
 			message.classList.add('messageblock');
 			message.setAttribute('data-id', id);
-			message.setAttribute('data-objectid', cast _id);
-
-			if(_id != null) {
-				message.onclick = _tryDeleteMessage.bind(_, cast _id);
-			}
 
 			lastParagraph = message;
 
@@ -1001,6 +996,12 @@ class Main
 
 		var messageItem: DivElement = Browser.document.createDivElement();
 		messageItem.classList.add('messageitem');
+
+		messageItem.setAttribute('data-objectid', _id);
+
+		if(_id != null) {
+			messageItem.onclick = _tryDeleteMessage.bind(_, _id);
+		}
 
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
 

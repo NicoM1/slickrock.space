@@ -24,7 +24,8 @@ using StringTools;
 
 typedef RoomMetric = {
 	room: String,
-	count: Int
+	count: Int,
+	locked: Bool
 }
 
 class Main {
@@ -112,7 +113,9 @@ class Main {
 		});
 	}
 
-	public static function deleteMessage(room: String, id: ObjectID) {
+
+	//this is not working yet
+	public static function deleteMessage(room: String, id: String) {
 		if(rooms[room] == null) return;
 		for(m in rooms[room].messages) {
 			if(m._id == id) {
@@ -124,7 +127,7 @@ class Main {
 			if(e == null) {
 				database.remove({
 					room: room,
-					_id: id
+					_id: new ObjectID(id)
 				});
 			}
 		});
@@ -175,7 +178,7 @@ class Main {
 								typing: []
 							});
 						}
-						rooms.get(m.room).messages.push( { text: m.text, id: m.id, _id: m._id } );
+						rooms.get(m.room).messages.push( { text: m.text, id: m.id, _id: m._id.toHexString() } );
 					}
 				});
 			}
@@ -266,6 +269,15 @@ class RouteHandler implements abe.IRoute {
 		});
 	}
 
+	@:get('/top')
+	function top() {
+		_serveHtml('bin/top.html', function(e, d) {
+			if(e == null) {
+				response.send(d);
+			}
+		});
+	}
+
 	@:get('/:room')
 	function chatroom(room: String) {
 		room = room.toLowerCase();
@@ -317,7 +329,7 @@ class RouteHandler implements abe.IRoute {
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt+password)) {
 				var objectid = new ObjectID();
-				Main.rooms.get(room).messages.push( { text: message, id: id,  _id: objectid} );
+				Main.rooms.get(room).messages.push( { text: message, id: id,  _id: objectid.toHexString()} );
 				Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
 				if (Main.userCounts[room] == null) {
 					Main.userCounts[room] = [];
@@ -388,10 +400,10 @@ class RouteHandler implements abe.IRoute {
 			}
 			if (top10.length >= 10 && count.length > lowest) {
 				top10.remove(top10[lowestIndex]);
-				top10.push({room: r, count: count.length});
+				top10.push({room: r, count: count.length, locked: roomE.lock != null});
 			}
 			else if (top10.length < 10) {
-				top10.push({room: r, count: count.length});
+				top10.push({room: r, count: count.length, locked: roomE.lock != null});
 			}
 		}
 		top10.sort(function(r1: RoomMetric, r2: RoomMetric) {
@@ -506,7 +518,7 @@ class RouteHandler implements abe.IRoute {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
-			Main.deleteMessage(room, ObjectID.createFromHexString(id));
+			Main.deleteMessage(room, id);
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('deleted');
 			return;

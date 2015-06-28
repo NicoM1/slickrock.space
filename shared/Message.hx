@@ -5,5 +5,5 @@ import js.node.mongodb.ObjectID;
 typedef Message = {
 	text: String,
 	id: String,
-	?_id: ObjectID
+	?_id: String
 }
