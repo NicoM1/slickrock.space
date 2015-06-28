@@ -984,11 +984,6 @@ class Main
 			message = Browser.document.createDivElement();
 			message.classList.add('messageblock');
 			message.setAttribute('data-id', id);
-			message.setAttribute('data-objectid', _id);
-
-			if(_id != null) {
-				message.onclick = _tryDeleteMessage.bind(_, _id);
-			}
 
 			lastParagraph = message;
 
@@ -1001,6 +996,12 @@ class Main
 
 		var messageItem: DivElement = Browser.document.createDivElement();
 		messageItem.classList.add('messageitem');
+
+		messageItem.setAttribute('data-objectid', _id);
+
+		if(_id != null) {
+			messageItem.onclick = _tryDeleteMessage.bind(_, _id);
+		}
 
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
 
