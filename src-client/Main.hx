@@ -185,7 +185,7 @@ class Main
 			}
 		}
 		chatbox.onkeyup = _checkKeyPress;
-		chatbox.focus();
+		//chatbox.focus();
 		chatbox.onmousedown = function() {
 			if (chatbox.classList.contains('helptip')) {
 				chatbox.classList.remove('helptip');
