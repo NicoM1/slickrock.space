@@ -88,6 +88,8 @@ class Main {
 		}
 	}
 
+	var thing = 'test';
+
 	public static function resetTypingTimer(room: String, id: String) {
 		if (typingTimers[room] == null) {
 			typingTimers[room] = new Map();

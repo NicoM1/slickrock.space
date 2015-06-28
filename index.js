@@ -155,6 +155,7 @@ Lambda.has = function(it,elt) {
 	return false;
 };
 var Main = function() {
+	this.thing = "test";
 	this.mongoUrl = "";
 	Main.animalWords = js_node_Fs.readFileSync("bin/animals.txt",{ encoding : "utf8"}).split("\n");
 	Main.adjectives = js_node_Fs.readFileSync("bin/adjectives.txt",{ encoding : "utf8"}).split("\n");
@@ -484,6 +485,7 @@ Main.prototype = {
 			Main._parseMessages();
 		});
 	}
+	,thing: null
 	,__class__: Main
 };
 var abe_IRoute = function() { };
