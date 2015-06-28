@@ -24,7 +24,8 @@ using StringTools;
 
 typedef RoomMetric = {
 	room: String,
-	count: Int
+	count: Int,
+	locked: Bool
 }
 
 class Main {
@@ -390,10 +391,10 @@ class RouteHandler implements abe.IRoute {
 			}
 			if (top10.length >= 10 && count.length > lowest) {
 				top10.remove(top10[lowestIndex]);
-				top10.push({room: r, count: count.length});
+				top10.push({room: r, count: count.length, locked: roomE.lock != null});
 			}
 			else if (top10.length < 10) {
-				top10.push({room: r, count: count.length});
+				top10.push({room: r, count: count.length, locked: roomE.lock != null});
 			}
 		}
 		top10.sort(function(r1: RoomMetric, r2: RoomMetric) {
