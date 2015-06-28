@@ -98,9 +98,10 @@ class Main
 
 	function new() {
 		room = untyped window.room;
+		var theme = untyped window.roomTheme;
 		_buildCommands();
 
-		_setTheme(Cookie.get('theme') == 'light');
+		_setTheme(Cookie.get('${room}_theme') != null? Cookie.get('${room}_theme') : theme);
 
 		Browser.window.onload = _windowLoaded;
 	}
@@ -566,6 +567,11 @@ class Main
 			identifiers: '<strong>/becloud</strong>',
 			description: 'switch to dark theme.',
 			method: _darkTheme
+		},
+		'set_theme' => {
+			identifiers: '<strong>/set_theme</strong> <em>THEME</em>',
+			description: 'set the default theme, must have admin access to room.',
+			method: _setDefaultTheme
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
@@ -790,6 +796,7 @@ class Main
 	function _emptyRoom(args: Array<String>) {
 		if(args.length == 0) {
 			_addMessage('**/decontaminate** requires argument: *ADMIN_PASSWORD*, this is to ensure you understand what you are doing.');
+			return;
 		}
 		var lockHttp: Http = new Http(basePath + 'api/empty/$room/${args[0]}');
 		lockHttp.onData = function(d) {
@@ -823,13 +830,36 @@ class Main
 	}
 
 	function _lightTheme(_) {
-		Cookie.set('theme', 'light',  60 * 60 * 24 * 365 * 10);
+		Cookie.set('${room}_theme', 'light',  60 * 60 * 24 * 365 * 10);
 		Browser.window.location.reload();
 	}
 
 	function _darkTheme(_) {
-		Cookie.set('theme', 'dark',  60 * 60 * 24 * 365 * 10);
+		Cookie.set('${room}_theme', 'dark',  60 * 60 * 24 * 365 * 10);
 		Browser.window.location.reload();
+	}
+
+	function _setDefaultTheme(args: Array<String>) {
+		if(args.length == 0) {
+			_addMessage('**/set_theme** requires argument: *THEME*.');
+			return;
+		}
+
+		var lockHttp: Http = new Http(basePath + 'api/setTheme/$room/${args[0]}/$adminPassword');
+		lockHttp.onData = function(d) {
+			if(d == 'themed') {
+				_addMessage('default theme set to: ${args[0]}.');
+			}
+			else {
+				_addMessage('you are not authorized to theme $room.');
+			}
+		}
+		lockHttp.onError = function(e) {
+			trace(e);
+			_addMessage('failed to connect to api, couldn\'t theme room.');
+		}
+
+		lockHttp.request(true);
 	}
 
 	function _legal(_) {
@@ -1080,16 +1110,16 @@ class Main
 		return messageItem;
 	}
 
-	function _setTheme(light: Bool = true) {
-		if(light) {
-			var lightCss: LinkElement = Browser.document.createLinkElement();
-			lightCss.rel = 'stylesheet';
-			lightCss.type = 'text/css';
-			lightCss.href = 'bin/css/clientstyle_light.css';
-			Browser.document.head.appendChild(lightCss);
-			lightTheme = true;
-		}
-		else {
+	function _setTheme(theme: String) {
+		switch(theme) {
+			case 'light':
+				var lightCss: LinkElement = Browser.document.createLinkElement();
+				lightCss.rel = 'stylesheet';
+				lightCss.type = 'text/css';
+				lightCss.href = 'bin/css/clientstyle_light.css';
+				Browser.document.head.appendChild(lightCss);
+				lightTheme = true;
+			default:
 			for (css in Browser.document.head.getElementsByTagName('link')) {
 				var link: LinkElement = cast css;
 				if(link.href.indexOf('_light') != -1) {
