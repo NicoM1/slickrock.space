@@ -358,7 +358,7 @@ Main.deleteMessage = function(room,id) {
 		}
 	}
 	Main.mongodb.collection("messages",function(e,database) {
-		if(e == null) database.remove({ room : room, _id : id});
+		if(e == null) database.remove({ room : room, _id : new js_node_mongodb_ObjectID(id)});
 	});
 };
 Main._parseMessages = function() {
@@ -403,7 +403,7 @@ Main._parseMessages = function() {
 					var value1 = { messages : [], lock : null, pw : null, typing : []};
 					Main.rooms.set(m.room,value1);
 				}
-				Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id, _id : m._id});
+				Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id, _id : m._id.toHexString()});
 			}
 		});
 	});
@@ -531,7 +531,7 @@ RouteHandler.prototype = {
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
 				var objectid = new js_node_mongodb_ObjectID();
-				Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid});
+				Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid.toHexString()});
 				Main.saveMessage({ text : message, id : id, room : room, _id : objectid});
 				if(Main.userCounts.get(room) == null) {
 					var v = [];
@@ -694,7 +694,7 @@ RouteHandler.prototype = {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
 		if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
-			Main.deleteMessage(room,js_node_mongodb_ObjectID.createFromHexString(id));
+			Main.deleteMessage(room,id);
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("deleted");
 			return;
