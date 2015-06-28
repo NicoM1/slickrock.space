@@ -116,9 +116,12 @@
 		}
 
 		function placeRooms(rooms){
-			rooms                = $.parseJSON(rooms);
 			var first_container  = $('#first-half');
 			var second_container = $('#second-half');
+
+			if(typeof(rooms) === 'string'){
+				rooms = $.parseJSON(rooms);
+			}
 
 			$.each(rooms, function(key, val){
 				var room = makeRoom(key, val);
