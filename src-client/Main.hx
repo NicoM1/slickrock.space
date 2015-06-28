@@ -849,6 +849,7 @@ class Main
 		lockHttp.onData = function(d) {
 			if(d == 'themed') {
 				_addMessage('default theme set to: ${args[0]}.');
+				Browser.window.location.reload();
 			}
 			else {
 				_addMessage('you are not authorized to theme $room.');

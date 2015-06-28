@@ -719,10 +719,13 @@ Main.prototype = {
 		}
 		var lockHttp = new haxe_Http(this.basePath + ("api/setTheme/" + this.room + "/" + args[0] + "/" + this.adminPassword));
 		lockHttp.onData = function(d) {
-			if(d == "themed") _g._addMessage("default theme set to: " + args[0] + "."); else _g._addMessage("you are not authorized to theme " + _g.room + ".");
+			if(d == "themed") {
+				_g._addMessage("default theme set to: " + args[0] + ".");
+				window.location.reload();
+			} else _g._addMessage("you are not authorized to theme " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 858, className : "Main", methodName : "_setDefaultTheme"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 859, className : "Main", methodName : "_setDefaultTheme"});
 			_g._addMessage("failed to connect to api, couldn't theme room.");
 		};
 		lockHttp.request(true);
@@ -983,7 +986,7 @@ Main.prototype = {
 				if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 			};
 			lockHttp.onError = function(e1) {
-				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1145, className : "Main", methodName : "_tryDeleteMessage"});
+				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1146, className : "Main", methodName : "_tryDeleteMessage"});
 				_g._addMessage("failed to connect to api, couldn't delete message.");
 			};
 			lockHttp.request(true);
@@ -1083,7 +1086,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1277, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1278, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
