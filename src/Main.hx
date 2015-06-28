@@ -588,7 +588,7 @@ class RouteHandler implements abe.IRoute {
 		response.send('failed');
 	}
 
-	@:post('/api/setTheme/:room/:theme/:privatePass')
+	/*@:post('/api/setTheme/:room/:theme/:privatePass')
 	function setRoomTheme(room: String, theme: String, privatePass: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);
@@ -601,7 +601,7 @@ class RouteHandler implements abe.IRoute {
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');
 		response.send('failed');
-	}
+	}*/
 
 	@:post('/api/:room/:lastID')
 	function getMessages(room: String, lastID: Int) {
