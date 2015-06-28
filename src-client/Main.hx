@@ -1188,7 +1188,6 @@ class Main
 
 			if (selectedElem != null) {
 				var command = selectedElem.getAttribute('data-command');
-				trace(command);
 				var replacement = '/' + command + ' ';
 				if(chatbox.value.indexOf(command) == -1) {
 					if (chatbox.value.charAt(chatbox.value.length - 1) == ' ' || (code != null && (code == 13 || code == 9))) {
