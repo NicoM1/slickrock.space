@@ -700,8 +700,8 @@ Main.prototype = {
 	}
 	,_credits: function(_) {
 		this._addMessage("Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).");
-		this._addMessage("Assorted help and testing: @dimensive, @gamesbybeta, @Zanzlanz.");
-		this._addMessage("Additional images: @nathanwentworth.");
+		this._addMessage("Assorted help and testing: Mark Kowalsky (@dimensive), Isaac Bickel (@gamesbybeta), Alex Lanzetta (@Zanzlanz).");
+		this._addMessage("Additional images: Nathan Wentworth (@nathanwentworth).");
 		this._addMessage("slickrock.io is crafted in Haxe, the backend is helped by the Abe library.");
 	}
 	,_rules: function(_) {
