@@ -100,6 +100,8 @@ class Main
 		room = untyped window.room;
 		_buildCommands();
 
+		_setTheme(Cookie.get('theme') == 'light');
+
 		Browser.window.onload = _windowLoaded;
 	}
 
@@ -816,13 +818,10 @@ class Main
 	}
 
 	function _lightTheme(_) {
-		var lightCss: LinkElement = Browser.document.createLinkElement();
-		lightCss.rel = 'stylesheet';
-		lightCss.type = 'text/css';
-		lightCss.href = 'bin/css/clientstyle_light.css';
-		Browser.document.head.appendChild(lightCss);
-		lightTheme = true;
+
 		_setID(id);
+		Cookie.set('theme', 'light',  60 * 60 * 24 * 365 * 10);
+		Browser.window.location.reload();
 	}
 
 	function _legal(_) {
@@ -1071,6 +1070,26 @@ class Main
 		}
 
 		return messageItem;
+	}
+
+	function _setTheme(light: Bool = true) {
+		if(light) {
+			var lightCss: LinkElement = Browser.document.createLinkElement();
+			lightCss.rel = 'stylesheet';
+			lightCss.type = 'text/css';
+			lightCss.href = 'bin/css/clientstyle_light.css';
+			Browser.document.head.appendChild(lightCss);
+			lightTheme = true;
+		}
+		else {
+			for (css in Browser.document.head.getElementsByTagName('link')) {
+				var link: LinkElement = cast css;
+				if(link.href.indexOf('_light') != -1) {
+					Browser.document.head.removeChild(link);
+					break;
+				}
+			}
+		}
 	}
 
 	function _tryDeleteMessage(e: MouseEvent, id: String) {
