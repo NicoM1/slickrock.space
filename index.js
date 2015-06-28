@@ -395,6 +395,7 @@ Main._parseMessages = function() {
 				Main.rooms.get(r1._id).lock = r1.lock;
 				Main.rooms.get(r1._id).pw = r1.pw;
 				Main.rooms.get(r1._id).salt = r1.salt;
+				if(r1.theme != null) Main.rooms.get(r1._id).theme = r1.theme; else Main.rooms.get(r1._id).theme = "dark";
 			}
 		});
 	});

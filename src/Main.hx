@@ -158,6 +158,7 @@ class Main {
 						rooms.get(r._id).lock = r.lock;
 						rooms.get(r._id).pw = r.pw;
 						rooms.get(r._id).salt = r.salt;
+						rooms.get(r._id).theme = r.theme != null? r.theme : 'dark';
 					}
 				});
 			}
