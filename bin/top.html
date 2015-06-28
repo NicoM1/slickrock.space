@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="enUS">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>slickrock.io</title>
+		<meta name="description" content="Communication – without all the hassle.">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="stylesheet" href="bin/css/bootstrap.min.css">
+		<link rel="stylesheet" href="bin/css/font-awesome-animation.min.css">
+		
+
+		<link rel="stylesheet" href="bin/fonts/font-awesome-4.3.0/css/font-awesome.min.css">
+		<link href='http://fonts.googleapis.com/css?family=Poiret+One|Gentium+Basic:300,400,700,400italic|Roboto:100,300,400,700' rel='stylesheet' type='text/css'>
+
+		<link rel="stylesheet" href="bin/css/main.css?v=3">
+		<link rel="stylesheet" href="bin/css/dark-theme.css?v=3">
+		<link rel="stylesheet" href="bin/css/top-rooms.css">
+			
+		<link class="favicon" rel="shortcut icon" type="image/x-icon" href="bin/img/faviconempty.ico" />
+		<link class="favicon" rel="icon" type="image/x-icon" href="bin/img/faviconempty.ico" />
+	</head>
+	<body>
+
+	<nav id="nav">
+	  <div class="container-fluid">
+		  <ul class="nav navbar-nav">
+			<li>
+				<a href="/">
+				<i class="fa fa-angle-left"></i>&nbsp;
+				<span class="smaller-xs">Back to slickrock.io</span>
+				</a>
+			</li>
+		  </ul>
+		</div>
+	</nav>
+<div class="dim">
+	<div class="jumbotron" id="header">
+		<div class="container text-center">
+			<h1>slickrock.io</h1>
+			<p class="text-muted subtitle">
+				<i class="fa fa-angle-right" style="color: #46DD7B;"></i>&nbsp; Find me the Cool Kids <span class="type-caret faa-flash animated faa-slow">&nbsp;</span>
+			</p>
+		</div>
+	</div>
+
+	<div class="container list-container mobile-container">
+		<div class="row">
+			<div class="col-sm-6">
+				<h3>Top Chat Rooms.</h3>
+			</div>
+			<div class="col-sm-6">
+				<p class="pull-right last-updated smaller-xs">Popular rooms from the last seven days.</p>
+			</div>
+		</div>
+		<div id="rooms-list">
+		<div class="row">
+			<div class="col-md-6" id="first-half">
+				
+			</div>
+			<div class="col-md-6" id="second-half">
+				
+			</div>
+		</div>
+		</div>
+
+	</div>
+
+	<footer class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 text-left">Copyright &copy; 2015 &mdash; Nico May
+				<hr class="visible-xs" style="opacity: .4;">
+				</div>
+				<div class="col-md-6 text-right"> <i class="fa fa-code"></i> with <i class="fa fa-heart-o"></i> by <a href="https://twitter.com/LorenzoMaieru">@LorenzoMaieru</a></div>
+			</div>
+		</div>
+	</footer>
+</div>
+		<!-- js -->
+		<script src="bin/js/vendor/jquery-1.11.2.min.js"></script>
+		<script src="bin/js/vendor/bootstrap.min.js"></script>
+		<script>
+
+		function makeRoom(key, val){
+			var locked     = ((val.locked+"").toLowerCase() === 'true');
+			var lock_icon  = (locked) ? 'lock' : 'unlock dimmed';
+			var lock_title = (locked) ? 'Locked Room' : 'Public Room';
+
+			var room = $('<div>');
+			room.addClass('room');
+
+			room.html(
+				'<a class="btn-peek pull-right hidden-xs" href="//chat.slickrock.io/'+val.room+'">go to room <i class="fa fa-angle-right"></i></a>'+
+				'<span class="thin">#'+(key+1)+'</span>'+
+				'&nbsp;&nbsp;'+
+				'<a class="room-title truncate" data-toggle="tooltip" data-placement="top" title="/'+val.room+'" href="//chat.slickrock.io/'+val.room+'">/'+
+					val.room+
+				'</a>'+
+				'&nbsp;&nbsp;'+
+				'<span class="extra">'+
+					'<i class="fa fa-'+
+					lock_icon+
+					'" data-toggle="tooltip" data-placement="top" title="'+
+					lock_title+
+					'"></i>'+
+					'&nbsp;&nbsp;'+
+					'<span class="powerlevel">'+
+						val.count+
+					'</span> <span class="thin">recurrent users.</span>'+
+				'</span>'
+			);
+
+			return room;
+		}
+
+		function placeRooms(rooms){
+			var first_container  = $('#first-half');
+			var second_container = $('#second-half');
+
+			if(typeof(rooms) === 'string'){
+				rooms = $.parseJSON(rooms);
+			}
+
+			$.each(rooms, function(key, val){
+				var room = makeRoom(key, val);
+				if(key < rooms.length / 2){
+					$(first_container).append(room);
+				}else{
+					$(second_container).append(room);
+				}
+				$('[data-toggle="tooltip"]').tooltip();
+			});
+		}
+
+		$(document).on('ready', function(){
+			var top_rooms_url = "http://chat.slickrock.io/api/getTopRooms";
+			$.getJSON(top_rooms_url, function(data) {
+				placeRooms(data);
+			});
+		});
+		</script>
+	</body>
+</html>
