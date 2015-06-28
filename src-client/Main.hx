@@ -360,10 +360,19 @@ class Main
 		}, 1000);
 	}
 
+	var counter = 0;
 	function _update() {
 		if (requestInProgress) {
-			return;
+			counter++;
+			if(counter > 4) {
+				getHttp.cancel();
+				requestInProgress = false;
+			}
+			else {
+				return;
+			}
 		}
+		counter = 0;
 		if(password == null) {
 			getHttp.url = basePath + 'api/' + room + '/' + lastIndex;
 		}
