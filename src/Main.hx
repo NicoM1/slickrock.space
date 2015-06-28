@@ -177,7 +177,8 @@ class Main {
 								messages: new Array<Message>(),
 								lock: null,
 								pw: null,
-								typing: []
+								typing: [],
+								theme: 'dark'
 							});
 						}
 						rooms.get(m.room).messages.push( { text: m.text, id: m.id, _id: m._id.toHexString() } );
@@ -323,7 +324,8 @@ class RouteHandler implements abe.IRoute {
 					messages: new Array<Message>(),
 					lock: null,
 					pw: null,
-					typing: []
+					typing: [],
+					theme: 'dark'
 				});
 			}
 
@@ -639,7 +641,8 @@ class RouteHandler implements abe.IRoute {
 				messages: new Array<Message>(),
 				lock: null,
 				pw: null,
-				typing: []
+				typing: [],
+				theme: 'dark'
 			});
 		}
 

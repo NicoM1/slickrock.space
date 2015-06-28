@@ -411,7 +411,7 @@ Main._parseMessages = function() {
 				var m = messages[_g1];
 				++_g1;
 				if(!Main.rooms.exists(m.room)) {
-					var value1 = { messages : [], lock : null, pw : null, typing : []};
+					var value1 = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
 					Main.rooms.set(m.room,value1);
 				}
 				Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id, _id : m._id.toHexString()});
@@ -541,7 +541,7 @@ RouteHandler.prototype = {
 		}
 		if(Main.tokens.get(privateID) == token) {
 			if(!Main.rooms.exists(room)) {
-				var value = { messages : [], lock : null, pw : null, typing : []};
+				var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
 				Main.rooms.set(room,value);
 			}
 			Main.emptyTyping(room,id);
@@ -802,7 +802,7 @@ RouteHandler.prototype = {
 			return;
 		}
 		if(!Main.rooms.exists(room)) {
-			var value = { messages : [], lock : null, pw : null, typing : []};
+			var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
 			Main.rooms.set(room,value);
 		}
 		var roomE = Main.rooms.get(room);
