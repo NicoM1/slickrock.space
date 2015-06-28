@@ -1,0 +1,18 @@
+body {
+    color: rgb(115, 115, 115);
+    background-color: #ffffff;
+}
+
+span {
+    text-shadow: 1px 1px 2px #888888;
+}
+
+.messageblock {
+    margin-bottom: 25px;
+    box-shadow: 2px 2px 15px #eeeeee;
+}
+
+#chatbox {
+    color: #ffffff;
+    background-color: #777777;
+}

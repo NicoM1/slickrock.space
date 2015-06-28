@@ -552,6 +552,11 @@ class Main
 			identifiers: '<strong>/bestow</strong>',
 			description: 'open a page where you may donate to keep the site afloat, if you are able.',
 			method: _donate
+		},
+		'illume' => {
+			identifiers: '<strong>/illume</strong>',
+			description: 'switch to light theme.',
+			method: _lightTheme
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
@@ -806,6 +811,14 @@ class Main
 
 	function _notificationCommand(_) {
 		_getNotificationPermission(true);
+	}
+
+	function _lightTheme(_) {
+		var lightCss: LinkElement = Browser.document.createLinkElement();
+		lightCss.rel = 'stylesheet';
+		lightCss.type = 'text/css';
+		lightCss.href = 'bin/css/clientstyle_light.css';
+		Browser.document.head.appendChild(lightCss);
 	}
 
 	function _legal(_) {
