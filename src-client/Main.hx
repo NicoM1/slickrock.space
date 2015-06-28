@@ -814,9 +814,9 @@ class Main
 	}
 
 	function _credits(_) {
-		_addMessage('Homepage design and general awesomeness: Lorenzo Maieru (@LorenzoMaieru).');
-		_addMessage('Assorted help and testing: Mark Kowalsky (@dimensive), Isaac Bickel (@gamesbybeta), Alex Lanzetta (@Zanzlanz).');
-		_addMessage('Additional images: Nathan Wentworth (@nathanwentworth).');
+		_addMessage('Homepage design and general awesomeness: **Lorenzo Maieru** *(@LorenzoMaieru)*.');
+		_addMessage('Assorted help and testing: **Mark Kowalsky** *(@dimensive)*, **Isaac Bickel** *(@gamesbybeta)*, **Alex Lanzetta** *(@Zanzlanz)*.');
+		_addMessage('Additional images: **Nathan Wentworth** *(@nathanwentworth)*.');
 		_addMessage('slickrock.io is crafted in Haxe, the backend is helped by the Abe library.');
 	}
 
