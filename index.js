@@ -517,7 +517,8 @@ RouteHandler.prototype = {
 			if(e == null) {
 				var withRoom = "";
 				var startBody = d.indexOf("head") + 6;
-				var theme = Main.rooms.get(room).theme;
+				var theme = "dark";
+				if(Main.rooms.get(room) != null) theme = Main.rooms.get(room).theme;
 				withRoom = d.substring(0,startBody) + ("\n\t<script>var room = \"" + room + "\"; var roomTheme = \"" + theme + "\";</script>\n") + HxOverrides.substr(d,startBody + 1,null);
 				response.setHeader("Access-Control-Allow-Origin","*");
 				response.send(withRoom);
