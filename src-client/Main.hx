@@ -561,6 +561,11 @@ class Main
 			identifiers: '<strong>/illume</strong>',
 			description: 'switch to light theme.',
 			method: _lightTheme
+		},
+		'becloud' => {
+			identifiers: '<strong>/becloud</strong>',
+			description: 'switch to dark theme.',
+			method: _darkTheme
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
@@ -818,9 +823,12 @@ class Main
 	}
 
 	function _lightTheme(_) {
-
-		_setID(id);
 		Cookie.set('theme', 'light',  60 * 60 * 24 * 365 * 10);
+		Browser.window.location.reload();
+	}
+
+	function _darkTheme(_) {
+		Cookie.set('theme', 'dark',  60 * 60 * 24 * 365 * 10);
 		Browser.window.location.reload();
 	}
 
