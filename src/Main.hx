@@ -269,6 +269,15 @@ class RouteHandler implements abe.IRoute {
 		});
 	}
 
+	@:get('/top')
+	function top() {
+		_serveHtml('bin/top.html', function(e, d) {
+			if(e == null) {
+				response.send(d);
+			}
+		});
+	}
+
 	@:get('/:room')
 	function chatroom(room: String) {
 		room = room.toLowerCase();
