@@ -94,6 +94,8 @@ class Main
 	var lastY: Int = null;
 	var lastChatboxValue: String = '';
 
+	var lightTheme: Bool = false;
+
 	function new() {
 		room = untyped window.room;
 		_buildCommands();
@@ -819,6 +821,8 @@ class Main
 		lightCss.type = 'text/css';
 		lightCss.href = 'bin/css/clientstyle_light.css';
 		Browser.document.head.appendChild(lightCss);
+		lightTheme = true;
+		_setID(id);
 	}
 
 	function _legal(_) {
@@ -1346,6 +1350,10 @@ class Main
 	}
 
 	function _generateColorFromID(?id: String, ?dark: Bool = false): String {
+		var max: Float = 0.5;
+		if(lightTheme) {
+			max = 1.0;
+		}
 		var hsl: Hsl;
 		if (id != null && id != '-1') {
 			var intID = 0;
@@ -1354,12 +1362,12 @@ class Main
 				intID += s;
 			}
 			var hue = new Random(intID * 12189234).float(0, 360);
-			var sat = new Random(intID * 12189234).float(0.3, 0.5);
-			var light = new Random(intID * 12189234).float(0.3, 0.5);
+			var sat = new Random(intID * 12189234).float(0.3, max);
+			var light = new Random(intID * 12189234).float(0.3, max);
 			hsl = Hsl.create(hue, sat, light);
 
 			if (dark) {
-				hsl = hsl.darker(0.5);
+				hsl = hsl.darker(1-max);
 			}
 		}
 		else {
