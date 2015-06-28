@@ -261,30 +261,35 @@ var Main = function() {
 		var uses18 = [];
 		router.registerMethod("/api/claim/:room/:privateID/:oldAdmin/:newAdmin","post",process18,uses18,[]);
 		var filters19 = new abe_core_ArgumentsFilter();
-		var processor19 = new abe_core_ArgumentProcessor(filters19,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
-		var process19 = new RouteHandler_$getMessages_$RouteProcess({ room : null, lastID : null},instance,processor19);
+		var processor19 = new abe_core_ArgumentProcessor(filters19,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "theme", optional : false, type : "String", sources : ["params"]},{ name : "privatePass", optional : false, type : "String", sources : ["params"]}]);
+		var process19 = new RouteHandler_$setRoomTheme_$RouteProcess({ room : null, theme : null, privatePass : null},instance,processor19);
 		var uses19 = [];
-		router.registerMethod("/api/:room/:lastID","post",process19,uses19,[]);
+		router.registerMethod("/api/setTheme/:room/:theme/:privatePass","post",process19,uses19,[]);
 		var filters20 = new abe_core_ArgumentsFilter();
-		var processor20 = new abe_core_ArgumentProcessor(filters20,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
-		var process20 = new RouteHandler_$getMessagesWithPass_$RouteProcess({ room : null, password : null, lastID : null},instance,processor20);
+		var processor20 = new abe_core_ArgumentProcessor(filters20,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process20 = new RouteHandler_$getMessages_$RouteProcess({ room : null, lastID : null},instance,processor20);
 		var uses20 = [];
-		router.registerMethod("/api/:room/:password/:lastID","post",process20,uses20,[]);
+		router.registerMethod("/api/:room/:lastID","post",process20,uses20,[]);
 		var filters21 = new abe_core_ArgumentsFilter();
-		var processor21 = new abe_core_ArgumentProcessor(filters21,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
-		var process21 = new RouteHandler_$getMessagesHist_$RouteProcess({ room : null, lastID : null, firstID : null},instance,processor21);
+		var processor21 = new abe_core_ArgumentProcessor(filters21,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
+		var process21 = new RouteHandler_$getMessagesWithPass_$RouteProcess({ room : null, password : null, lastID : null},instance,processor21);
 		var uses21 = [];
-		router.registerMethod("/api/hist/:room/:lastID/:firstID","get",process21,uses21,[]);
+		router.registerMethod("/api/:room/:password/:lastID","post",process21,uses21,[]);
 		var filters22 = new abe_core_ArgumentsFilter();
 		var processor22 = new abe_core_ArgumentProcessor(filters22,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
 		var process22 = new RouteHandler_$getMessagesHist_$RouteProcess({ room : null, lastID : null, firstID : null},instance,processor22);
 		var uses22 = [];
-		router.registerMethod("/api/hist/:room/:lastID/:firstID","post",process22,uses22,[]);
+		router.registerMethod("/api/hist/:room/:lastID/:firstID","get",process22,uses22,[]);
 		var filters23 = new abe_core_ArgumentsFilter();
-		var processor23 = new abe_core_ArgumentProcessor(filters23,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
-		var process23 = new RouteHandler_$getMessagesHistWithPass_$RouteProcess({ room : null, password : null, lastID : null, firstID : null},instance,processor23);
+		var processor23 = new abe_core_ArgumentProcessor(filters23,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
+		var process23 = new RouteHandler_$getMessagesHist_$RouteProcess({ room : null, lastID : null, firstID : null},instance,processor23);
 		var uses23 = [];
-		router.registerMethod("/api/hist/:room/:password/:lastID/:firstID","post",process23,uses23,[]);
+		router.registerMethod("/api/hist/:room/:lastID/:firstID","post",process23,uses23,[]);
+		var filters24 = new abe_core_ArgumentsFilter();
+		var processor24 = new abe_core_ArgumentProcessor(filters24,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "password", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]},{ name : "firstID", optional : false, type : "Int", sources : ["params"]}]);
+		var process24 = new RouteHandler_$getMessagesHistWithPass_$RouteProcess({ room : null, password : null, lastID : null, firstID : null},instance,processor24);
+		var uses24 = [];
+		router.registerMethod("/api/hist/:room/:password/:lastID/:firstID","post",process24,uses24,[]);
 		return router;
 	})(new RouteHandler(),app.router);
 	var port;
@@ -510,8 +515,7 @@ RouteHandler.prototype = {
 			if(e == null) {
 				var withRoom = "";
 				var startBody = d.indexOf("head") + 6;
-				var theme;
-				if(Main.rooms.get(room).theme != null) theme = Main.rooms.get(room).theme; else theme = "dark";
+				var theme = Main.rooms.get(room).theme;
 				withRoom = d.substring(0,startBody) + ("\n\t<script>var room = \"" + room + "\"; var roomTheme = \"" + theme + "\";</script>\n") + HxOverrides.substr(d,startBody + 1,null);
 				response.setHeader("Access-Control-Allow-Origin","*");
 				response.send(withRoom);
@@ -757,6 +761,19 @@ RouteHandler.prototype = {
 			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), lock : roomE.lock, theme : roomE.theme});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("claimed");
+			return;
+		}
+		response.setHeader("Access-Control-Allow-Origin","*");
+		response.send("failed");
+	}
+	,setRoomTheme: function(room,theme,privatePass,request,response,next) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if(haxe_crypto_Sha1.encode(roomE.salt + privatePass) == roomE.pw) {
+			roomE.theme = theme;
+			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), lock : roomE.lock, theme : roomE.theme});
+			response.setHeader("Access-Control-Allow-Origin","*");
+			response.send("themed");
 			return;
 		}
 		response.setHeader("Access-Control-Allow-Origin","*");
@@ -1154,6 +1171,17 @@ RouteHandler_$sendMessage_$RouteProcess.prototype = $extend(abe_core_RouteProces
 		this.instance.sendMessage(this.args.message,this.args.room,this.args.id,this.args.privateID,this.args.token,request,response,next);
 	}
 	,__class__: RouteHandler_$sendMessage_$RouteProcess
+});
+var RouteHandler_$setRoomTheme_$RouteProcess = function(args,instance,argumentProcessor) {
+	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
+};
+RouteHandler_$setRoomTheme_$RouteProcess.__name__ = ["RouteHandler_setRoomTheme_RouteProcess"];
+RouteHandler_$setRoomTheme_$RouteProcess.__super__ = abe_core_RouteProcess;
+RouteHandler_$setRoomTheme_$RouteProcess.prototype = $extend(abe_core_RouteProcess.prototype,{
+	execute: function(request,response,next) {
+		this.instance.setRoomTheme(this.args.room,this.args.theme,this.args.privatePass,request,response,next);
+	}
+	,__class__: RouteHandler_$setRoomTheme_$RouteProcess
 });
 var RouteHandler_$top_$RouteProcess = function(args,instance,argumentProcessor) {
 	abe_core_RouteProcess.call(this,args,instance,argumentProcessor);
