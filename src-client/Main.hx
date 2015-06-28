@@ -1370,8 +1370,10 @@ class Main
 
 	function _generateColorFromID(?id: String, ?dark: Bool = false): String {
 		var max: Float = 0.5;
+		var min: Float = 0.3;
 		if(lightTheme) {
 			max = 1.0;
+			min = 0.7;
 		}
 		var hsl: Hsl;
 		if (id != null && id != '-1') {
@@ -1381,8 +1383,8 @@ class Main
 				intID += s;
 			}
 			var hue = new Random(intID * 12189234).float(0, 360);
-			var sat = new Random(intID * 12189234).float(0.3, max);
-			var light = new Random(intID * 12189234).float(0.3, max);
+			var sat = new Random(intID * 12189234).float(min, max);
+			var light = new Random(intID * 12189234).float(min, max);
 			hsl = Hsl.create(hue, sat, light);
 
 			if (dark) {
