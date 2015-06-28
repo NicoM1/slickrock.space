@@ -1,0 +1,142 @@
+body{
+	background-position: 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-image: url("../img/slickrocks.jpg");
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.jumbotron, .footer{
+	background: none;
+}
+
+.dim{
+	margin: 0;
+	padding-left: 0;
+	padding-right: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	min-height: 100%;
+	width: 100%;
+
+}
+
+.footer{
+	padding: 15px;
+	opacity: .7;
+	position: relative;
+}
+
+.list-container{
+	background-color: #222;
+	padding: 30px;
+	-webkit-box-shadow: 0px 5px 10px 0px rgba(30, 30, 30, 0.3);
+	-moz-box-shadow:    0px 5px 10px 0px rgba(30, 30, 30, 0.3);
+	box-shadow:         0px 5px 10px 0px rgba(30, 30, 30, 0.3);
+}
+
+.last-updated{
+	color: #999;
+}
+#last-updated{
+	color: #ccc;
+}
+
+.room{
+	padding: 15px;
+	margin-bottom: 15px;
+	border-bottom: 1px solid #333;
+}
+
+.room-left{
+	display: inline-block;
+	width: 200px;
+	vertical-align: middle;
+}
+.room-center{
+	display: inline-block;
+	width: calc(100% - 410px);
+}
+.room-right{
+	display: inline-block;
+	width: 200px;
+}
+
+.room-title{
+	font-size: 16px;
+	border-bottom: 1px solid rgba(40, 40, 40, 0);
+}
+
+nav{
+	position: absolute;
+}
+
+.btn-peek{
+	color: #666;
+	margin-left: 30px;
+}
+
+.btn-peek, .btn-peek > *{
+	-moz-transition: none;
+	-webkit-transition: none;
+	transition: none;
+}
+
+.btn-peek:hover,
+.btn-peek:active,
+.btn-peek:focus,
+.btn-peek:hover:active{
+	color: #ddd;
+	border: none;
+
+}
+
+.progress{
+	border: 1px solid #ddd;
+	background: transparent;
+	margin-bottom: -4px;
+}
+.progress .progress-bar{
+	background-color: #ddd;
+	-webkit-box-shadow: inset 0px 0px 0px 1px #222;
+	-moz-box-shadow:    inset 0px 0px 0px 1px #222;
+	box-shadow:         inset 0px 0px 0px 1px #222;
+}
+
+
+.truncate {
+	display: inline-block;
+	max-width: 200px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: bottom;
+}
+
+@media (max-width: 769px) {
+	nav{
+		background-color: rgba(40, 40, 40, 0);
+	}
+	.nav.navbar-nav{
+		margin: 0;
+	}
+	nav .container-fluid{
+		padding-left: 0;
+	}
+	.pull-right.last-updated.smaller-xs{
+		float: left !important;
+	}
+}
+@media (max-width: 1200px) {
+
+	.room > .extra{
+		display: block;
+	}
+
+}
+
+.dimmed{
+	opacity: .5;
+}
