@@ -125,7 +125,7 @@ nav.scrolled-past{
 @media (max-width: 769px) {
 
     .jumbotron {
-        background-size: 800px 600px; 
+        background-size: 800px 600px;
     }
     .jumbotron .subtitle{
 		font-size: 16px;
@@ -198,7 +198,7 @@ nav.scrolled-past{
 	padding-bottom: 60px;
 }
 .footer *{
-	color: #fff; 
+	color: #fff;
 	text-shadow: 0px 1px 5px rgba(40, 40, 40, 1);
 }
 .footer a{
@@ -243,7 +243,7 @@ nav.scrolled-past{
 	.img-presponsive{
 		opacity: 0.8;
 	}
-	
+
 	.img-presponsive:hover{
 		opacity: 1;
 	}
@@ -295,7 +295,6 @@ nav.scrolled-past{
 	-webkit-box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.3);
 	-moz-box-shadow:    0px 5px 10px 0px rgba(50, 50, 50, 0.3);
 	box-shadow:         0px 5px 10px 0px rgba(50, 50, 50, 0.3);
-	background-color: #2b2b2b;
+	background-color: #222;
 	padding: 5px;
 }
-
