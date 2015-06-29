@@ -14,3 +14,9 @@ span {
     color: #eeeeee;
     background-color: #585858;
 }
+
+#helpbox {
+    background-color: #585858;
+    color: #eeeeee;
+    border-color: #b0b0b0;
+}
