@@ -188,7 +188,7 @@ li:hover {
 	padding-bottom: 10px;
 }
 
-#helpbox li .selected {
+li .selected {
 	background-color: hsl(282, 45.9%, 25.7%);
 }
 
