@@ -25,6 +25,6 @@ span {
     background-color: #5c5c5c;
 }
 
-.selected {
+#helpbox li .selected {
 	background-color: hsl(282, 45.9%, 25.7%);
 }

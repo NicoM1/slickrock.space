@@ -139,10 +139,6 @@ span.non-anim {
 #helpbox {
 	position: fixed;
 	margin: 0px;
-	padding-left: 5px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-right: 5px;
 
 	max-height: 80%;
 	overflow: scroll;
@@ -187,16 +183,12 @@ li:hover {
 	cursor: pointer;
 }
 
-.description {
-
-}
-
 .commandTip {
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
 
-.selected {
+#helpbox li .selected {
 	background-color: hsl(282, 45.9%, 25.7%);
 }
 
