@@ -20,3 +20,11 @@ span {
     color: #eeeeee;
     border-color: #b0b0b0;
 }
+
+#helpbox li:nth-child(odd) {
+    background-color: #5c5c5c;
+}
+
+.selected {
+	background-color: hsl(282, 45.9%, 25.7%);
+}

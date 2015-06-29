@@ -161,6 +161,10 @@ span.non-anim {
 	list-style-type: none;
 }
 
+#helpbox li:nth-child(odd) {
+    background-color: #242424;
+}
+
 @media screen and (max-width: 400px), screen and (max-height: 500px) {
 	#chatbox {
         height: 50px;
