@@ -408,11 +408,11 @@ class RouteHandler implements abe.IRoute {
 					lowestIndex = i;
 				}
 			}
-			if (top10.length >= 10 && count.length > lowest) {
-				top10.remove(top10[lowestIndex]);
+			if (top10.length < 10) {
 				top10.push({room: r, count: count.length, locked: roomE.lock != null});
 			}
-			else if (top10.length < 10) {
+			else if (count.length > lowest) {
+				top10.remove(top10[lowestIndex]);
 				top10.push({room: r, count: count.length, locked: roomE.lock != null});
 			}
 		}

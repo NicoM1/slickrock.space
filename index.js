@@ -619,10 +619,10 @@ RouteHandler.prototype = {
 					lowestIndex = i;
 				}
 			}
-			if(top10.length >= 10 && count.length > lowest) {
+			if(top10.length < 10) top10.push({ room : r, count : count.length, locked : roomE.lock != null}); else if(count.length > lowest) {
 				HxOverrides.remove(top10,top10[lowestIndex]);
 				top10.push({ room : r, count : count.length, locked : roomE.lock != null});
-			} else if(top10.length < 10) top10.push({ room : r, count : count.length, locked : roomE.lock != null});
+			}
 		}
 		console.log(Main.userCounts);
 		console.log(top10);
