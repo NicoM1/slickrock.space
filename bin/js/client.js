@@ -399,7 +399,7 @@ Main.prototype = {
 	}
 	,_getAuth: function(data) {
 		this._addMessage("please enter the following to authenticate.");
-		this._addMessage("#http://dummyimage.com/400x128/2b2b2b/ecf0f1/&amp;text=" + data + " 200#",null,null,false,false);
+		this._addMessage("#http://dummyimage.com/400x128/202020/ecf0f1/&amp;text=" + data + " 200#",null,null,false,false);
 	}
 	,_loop: function() {
 		var _g = this;
