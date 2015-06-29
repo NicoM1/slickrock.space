@@ -625,6 +625,7 @@ RouteHandler.prototype = {
 			} else if(top10.length < 10) top10.push({ room : r, count : count.length, locked : roomE.lock != null});
 		}
 		console.log(Main.userCounts);
+		console.log(top10);
 		top10.sort(function(r1,r2) {
 			if(r1.count > r2.count) return -1;
 			if(r1.count < r2.count) return 1;
