@@ -614,7 +614,7 @@ RouteHandler.prototype = {
 			while(_g11 < _g2) {
 				var i = _g11++;
 				var c = top10[i];
-				if(c.count < lowest) {
+				if(c.count <= lowest) {
 					lowest = c.count;
 					lowestIndex = i;
 				}

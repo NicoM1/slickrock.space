@@ -403,7 +403,7 @@ class RouteHandler implements abe.IRoute {
 			toRemove = [];
 			for (i in 0...top10.length) {
 				var c = top10[i];
-				if (c.count < lowest) {
+				if (c.count <= lowest) {
 					lowest = c.count;
 					lowestIndex = i;
 				}
