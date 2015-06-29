@@ -812,8 +812,7 @@ Main.prototype = {
 		while(_g4 < _g11.length) {
 			var t = _g11[_g4];
 			++_g4;
-			this.messages.removeChild(t.chevron);
-			this.messages.removeChild(t.message);
+			this.messages.removeChild(t);
 		}
 		this.typings = [];
 		var _g5 = 0;
@@ -838,14 +837,13 @@ Main.prototype = {
 				var chevron = this._makeSpan(true,t1);
 				message1.appendChild(chevron);
 				this.messages.appendChild(message1);
-				var messageD = { id : t1, chevron : chevron, message : message1};
 				message1.appendChild(typeMessage[0]);
 				haxe_Timer.delay((function(typeMessage) {
 					return function() {
 						typeMessage[0].classList.add("loaded");
 					};
 				})(typeMessage),10);
-				this.typings.push(messageD);
+				this.typings.push(message1);
 				this._tryScroll();
 			}
 		}
@@ -985,7 +983,7 @@ Main.prototype = {
 				if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 			};
 			lockHttp.onError = function(e1) {
-				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1146, className : "Main", methodName : "_tryDeleteMessage"});
+				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1140, className : "Main", methodName : "_tryDeleteMessage"});
 				_g._addMessage("failed to connect to api, couldn't delete message.");
 			};
 			lockHttp.request(true);
@@ -1085,7 +1083,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1278, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1272, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {

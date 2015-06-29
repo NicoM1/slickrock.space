@@ -69,7 +69,7 @@ class Main
 	var messageSound: AudioElement;
 	var lastParagraph: DivElement;
 	var favicons: Array<LinkElement>;
-	var typings: Array<MessageDiv> = new Array<MessageDiv>();
+	var typings: Array<DivElement> = new Array<DivElement>();
 
 	var requestInProgress: Bool = false;
 	var histRequestInProgress: Bool = false;
@@ -953,8 +953,7 @@ class Main
 		}
 
 		for (t in typings) {
-			messages.removeChild(t.chevron);
-			messages.removeChild(t.message);
+			messages.removeChild(t);
 		}
 		typings = [];
 
@@ -973,14 +972,9 @@ class Main
 				message.appendChild(chevron);
 				messages.appendChild(message);
 
-				var messageD: MessageDiv = {
-					id: t,
-					chevron: chevron,
-					message: message
-				}
 				message.appendChild(typeMessage);
 				Timer.delay(function() { typeMessage.classList.add('loaded'); }, 10);
-				typings.push(messageD);
+				typings.push(message);
 
 				_tryScroll();
 			}
