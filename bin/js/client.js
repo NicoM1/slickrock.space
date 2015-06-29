@@ -1190,8 +1190,8 @@ Main.prototype = {
 		var max = 0.5;
 		var min = 0.3;
 		if(this.lightTheme) {
-			max = 1.0;
-			min = 0.7;
+			max = 0.4;
+			min = 0.2;
 		}
 		var hsl;
 		if(id != null && id != "-1") {
@@ -1204,7 +1204,7 @@ Main.prototype = {
 				intID += s;
 			}
 			var hue = new Random(intID * 12189234)["float"](0,360);
-			var sat = new Random(intID * 12189234)["float"](min,max);
+			var sat = new Random(intID * 12189234)["float"](0.7,1.0);
 			var light = new Random(intID * 12189234)["float"](min,max);
 			hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
 			if(dark) hsl = thx_color__$Hsl_Hsl_$Impl_$.darker(hsl,1 - max);
