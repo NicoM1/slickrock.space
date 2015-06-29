@@ -56,8 +56,12 @@ img {
 .messageblock {
 	height: 100%;
 	margin: 0px;
-	margin-bottom:15px;
-	padding:0px;
+	padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.messageblock:nth-child(odd) {
+    background-color: #252525;
 }
 
 h1 {
