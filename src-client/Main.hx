@@ -98,10 +98,19 @@ class Main
 
 	function new() {
 		room = untyped window.room;
-		var theme = untyped window.roomTheme;
-		_buildCommands();
+		var theme = 'dark';
 
-		_setTheme(Cookie.get('${room}_theme') != null? Cookie.get('${room}_theme') : theme);
+		if(_inIframe()) {
+			theme = untyped window.roomTheme;
+		}
+
+		if(Cookie.exists('${room}_theme')) {
+			theme = Cookie.get('${room}_theme');
+		}
+
+		_setTheme(theme);
+
+		_buildCommands();
 
 		Browser.window.onload = _windowLoaded;
 	}

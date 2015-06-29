@@ -187,9 +187,11 @@ var Main = function() {
 	this.id = null;
 	this.basePath = "https://aqueous-basin.herokuapp.com/";
 	this.room = window.room;
-	var theme = window.roomTheme;
+	var theme = "dark";
+	if(this._inIframe()) theme = window.roomTheme;
+	if(js_Cookie.exists("" + this.room + "_theme")) theme = js_Cookie.get("" + this.room + "_theme");
+	this._setTheme(theme);
 	this._buildCommands();
-	this._setTheme(js_Cookie.get("" + this.room + "_theme") != null?js_Cookie.get("" + this.room + "_theme"):theme);
 	window.onload = $bind(this,this._windowLoaded);
 };
 Main.__name__ = true;
@@ -202,7 +204,7 @@ Main.prototype = {
 		this.authHttp = new haxe_Http(this.basePath);
 		this.authHttp.onData = $bind(this,this._getAuth);
 		this.authHttp.onError = function(error) {
-			haxe_Log.trace(error,{ fileName : "Main.hx", lineNumber : 114, className : "Main", methodName : "_windowLoaded"});
+			haxe_Log.trace(error,{ fileName : "Main.hx", lineNumber : 123, className : "Main", methodName : "_windowLoaded"});
 			_g._addMessage("Could not connect to authentication api, please refresh the page.");
 		};
 		this.getHttp = new haxe_Http(this.basePath + this.lastIndex);
@@ -212,7 +214,7 @@ Main.prototype = {
 			};
 		})($bind(this,this._parseMessages),false);
 		this.getHttp.onError = function(error1) {
-			haxe_Log.trace(error1,{ fileName : "Main.hx", lineNumber : 121, className : "Main", methodName : "_windowLoaded"});
+			haxe_Log.trace(error1,{ fileName : "Main.hx", lineNumber : 130, className : "Main", methodName : "_windowLoaded"});
 			_g.requestInProgress = false;
 		};
 		this.postHttp = new haxe_Http(this.basePath);
@@ -227,7 +229,7 @@ Main.prototype = {
 			if(data == "failed-image") _g._addMessage("to prevent spam, images are disabled on this chatroom, you may ***/survey*** another chat where this restriction is not active.");
 		};
 		this.postHttp.onError = function(error2) {
-			haxe_Log.trace(error2,{ fileName : "Main.hx", lineNumber : 139, className : "Main", methodName : "_windowLoaded"});
+			haxe_Log.trace(error2,{ fileName : "Main.hx", lineNumber : 148, className : "Main", methodName : "_windowLoaded"});
 			_g.requestInProgress = false;
 		};
 		this.chatbox = window.document.getElementById("chatbox");
@@ -339,7 +341,7 @@ Main.prototype = {
 				var histHttp = new haxe_Http(this.basePath);
 				histHttp.onError = function(e) {
 					_g.histRequestInProgress = false;
-					haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 282, className : "Main", methodName : "_tryGetOldMessages"});
+					haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 291, className : "Main", methodName : "_tryGetOldMessages"});
 				};
 				histHttp.onData = (function(f,a2) {
 					return function(a1) {
@@ -387,7 +389,7 @@ Main.prototype = {
 		checkValid.onError = function(e) {
 			js_Cookie.remove("private");
 			js_Cookie.remove("token");
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 344, className : "Main", methodName : "_checkValid"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 353, className : "Main", methodName : "_checkValid"});
 			_g._addMessage("an error occured getting authentication, please refresh the page.");
 		};
 		checkValid.request(true);
@@ -544,7 +546,7 @@ Main.prototype = {
 			_g._printID();
 		};
 		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 615, className : "Main", methodName : "_getID"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 624, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
 		};
 		idHttp.request(true);
@@ -577,7 +579,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 667, className : "Main", methodName : "_claimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 676, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
 		};
 		lockHttp.request(true);
@@ -597,7 +599,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to reclaim " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 691, className : "Main", methodName : "_reclaimRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 700, className : "Main", methodName : "_reclaimRoom"});
 			_g._addMessage("failed to connect to api, couldn't reclaim room.");
 		};
 		lockHttp.request(true);
@@ -616,7 +618,7 @@ Main.prototype = {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 716, className : "Main", methodName : "_authorizeRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 725, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
 		};
 		lockHttp.request(true);
@@ -657,7 +659,7 @@ Main.prototype = {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 771, className : "Main", methodName : "_lockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 780, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
 		};
 		lockHttp.request(true);
@@ -669,7 +671,7 @@ Main.prototype = {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 789, className : "Main", methodName : "_unlockRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 798, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
 		};
 		lockHttp.request(true);
@@ -685,7 +687,7 @@ Main.prototype = {
 			if(d == "emptied") _g._addMessage("" + _g.room + " emptied."); else _g._addMessage("you are not authorized to empty " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 811, className : "Main", methodName : "_emptyRoom"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 820, className : "Main", methodName : "_emptyRoom"});
 			_g._addMessage("failed to connect to api, couldn't empty room.");
 		};
 		lockHttp.request(true);
@@ -724,7 +726,7 @@ Main.prototype = {
 			} else _g._addMessage("you are not authorized to theme " + _g.room + ".");
 		};
 		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 859, className : "Main", methodName : "_setDefaultTheme"});
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 868, className : "Main", methodName : "_setDefaultTheme"});
 			_g._addMessage("failed to connect to api, couldn't theme room.");
 		};
 		lockHttp.request(true);
@@ -983,7 +985,7 @@ Main.prototype = {
 				if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 			};
 			lockHttp.onError = function(e1) {
-				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1140, className : "Main", methodName : "_tryDeleteMessage"});
+				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1149, className : "Main", methodName : "_tryDeleteMessage"});
 				_g._addMessage("failed to connect to api, couldn't delete message.");
 			};
 			lockHttp.request(true);
@@ -1083,7 +1085,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1272, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1281, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
