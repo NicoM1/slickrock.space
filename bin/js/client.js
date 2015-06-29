@@ -1207,7 +1207,7 @@ Main.prototype = {
 			var sat = new Random(intID * 12189234)["float"](0.7,1.0);
 			var light = new Random(intID * 12189234)["float"](min,max);
 			hsl = thx_color__$Hsl_Hsl_$Impl_$.create(hue,sat,light);
-			if(dark) hsl = thx_color__$Hsl_Hsl_$Impl_$.darker(hsl,1 - max);
+			if(!this.lightTheme && dark) hsl = thx_color__$Hsl_Hsl_$Impl_$.darker(hsl,1 - max);
 		} else hsl = thx_color__$Hsl_Hsl_$Impl_$.create(0,1,1);
 		return "#" + StringTools.hex(thx_color__$Hsl_Hsl_$Impl_$.toRgb(hsl),6);
 	}

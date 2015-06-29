@@ -1420,7 +1420,7 @@ class Main
 			var light = new Random(intID * 12189234).float(min, max);
 			hsl = Hsl.create(hue, sat, light);
 
-			if (dark) {
+			if (!lightTheme && dark) {
 				hsl = hsl.darker(1-max);
 			}
 		}
