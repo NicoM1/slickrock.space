@@ -412,6 +412,7 @@ class RouteHandler implements abe.IRoute {
 				top10.push({room: r, count: count.length, locked: roomE.lock != null});
 			}
 			else if (count.length > lowest) {
+				js.Node.console.log('removing: ' + top10[lowestIndex]);
 				top10.remove(top10[lowestIndex]);
 				top10.push({room: r, count: count.length, locked: roomE.lock != null});
 			}

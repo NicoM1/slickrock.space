@@ -620,6 +620,7 @@ RouteHandler.prototype = {
 				}
 			}
 			if(top10.length < 10) top10.push({ room : r, count : count.length, locked : roomE.lock != null}); else if(count.length > lowest) {
+				console.log("removing: " + Std.string(top10[lowestIndex]));
 				HxOverrides.remove(top10,top10[lowestIndex]);
 				top10.push({ room : r, count : count.length, locked : roomE.lock != null});
 			}
