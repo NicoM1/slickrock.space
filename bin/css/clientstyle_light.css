@@ -28,3 +28,7 @@ span {
 .selected {
 	background-color: hsl(282, 45.9%, 25.7%) !important;
 }
+
+.floatingbutton:hover {
+	color: #888888;
+}
