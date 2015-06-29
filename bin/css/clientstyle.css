@@ -149,11 +149,6 @@ span.non-anim {
 	background-color: #1e1e1e;
 	display: none;
 
-	border-width: 2px;
-	border-right: solid;
-	border-top: solid;
-	border-color: #252525;
-
 	list-style-type: none;
 }
 
