@@ -416,6 +416,9 @@ class RouteHandler implements abe.IRoute {
 				top10.push({room: r, count: count.length, locked: roomE.lock != null});
 			}
 		}
+
+		trace(Main.userCounts);
+
 		top10.sort(function(r1: RoomMetric, r2: RoomMetric) {
 			if (r1.count > r2.count) {
 				return -1;

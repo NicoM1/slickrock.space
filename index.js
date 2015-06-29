@@ -624,6 +624,7 @@ RouteHandler.prototype = {
 				top10.push({ room : r, count : count.length, locked : roomE.lock != null});
 			} else if(top10.length < 10) top10.push({ room : r, count : count.length, locked : roomE.lock != null});
 		}
+		console.log(Main.userCounts.toString());
 		top10.sort(function(r1,r2) {
 			if(r1.count > r2.count) return -1;
 			if(r1.count < r2.count) return 1;
@@ -2013,6 +2014,23 @@ haxe_ds_StringMap.prototype = {
 			}
 		}
 		return out;
+	}
+	,toString: function() {
+		var s = new StringBuf();
+		s.b += "{";
+		var keys = this.arrayKeys();
+		var _g1 = 0;
+		var _g = keys.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var k = keys[i];
+			if(k == null) s.b += "null"; else s.b += "" + k;
+			s.b += " => ";
+			s.add(Std.string(__map_reserved[k] != null?this.getReserved(k):this.h[k]));
+			if(i < keys.length) s.b += ", ";
+		}
+		s.b += "}";
+		return s.b;
 	}
 	,__class__: haxe_ds_StringMap
 };
