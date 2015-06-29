@@ -401,6 +401,10 @@ class RouteHandler implements abe.IRoute {
 			var roomE = Main.rooms[r];
 			Main.roomInfo( { _id: r, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[r], theme: roomE.theme } );
 			toRemove = [];
+			if(top10.length > 0) {
+				lowest = top10[0].count;
+				lowestIndex = 0;
+			}
 			for (i in 0...top10.length) {
 				var c = top10[i];
 				if (c.count <= lowest) {

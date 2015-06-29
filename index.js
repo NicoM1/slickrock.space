@@ -609,6 +609,10 @@ RouteHandler.prototype = {
 			var roomE = Main.rooms.get(r);
 			Main.roomInfo({ _id : r, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(r), theme : roomE.theme});
 			toRemove = [];
+			if(top10.length > 0) {
+				lowest = top10[0].count;
+				lowestIndex = 0;
+			}
 			var _g11 = 0;
 			var _g2 = top10.length;
 			while(_g11 < _g2) {
