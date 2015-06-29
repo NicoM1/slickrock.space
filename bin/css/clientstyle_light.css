@@ -25,6 +25,6 @@ span {
     background-color: #5c5c5c;
 }
 
-li .selected {
-	background-color: hsl(282, 45.9%, 25.7%);
+.selected {
+	background-color: hsl(282, 45.9%, 25.7%) !important;
 }
