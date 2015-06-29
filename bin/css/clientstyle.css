@@ -34,7 +34,7 @@ img {
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
     margin: 0px;
-	margin-bottom: 65px;
+	margin-bottom: 62px;
 }
 
 .messageitem {
@@ -169,7 +169,7 @@ span.non-anim {
 		bottom: 50px;
 	}
 	#messages {
-		margin-bottom: 55px;
+		margin-bottom: 52px;
 	}
 }
 
