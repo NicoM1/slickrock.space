@@ -970,7 +970,7 @@ class Main
 				message.setAttribute('data-id', t);
 
 				var chevron = _makeSpan(true, t);
-				messages.appendChild(chevron);
+				message.appendChild(chevron);
 				messages.appendChild(message);
 
 				var messageD: MessageDiv = {
@@ -1051,7 +1051,7 @@ class Main
 
 			lastParagraph = message;
 
-			messages.appendChild(_makeSpan(differentUser, id));
+			message.appendChild(_makeSpan(differentUser, id));
 			messages.appendChild(message);
 		}
 		else {
@@ -1077,7 +1077,7 @@ class Main
 			message = cast messages.children[1];
 			var last = message.getAttribute('data-id');
 			if(last == id) {
-				message.insertBefore(messageItem, message.children[0]);
+				message.insertBefore(messageItem, message.children[1]);
 				offset = new JQuery(messageItem).outerHeight(true);
 			}
 			else {
@@ -1086,8 +1086,8 @@ class Main
 				message.setAttribute('data-id', id);
 
 				messages.insertBefore(message, messages.children[0]);
-				messages.insertBefore(_makeSpan(true, id), messages.children[0]);
-				message.insertBefore(messageItem, message.children[0]);
+				message.appendChild(_makeSpan(true, id));
+				message.insertBefore(messageItem, message.children[1]);
 				offset = new JQuery(message).outerHeight(true);
 			}
 		}

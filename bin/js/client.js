@@ -836,7 +836,7 @@ Main.prototype = {
 				message1.classList.add("messageblock");
 				message1.setAttribute("data-id",t1);
 				var chevron = this._makeSpan(true,t1);
-				this.messages.appendChild(chevron);
+				message1.appendChild(chevron);
 				this.messages.appendChild(message1);
 				var messageD = { id : t1, chevron : chevron, message : message1};
 				message1.appendChild(typeMessage[0]);
@@ -907,7 +907,7 @@ Main.prototype = {
 			message.classList.add("messageblock");
 			message.setAttribute("data-id",id);
 			this.lastParagraph = message;
-			this.messages.appendChild(this._makeSpan(differentUser,id));
+			message.appendChild(this._makeSpan(differentUser,id));
 			this.messages.appendChild(message);
 		} else message = this.lastParagraph;
 		var messageItem;
@@ -926,7 +926,7 @@ Main.prototype = {
 			message = this.messages.children[1];
 			var last = message.getAttribute("data-id");
 			if(last == id) {
-				message.insertBefore(messageItem,message.children[0]);
+				message.insertBefore(messageItem,message.children[1]);
 				offset = $(messageItem).outerHeight(true);
 			} else {
 				var _this2 = window.document;
@@ -934,8 +934,8 @@ Main.prototype = {
 				message.classList.add("messageblock");
 				message.setAttribute("data-id",id);
 				this.messages.insertBefore(message,this.messages.children[0]);
-				this.messages.insertBefore(this._makeSpan(true,id),this.messages.children[0]);
-				message.insertBefore(messageItem,message.children[0]);
+				message.appendChild(this._makeSpan(true,id));
+				message.insertBefore(messageItem,message.children[1]);
 				offset = $(message).outerHeight(true);
 			}
 		}
