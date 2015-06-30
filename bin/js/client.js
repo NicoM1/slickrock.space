@@ -739,7 +739,7 @@ Main.prototype = {
 		this._addMessage("Homepage design and general awesomeness: **Lorenzo Maieru** *(@LorenzoMaieru)*.");
 		this._addMessage("Assorted help and testing: **Mark Kowalsky** *(@dimensive)*, **Isaac Bickel** *(@gamesbybeta)*, **Alex Lanzetta** *(@Zanzlanz)*.");
 		this._addMessage("Additional images: **Nathan Wentworth** *(@nathanwentworth)*.");
-		this._addMessage("slickrock.io is crafted in **Haxe**, the backend is helped by the **Abe** library.");
+		this._addMessage("slickrock.io is crafted in **Haxe**, the backend is helped by the **Abe** library *(github.com/abedev/abe)*.");
 	}
 	,_rules: function(_) {
 		this._addMessage("slickrock.io is not meant to allow people to say or show horrible things.");
