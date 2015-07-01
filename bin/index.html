@@ -5,12 +5,12 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no" />
 	<title>slickrock.io</title>
 	<meta name="description" content="Simple. Modern. Beautiful. Chatrooms without all the struggle.">
-		
+
 	<link rel="stylesheet" href="bin/fonts/font-awesome-4.3.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="bin/css/font-awesome-animation.min.css">
-		
+
 	<link rel="stylesheet" type="text/css" href="bin/css/clientstyle.css">
-		
+
 	<link class="favicon" rel="shortcut icon" type="image/x-icon" href="bin/img/faviconempty.ico" />
 	<link class="favicon" rel="icon" type="image/x-icon" href="bin/img/faviconempty.ico" />
 </head>
@@ -23,9 +23,11 @@
 			<source src="bin/sound/pop_drip.mp3" type="audio/mpeg">
 			<source src="bin/sound/pop_drip.wav" type="audio/wav">
 		</audio>
+		<div id="wrapper" style="width: 100%; height: 100%; overflow: auto; position: relative; -webkit-overflow-scrolling: touch;">
 		<div id="messages"></div>
-		<ul id="helpbox"></ul>
-		<input id="chatbox" value="type, or tap / for commands." class="helptip"></input>
+			<ul id="helpbox"></ul>
+			<input id="chatbox" value="type, or tap / for commands." class="helptip"></input>
+		</div>
 
 		<script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
