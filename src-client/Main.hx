@@ -1021,7 +1021,7 @@ class Main
 
 	function _tryScroll(force: Bool = false, img: ImageElement = null) {
 		if (force || _atBottom(img)) {
-			messages.scrollTo(0, messages.scrollHeight);
+			Browser.window.scrollTo(0, messages.scrollHeight);
 			initialScroll = false;
 		}
 	}
