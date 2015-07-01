@@ -891,7 +891,7 @@ Main.prototype = {
 		var offset = 0;
 		if(img != null) offset = img.height;
 		var elem = $(this.messages);
-		if(this.messages.scrollHeight - elem.scrollTop() == elem.outerHeight()) return true;
+		if(elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) return true;
 		return false;
 	}
 	,_addMessage: function(msg,id,customHTML,hist,safe,first,_id) {
