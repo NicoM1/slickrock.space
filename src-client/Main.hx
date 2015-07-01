@@ -174,10 +174,10 @@ class Main
 			focussed = false;
 		};
 
-		messages.addEventListener('mousewheel', _tryGetOldMessages);
+		/*messages.addEventListener('mousewheel', _tryGetOldMessages);
 		messages.addEventListener('DOMMouseScroll', _tryGetOldMessages);
 		messages.ontouchmove = _tryGetOldMessages;
-		Browser.document.onkeydown = _testScrolling;
+		Browser.document.onkeydown = _testScrolling;*/
 
 		_setupHelpbox();
 
@@ -194,7 +194,7 @@ class Main
 			}
 		}
 		chatbox.onkeyup = _checkKeyPress;
-
+		//chatbox.focus();
 		chatbox.onmousedown = function() {
 			if (chatbox.classList.contains('helptip')) {
 				chatbox.classList.remove('helptip');
@@ -280,8 +280,8 @@ class Main
 
 	function _tryGetOldMessages(?args) {
 		if (histRequestInProgress || initialScroll) return;
-		var scrollY = (lastY != null? lastY : messages.scrollTop) - messages.scrollTop;
-		lastY = messages.scrollTop;
+		var scrollY = (lastY != null? lastY : Browser.window.pageYOffset) - Browser.window.pageYOffset;
+		lastY = Browser.window.pageYOffset;
 
 		if (lastY < 500) {
 			if(firstIndex > 0) {

@@ -261,10 +261,6 @@ Main.prototype = {
 		window.onblur = function() {
 			_g.focussed = false;
 		};
-		this.messages.addEventListener("mousewheel",$bind(this,this._tryGetOldMessages));
-		this.messages.addEventListener("DOMMouseScroll",$bind(this,this._tryGetOldMessages));
-		this.messages.ontouchmove = $bind(this,this._tryGetOldMessages);
-		window.document.onkeydown = $bind(this,this._testScrolling);
 		this._setupHelpbox();
 		this.chatbox.onclick = function() {
 			_g._getNotificationPermission();
@@ -334,8 +330,8 @@ Main.prototype = {
 		var _g = this;
 		if(this.histRequestInProgress || this.initialScroll) return;
 		var scrollY;
-		scrollY = (this.lastY != null?this.lastY:this.messages.scrollTop) - this.messages.scrollTop;
-		this.lastY = this.messages.scrollTop;
+		scrollY = (this.lastY != null?this.lastY:window.pageYOffset) - window.pageYOffset;
+		this.lastY = window.pageYOffset;
 		if(this.lastY < 500) {
 			if(this.firstIndex > 0) {
 				var histHttp = new haxe_Http(this.basePath);
