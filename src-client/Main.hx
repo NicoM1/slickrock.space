@@ -1032,7 +1032,7 @@ class Main
 			offset = img.height;
 		}
 		var elem = new JQuery(messages);
-		if (untyped elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) {
+		if (messages.scrollHeight - elem.scrollTop() == elem.outerHeight()) {
 			return true;
 		}
 		return false;
