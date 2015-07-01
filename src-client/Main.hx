@@ -1031,7 +1031,8 @@ class Main
 		if (img != null) {
 			offset = img.height;
 		}
-		if (messages.scrollTop + offset >= (messages.scrollHeight/*-messages.offsetHeight*/)) {
+		var elem = new JQuery(messages);
+		if (untyped elem[0].scrollHeight - elem.scrollTop() == elem.outerHeight()) {
 			return true;
 		}
 		return false;
