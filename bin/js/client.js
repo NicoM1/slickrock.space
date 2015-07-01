@@ -890,7 +890,7 @@ Main.prototype = {
 	,_atBottom: function(img) {
 		var offset = 0;
 		if(img != null) offset = img.height;
-		if(this.messages.scrollTop + offset >= this.messages.scrollHeight - this.messages.offsetHeight) return true;
+		if(this.messages.scrollTop + offset >= this.messages.scrollHeight) return true;
 		return false;
 	}
 	,_addMessage: function(msg,id,customHTML,hist,safe,first,_id) {
