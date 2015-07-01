@@ -742,7 +742,7 @@ class Main
 			return;
 		}
 		var embed = embedTemplate;
-		embed = embed.replace('[SRC]', 'http://slickrock.io/$room');
+		embed = embed.replace('[SRC]', '//aqueous-basin.herokuapp.com/$room');
 		embed = embed.replace('[WIDTH]', Std.string(width));
 		embed = embed.replace('[HEIGHT]', Std.string(height));
 

@@ -635,7 +635,7 @@ Main.prototype = {
 			return;
 		}
 		var embed = this.embedTemplate;
-		embed = StringTools.replace(embed,"[SRC]","http://slickrock.io/" + this.room);
+		embed = StringTools.replace(embed,"[SRC]","//aqueous-basin.herokuapp.com/" + this.room);
 		embed = StringTools.replace(embed,"[WIDTH]",width == null?"null":"" + width);
 		embed = StringTools.replace(embed,"[HEIGHT]",height == null?"null":"" + height);
 		this._addMessage("`" + embed + "`");
