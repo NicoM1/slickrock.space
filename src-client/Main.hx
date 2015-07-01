@@ -96,11 +96,17 @@ class Main
 
 	var lightTheme: Bool = false;
 
+	var ios: Bool = false;
+
 	function new() {
 		room = untyped window.room;
 		var theme = 'dark';
 
 		if(_inIframe()) {
+			if(~/iPad|iPhone|iPod/ig.match(Browser.window.navigator.userAgent)) {
+				ios = true;
+			}
+
 			theme = untyped window.roomTheme;
 		}
 
@@ -117,39 +123,6 @@ class Main
 
 	//{ startup and message loop
 	function _windowLoaded() {
-		authHttp = new Http(basePath);
-		authHttp.onData = _getAuth;
-		authHttp.onError = function(error) {
-			trace(error);
-			_addMessage('Could not connect to authentication api, please refresh the page.');
-		}
-
-		getHttp = new Http(basePath + lastIndex);
-		getHttp.onData = _parseMessages.bind(_, false);
-		getHttp.onError = function(error) {
-			trace(error);
-			requestInProgress = false;
-		}
-
-		postHttp = new Http(basePath);
-		postHttp.async = true;
-		postHttp.onData = function(data) {
-			if (data == 'failed') {
-				token = null;
-				hasTriedAuth = false;
-				sendLast = true;
-				_tryAuth();
-			}
-			if (data == 'failed-image') {
-				_addMessage('to prevent spam, images are disabled on this chatroom, you may ***/survey*** another chat where this restriction is not active.');
-			}
-		}
-		postHttp.onError = function(error) {
-			trace(error);
-			requestInProgress = false;
-			//chatbox.value = lastMessage;
-		}
-
 		chatbox = cast Browser.document.getElementById('chatbox');
 		messages = cast Browser.document.getElementById('messages');
 		helpbox = cast Browser.document.getElementById('helpbox');
@@ -160,112 +133,150 @@ class Main
 		}
 		messageSound = cast Browser.document.getElementById('messagesound');
 
-		Browser.document.title = '/$room.';
-		Browser.window.onfocus = function() {
-			focussed = true;
-			Browser.document.title = '/$room.';
-			for (f in favicons) {
-				f.href = 'bin/img/faviconempty.ico';
-			}
-			_clearNotifications();
-		};
-
-		Browser.window.onblur = function() {
-			focussed = false;
-		};
-
-		messages.addEventListener('mousewheel', _tryGetOldMessages);
-		messages.addEventListener('DOMMouseScroll', _tryGetOldMessages);
-		messages.ontouchmove = _tryGetOldMessages;
-		Browser.document.onkeydown = _testScrolling;
-
-		_setupHelpbox();
-
-		chatbox.onclick = function() {
-			_getNotificationPermission();
-			if (token == null && !hasTriedAuth) {
-				_tryAuth();
-			}
-		}
-		chatbox.oninput = function(e) {
-			_getNotificationPermission();
-			if (token == null && !hasTriedAuth) {
-				_tryAuth();
-			}
-		}
-		chatbox.onkeyup = _checkKeyPress;
-		//chatbox.focus();
-		chatbox.onmousedown = function() {
-			if (chatbox.classList.contains('helptip')) {
-				chatbox.classList.remove('helptip');
-				chatbox.value = '';
-			}
-		}
-		chatbox.ontouchstart = function() {
-			if (chatbox.classList.contains('helptip')) {
-				chatbox.classList.remove('helptip');
-				chatbox.value = '';
-			}
-		}
-		chatbox.onkeydown = function(e) {
-			if (chatbox.classList.contains('helptip')) {
-				chatbox.classList.remove('helptip');
-				chatbox.value = '';
+		if(!ios) {
+			authHttp = new Http(basePath);
+			authHttp.onData = _getAuth;
+			authHttp.onError = function(error) {
+				trace(error);
+				_addMessage('Could not connect to authentication api, please refresh the page.');
 			}
 
-			var code = null;
-			if(e != null) {
-				 code = (e.keyCode != null ? e.keyCode : e.which);
+			getHttp = new Http(basePath + lastIndex);
+			getHttp.onData = _parseMessages.bind(_, false);
+			getHttp.onError = function(error) {
+				trace(error);
+				requestInProgress = false;
 			}
 
-			if (code == 9 || code == 38 || code == 40) {
-				e.preventDefault();
-			}
-
-			if (code == 27) {
-				if (chatbox.value == '/') {
-					chatbox.value = '';
-					_filterHelp();
+			postHttp = new Http(basePath);
+			postHttp.async = true;
+			postHttp.onData = function(data) {
+				if (data == 'failed') {
+					token = null;
+					hasTriedAuth = false;
+					sendLast = true;
+					_tryAuth();
+				}
+				if (data == 'failed-image') {
+					_addMessage('to prevent spam, images are disabled on this chatroom, you may ***/survey*** another chat where this restriction is not active.');
 				}
 			}
-		}
-
-		messages.onclick = function() {
-			if (chatbox.value == '/') {
-				chatbox.value = '';
-				_checkKeyPress({which: 9, keyCode: 9});//hack but should work
+			postHttp.onError = function(error) {
+				trace(error);
+				requestInProgress = false;
+				//chatbox.value = lastMessage;
 			}
-		}
 
-		if (_inIframe()) {
-			var maximize = Browser.document.createButtonElement();
-			//maximize.textContent = '[X]';
-			maximize.onclick = function() {
-				Browser.window.top.location.href = 'http://slickrock.io/$room';
-				maximize.classList.add('faa-passing', 'animated', 'faa-fast');
+			Browser.document.title = '/$room.';
+			Browser.window.onfocus = function() {
+				focussed = true;
+				Browser.document.title = '/$room.';
+				for (f in favicons) {
+					f.href = 'bin/img/faviconempty.ico';
+				}
+				_clearNotifications();
+			};
+
+			Browser.window.onblur = function() {
+				focussed = false;
+			};
+
+			messages.addEventListener('mousewheel', _tryGetOldMessages);
+			messages.addEventListener('DOMMouseScroll', _tryGetOldMessages);
+			messages.ontouchmove = _tryGetOldMessages;
+			Browser.document.onkeydown = _testScrolling;
+
+			_setupHelpbox();
+
+			chatbox.onclick = function() {
+				_getNotificationPermission();
+				if (token == null && !hasTriedAuth) {
+					_tryAuth();
+				}
 			}
-			maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton');
-			Browser.document.body.appendChild(maximize);
-		}
+			chatbox.oninput = function(e) {
+				_getNotificationPermission();
+				if (token == null && !hasTriedAuth) {
+					_tryAuth();
+				}
+			}
+			chatbox.onkeyup = _checkKeyPress;
+			//chatbox.focus();
+			chatbox.onmousedown = function() {
+				if (chatbox.classList.contains('helptip')) {
+					chatbox.classList.remove('helptip');
+					chatbox.value = '';
+				}
+			}
+			chatbox.ontouchstart = function() {
+				if (chatbox.classList.contains('helptip')) {
+					chatbox.classList.remove('helptip');
+					chatbox.value = '';
+				}
+			}
+			chatbox.onkeydown = function(e) {
+				if (chatbox.classList.contains('helptip')) {
+					chatbox.classList.remove('helptip');
+					chatbox.value = '';
+				}
 
-		if(!Cookie.exists('id')) {
-			_getID();
+				var code = null;
+				if(e != null) {
+					 code = (e.keyCode != null ? e.keyCode : e.which);
+				}
+
+				if (code == 9 || code == 38 || code == 40) {
+					e.preventDefault();
+				}
+
+				if (code == 27) {
+					if (chatbox.value == '/') {
+						chatbox.value = '';
+						_filterHelp();
+					}
+				}
+			}
+
+			messages.onclick = function() {
+				if (chatbox.value == '/') {
+					chatbox.value = '';
+					_checkKeyPress({which: 9, keyCode: 9});//hack but should work
+				}
+			}
+
+			if (_inIframe()) {
+				var maximize = Browser.document.createButtonElement();
+				//maximize.textContent = '[X]';
+				maximize.onclick = function() {
+					Browser.window.top.location.href = 'http://slickrock.io/$room';
+					maximize.classList.add('faa-passing', 'animated', 'faa-fast');
+				}
+				maximize.classList.add('fa', 'fa-angle-double-right', 'floatingbutton');
+				Browser.document.body.appendChild(maximize);
+			}
+
+			if(!Cookie.exists('id')) {
+				_getID();
+			}
+			else {
+				_setID(Cookie.get('id'));
+			}
+
+			if (Cookie.exists('$room-password')) {
+				_setPassword(Cookie.get('$room-password'));
+			}
+
+			if (Cookie.exists('${room}admin-password')) {
+				_setAdminPassword(Cookie.get('${room}admin-password'));
+			}
+
+			_setupPrivateID();
+
+			_loop();
 		}
 		else {
-			_setID(Cookie.get('id'));
+			_addMessage('iframes are unreliable in iOS, please view this chat directly on slickrock.io/$room');
 		}
-
-		if (Cookie.exists('$room-password')) {
-			_setPassword(Cookie.get('$room-password'));
-		}
-
-		if (Cookie.exists('${room}admin-password')) {
-			_setAdminPassword(Cookie.get('${room}admin-password'));
-		}
-
-		_setupPrivateID();
-
-		_loop();
 	}
 
 	function _testScrolling(e) {
