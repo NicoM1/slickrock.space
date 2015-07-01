@@ -1107,7 +1107,7 @@ class Main
 			}
 		}
 		else {
-			messages.scrollTop += Std.int(offset);
+			Browser.document.body.scrollTop += Std.int(offset);
 			messageItem.classList.add('non-anim');
 		}
 

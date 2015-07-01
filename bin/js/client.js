@@ -946,7 +946,7 @@ Main.prototype = {
 				messageItem.classList.add("loaded");
 			},10); else messageItem.classList.add("non-anim");
 		} else {
-			this.messages.scrollTop += offset | 0;
+			window.document.body.scrollTop += offset | 0;
 			messageItem.classList.add("non-anim");
 		}
 		return messageItem;
