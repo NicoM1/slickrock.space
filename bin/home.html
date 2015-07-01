@@ -224,9 +224,12 @@
 
 		<p class="lead text-center">Or just try it out <strong>right now</strong>:</p>
 
-		<div style="overflow:auto;-webkit-overflow-scrolling:touch">
-    		<iframe id="embed-iframe" src="//aqueous-basin.herokuapp.com/homepage" height="300"></iframe>
-		</div>	
+		<script>$("#embed-iframe").load(location.protocol + "//aqueous-basin.herokuapp.com/homepage");</script>
+		<div id="embed-iframe" style="height: 300px;"></div>
+
+		<!--<div style="overflow:auto;-webkit-overflow-scrolling:touch">
+    		<iframe id="embed-iframe" src="" height="300"></iframe>
+		</div>-->
 
 		<hr>
 

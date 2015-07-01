@@ -3,6 +3,8 @@ package;
 import abe.App;
 import express.Middleware;
 import express.Response;
+import express.Request;
+import express.Next;
 import haxe.crypto.Sha1;
 import haxe.Json;
 import haxe.Timer;
@@ -59,6 +61,8 @@ class Main {
 		app.http(port != null? Std.parseInt(port) : 9998);
 
 		app.router.serve('/bin', './bin');
+
+		app.router.use((cast ErrorHandling.handle : express.Middleware));
 	}
 
 	function _setupMongo() {
@@ -267,7 +271,7 @@ class RouteHandler implements abe.IRoute {
 
 	@:get('/')
 	function index() {
-		_serveHtml('bin/home.html', function(e, d) {
+		Util.serveHtml('bin/home.html', function(e, d) {
 			if(e == null) {
 				response.send(d);
 			}
@@ -276,7 +280,7 @@ class RouteHandler implements abe.IRoute {
 
 	@:get('/top')
 	function top() {
-		_serveHtml('bin/top.html', function(e, d) {
+		Util.serveHtml('bin/top.html', function(e, d) {
 			if(e == null) {
 				response.send(d);
 			}
@@ -286,7 +290,7 @@ class RouteHandler implements abe.IRoute {
 	@:get('/:room')
 	function chatroom(room: String) {
 		room = room.toLowerCase();
-		_serveHtml('bin/index.html', function(e, d) {
+		Util.serveHtml('bin/index.html', function(e, d) {
 			if (e == null) {
 				var withRoom: String = '';
 				var startBody = d.indexOf('head') + 6;
@@ -710,8 +714,20 @@ class RouteHandler implements abe.IRoute {
 			}
 		}
 	}
+}
 
-	function _serveHtml(path: String, handler: Error->String->Void) {
+class ErrorHandling {
+	public static function handle(err: Error, req: Request, res: Response, next: Next) {
+		Util.serveHtml('bin/404.html', function(e, d) {
+			if(e == null) {
+				res.status(404).send(d);
+			}
+		});
+	}
+}
+
+class Util {
+	public static function serveHtml(path: String, handler: Error->String->Void) {
 		Fs.readFile(path, { encoding: 'utf8' }, handler);
 	}
 }

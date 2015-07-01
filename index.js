@@ -298,6 +298,7 @@ var Main = function() {
 	port = this1.PORT;
 	app.http(port != null?Std.parseInt(port):9998);
 	app.router.serve("/bin","./bin");
+	app.router["use"](null,ErrorHandling.handle);
 };
 Main.__name__ = ["Main"];
 Main.clearTyping = function(room,id) {
@@ -502,18 +503,18 @@ RouteHandler.__interfaces__ = [abe_IRoute];
 RouteHandler.prototype = {
 	maxMessageLoad: null
 	,index: function(request,response,next) {
-		this._serveHtml("bin/home.html",function(e,d) {
+		Util.serveHtml("bin/home.html",function(e,d) {
 			if(e == null) response.send(d);
 		});
 	}
 	,top: function(request,response,next) {
-		this._serveHtml("bin/top.html",function(e,d) {
+		Util.serveHtml("bin/top.html",function(e,d) {
 			if(e == null) response.send(d);
 		});
 	}
 	,chatroom: function(room,request,response,next) {
 		room = room.toLowerCase();
-		this._serveHtml("bin/index.html",function(e,d) {
+		Util.serveHtml("bin/index.html",function(e,d) {
 			if(e == null) {
 				var withRoom = "";
 				var startBody = d.indexOf("head") + 6;
@@ -845,13 +846,22 @@ RouteHandler.prototype = {
 			if(password != null) response.send("password"); else response.send("locked");
 		}
 	}
-	,_serveHtml: function(path,handler) {
-		js_node_Fs.readFile(path,{ encoding : "utf8"},handler);
-	}
 	,toString: function() {
 		return "RouteHandler";
 	}
 	,__class__: RouteHandler
+};
+var ErrorHandling = function() { };
+ErrorHandling.__name__ = ["ErrorHandling"];
+ErrorHandling.handle = function(err,req,res,next) {
+	Util.serveHtml("bin/404.html",function(e,d) {
+		if(e == null) res.status(404).send(d);
+	});
+};
+var Util = function() { };
+Util.__name__ = ["Util"];
+Util.serveHtml = function(path,handler) {
+	js_node_Fs.readFile(path,{ encoding : "utf8"},handler);
 };
 Math.__name__ = ["Math"];
 var Random = function(_initial_seed) {
