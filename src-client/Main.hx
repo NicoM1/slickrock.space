@@ -1031,7 +1031,7 @@ class Main
 		if (img != null) {
 			offset = img.height;
 		}
-		if (messages.scrollTop + offset >= (messages.scrollHeight-messages.offsetHeight)) {
+		if (messages.scrollTop + offset == (messages.scrollHeight-messages.offsetHeight)) {
 			return true;
 		}
 		return false;
