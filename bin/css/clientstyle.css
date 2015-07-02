@@ -129,6 +129,10 @@ span.non-anim {
 	background-color: #1e1e1e;
 
 	border: none;
+
+    position: relative;
+
+    z-index: 999;
 }
 
 #chatbox:active, #chatbox:focus {
