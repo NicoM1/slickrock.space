@@ -757,8 +757,9 @@ class Main
 		embed = embed.replace('[WIDTH]', Std.string(width));
 		embed = embed.replace('[HEIGHT]', Std.string(height));
 
+		_addMessage('embed code:');
 		_addMessage('`$embed`');
-		_addMessage('due to issues with Apple Webkit, embedded chats will not work properly on iOS. instead, your users will be greeted with a similar expanation, and a direct link to your chatroom.');
+		_addMessage('note: due to issues with Apple Webkit, embedded chats will not work properly on iOS. instead, your users will be greeted with a similar expanation, and a direct link to your chatroom.');
 	}
 
 	function _printID(?_) {
