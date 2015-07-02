@@ -181,10 +181,12 @@ class Main
 				focussed = false;
 			};
 
-			messages.addEventListener('mousewheel', _tryGetOldMessages);
+			Browser.document.body.onscroll = _tryGetOldMessages;
+
+			/*messages.addEventListener('mousewheel', _tryGetOldMessages);
 			messages.addEventListener('DOMMouseScroll', _tryGetOldMessages);
 			messages.ontouchmove = _tryGetOldMessages;
-			Browser.document.onkeydown = _testScrolling;
+			Browser.document.onkeydown = _testScrolling;*/
 
 			_setupHelpbox();
 
