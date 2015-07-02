@@ -113,7 +113,7 @@ span.non-anim {
     border-radius:0;
 
 	font-family: 'Arial', sans-serif;
-    
+
 	bottom: 0px;
 	left: 0px;
 
@@ -179,7 +179,6 @@ span.non-anim {
 		bottom: 50px;
 	}
 	#messages {
-		margin-bottom: 52px;
 	}
 }
 
