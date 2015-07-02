@@ -252,7 +252,7 @@ li:hover {
 
 ::-webkit-scrollbar-thumb
 {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(71, 71, 71, 0.5);
 }
 
 /*::-webkit-scrollbar {
