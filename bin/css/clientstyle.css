@@ -49,7 +49,6 @@ img {
 
 #messages {
     min-height: calc(100% - 60px);
-	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
     margin: 0px;
 }
