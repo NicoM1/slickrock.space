@@ -102,11 +102,11 @@ class Main
 		room = untyped window.room;
 		var theme = 'dark';
 
-		if(_inIframe()) {
-			if(~/iPad|iPhone|iPod/ig.match(Browser.window.navigator.userAgent)) {
-				ios = true;
-			}
+		if(~/iPad|iPhone|iPod/ig.match(Browser.window.navigator.userAgent)) {
+			ios = true;
+		}
 
+		if(_inIframe()) {
 			theme = untyped window.roomTheme;
 		}
 
@@ -133,7 +133,7 @@ class Main
 		}
 		messageSound = cast Browser.document.getElementById('messagesound');
 
-		if(!ios) {
+		if(!(ios && _inIframe())) {
 			authHttp = new Http(basePath);
 			authHttp.onData = _getAuth;
 			authHttp.onError = function(error) {
@@ -187,6 +187,10 @@ class Main
 			Browser.document.onkeydown = _testScrolling;
 
 			_setupHelpbox();
+
+			if(ios) {
+				chatbox.style.position = 'static';
+			}
 
 			chatbox.onclick = function() {
 				_getNotificationPermission();
