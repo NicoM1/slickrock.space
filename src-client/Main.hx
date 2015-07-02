@@ -275,7 +275,7 @@ class Main
 			_loop();
 		}
 		else {
-			_addMessage('', null, 'iframes are unreliable in iOS, please view this chat directly on <a href="slickrock.io/$room">slickrock.io/$room</a>.');
+			_addMessage('', null, 'embedded chatrooms are unreliable in iOS, please view this chat directly on <a href="slickrock.io/$room">slickrock.io/$room</a>.');
 		}
 	}
 

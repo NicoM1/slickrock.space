@@ -329,7 +329,7 @@ Main.prototype = {
 			if(js_Cookie.exists("" + this.room + "admin-password")) this._setAdminPassword(js_Cookie.get("" + this.room + "admin-password"));
 			this._setupPrivateID();
 			this._loop();
-		} else this._addMessage("",null,"iframes are unreliable in iOS, please view this chat directly on <a href=\"slickrock.io/" + this.room + "\">slickrock.io/" + this.room + "</a>.");
+		} else this._addMessage("",null,"embedded chatrooms are unreliable in iOS, please view this chat directly on <a href=\"slickrock.io/" + this.room + "\">slickrock.io/" + this.room + "</a>.");
 	}
 	,_testScrolling: function(e) {
 		var code = null;
