@@ -24,6 +24,15 @@ div {
 	margin-top: 0px;
 }
 
+a {
+    color: #46DD7B;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 p {
 	margin: 5px;
 	white-space: pre-line;
