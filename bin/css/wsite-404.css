@@ -1,0 +1,41 @@
+/* Resets
+--------------------------------------------------------------------------------*/
+
+ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, body, html, p, blockquote, fieldset, input 
+{
+	margin: 0;
+	padding: 0;
+}
+
+a
+{
+	text-decoration: none;
+}
+
+/* General Styling and Structure
+--------------------------------------------------------------------------------*/
+
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	font-smoothing: always;
+	letter-spacing: .5px;
+	text-align: center;
+	line-height:24px;
+	background: #fff;
+	color: #555;
+}
+
+.container {
+	margin: 0 auto;
+	width: 960px;
+}
+
+a {
+    color: #777777;
+}
+
+a:hover {
+    color: #46DD7B;
+}
