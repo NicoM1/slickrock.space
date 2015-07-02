@@ -275,7 +275,7 @@ class Main
 			_loop();
 		}
 		else {
-			_addMessage('iframes are unreliable in iOS, please view this chat directly on slickrock.io/$room');
+			_addMessage(null, null, 'iframes are unreliable in iOS, please view this chat directly on <a href="slickrock.io/$room"></a>');
 		}
 	}
 
@@ -758,6 +758,7 @@ class Main
 		embed = embed.replace('[HEIGHT]', Std.string(height));
 
 		_addMessage('`$embed`');
+		_addMessage('due to issues with Apple Webkit, embedded chats will not work properly on iOS. instead, your users will be greeted with a similar expanation, and a direct link to your chatroom.');
 	}
 
 	function _printID(?_) {
