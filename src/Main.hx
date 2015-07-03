@@ -57,12 +57,11 @@ class Main {
 
 		var app = new App();
 		app.router.register(new RouteHandler());
+		app.router.use((cast ErrorHandling.handle : express.Middleware));
 		var port = Node.process.env.get('PORT');
 		app.http(port != null? Std.parseInt(port) : 9998);
 
 		app.router.serve('/bin', './bin');
-
-		app.router.use((cast ErrorHandling.handle : express.Middleware));
 	}
 
 	function _setupMongo() {
