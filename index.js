@@ -854,6 +854,7 @@ RouteHandler.prototype = {
 var ErrorHandling = function() { };
 ErrorHandling.__name__ = ["ErrorHandling"];
 ErrorHandling.handle = function(err,req,res,next) {
+	console.log(err);
 	Util.serveHtml("bin/404.html",function(e,d) {
 		if(e == null) res.status(404).send(d);
 	});

@@ -718,6 +718,7 @@ class RouteHandler implements abe.IRoute {
 
 class ErrorHandling {
 	public static function handle(err: Error, req: Request, res: Response, next: Next) {
+		trace(err);
 		Util.serveHtml('bin/404.html', function(e, d) {
 			if(e == null) {
 				res.status(404).send(d);
