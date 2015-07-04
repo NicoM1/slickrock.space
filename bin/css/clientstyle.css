@@ -27,6 +27,10 @@ div {
 	margin-top: 0px;
 }
 
+pre {
+    display: inline;
+}
+
 a {
     color: #46DD7B;
     text-decoration: none;
