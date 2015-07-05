@@ -1127,7 +1127,7 @@ class Main
 					message.insertBefore(messageItem, message.children[3]);
 				}
 				else {
-					message.insertBefore(messageItem, message.children[3]);
+					message.insertBefore(messageItem, message.children[2]);
 				}
 				offset = new JQuery(message).outerHeight(true);
 			}
