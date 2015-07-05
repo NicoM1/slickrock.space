@@ -888,7 +888,7 @@ Main.prototype = {
 	,_tryScroll: function(force,img) {
 		if(force == null) force = false;
 		if(force || this._atBottom(img)) {
-			window.scrollTo(0,this.messages.scrollHeight);
+			window.scrollTo(0,window.document.body.scrollHeight);
 			this.initialScroll = false;
 		}
 	}
