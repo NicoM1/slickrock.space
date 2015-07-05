@@ -295,7 +295,7 @@ class Main {
 		Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
 
 		if(!irc) {
-			ircClient.send('PRIVMSG', '#$room', '+o', id);
+			ircClient.send('PRIVMSG', '#$room', message, id);
 			//ircClient.say('#$room', '$id: $message');
 		}
 	}
