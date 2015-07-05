@@ -1080,7 +1080,7 @@ class Main
 				name.innerText = id+': ';
 				name.classList.add('messageblock');
 				name.style.color = _generateColorFromID(id);
-				messages.appendChild(name);
+				message.appendChild(name);
 			}
 			messages.appendChild(message);
 		}

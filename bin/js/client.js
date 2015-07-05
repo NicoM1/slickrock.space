@@ -920,7 +920,7 @@ Main.prototype = {
 				name.innerText = id + ": ";
 				name.classList.add("messageblock");
 				name.style.color = this._generateColorFromID(id);
-				this.messages.appendChild(name);
+				message.appendChild(name);
 			}
 			this.messages.appendChild(message);
 		} else message = this.lastParagraph;
