@@ -491,6 +491,7 @@ Main.prototype = {
 	}
 	,_setupIRC: function() {
 		this.irc = require("irc");
+		var irc = require('irc');;
 		this.ircClient = new irc.Client('chat.us.freenode.net', 'debug', {
 			channels: ['#slickrock_haxe_debug_test']
 		});;

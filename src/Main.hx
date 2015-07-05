@@ -83,6 +83,7 @@ class Main {
 
 	function _setupIRC() {
 		irc = Lib.require('irc');
+		untyped __js__("var irc = require('irc');");
 		ircClient = untyped __js__("new irc.Client('chat.us.freenode.net', 'debug', {
 			channels: ['#slickrock_haxe_debug_test']
 		});");
