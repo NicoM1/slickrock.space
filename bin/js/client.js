@@ -737,7 +737,7 @@ Main.prototype = {
 			this._addMessage("**please /system_message again to end the buffer before submitting.**");
 			return;
 		}
-		var $final = this.systemMessage.substring(0,this.systemMessage.length - 1);
+		var $final = StringTools.urlEncode(this.systemMessage.substring(0,this.systemMessage.length - 1));
 		this._request(this.basePath + ("api/system/" + this.room + "/" + this.adminPassword + "/" + $final),function(d) {
 			if(d == "set") _g._addMessage("system message set."); else _g._addMessage("you are not authorized to set " + _g.room + "'s system message.");
 		},function(e) {
@@ -1364,6 +1364,9 @@ StringBuf.prototype = {
 };
 var StringTools = function() { };
 StringTools.__name__ = true;
+StringTools.urlEncode = function(s) {
+	return encodeURIComponent(s);
+};
 StringTools.htmlEscape = function(s,quotes) {
 	s = s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
 	if(quotes) return s.split("\"").join("&quot;").split("'").join("&#039;"); else return s;

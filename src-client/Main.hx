@@ -923,7 +923,7 @@ class Main
 			_addMessage('**please /system_message again to end the buffer before submitting.**');
 			return;
 		}
-		var final = systemMessage.substring(0, systemMessage.length-1);
+		var final = systemMessage.substring(0, systemMessage.length-1).urlEncode();
 
 		_request(basePath + 'api/system/$room/$adminPassword/$final',
 			function(d) {
