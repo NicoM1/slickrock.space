@@ -1061,6 +1061,7 @@ class Main
 		msg = _parseMessage(msg, safe);
 
 		var message: DivElement;
+		var name: DivElement = null;
 
 		var differentUser = false;
 		if (!hist && (id == null || id == '-1' || id != lastUserID)) {
@@ -1076,9 +1077,9 @@ class Main
 
 			message.appendChild(_makeSpan(differentUser, id));
 			if(room == 'test' && id != null) {
-				var name: DivElement = Browser.document.createDivElement();
+				name = Browser.document.createDivElement();
 				name.innerText = id+': ';
-				name.classList.add('messageitem');
+				name.classList.add('messageItem');
 				name.style.color = _generateColorFromID(id);
 				message.appendChild(name);
 			}
@@ -1128,6 +1129,9 @@ class Main
 			lastUserID = id;
 			if(!first) {
 				Timer.delay(function() { messageItem.classList.add('loaded'); }, 10);
+				if(name != null) {
+					Timer.delay(function() { name.classList.add('loaded'); }, 10);
+				}
 			}
 			else {
 				messageItem.classList.add('non-anim');
