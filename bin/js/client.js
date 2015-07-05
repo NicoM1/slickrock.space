@@ -918,7 +918,7 @@ Main.prototype = {
 				var _this1 = window.document;
 				name = _this1.createElement("div");
 				name.innerText = id + ": ";
-				name.classList.add("messageblock");
+				name.classList.add("messageitem");
 				name.style.color = this._generateColorFromID(id);
 				message.appendChild(name);
 			}

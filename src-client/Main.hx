@@ -1078,7 +1078,7 @@ class Main
 			if(room == 'test' && id != null) {
 				var name: DivElement = Browser.document.createDivElement();
 				name.innerText = id+': ';
-				name.classList.add('messageblock');
+				name.classList.add('messageitem');
 				name.style.color = _generateColorFromID(id);
 				message.appendChild(name);
 			}
