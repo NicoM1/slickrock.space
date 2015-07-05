@@ -908,7 +908,7 @@ class Main
 		else {
 			parsingSystemMessage = true;
 			_addMessage('ended parsing system message, message will be displayed as follows:');
-			for(m in systemMessage.split('\n')) {
+			for(m in systemMessage.substring(0, systemMessage.length-1).split('\n')) {
 				_addMessage(m);
 			}
 		}

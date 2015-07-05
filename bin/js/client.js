@@ -747,7 +747,7 @@ Main.prototype = {
 			this.parsingSystemMessage = true;
 			this._addMessage("ended parsing system message, message will be displayed as follows:");
 			var _g = 0;
-			var _g1 = this.systemMessage.split("\n");
+			var _g1 = this.systemMessage.substring(0,this.systemMessage.length - 1).split("\n");
 			while(_g < _g1.length) {
 				var m = _g1[_g];
 				++_g;
