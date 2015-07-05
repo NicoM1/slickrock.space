@@ -904,6 +904,7 @@ Main.prototype = {
 		if(hist == null) hist = false;
 		msg = this._parseMessage(msg,safe);
 		var showName = false;
+		if(this.room == "CFA_TeamChat" && id != null) showName = true;
 		var message;
 		var name = null;
 		var differentUser = false;
