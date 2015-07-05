@@ -1062,9 +1062,9 @@ class Main
 
 		var showName: Bool = false;
 
-		if(room == 'test' && id != null) {
+		/*if(room == 'test' && id != null) {
 			showName = true;
-		}
+		}*/
 
 		var message: DivElement;
 		var name: DivElement = null;
