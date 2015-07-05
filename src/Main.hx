@@ -93,7 +93,8 @@ class Main {
 		});
 
 		ircClient.addListener('error', function(message) {
-			Node.console.log('error: ' + message);
+			Node.console.log('error: ');
+			Node.console.log(message);
 		});
 	}
 

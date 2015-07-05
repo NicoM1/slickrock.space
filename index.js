@@ -510,7 +510,8 @@ Main.prototype = {
 			_g._parseIRCMessage(from,to,message);
 		});
 		Main.ircClient.addListener("error",function(message1) {
-			console.log("error: " + message1);
+			console.log("error: ");
+			console.log(message1);
 		});
 	}
 	,_parseIRCMessage: function(from,to,message) {
