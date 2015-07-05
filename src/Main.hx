@@ -294,7 +294,7 @@ class Main {
 		Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
 
 		if(!irc) {
-			ircClient.say('#$room', '<$id> says: $message');
+			ircClient.say('#$room', '<$id> $message');
 		}
 	}
 
