@@ -1079,7 +1079,7 @@ class Main
 			if(room == 'test' && id != null) {
 				name = Browser.document.createDivElement();
 				name.innerText = id+': ';
-				name.classList.add('messageItem');
+				name.classList.add('messageitem');
 				name.style.color = _generateColorFromID(id);
 				message.appendChild(name);
 			}
