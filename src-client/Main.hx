@@ -353,27 +353,27 @@ class Main
 	}
 
 	function _checkValid(printValid: Bool = false) {
-		var checkValid = new Http(basePath + 'api/checkvalid/$privateID/$token');
-		checkValid.onData = function(data: String) {
-			if (data == 'invalid') {
-				token = null;
-				_tryAuth();
-				return;
-			}
-			else {
-				if(printValid) {
-					_addMessage('authentication successful, chat away.');
-					hasTriedAuth = false;
+		_request(basePath + 'api/checkvalid/$privateID/$token',
+			function(d) {
+				if (d == 'invalid') {
+					token = null;
+					_tryAuth();
+					return;
 				}
+				else {
+					if(printValid) {
+						_addMessage('authentication successful, chat away.');
+						hasTriedAuth = false;
+					}
+				}
+			},
+			function(e) {
+				Cookie.remove('private');
+				Cookie.remove('token');
+				trace(e);
+				_addMessage('an error occured getting authentication, please refresh the page.');
 			}
-		}
-		checkValid.onError = function(e) {
-			Cookie.remove('private');
-			Cookie.remove('token');
-			trace(e);
-			_addMessage('an error occured getting authentication, please refresh the page.');
-		}
-		checkValid.request(true);
+		);
 	}
 
 	function _tryAuth() {
@@ -607,6 +607,11 @@ class Main
 			identifiers: '<strong>/system_message</strong>',
 			description: 'begins or ends setting a series of messages to be displayed on first entry to room.',
 			method: _systemMessage
+		},
+		'submit_system_message' => {
+			identifiers: '<strong>/submit_system_message</strong>',
+			description: 'sends your recently set system message to the server, redo and resend to change.',
+			method: _submitSystemMessage
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
@@ -641,17 +646,16 @@ class Main
 
 	//{ command functions
 	function _getID(?_) {
-		var idHttp: Http = new Http(basePath + 'api/getID');
-		idHttp.onData = function(d) {
-			_setID(d);
-			_printID();
-		}
-		idHttp.onError = function(e) {
-			trace(e);
-			_addMessage('failed to connect to api, couldn\'t get ID.');
-		}
-
-		idHttp.request(true);
+		_request(basePath + 'api/getID',
+			function(d) {
+				_setID(d);
+				_printID();
+			},
+			function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t get ID.');
+			}
+		);
 	}
 
 	function _setIDCommand(arguments: Array<String>) {
@@ -687,23 +691,23 @@ class Main
 			return;
 		}
 		var newPassword = arguments[0];
-		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$newPassword');
-		lockHttp.onData = function(d) {
-			if(d == 'claimed') {
-				_addMessage('$room claimed.');
-				_setAdminPassword(newPassword);
-				_addMessage('you may consider ***/fasten***-ing it at any time.');
-			}
-			else {
-				_addMessage('you are not authorized to claim $room.');
-			}
-		}
-		lockHttp.onError = function(e) {
-			trace(e);
-			_addMessage('failed to connect to api, couldn\'t claim room.');
-		}
 
-		lockHttp.request(true);
+		_request(basePath + 'api/claim/$room/$privateID/$newPassword',
+			function(d) {
+				if(d == 'claimed') {
+					_addMessage('$room claimed.');
+					_setAdminPassword(newPassword);
+					_addMessage('you may consider ***/fasten***-ing it at any time.');
+				}
+				else {
+					_addMessage('you are not authorized to claim $room.');
+				}
+			},
+			function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t claim room.');
+			}
+		);
 	}
 
 	function _reclaimRoom(arguments: Array<String>) {
@@ -712,22 +716,22 @@ class Main
 			return;
 		}
 		var newPassword = arguments[0];
-		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$adminPassword/$newPassword');
-		lockHttp.onData = function(d) {
-			if(d == 'claimed') {
-				_addMessage('$room reclaimed.');
-				_setAdminPassword(newPassword);
-			}
-			else {
-				_addMessage('you are not authorized to reclaim $room.');
-			}
-		}
-		lockHttp.onError = function(e) {
-			trace(e);
-			_addMessage('failed to connect to api, couldn\'t reclaim room.');
-		}
 
-		lockHttp.request(true);
+		_request(basePath + 'api/claim/$room/$privateID/$adminPassword/$newPassword',
+			function(d) {
+				if(d == 'claimed') {
+					_addMessage('$room reclaimed.');
+					_setAdminPassword(newPassword);
+				}
+				else {
+					_addMessage('you are not authorized to reclaim $room.');
+				}
+			},
+			function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t reclaim room.');
+			}
+		);
 	}
 
 	function _authorizeRoom(arguments: Array<String>) {
@@ -738,21 +742,21 @@ class Main
 		var newPassword = arguments[0];
 		_setAdminPassword(newPassword);
 		_addMessage('set admin password to: $adminPassword');
-		var lockHttp: Http = new Http(basePath + 'api/claim/$room/$privateID/$newPassword');
-		lockHttp.onData = function(d) {
-			if(d == 'claimed') {
-				_addMessage('authorized as admin for $room.');
-			}
-			else {
-				_addMessage('incorrect admin password.');
-			}
-		}
-		lockHttp.onError = function(e) {
-			trace(e);
-			_addMessage('failed to connect to api, couldn\'t authorize admin.');
-		}
 
-		lockHttp.request(true);
+		_request(basePath + 'api/claim/$room/$privateID/$newPassword',
+			function(d) {
+				if(d == 'claimed') {
+					_addMessage('authorized as admin for $room.');
+				}
+				else {
+					_addMessage('incorrect admin password.');
+				}
+			},
+			function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t authorize admin.');
+			}
+		);
 	}
 
 	var embedTemplate = '<iframe src="[SRC]" width="[WIDTH]" height="[HEIGHT]" style="border-color: #333333; border-style: solid;"></iframe>';
@@ -792,42 +796,41 @@ class Main
 		}
 		var newPassword = arguments[0];
 		_setPassword(newPassword);
-		var lockHttp: Http = new Http(basePath + 'api/lock/$room/$privateID/$newPassword/$adminPassword');
-		lockHttp.onData = function(d) {
-			if(d == 'locked') {
-				_addMessage('$room locked with password: $newPassword.');
-			}
-			else if (d == 'unclaimed') {
-				_addMessage('$room must be claimed before locking.');
-			}
-			else {
-				_addMessage('you are not authorized to lock $room.');
-			}
-		}
-		lockHttp.onError = function(e) {
-			trace(e);
-			_addMessage('failed to connect to api, couldn\'t lock room.');
-		}
 
-		lockHttp.request(true);
+		_request(basePath + 'api/lock/$room/$privateID/$newPassword/$adminPassword',
+			function(d) {
+				if(d == 'locked') {
+					_addMessage('$room locked with password: $newPassword.');
+				}
+				else if (d == 'unclaimed') {
+					_addMessage('$room must be claimed before locking.');
+				}
+				else {
+					_addMessage('you are not authorized to lock $room.');
+				}
+			},
+			function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t lock room.');
+			}
+		);
 	}
 
 	function _unlockRoom(_) {
-		var lockHttp: Http = new Http(basePath + 'api/unlock/$room/$privateID/$adminPassword');
-		lockHttp.onData = function(d) {
-			if(d == 'unlocked') {
-				_addMessage('$room unlocked.');
+		_request(basePath + 'api/unlock/$room/$privateID/$adminPassword',
+			function(d) {
+				if(d == 'unlocked') {
+					_addMessage('$room unlocked.');
+				}
+				else {
+					_addMessage('you are not authorized to unlock $room.');
+				}
+			},
+			function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t unlock room.');
 			}
-			else {
-				_addMessage('you are not authorized to unlock $room.');
-			}
-		}
-		lockHttp.onError = function(e) {
-			trace(e);
-			_addMessage('failed to connect to api, couldn\'t unlock room.');
-		}
-
-		lockHttp.request(true);
+		);
 	}
 
 	function _emptyRoom(args: Array<String>) {
@@ -835,21 +838,21 @@ class Main
 			_addMessage('**/decontaminate** requires argument: *ADMIN_PASSWORD*, this is to ensure you understand what you are doing.');
 			return;
 		}
-		var lockHttp: Http = new Http(basePath + 'api/empty/$room/${args[0]}');
-		lockHttp.onData = function(d) {
-			if(d == 'emptied') {
-				_addMessage('$room emptied.');
-			}
-			else {
-				_addMessage('you are not authorized to empty $room.');
-			}
-		}
-		lockHttp.onError = function(e) {
-			trace(e);
-			_addMessage('failed to connect to api, couldn\'t empty room.');
-		}
 
-		lockHttp.request(true);
+		_request(basePath + 'api/empty/$room/${args[0]}',
+			function(d) {
+				if(d == 'emptied') {
+					_addMessage('$room emptied.');
+				}
+				else {
+					_addMessage('you are not authorized to empty $room.');
+				}
+			},
+			function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t empty room.');
+			}
+		);
 	}
 
 	function _formatHelp(?args) {
@@ -882,27 +885,27 @@ class Main
 			return;
 		}
 
-		var lockHttp: Http = new Http(basePath + 'api/setTheme/$room/${args[0]}/$adminPassword');
-		lockHttp.onData = function(d) {
-			if(d == 'themed') {
-				_addMessage('default theme set to: ${args[0]}.');
-				Browser.window.location.reload();
+		_request(basePath + 'api/setTheme/$room/${args[0]}/$adminPassword',
+			function(d) {
+				if(d == 'themed') {
+					_addMessage('default theme set to: ${args[0]}.');
+					Browser.window.location.reload();
+				}
+				else {
+					_addMessage('you are not authorized to theme $room.');
+				}
+			},
+			function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t theme room.');
 			}
-			else {
-				_addMessage('you are not authorized to theme $room.');
-			}
-		}
-		lockHttp.onError = function(e) {
-			trace(e);
-			_addMessage('failed to connect to api, couldn\'t theme room.');
-		}
-
-		lockHttp.request(true);
+		);
 	}
 
 	function _systemMessage(_) {
 		if(!parsingSystemMessage) {
 			parsingSystemMessage = true;
+			systemMessage  = '';
 			_addMessage('began parsing system message, all messages untill another call to /system_message will be added to a buffer shown at first visit.');
 		}
 		else {
@@ -911,7 +914,31 @@ class Main
 			for(m in systemMessage.substring(0, systemMessage.length-1).split('\n')) {
 				_addMessage(m);
 			}
+			_addMessage('**use /submit_system_message to use this, or restart with /system_message**');
 		}
+	}
+
+	function _submitSystemMessage(_) {
+		if(parsingSystemMessage) {
+			_addMessage('**please /system_message again to end the buffer before submitting.**');
+			return;
+		}
+		var final = systemMessage.substring(0, systemMessage.length-1);
+
+		_request(basePath + 'api/system/$room/$adminPassword/$final',
+			function(d) {
+				if(d == 'set') {
+					_addMessage('system message set.');
+				}
+				else {
+					_addMessage('you are not authorized to set ${room}\'s system message.');
+				}
+			},
+			function(e) {
+				trace(e);
+				_addMessage('failed to connect to api, couldn\'t submit system message.');
+			}
+		);
 	}
 
 	function _legal(_) {
@@ -1211,21 +1238,20 @@ class Main
 
 	function _tryDeleteMessage(e: MouseEvent, id: String) {
 		if(e.ctrlKey && e.shiftKey && e.altKey) {
-			var lockHttp: Http = new Http(basePath + 'api/deleteMessage/$room/$adminPassword/$id');
-			lockHttp.onData = function(d) {
-				if(d == 'deleted') {
-					_addMessage('message deleted.');
+			_request(basePath + 'api/deleteMessage/$room/$adminPassword/$id',
+				function(d) {
+					if(d == 'deleted') {
+						_addMessage('message deleted.');
+					}
+					else {
+						_addMessage('you are not authorized to moderate $room.');
+					}
+				},
+				function(e) {
+					trace(e);
+					_addMessage('failed to connect to api, couldn\'t delete message.');
 				}
-				else {
-					_addMessage('you are not authorized to moderate $room.');
-				}
-			}
-			lockHttp.onError = function(e) {
-				trace(e);
-				_addMessage('failed to connect to api, couldn\'t delete message.');
-			}
-
-			lockHttp.request(true);
+			);
 		}
 	}
 
@@ -1543,6 +1569,14 @@ class Main
 	function _setAdminPassword(password_: String) {
 		adminPassword = password_;
 		Cookie.set('${room}admin-password', adminPassword, 60 * 60 * 24 * 365 * 10);
+	}
+
+	function _request(path: String, onData: String -> Void, onError: String -> Void, push: Bool = true) {
+		var http: Http = new Http(path);
+		http.onData = onData;
+		http.onError = onError;
+
+		http.request(push);
 	}
 
 	function _inIframe(): Bool {

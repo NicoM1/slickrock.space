@@ -379,9 +379,8 @@ Main.prototype = {
 	,_checkValid: function(printValid) {
 		if(printValid == null) printValid = false;
 		var _g = this;
-		var checkValid = new haxe_Http(this.basePath + ("api/checkvalid/" + this.privateID + "/" + this.token));
-		checkValid.onData = function(data) {
-			if(data == "invalid") {
+		this._request(this.basePath + ("api/checkvalid/" + this.privateID + "/" + this.token),function(d) {
+			if(d == "invalid") {
 				_g.token = null;
 				_g._tryAuth();
 				return;
@@ -389,14 +388,12 @@ Main.prototype = {
 				_g._addMessage("authentication successful, chat away.");
 				_g.hasTriedAuth = false;
 			}
-		};
-		checkValid.onError = function(e) {
+		},function(e) {
 			js_Cookie.remove("private");
 			js_Cookie.remove("token");
 			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 373, className : "Main", methodName : "_checkValid"});
 			_g._addMessage("an error occured getting authentication, please refresh the page.");
-		};
-		checkValid.request(true);
+		});
 	}
 	,_tryAuth: function() {
 		this.authHttp.url = this.basePath + ("api/gettoken/" + this.privateID);
@@ -518,6 +515,7 @@ Main.prototype = {
 		_g.set("becloud",{ identifiers : "<strong>/becloud</strong>", description : "switch to dark theme.", method : $bind(this,this._darkTheme)});
 		_g.set("set_theme",{ identifiers : "<strong>/set_theme</strong> <em>THEME</em>", description : "set the default theme, must have admin access to room.", method : $bind(this,this._setDefaultTheme)});
 		_g.set("system_message",{ identifiers : "<strong>/system_message</strong>", description : "begins or ends setting a series of messages to be displayed on first entry to room.", method : $bind(this,this._systemMessage)});
+		_g.set("submit_system_message",{ identifiers : "<strong>/submit_system_message</strong>", description : "sends your recently set system message to the server, redo and resend to change.", method : $bind(this,this._submitSystemMessage)});
 		this.commandInfos = _g;
 		var $it0 = this.commandInfos.keys();
 		while( $it0.hasNext() ) {
@@ -546,16 +544,13 @@ Main.prototype = {
 	}
 	,_getID: function(_) {
 		var _g = this;
-		var idHttp = new haxe_Http(this.basePath + "api/getID");
-		idHttp.onData = function(d) {
+		this._request(this.basePath + "api/getID",function(d) {
 			_g._setID(d);
 			_g._printID();
-		};
-		idHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 650, className : "Main", methodName : "_getID"});
+		},function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 655, className : "Main", methodName : "_getID"});
 			_g._addMessage("failed to connect to api, couldn't get ID.");
-		};
-		idHttp.request(true);
+		});
 	}
 	,_setIDCommand: function($arguments) {
 		if($arguments != null && $arguments[0] != null && $arguments[0] != "") {
@@ -576,19 +571,16 @@ Main.prototype = {
 			return;
 		}
 		var newPassword = $arguments[0];
-		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
-		lockHttp.onData = function(d) {
+		this._request(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword),function(d) {
 			if(d == "claimed") {
 				_g._addMessage("" + _g.room + " claimed.");
 				_g._setAdminPassword(newPassword);
 				_g._addMessage("you may consider ***/fasten***-ing it at any time.");
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
-		};
-		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 702, className : "Main", methodName : "_claimRoom"});
+		},function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 707, className : "Main", methodName : "_claimRoom"});
 			_g._addMessage("failed to connect to api, couldn't claim room.");
-		};
-		lockHttp.request(true);
+		});
 	}
 	,_reclaimRoom: function($arguments) {
 		var _g = this;
@@ -597,18 +589,15 @@ Main.prototype = {
 			return;
 		}
 		var newPassword = $arguments[0];
-		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + this.adminPassword + "/" + newPassword));
-		lockHttp.onData = function(d) {
+		this._request(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + this.adminPassword + "/" + newPassword),function(d) {
 			if(d == "claimed") {
 				_g._addMessage("" + _g.room + " reclaimed.");
 				_g._setAdminPassword(newPassword);
 			} else _g._addMessage("you are not authorized to reclaim " + _g.room + ".");
-		};
-		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 726, className : "Main", methodName : "_reclaimRoom"});
+		},function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 731, className : "Main", methodName : "_reclaimRoom"});
 			_g._addMessage("failed to connect to api, couldn't reclaim room.");
-		};
-		lockHttp.request(true);
+		});
 	}
 	,_authorizeRoom: function($arguments) {
 		var _g = this;
@@ -619,15 +608,12 @@ Main.prototype = {
 		var newPassword = $arguments[0];
 		this._setAdminPassword(newPassword);
 		this._addMessage("set admin password to: " + this.adminPassword);
-		var lockHttp = new haxe_Http(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword));
-		lockHttp.onData = function(d) {
+		this._request(this.basePath + ("api/claim/" + this.room + "/" + this.privateID + "/" + newPassword),function(d) {
 			if(d == "claimed") _g._addMessage("authorized as admin for " + _g.room + "."); else _g._addMessage("incorrect admin password.");
-		};
-		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 751, className : "Main", methodName : "_authorizeRoom"});
+		},function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 756, className : "Main", methodName : "_authorizeRoom"});
 			_g._addMessage("failed to connect to api, couldn't authorize admin.");
-		};
-		lockHttp.request(true);
+		});
 	}
 	,_generateEmbed: function($arguments) {
 		if($arguments.length != 2) {
@@ -662,27 +648,21 @@ Main.prototype = {
 		}
 		var newPassword = $arguments[0];
 		this._setPassword(newPassword);
-		var lockHttp = new haxe_Http(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + newPassword + "/" + this.adminPassword));
-		lockHttp.onData = function(d) {
+		this._request(this.basePath + ("api/lock/" + this.room + "/" + this.privateID + "/" + newPassword + "/" + this.adminPassword),function(d) {
 			if(d == "locked") _g._addMessage("" + _g.room + " locked with password: " + newPassword + "."); else if(d == "unclaimed") _g._addMessage("" + _g.room + " must be claimed before locking."); else _g._addMessage("you are not authorized to lock " + _g.room + ".");
-		};
-		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 808, className : "Main", methodName : "_lockRoom"});
+		},function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 813, className : "Main", methodName : "_lockRoom"});
 			_g._addMessage("failed to connect to api, couldn't lock room.");
-		};
-		lockHttp.request(true);
+		});
 	}
 	,_unlockRoom: function(_) {
 		var _g = this;
-		var lockHttp = new haxe_Http(this.basePath + ("api/unlock/" + this.room + "/" + this.privateID + "/" + this.adminPassword));
-		lockHttp.onData = function(d) {
+		this._request(this.basePath + ("api/unlock/" + this.room + "/" + this.privateID + "/" + this.adminPassword),function(d) {
 			if(d == "unlocked") _g._addMessage("" + _g.room + " unlocked."); else _g._addMessage("you are not authorized to unlock " + _g.room + ".");
-		};
-		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 826, className : "Main", methodName : "_unlockRoom"});
+		},function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 830, className : "Main", methodName : "_unlockRoom"});
 			_g._addMessage("failed to connect to api, couldn't unlock room.");
-		};
-		lockHttp.request(true);
+		});
 	}
 	,_emptyRoom: function(args) {
 		var _g = this;
@@ -690,15 +670,12 @@ Main.prototype = {
 			this._addMessage("**/decontaminate** requires argument: *ADMIN_PASSWORD*, this is to ensure you understand what you are doing.");
 			return;
 		}
-		var lockHttp = new haxe_Http(this.basePath + ("api/empty/" + this.room + "/" + args[0]));
-		lockHttp.onData = function(d) {
+		this._request(this.basePath + ("api/empty/" + this.room + "/" + args[0]),function(d) {
 			if(d == "emptied") _g._addMessage("" + _g.room + " emptied."); else _g._addMessage("you are not authorized to empty " + _g.room + ".");
-		};
-		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 848, className : "Main", methodName : "_emptyRoom"});
+		},function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 852, className : "Main", methodName : "_emptyRoom"});
 			_g._addMessage("failed to connect to api, couldn't empty room.");
-		};
-		lockHttp.request(true);
+		});
 	}
 	,_formatHelp: function(args) {
 		this._addMessage("\\*italic.\\*");
@@ -726,22 +703,20 @@ Main.prototype = {
 			this._addMessage("**/set_theme** requires argument: *THEME*.");
 			return;
 		}
-		var lockHttp = new haxe_Http(this.basePath + ("api/setTheme/" + this.room + "/" + args[0] + "/" + this.adminPassword));
-		lockHttp.onData = function(d) {
+		this._request(this.basePath + ("api/setTheme/" + this.room + "/" + args[0] + "/" + this.adminPassword),function(d) {
 			if(d == "themed") {
 				_g._addMessage("default theme set to: " + args[0] + ".");
 				window.location.reload();
 			} else _g._addMessage("you are not authorized to theme " + _g.room + ".");
-		};
-		lockHttp.onError = function(e) {
-			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 896, className : "Main", methodName : "_setDefaultTheme"});
+		},function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 899, className : "Main", methodName : "_setDefaultTheme"});
 			_g._addMessage("failed to connect to api, couldn't theme room.");
-		};
-		lockHttp.request(true);
+		});
 	}
 	,_systemMessage: function(_) {
 		if(!this.parsingSystemMessage) {
 			this.parsingSystemMessage = true;
+			this.systemMessage = "";
 			this._addMessage("began parsing system message, all messages untill another call to /system_message will be added to a buffer shown at first visit.");
 		} else {
 			this.parsingSystemMessage = true;
@@ -753,7 +728,22 @@ Main.prototype = {
 				++_g;
 				this._addMessage(m);
 			}
+			this._addMessage("**use /submit_system_message to use this, or restart with /system_message**");
 		}
+	}
+	,_submitSystemMessage: function(_) {
+		var _g = this;
+		if(this.parsingSystemMessage) {
+			this._addMessage("**please /system_message again to end the buffer before submitting.**");
+			return;
+		}
+		var $final = this.systemMessage.substring(0,this.systemMessage.length - 1);
+		this._request(this.basePath + ("api/system/" + this.room + "/" + this.adminPassword + "/" + $final),function(d) {
+			if(d == "set") _g._addMessage("system message set."); else _g._addMessage("you are not authorized to set " + _g.room + "'s system message.");
+		},function(e) {
+			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 938, className : "Main", methodName : "_submitSystemMessage"});
+			_g._addMessage("failed to connect to api, couldn't submit system message.");
+		});
 	}
 	,_legal: function(_) {
 		this._addMessage("slickrock.io is (c) 2015 Nico May.");
@@ -1024,17 +1014,12 @@ Main.prototype = {
 	}
 	,_tryDeleteMessage: function(e,id) {
 		var _g = this;
-		if(e.ctrlKey && e.shiftKey && e.altKey) {
-			var lockHttp = new haxe_Http(this.basePath + ("api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + id));
-			lockHttp.onData = function(d) {
-				if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
-			};
-			lockHttp.onError = function(e1) {
-				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1224, className : "Main", methodName : "_tryDeleteMessage"});
-				_g._addMessage("failed to connect to api, couldn't delete message.");
-			};
-			lockHttp.request(true);
-		}
+		if(e.ctrlKey && e.shiftKey && e.altKey) this._request(this.basePath + ("api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + id),function(d) {
+			if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
+		},function(e1) {
+			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1251, className : "Main", methodName : "_tryDeleteMessage"});
+			_g._addMessage("failed to connect to api, couldn't delete message.");
+		});
 	}
 	,_parseMessage: function(raw,safe) {
 		if(safe == null) safe = true;
@@ -1130,7 +1115,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1356, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1382, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
@@ -1278,6 +1263,13 @@ Main.prototype = {
 	,_setAdminPassword: function(password_) {
 		this.adminPassword = password_;
 		js_Cookie.set("" + this.room + "admin-password",this.adminPassword,315360000);
+	}
+	,_request: function(path,onData,onError,push) {
+		if(push == null) push = true;
+		var http = new haxe_Http(path);
+		http.onData = onData;
+		http.onError = onError;
+		http.request(push);
 	}
 	,_inIframe: function() {
 		try {
