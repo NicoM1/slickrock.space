@@ -1077,10 +1077,7 @@ class Main
 
 			message.appendChild(_makeSpan(differentUser, id));
 			if(room == 'test' && id != null) {
-				name = Browser.document.createDivElement();
-				name.innerText = id+': ';
-				name.classList.add('messageitem');
-				name.style.color = _generateColorFromID(id);
+				name = cast _makeName(id);
 				message.appendChild(name);
 			}
 			messages.appendChild(message);
@@ -1118,6 +1115,10 @@ class Main
 
 				messages.insertBefore(message, messages.children[0]);
 				message.appendChild(_makeSpan(true, id));
+				if(room == 'test' && id != null) {
+					name = cast _makeName(id);
+					message.appendChild(name);
+				}
 				message.insertBefore(messageItem, message.children[1]);
 				offset = new JQuery(message).outerHeight(true);
 			}
@@ -1135,11 +1136,17 @@ class Main
 			}
 			else {
 				messageItem.classList.add('non-anim');
+				if(name != null) {
+					name.classList.add('non-anim');
+				}
 			}
 		}
 		else {
 			Browser.document.body.scrollTop += Std.int(offset);
 			messageItem.classList.add('non-anim');
+			if(name != null) {
+				name.classList.add('non-anim');
+			}
 		}
 
 		return messageItem;
@@ -1439,6 +1446,15 @@ class Main
 		}
 
 		return span;
+	}
+
+	function _makeName(id: String): Element {
+		var name = Browser.document.createDivElement();
+		name = Browser.document.createDivElement();
+		name.innerText = id+': ';
+		name.classList.add('messageitem');
+		name.style.color = _generateColorFromID(id);
+		return name;
 	}
 
 	function _generateColorFromID(?id: String, ?dark: Bool = false): String {

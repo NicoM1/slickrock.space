@@ -915,18 +915,14 @@ Main.prototype = {
 			this.lastParagraph = message;
 			message.appendChild(this._makeSpan(differentUser,id));
 			if(this.room == "test" && id != null) {
-				var _this1 = window.document;
-				name = _this1.createElement("div");
-				name.innerText = id + ": ";
-				name.classList.add("messageitem");
-				name.style.color = this._generateColorFromID(id);
+				name = this._makeName(id);
 				message.appendChild(name);
 			}
 			this.messages.appendChild(message);
 		} else message = this.lastParagraph;
 		var messageItem;
-		var _this2 = window.document;
-		messageItem = _this2.createElement("div");
+		var _this1 = window.document;
+		messageItem = _this1.createElement("div");
 		messageItem.classList.add("messageitem");
 		messageItem.setAttribute("data-objectid",_id);
 		if(_id != null) messageItem.onclick = (function(f,id1) {
@@ -943,12 +939,16 @@ Main.prototype = {
 				message.insertBefore(messageItem,message.children[1]);
 				offset = $(messageItem).outerHeight(true);
 			} else {
-				var _this3 = window.document;
-				message = _this3.createElement("div");
+				var _this2 = window.document;
+				message = _this2.createElement("div");
 				message.classList.add("messageblock");
 				message.setAttribute("data-id",id);
 				this.messages.insertBefore(message,this.messages.children[0]);
 				message.appendChild(this._makeSpan(true,id));
+				if(this.room == "test" && id != null) {
+					name = this._makeName(id);
+					message.appendChild(name);
+				}
 				message.insertBefore(messageItem,message.children[1]);
 				offset = $(message).outerHeight(true);
 			}
@@ -963,10 +963,14 @@ Main.prototype = {
 				if(name != null) haxe_Timer.delay(function() {
 					name.classList.add("loaded");
 				},10);
-			} else messageItem.classList.add("non-anim");
+			} else {
+				messageItem.classList.add("non-anim");
+				if(name != null) name.classList.add("non-anim");
+			}
 		} else {
 			window.document.body.scrollTop += offset | 0;
 			messageItem.classList.add("non-anim");
+			if(name != null) name.classList.add("non-anim");
 		}
 		return messageItem;
 	}
@@ -1004,7 +1008,7 @@ Main.prototype = {
 				if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 			};
 			lockHttp.onError = function(e1) {
-				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1180, className : "Main", methodName : "_tryDeleteMessage"});
+				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1187, className : "Main", methodName : "_tryDeleteMessage"});
 				_g._addMessage("failed to connect to api, couldn't delete message.");
 			};
 			lockHttp.request(true);
@@ -1104,7 +1108,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1312, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1319, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
@@ -1205,6 +1209,17 @@ Main.prototype = {
 			span.classList.add("loaded");
 		},10); else span.classList.add("non-anim");
 		return span;
+	}
+	,_makeName: function(id) {
+		var name;
+		var _this = window.document;
+		name = _this.createElement("div");
+		var _this1 = window.document;
+		name = _this1.createElement("div");
+		name.innerText = id + ": ";
+		name.classList.add("messageitem");
+		name.style.color = this._generateColorFromID(id);
+		return name;
 	}
 	,_generateColorFromID: function(id,dark) {
 		if(dark == null) dark = false;
