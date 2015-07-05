@@ -1124,10 +1124,10 @@ class Main
 				if(showName) {
 					name = cast _makeName(id);
 					message.appendChild(name);
-					message.insertBefore(messageItem, message.children[3]);
+					message.insertBefore(messageItem, message.children[2]);
 				}
 				else {
-					message.insertBefore(messageItem, message.children[2]);
+					message.insertBefore(messageItem, message.children[1]);
 				}
 				offset = new JQuery(message).outerHeight(true);
 			}

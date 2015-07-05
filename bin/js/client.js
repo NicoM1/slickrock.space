@@ -950,8 +950,8 @@ Main.prototype = {
 				if(showName) {
 					name = this._makeName(id);
 					message.appendChild(name);
-					message.insertBefore(messageItem,message.children[3]);
-				} else message.insertBefore(messageItem,message.children[2]);
+					message.insertBefore(messageItem,message.children[2]);
+				} else message.insertBefore(messageItem,message.children[1]);
 				offset = $(message).outerHeight(true);
 			}
 		}
