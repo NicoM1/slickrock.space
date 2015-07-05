@@ -89,12 +89,16 @@ class Main {
 		});");
 
 		ircClient.addListener('message', function(from, to, message){
-			Node.console.log(from + ' => ' + to + ': ' + message);
+			_parseIRCMessage(from, to, message);
 		});
 
 		ircClient.addListener('error', function(message) {
 			Node.console.log('error: ' + message);
 		});
+	}
+
+	function _parseIRCMessage(from: String, to: String, message: String) {
+		addMessage(message, from, to);
 	}
 
 	public static function clearTyping(room: String, id: String) {
@@ -275,6 +279,12 @@ class Main {
 		return ID;
 	}
 
+	public static function addMessage(message: String, id: String, room: String) {
+		var objectid = new ObjectID();
+		Main.rooms.get(room).messages.push( { text: message, id: id,  _id: objectid.toHexString()} );
+		Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
+	}
+
 	public static function hasMongo() {
 		return mongodb != null;
 	}
@@ -361,9 +371,7 @@ class RouteHandler implements abe.IRoute {
 
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt+password)) {
-				var objectid = new ObjectID();
-				Main.rooms.get(room).messages.push( { text: message, id: id,  _id: objectid.toHexString()} );
-				Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
+				Main.addMessage(message, id, room);
 				if (Main.userCounts[room] == null) {
 					Main.userCounts[room] = [];
 				}

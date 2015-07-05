@@ -468,6 +468,11 @@ Main.getUserID = function() {
 	ID += third;
 	return ID;
 };
+Main.addMessage = function(message,id,room) {
+	var objectid = new js_node_mongodb_ObjectID();
+	Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid.toHexString()});
+	Main.saveMessage({ text : message, id : id, room : room, _id : objectid});
+};
 Main.hasMongo = function() {
 	return Main.mongodb != null;
 };
@@ -490,17 +495,21 @@ Main.prototype = {
 		});
 	}
 	,_setupIRC: function() {
+		var _g = this;
 		this.irc = require("irc");
 		var irc = require('irc');;
 		this.ircClient = new irc.Client('chat.us.freenode.net', 'debug', {
 			channels: ['#slickrock_haxe_debug_test']
 		});;
 		this.ircClient.addListener("message",function(from,to,message) {
-			console.log(from + " => " + to + ": " + message);
+			_g._parseIRCMessage(from,to,message);
 		});
 		this.ircClient.addListener("error",function(message1) {
 			console.log("error: " + message1);
 		});
+	}
+	,_parseIRCMessage: function(from,to,message) {
+		Main.addMessage(message,from,to);
 	}
 	,thing: null
 	,__class__: Main
@@ -567,9 +576,7 @@ RouteHandler.prototype = {
 			Main.emptyTyping(room,id);
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
-				var objectid = new js_node_mongodb_ObjectID();
-				Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid.toHexString()});
-				Main.saveMessage({ text : message, id : id, room : room, _id : objectid});
+				Main.addMessage(message,id,room);
 				if(Main.userCounts.get(room) == null) {
 					var v = [];
 					Main.userCounts.set(room,v);
