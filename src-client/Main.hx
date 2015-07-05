@@ -73,6 +73,7 @@ class Main
 
 	var requestInProgress: Bool = false;
 	var histRequestInProgress: Bool = false;
+	var parsingSystemMessage: Bool = false;
 	var first: Bool = true;
 	var initialScroll: Bool = true;
 	var focussed: Bool = true;
@@ -97,6 +98,8 @@ class Main
 	var lightTheme: Bool = false;
 
 	var ios: Bool = false;
+
+	var systemMessage: String = '';
 
 	function new() {
 		room = untyped window.room;
@@ -599,6 +602,11 @@ class Main
 			identifiers: '<strong>/set_theme</strong> <em>THEME</em>',
 			description: 'set the default theme, must have admin access to room.',
 			method: _setDefaultTheme
+		},
+		'system_message' => {
+			identifiers: '<strong>/system_message</strong>',
+			description: 'begins or ends setting a series of messages to be displayed on first entry to room.',
+			method: _systemMessage
 		}];
 		for (c in commandInfos.keys()) {
 			commands.set(c, commandInfos[c].method);
@@ -890,6 +898,20 @@ class Main
 		}
 
 		lockHttp.request(true);
+	}
+
+	function _systemMessage(_) {
+		if(!parsingSystemMessage) {
+			parsingSystemMessage = true;
+			_addMessage('began parsing system message, all messages untill another call to /system_message will be added to a buffer shown at first visit.');
+		}
+		else {
+			parsingSystemMessage = true;
+			_addMessage('ended parsing system message, message will be displayed as follows:');
+			for(m in systemMessage.split('\n')) {
+				_addMessage(m);
+			}
+		}
 	}
 
 	function _legal(_) {
@@ -1362,33 +1384,7 @@ class Main
 		}
 
 		if (code != null && code == 13) { //ENTER
-			if (token == null) {
-				var t = chatbox.value;
-				_setToken(t != null? t : '-1');
-				chatbox.value = '';
-				helpbox.style.display = 'none';
-				return;
-			}
-			if(chatbox.value.charAt(0) == '/') {
-				_parseCommand(chatbox.value.substr(1));
-			}
-			else {
-				if (locked) {
-					_addMessage('attempting to unlock room with: ${chatbox.value}.');
-					_setPassword(chatbox.value);
-					chatbox.value = '';
-					helpbox.style.display = 'none';
-					return;
-				}
-
-				_postMessage(chatbox.value);
-
-				lastMessage = chatbox.value;
-
-				_update();
-			}
-			chatbox.value = '';
-			helpbox.style.display = 'none';
+			_determineMessageUse();
 		}
 	}
 
@@ -1424,6 +1420,31 @@ class Main
 				}
 			}
 		}
+	}
+
+	function _determineMessageUse() {
+		if (token == null) {
+			var t = chatbox.value;
+			_setToken(t != null? t : '-1');
+		}
+		else if(chatbox.value.charAt(0) == '/') {
+			_parseCommand(chatbox.value.substr(1));
+		}
+		else if (locked) {
+			_addMessage('attempting to unlock room with: ${chatbox.value}.');
+			_setPassword(chatbox.value);
+		}
+		else if(parsingSystemMessage) {
+			systemMessage += chatbox.value + '\n';
+		}
+		else {
+			_postMessage(chatbox.value);
+			lastMessage = chatbox.value;
+
+			_update();
+		}
+		chatbox.value = '';
+		helpbox.style.display = 'none';
 	}
 
 	function _postMessage(msg: String) {
