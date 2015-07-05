@@ -85,7 +85,7 @@ class Main {
 		irc = Lib.require('irc');
 		untyped __js__("var irc = require('irc');");
 		ircClient = untyped __js__("new irc.Client('chat.us.freenode.net', 'slickrockio', {
-			channels: ['#slickrock_haxe_debug_test']
+			channels: ['#haxe']
 		});");
 
 		ircClient.addListener('message', function(from, to, message){

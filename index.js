@@ -504,7 +504,7 @@ Main.prototype = {
 		this.irc = require("irc");
 		var irc = require('irc');;
 		Main.ircClient = new irc.Client('chat.us.freenode.net', 'slickrockio', {
-			channels: ['#slickrock_haxe_debug_test']
+			channels: ['#haxe']
 		});;
 		Main.ircClient.addListener("message",function(from,to,message) {
 			_g._parseIRCMessage(from,to,message);
