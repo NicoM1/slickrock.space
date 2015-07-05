@@ -1051,7 +1051,7 @@ class Main
 		if (img != null) {
 			offset = img.height;
 		}
-		if ((Browser.window.innerHeight + Browser.window.scrollY + offset) >= messages.offsetHeight) {
+		if (Browser.document.body.scrollTop + Browser.window.innerHeight > Browser.document.body.scrollHeight - 100) {
 			return true;
 		}
 		return false;
