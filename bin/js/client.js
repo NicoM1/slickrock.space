@@ -903,6 +903,8 @@ Main.prototype = {
 		if(safe == null) safe = true;
 		if(hist == null) hist = false;
 		msg = this._parseMessage(msg,safe);
+		var showName = false;
+		if(this.room == "test" && id != null) showName = true;
 		var message;
 		var name = null;
 		var differentUser = false;
@@ -914,7 +916,7 @@ Main.prototype = {
 			message.setAttribute("data-id",id);
 			this.lastParagraph = message;
 			message.appendChild(this._makeSpan(differentUser,id));
-			if(this.room == "test" && id != null) {
+			if(showName) {
 				name = this._makeName(id);
 				message.appendChild(name);
 			}
@@ -945,11 +947,11 @@ Main.prototype = {
 				message.setAttribute("data-id",id);
 				this.messages.insertBefore(message,this.messages.children[0]);
 				message.appendChild(this._makeSpan(true,id));
-				if(this.room == "test" && id != null) {
+				if(showName) {
 					name = this._makeName(id);
 					message.appendChild(name);
-				}
-				message.insertBefore(messageItem,message.children[1]);
+					message.insertBefore(messageItem,message.children[2]);
+				} else message.insertBefore(messageItem,message.children[1]);
 				offset = $(message).outerHeight(true);
 			}
 		}
@@ -1008,7 +1010,7 @@ Main.prototype = {
 				if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 			};
 			lockHttp.onError = function(e1) {
-				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1187, className : "Main", methodName : "_tryDeleteMessage"});
+				haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1196, className : "Main", methodName : "_tryDeleteMessage"});
 				_g._addMessage("failed to connect to api, couldn't delete message.");
 			};
 			lockHttp.request(true);
@@ -1108,7 +1110,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1319, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1328, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {

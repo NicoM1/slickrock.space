@@ -1060,6 +1060,12 @@ class Main
 	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false, ?_id: String): DivElement {
 		msg = _parseMessage(msg, safe);
 
+		var showName: Bool = false;
+
+		if(room == 'test' && id != null) {
+			showName = true;
+		}
+
 		var message: DivElement;
 		var name: DivElement = null;
 
@@ -1076,7 +1082,7 @@ class Main
 			lastParagraph = message;
 
 			message.appendChild(_makeSpan(differentUser, id));
-			if(room == 'test' && id != null) {
+			if(showName) {
 				name = cast _makeName(id);
 				message.appendChild(name);
 			}
@@ -1115,11 +1121,14 @@ class Main
 
 				messages.insertBefore(message, messages.children[0]);
 				message.appendChild(_makeSpan(true, id));
-				if(room == 'test' && id != null) {
+				if(showName) {
 					name = cast _makeName(id);
 					message.appendChild(name);
+					message.insertBefore(messageItem, message.children[2]);
 				}
-				message.insertBefore(messageItem, message.children[1]);
+				else {
+					message.insertBefore(messageItem, message.children[1]);
+				}
 				offset = new JQuery(message).outerHeight(true);
 			}
 		}
