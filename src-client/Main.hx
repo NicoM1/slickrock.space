@@ -969,7 +969,7 @@ class Main
 				ii = parsed.messages.messages.length - 1 - i;
 			}
 			var p = parsed.messages.messages[ii];
-			var message = _addMessage(p.text, p.id, hist, true, first,p._id);
+			var message = _addMessage(p.text, p.id, hist, true, first, p._id, parsed.messages.names);
 
 			if (!hist && !focussed && !first) {
 				Browser.document.title = '# /$room.';
@@ -1057,12 +1057,12 @@ class Main
 		return false;
 	}
 
-	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false, ?_id: String): DivElement {
+	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false, ?_id: String, ?names: Bool = false): DivElement {
 		msg = _parseMessage(msg, safe);
 
 		var showName: Bool = false;
 
-		if(room == 'CFA_TeamChat' && id != null) {
+		if(names && id != null) {
 			showName = true;
 		}
 
@@ -1109,6 +1109,7 @@ class Main
 		}
 		else {
 			message = cast messages.children[0];
+
 			var last = message.getAttribute('data-id');
 			if(last == id) {
 				if(showName) {

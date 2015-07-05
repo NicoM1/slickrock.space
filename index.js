@@ -386,10 +386,7 @@ Main._parseMessages = function() {
 			while(_g < roominfo.length) {
 				var r1 = roominfo[_g];
 				++_g;
-				if(!Main.rooms.exists(r1._id)) {
-					var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
-					Main.rooms.set(r1._id,value);
-				}
+				Main.ensureCreated(r1._id);
 				if(r1.users != null) {
 					var v = r1.users;
 					Main.userCounts.set(r1._id,v);
@@ -399,6 +396,7 @@ Main._parseMessages = function() {
 				Main.rooms.get(r1._id).pw = r1.pw;
 				Main.rooms.get(r1._id).salt = r1.salt;
 				if(r1.theme != null) Main.rooms.get(r1._id).theme = r1.theme; else Main.rooms.get(r1._id).theme = "dark";
+				if(r1.names != null) Main.rooms.get(r1._id).names = r1.names; else Main.rooms.get(r1._id).names = false;
 			}
 		});
 	});
@@ -414,8 +412,8 @@ Main._parseMessages = function() {
 				var m = messages[_g1];
 				++_g1;
 				if(!Main.rooms.exists(m.room)) {
-					var value1 = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
-					Main.rooms.set(m.room,value1);
+					var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark", names : false};
+					Main.rooms.set(m.room,value);
 				}
 				Main.rooms.get(m.room).messages.push({ text : m.text, id : m.id, _id : m._id.toHexString()});
 			}
@@ -446,7 +444,22 @@ Main.saveMessage = function(msg) {
 		});
 	}); else console.log("mongo null");
 };
+Main.ensureCreated = function(room) {
+	if(!Main.rooms.exists(room)) {
+		var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
+		Main.rooms.set(room,value);
+	}
+};
 Main.roomInfo = function(roomInfo) {
+	var roomE = Main.rooms.get(roomInfo._id);
+	var _g = 0;
+	var _g1 = Reflect.fields(roomInfo);
+	while(_g < _g1.length) {
+		var f = _g1[_g];
+		++_g;
+		var field = Reflect.field(roomInfo,f);
+		if(field == null) Reflect.setField(roomInfo,f,Reflect.field(roomE,f));
+	}
 	Main.mongodb.collection("roominfo",function(e,database) {
 		if(e == null) database.save(roomInfo);
 	});
@@ -470,10 +483,7 @@ Main.getUserID = function() {
 };
 Main.addMessage = function(message,id,room,irc) {
 	if(irc == null) irc = false;
-	if(!Main.rooms.exists(room)) {
-		var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
-		Main.rooms.set(room,value);
-	}
+	Main.ensureCreated(room);
 	var objectid = new js_node_mongodb_ObjectID();
 	Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid.toHexString()});
 	Main.saveMessage({ text : message, id : id, room : room, _id : objectid});
@@ -575,10 +585,7 @@ RouteHandler.prototype = {
 			}
 		}
 		if(Main.tokens.get(privateID) == token) {
-			if(!Main.rooms.exists(room)) {
-				var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
-				Main.rooms.set(room,value);
-			}
+			Main.ensureCreated(room);
 			Main.emptyTyping(room,id);
 			var roomE = Main.rooms.get(room);
 			if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
@@ -838,16 +845,13 @@ RouteHandler.prototype = {
 			response.send("nomongo");
 			return;
 		}
-		if(!Main.rooms.exists(room)) {
-			var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
-			Main.rooms.set(room,value);
-		}
+		Main.ensureCreated(room);
 		var roomE = Main.rooms.get(room);
 		if(roomE.lock == null || roomE.lock == haxe_crypto_Sha1.encode(roomE.salt + password)) {
 			var roomE1 = Main.rooms.get(room);
 			var pass = null;
 			if(roomE1.pw != null) pass = "true";
-			var messages = { messages : { messages : [], lock : null, pw : pass, typing : roomE1.typing}, lastID : roomE1.messages.length - 1};
+			var messages = { messages : { messages : [], lock : null, pw : pass, typing : roomE1.typing, names : roomE1.names}, lastID : roomE1.messages.length - 1};
 			var start = 0;
 			var end = roomE1.messages.length;
 			if(firstID != null) {

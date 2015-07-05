@@ -173,15 +173,7 @@ class Main {
 					}
 					var roominfo: Array<RoomInfo> = cast r;
 					for (r in roominfo) {
-						if (!rooms.exists(r._id)) {
-							rooms.set(r._id, {
-								messages: new Array<Message>(),
-								lock: null,
-								pw: null,
-								typing: [],
-								theme: 'dark'
-							});
-						}
+						ensureCreated(r._id);
 						if (r.users != null) {
 							userCounts[r._id] = r.users;
 						}
@@ -189,6 +181,7 @@ class Main {
 						rooms.get(r._id).pw = r.pw;
 						rooms.get(r._id).salt = r.salt;
 						rooms.get(r._id).theme = r.theme != null? r.theme : 'dark';
+						rooms.get(r._id).names = r.names != null? r.names : false;
 					}
 				});
 			}
@@ -208,7 +201,8 @@ class Main {
 								lock: null,
 								pw: null,
 								typing: [],
-								theme: 'dark'
+								theme: 'dark',
+								names: false
 							});
 						}
 						rooms.get(m.room).messages.push( { text: m.text, id: m.id, _id: m._id.toHexString() } );
@@ -250,7 +244,27 @@ class Main {
 		}
 	}
 
+	public static function ensureCreated(room: String) {
+		if (!rooms.exists(room)) {
+			rooms.set(room, {
+				messages: new Array<Message>(),
+				lock: null,
+				pw: null,
+				typing: [],
+				theme: 'dark'
+			});
+		}
+	}
+
 	public static function roomInfo(roomInfo: RoomInfo) {
+		var roomE = rooms[roomInfo._id];
+
+		for(f in Reflect.fields(roomInfo)) {
+			var field = Reflect.field(roomInfo, f);
+			if(field == null) {
+				Reflect.setField(roomInfo, f, Reflect.field(roomE, f));
+			}
+		}
 		mongodb.collection('roominfo', function(e, database) {
 			if(e == null) {
 				database.save(roomInfo);
@@ -281,15 +295,7 @@ class Main {
 	}
 
 	public static function addMessage(message: String, id: String, room: String, irc: Bool = false) {
-		if (!Main.rooms.exists(room)) {
-			Main.rooms.set(room, {
-				messages: new Array<Message>(),
-				lock: null,
-				pw: null,
-				typing: [],
-				theme: 'dark'
-			});
-		}
+		Main.ensureCreated(room);
 		var objectid = new ObjectID();
 		Main.rooms.get(room).messages.push( { text: message, id: id,  _id: objectid.toHexString()} );
 		Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
@@ -371,15 +377,7 @@ class RouteHandler implements abe.IRoute {
 			}
 		}
 		if(Main.tokens[privateID] == token) {
-			if (!Main.rooms.exists(room)) {
-				Main.rooms.set(room, {
-					messages: new Array<Message>(),
-					lock: null,
-					pw: null,
-					typing: [],
-					theme: 'dark'
-				});
-			}
+			Main.ensureCreated(room);
 
 			Main.emptyTyping(room, id);
 
@@ -691,15 +689,7 @@ class RouteHandler implements abe.IRoute {
 			response.send('nomongo');
 			return;
 		}
-		if (!Main.rooms.exists(room)) {
-			Main.rooms.set(room, {
-				messages: new Array<Message>(),
-				lock: null,
-				pw: null,
-				typing: [],
-				theme: 'dark'
-			});
-		}
+		Main.ensureCreated(room);
 
 		var roomE = Main.rooms.get(room);
 		if (roomE.lock == null || roomE.lock == Sha1.encode(roomE.salt + password)) {
@@ -713,7 +703,8 @@ class RouteHandler implements abe.IRoute {
 					messages: new Array<Message>(),
 					lock: null,
 					pw: pass,
-					typing: roomE.typing
+					typing: roomE.typing,
+					names: roomE.names
 				},
 				lastID: roomE.messages.length - 1
 			};
