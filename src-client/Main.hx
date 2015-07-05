@@ -1111,7 +1111,12 @@ class Main
 			message = cast messages.children[0];
 			var last = message.getAttribute('data-id');
 			if(last == id) {
-				message.insertBefore(messageItem, message.children[1]);
+				if(showName) {
+					message.insertBefore(messageItem, message.children[2]);
+				}
+				else {
+					message.insertBefore(messageItem, message.children[1]);
+				}
 				offset = new JQuery(messageItem).outerHeight(true);
 			}
 			else {
