@@ -503,7 +503,7 @@ Main.prototype = {
 		var _g = this;
 		this.irc = require("irc");
 		var irc = require('irc');;
-		Main.ircClient = new irc.Client('chat.us.freenode.net', 'debug', {
+		Main.ircClient = new irc.Client('chat.us.freenode.net', 'irc.slickrock.io', {
 			channels: ['#slickrock_haxe_debug_test']
 		});;
 		Main.ircClient.addListener("message",function(from,to,message) {
