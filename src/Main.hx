@@ -48,7 +48,7 @@ class Main {
 	static var mongodb: MongoDatabase;
 
 	var irc: Dynamic;
-	var ircClient: Dynamic;
+	static var ircClient: Dynamic;
 
 	function new() {
 		animalWords = Fs.readFileSync('bin/animals.txt', { encoding: 'utf8' } ).split('\n');
@@ -98,7 +98,7 @@ class Main {
 	}
 
 	function _parseIRCMessage(from: String, to: String, message: String) {
-		addMessage(message, from, to.substr(1));
+		addMessage(message, from, to.substr(1), true);
 	}
 
 	public static function clearTyping(room: String, id: String) {
@@ -279,7 +279,7 @@ class Main {
 		return ID;
 	}
 
-	public static function addMessage(message: String, id: String, room: String) {
+	public static function addMessage(message: String, id: String, room: String, irc: Bool = false) {
 		if (!Main.rooms.exists(room)) {
 			Main.rooms.set(room, {
 				messages: new Array<Message>(),
@@ -292,6 +292,10 @@ class Main {
 		var objectid = new ObjectID();
 		Main.rooms.get(room).messages.push( { text: message, id: id,  _id: objectid.toHexString()} );
 		Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
+
+		if(!irc) {
+			ircClient.send('message', '#room', '+o', 'id');
+		}
 	}
 
 	public static function hasMongo() {

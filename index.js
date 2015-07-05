@@ -468,7 +468,8 @@ Main.getUserID = function() {
 	ID += third;
 	return ID;
 };
-Main.addMessage = function(message,id,room) {
+Main.addMessage = function(message,id,room,irc) {
+	if(irc == null) irc = false;
 	if(!Main.rooms.exists(room)) {
 		var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
 		Main.rooms.set(room,value);
@@ -476,6 +477,7 @@ Main.addMessage = function(message,id,room) {
 	var objectid = new js_node_mongodb_ObjectID();
 	Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid.toHexString()});
 	Main.saveMessage({ text : message, id : id, room : room, _id : objectid});
+	if(!irc) Main.ircClient.send("message","#room","+o","id");
 };
 Main.hasMongo = function() {
 	return Main.mongodb != null;
@@ -487,7 +489,6 @@ Main.prototype = {
 	MongoClient: null
 	,mongoUrl: null
 	,irc: null
-	,ircClient: null
 	,_setupMongo: function() {
 		this.MongoClient = require("mongodb").MongoClient;
 		var this1 = process.env;
@@ -502,18 +503,18 @@ Main.prototype = {
 		var _g = this;
 		this.irc = require("irc");
 		var irc = require('irc');;
-		this.ircClient = new irc.Client('chat.us.freenode.net', 'debug', {
+		Main.ircClient = new irc.Client('chat.us.freenode.net', 'debug', {
 			channels: ['#slickrock_haxe_debug_test']
 		});;
-		this.ircClient.addListener("message",function(from,to,message) {
+		Main.ircClient.addListener("message",function(from,to,message) {
 			_g._parseIRCMessage(from,to,message);
 		});
-		this.ircClient.addListener("error",function(message1) {
+		Main.ircClient.addListener("error",function(message1) {
 			console.log("error: " + message1);
 		});
 	}
 	,_parseIRCMessage: function(from,to,message) {
-		Main.addMessage(message,from,HxOverrides.substr(to,1,null));
+		Main.addMessage(message,from,HxOverrides.substr(to,1,null),true);
 	}
 	,thing: null
 	,__class__: Main
