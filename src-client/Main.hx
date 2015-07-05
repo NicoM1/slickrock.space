@@ -1075,6 +1075,13 @@ class Main
 			lastParagraph = message;
 
 			message.appendChild(_makeSpan(differentUser, id));
+			if(room == 'test' && id != null) {
+				var name: DivElement = Browser.document.createDivElement();
+				name.innerText = id+': ';
+				name.classList.add('messageblock');
+				name.style.color = _generateColorFromID(id);
+				messages.appendChild(name);
+			}
 			messages.appendChild(message);
 		}
 		else {
