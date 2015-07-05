@@ -1074,7 +1074,7 @@ class Main
 		}
 
 		if (first) {
-			if(parsed.messages.system != null) {
+			if(!_checkVisited() && parsed.messages.system != null) {
 				for(m in parsed.messages.system.split('\n')) {
 					_addMessage(m);
 				}
@@ -1523,6 +1523,16 @@ class Main
 		name.classList.add('messageitem');
 		name.style.color = _generateColorFromID(id);
 		return name;
+	}
+
+	function _checkVisited(): Bool {
+		if(Cookie.exists('${room}_visited')) {
+			return true;
+		}
+		else {
+			Cookie.set('${room}_visited', 'true');
+			return false;
+		}
 	}
 
 	function _generateColorFromID(?id: String, ?dark: Bool = false): String {

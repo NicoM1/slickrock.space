@@ -887,7 +887,7 @@ Main.prototype = {
 			})($bind(this,this._tryScroll),true);
 		}
 		if(this.first) {
-			if(parsed.messages.system != null) {
+			if(!this._checkVisited() && parsed.messages.system != null) {
 				var _g7 = 0;
 				var _g14 = parsed.messages.system.split("\n");
 				while(_g7 < _g14.length) {
@@ -1229,6 +1229,12 @@ Main.prototype = {
 		name.classList.add("messageitem");
 		name.style.color = this._generateColorFromID(id);
 		return name;
+	}
+	,_checkVisited: function() {
+		if(js_Cookie.exists("" + this.room + "_visited")) return true; else {
+			js_Cookie.set("" + this.room + "_visited","true");
+			return false;
+		}
 	}
 	,_generateColorFromID: function(id,dark) {
 		if(dark == null) dark = false;
