@@ -651,7 +651,7 @@ class RouteHandler implements abe.IRoute {
 		response.send('failed');
 	}
 
-	@:post('api/system/:room/:adminPassword/:systemMessage')
+	@:post('/api/system/:room/:adminPassword/:systemMessage')
 	function setSystemMessage(room: String, adminPassword: String, systemMessage: String) {
 		room = room.toLowerCase();
 		var roomE = Main.rooms.get(room);

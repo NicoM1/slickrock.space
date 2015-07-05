@@ -271,7 +271,7 @@ var Main = function() {
 		var processor20 = new abe_core_ArgumentProcessor(filters20,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "adminPassword", optional : false, type : "String", sources : ["params"]},{ name : "systemMessage", optional : false, type : "String", sources : ["params"]}]);
 		var process20 = new RouteHandler_$setSystemMessage_$RouteProcess({ room : null, adminPassword : null, systemMessage : null},instance,processor20);
 		var uses20 = [];
-		router.registerMethod("api/system/:room/:adminPassword/:systemMessage","post",process20,uses20,[]);
+		router.registerMethod("/api/system/:room/:adminPassword/:systemMessage","post",process20,uses20,[]);
 		var filters21 = new abe_core_ArgumentsFilter();
 		var processor21 = new abe_core_ArgumentProcessor(filters21,[{ name : "room", optional : false, type : "String", sources : ["params"]},{ name : "lastID", optional : false, type : "Int", sources : ["params"]}]);
 		var process21 = new RouteHandler_$getMessages_$RouteProcess({ room : null, lastID : null},instance,processor21);
