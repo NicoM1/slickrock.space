@@ -1108,7 +1108,7 @@ class Main
 			message.appendChild(messageItem);
 		}
 		else {
-			message = cast messages.children[1];
+			message = cast messages.children[0];
 			var last = message.getAttribute('data-id');
 			if(last == id) {
 				message.insertBefore(messageItem, message.children[1]);
@@ -1124,10 +1124,10 @@ class Main
 				if(showName) {
 					name = cast _makeName(id);
 					message.appendChild(name);
-					message.insertBefore(messageItem, message.children[2]);
+					message.insertBefore(messageItem, message.children[3]);
 				}
 				else {
-					message.insertBefore(messageItem, message.children[1]);
+					message.insertBefore(messageItem, message.children[3]);
 				}
 				offset = new JQuery(message).outerHeight(true);
 			}

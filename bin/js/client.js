@@ -935,7 +935,7 @@ Main.prototype = {
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		var offset = 0;
 		if(!hist) message.appendChild(messageItem); else {
-			message = this.messages.children[1];
+			message = this.messages.children[0];
 			var last = message.getAttribute("data-id");
 			if(last == id) {
 				message.insertBefore(messageItem,message.children[1]);
@@ -950,8 +950,8 @@ Main.prototype = {
 				if(showName) {
 					name = this._makeName(id);
 					message.appendChild(name);
-					message.insertBefore(messageItem,message.children[2]);
-				} else message.insertBefore(messageItem,message.children[1]);
+					message.insertBefore(messageItem,message.children[3]);
+				} else message.insertBefore(messageItem,message.children[3]);
 				offset = $(message).outerHeight(true);
 			}
 		}
