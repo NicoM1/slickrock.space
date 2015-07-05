@@ -909,7 +909,7 @@ class Main
 			_addMessage('began parsing system message, all messages untill another call to /system_message will be added to a buffer shown at first visit.');
 		}
 		else {
-			parsingSystemMessage = true;
+			parsingSystemMessage = false;
 			_addMessage('ended parsing system message, message will be displayed as follows:');
 			for(m in systemMessage.substring(0, systemMessage.length-1).split('\n')) {
 				_addMessage(m);

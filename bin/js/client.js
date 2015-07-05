@@ -719,7 +719,7 @@ Main.prototype = {
 			this.systemMessage = "";
 			this._addMessage("began parsing system message, all messages untill another call to /system_message will be added to a buffer shown at first visit.");
 		} else {
-			this.parsingSystemMessage = true;
+			this.parsingSystemMessage = false;
 			this._addMessage("ended parsing system message, message will be displayed as follows:");
 			var _g = 0;
 			var _g1 = this.systemMessage.substring(0,this.systemMessage.length - 1).split("\n");
