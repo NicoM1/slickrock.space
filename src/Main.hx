@@ -399,7 +399,7 @@ class RouteHandler implements abe.IRoute {
 				else {
 					Main.userCounts[room][index].timestamp = Date.now();
 				}
-				Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme } );
+				Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme, names: roomE.names } );
 			}
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('success');
@@ -442,7 +442,7 @@ class RouteHandler implements abe.IRoute {
 				Main.userCounts[r].remove(u);
 			}
 			var roomE = Main.rooms[r];
-			Main.roomInfo( { _id: r, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[r], theme: roomE.theme } );
+			Main.roomInfo( { _id: r, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[r], theme: roomE.theme, names: roomE.names } );
 			toRemove = [];
 			if(top10.length > 0) {
 				lowest = top10[0].count;
@@ -542,7 +542,7 @@ class RouteHandler implements abe.IRoute {
 		}
 		else if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
 			roomE.lock = Sha1.encode(roomE.salt+password);
-			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme } );
+			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme, names: roomE.names } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('locked');
 			return;
@@ -592,7 +592,7 @@ class RouteHandler implements abe.IRoute {
 		if(roomE.lock != null) {
 			if (roomE.pw == Sha1.encode(roomE.salt+privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo( { _id: room, lock: null, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme  } );
+				Main.roomInfo( { _id: room, lock: null, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme, names: roomE.names  } );
 				response.setHeader('Access-Control-Allow-Origin', '*');
 				response.send('unlocked');
 				return;
@@ -616,7 +616,7 @@ class RouteHandler implements abe.IRoute {
 				roomE.salt = getSalt();
 			}
 			roomE.pw = Sha1.encode(roomE.salt + privatePass);
-			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room]  } );
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], names: roomE.names  } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('claimed');
 			return;

@@ -603,7 +603,7 @@ RouteHandler.prototype = {
 					if(Main.userCounts.get(room)[i].id == privateID) index = i;
 				}
 				if(index == -1) Main.userCounts.get(room).push({ id : privateID, timestamp : new Date()}); else Main.userCounts.get(room)[index].timestamp = new Date();
-				Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme});
+				Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme, names : roomE.names});
 			}
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("success");
@@ -644,7 +644,7 @@ RouteHandler.prototype = {
 				HxOverrides.remove(_this,u1);
 			}
 			var roomE = Main.rooms.get(r);
-			Main.roomInfo({ _id : r, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(r), theme : roomE.theme});
+			Main.roomInfo({ _id : r, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(r), theme : roomE.theme, names : roomE.names});
 			toRemove = [];
 			if(top10.length > 0) {
 				lowest = top10[0].count;
@@ -726,7 +726,7 @@ RouteHandler.prototype = {
 			return;
 		} else if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 			roomE.lock = haxe_crypto_Sha1.encode(roomE.salt + password);
-			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme});
+			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme, names : roomE.names});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("locked");
 			return;
@@ -769,7 +769,7 @@ RouteHandler.prototype = {
 		if(roomE.lock != null) {
 			if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo({ _id : room, lock : null, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme});
+				Main.roomInfo({ _id : room, lock : null, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme, names : roomE.names});
 				response.setHeader("Access-Control-Allow-Origin","*");
 				response.send("unlocked");
 				return;
@@ -788,7 +788,7 @@ RouteHandler.prototype = {
 		if(roomE.pw == null && roomE.messages.length == 0 || haxe_crypto_Sha1.encode(roomE.salt + privatePass) == roomE.pw) {
 			if(roomE.salt == null) roomE.salt = this.getSalt();
 			roomE.pw = haxe_crypto_Sha1.encode(roomE.salt + privatePass);
-			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room)});
+			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), names : roomE.names});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("claimed");
 			return;
