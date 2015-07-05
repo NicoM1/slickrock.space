@@ -6,6 +6,7 @@ typedef MessageList = {
 	pw: String,
 	?theme: String,
 	?names: Bool,
+	?system: String,
 	messages: Array<Message>,
 	typing: Array<String>
 }

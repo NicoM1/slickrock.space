@@ -1012,6 +1012,7 @@ class Main
 		}
 
 		var parsed: MessageData = Json.parse(data);
+
 		for (i in 0...parsed.messages.messages.length) {
 			var ii = i;
 			if (hist) {
@@ -1073,6 +1074,11 @@ class Main
 		}
 
 		if (first) {
+			if(parsed.messages.system != null) {
+				for(m in parsed.messages.system.split('\n')) {
+					_addMessage(m);
+				}
+			}
 			_tryScroll(true);
 
 			if (parsed.messages.pw == null && parsed.messages.messages.length == 0) {

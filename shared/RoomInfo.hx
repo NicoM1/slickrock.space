@@ -7,5 +7,6 @@ typedef RoomInfo = {
 	?users: Array<{timestamp: Date, id: String}>,
 	?theme: String,
 	?names: Bool,
+	?system: String,
 	_id: String
 }

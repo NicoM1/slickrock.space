@@ -182,6 +182,7 @@ class Main {
 						rooms.get(r._id).salt = r.salt;
 						rooms.get(r._id).theme = r.theme != null? r.theme : 'dark';
 						rooms.get(r._id).names = r.names != null? r.names : false;
+						rooms.get(r._id).system = r.system != null? r.system : null;
 					}
 				});
 			}
@@ -195,16 +196,7 @@ class Main {
 					}
 					var messages: Array<MessageObject> = cast r;
 					for (m in messages) {
-						if (!rooms.exists(m.room)) {
-							rooms.set(m.room, {
-								messages: new Array<Message>(),
-								lock: null,
-								pw: null,
-								typing: [],
-								theme: 'dark',
-								names: false
-							});
-						}
+						ensureCreated(m.room);
 						rooms.get(m.room).messages.push( { text: m.text, id: m.id, _id: m._id.toHexString() } );
 					}
 				});
@@ -251,7 +243,8 @@ class Main {
 				lock: null,
 				pw: null,
 				typing: [],
-				theme: 'dark'
+				theme: 'dark',
+				names: false
 			});
 		}
 	}
@@ -652,6 +645,21 @@ class RouteHandler implements abe.IRoute {
 			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], lock: roomE.lock, theme: roomE.theme  } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('themed');
+			return;
+		}
+		response.setHeader('Access-Control-Allow-Origin', '*');
+		response.send('failed');
+	}
+
+	@:post('api/system/:room/:adminPassword/:systemMessage')
+	function setSystemMessage(room: String, adminPassword: String, systemMessage: String) {
+		room = room.toLowerCase();
+		var roomE = Main.rooms.get(room);
+		if (Sha1.encode(roomE.salt + adminPassword) == roomE.pw) {
+			roomE.system = systemMessage;
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], lock: roomE.lock, theme: roomE.theme, system: systemMessage  } );
+			response.setHeader('Access-Control-Allow-Origin', '*');
+			response.send('set');
 			return;
 		}
 		response.setHeader('Access-Control-Allow-Origin', '*');

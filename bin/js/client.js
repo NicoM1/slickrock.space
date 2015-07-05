@@ -887,6 +887,15 @@ Main.prototype = {
 			})($bind(this,this._tryScroll),true);
 		}
 		if(this.first) {
+			if(parsed.messages.system != null) {
+				var _g7 = 0;
+				var _g14 = parsed.messages.system.split("\n");
+				while(_g7 < _g14.length) {
+					var m = _g14[_g7];
+					++_g7;
+					this._addMessage(m);
+				}
+			}
 			this._tryScroll(true);
 			if(parsed.messages.pw == null && parsed.messages.messages.length == 0) this._addMessage("*" + this.room + "* is unclaimed, consider ***/claim***-ing it?");
 		}
@@ -1017,7 +1026,7 @@ Main.prototype = {
 		if(e.ctrlKey && e.shiftKey && e.altKey) this._request(this.basePath + ("api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + id),function(d) {
 			if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 		},function(e1) {
-			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1251, className : "Main", methodName : "_tryDeleteMessage"});
+			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1257, className : "Main", methodName : "_tryDeleteMessage"});
 			_g._addMessage("failed to connect to api, couldn't delete message.");
 		});
 	}
@@ -1115,7 +1124,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1382, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1388, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
