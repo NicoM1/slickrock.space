@@ -47,10 +47,14 @@ class Main {
 	var mongoUrl = '';
 	static var mongodb: MongoDatabase;
 
+	var irc: Dynamic;
+	var ircClient: Dynamic;
+
 	function new() {
 		animalWords = Fs.readFileSync('bin/animals.txt', { encoding: 'utf8' } ).split('\n');
 		adjectives = Fs.readFileSync('bin/adjectives.txt', { encoding: 'utf8' }).split('\n');
 		_setupMongo();
+		_setupIRC();
 		rooms = new Rooms();
 		typingTimers = new Map();
 		tokens = new Map();
@@ -74,6 +78,21 @@ class Main {
 			}
 			mongodb = db;
 			_parseMessages();
+		});
+	}
+
+	function _setupIRC() {
+		irc = Lib.require('irc');
+		ircClient = untyped __js__("new irc.Client('chat.us.freenode.net', 'debug', {
+			channels: ['#slickrock_haxe_debug_test']
+		});");
+
+		ircClient.addListener('message', function(from, to, message){
+			Node.console.log(from + ' => ' + to + ': ' + message);
+		});
+
+		ircClient.addListener('error', function(message) {
+			Node.console.log('error: ' + message);
 		});
 	}
 

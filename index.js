@@ -160,6 +160,7 @@ var Main = function() {
 	Main.animalWords = js_node_Fs.readFileSync("bin/animals.txt",{ encoding : "utf8"}).split("\n");
 	Main.adjectives = js_node_Fs.readFileSync("bin/adjectives.txt",{ encoding : "utf8"}).split("\n");
 	this._setupMongo();
+	this._setupIRC();
 	Main.rooms = new haxe_ds_StringMap();
 	Main.typingTimers = new haxe_ds_StringMap();
 	Main.tokens = new haxe_ds_StringMap();
@@ -476,6 +477,8 @@ Main.main = function() {
 Main.prototype = {
 	MongoClient: null
 	,mongoUrl: null
+	,irc: null
+	,ircClient: null
 	,_setupMongo: function() {
 		this.MongoClient = require("mongodb").MongoClient;
 		var this1 = process.env;
@@ -484,6 +487,18 @@ Main.prototype = {
 			if(err != null) console.log(err);
 			Main.mongodb = db;
 			Main._parseMessages();
+		});
+	}
+	,_setupIRC: function() {
+		this.irc = require("irc");
+		this.ircClient = new irc.Client('chat.us.freenode.net', 'debug', {
+			channels: ['#slickrock_haxe_debug_test']
+		});;
+		this.ircClient.addListener("message",function(from,to,message) {
+			console.log(from + " => " + to + ": " + message);
+		});
+		this.ircClient.addListener("error",function(message1) {
+			console.log("error: " + message1);
 		});
 	}
 	,thing: null
