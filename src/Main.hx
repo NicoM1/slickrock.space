@@ -712,7 +712,8 @@ class RouteHandler implements abe.IRoute {
 					lock: null,
 					pw: pass,
 					typing: roomE.typing,
-					names: roomE.names
+					names: roomE.names,
+					system: roomE.system
 				},
 				lastID: roomE.messages.length - 1
 			};

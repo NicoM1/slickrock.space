@@ -867,7 +867,7 @@ RouteHandler.prototype = {
 			var roomE1 = Main.rooms.get(room);
 			var pass = null;
 			if(roomE1.pw != null) pass = "true";
-			var messages = { messages : { messages : [], lock : null, pw : pass, typing : roomE1.typing, names : roomE1.names}, lastID : roomE1.messages.length - 1};
+			var messages = { messages : { messages : [], lock : null, pw : pass, typing : roomE1.typing, names : roomE1.names, system : roomE1.system}, lastID : roomE1.messages.length - 1};
 			var start = 0;
 			var end = roomE1.messages.length;
 			if(firstID != null) {
