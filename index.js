@@ -469,6 +469,10 @@ Main.getUserID = function() {
 	return ID;
 };
 Main.addMessage = function(message,id,room) {
+	if(!Main.rooms.exists(room)) {
+		var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark"};
+		Main.rooms.set(room,value);
+	}
 	var objectid = new js_node_mongodb_ObjectID();
 	Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid.toHexString()});
 	Main.saveMessage({ text : message, id : id, room : room, _id : objectid});

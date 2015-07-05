@@ -280,6 +280,15 @@ class Main {
 	}
 
 	public static function addMessage(message: String, id: String, room: String) {
+		if (!Main.rooms.exists(room)) {
+			Main.rooms.set(room, {
+				messages: new Array<Message>(),
+				lock: null,
+				pw: null,
+				typing: [],
+				theme: 'dark'
+			});
+		}
 		var objectid = new ObjectID();
 		Main.rooms.get(room).messages.push( { text: message, id: id,  _id: objectid.toHexString()} );
 		Main.saveMessage( { text: message, id: id, room: room, _id: objectid } );
