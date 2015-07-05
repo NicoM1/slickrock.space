@@ -98,7 +98,7 @@ class Main {
 	}
 
 	function _parseIRCMessage(from: String, to: String, message: String) {
-		addMessage(message, from, to);
+		addMessage(message, from, to.substr(1));
 	}
 
 	public static function clearTyping(room: String, id: String) {

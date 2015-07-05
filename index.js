@@ -513,7 +513,7 @@ Main.prototype = {
 		});
 	}
 	,_parseIRCMessage: function(from,to,message) {
-		Main.addMessage(message,from,to);
+		Main.addMessage(message,from,HxOverrides.substr(to,1,null));
 	}
 	,thing: null
 	,__class__: Main
