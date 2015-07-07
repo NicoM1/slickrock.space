@@ -307,12 +307,13 @@ var Main = function() {
 		router.registerMethod("/api/hist/:room/:password/:lastID/:firstID","post",process25,uses25,[]);
 		return router;
 	})(new RouteHandler(),app.router);
-	app.error(ErrorHandling.handle);
 	var port;
 	var this1 = process.env;
 	port = this1.PORT;
 	app.http(port != null?Std.parseInt(port):9998);
 	app.router.serve("/bin","./bin");
+	app.error(ErrorHandling.handle);
+	app["use"](null,ErrorHandling.handle);
 };
 Main.__name__ = ["Main"];
 Main.clearTyping = function(room,id) {
