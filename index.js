@@ -499,7 +499,8 @@ Main.addMessage = function(message,id,room,irc) {
 	var objectid = new js_node_mongodb_ObjectID();
 	Main.rooms.get(room).messages.push({ text : message, id : id, _id : objectid.toHexString()});
 	Main.saveMessage({ text : message, id : id, room : room, _id : objectid});
-	if(!irc) Main.ircClient.say("#" + room,"<" + id + "> " + message);
+	if(!irc) {
+	}
 };
 Main.hasMongo = function() {
 	return Main.mongodb != null;
