@@ -61,7 +61,7 @@ class Main {
 
 		var app = new App();
 		app.router.register(new RouteHandler());
-		app.router.use((cast ErrorHandling.handle : express.Middleware));
+		app.error((cast ErrorHandling.handle : express.ErrorMiddleware));
 		var port = Node.process.env.get('PORT');
 		app.http(port != null? Std.parseInt(port) : 9998);
 
@@ -189,7 +189,7 @@ class Main {
 		});
 		mongodb.collection('messages', function(e, database) {
 			if(e == null) {
-				database.find({}).sort( { _id:1 } ).toArray(function(e, r) {
+				untyped database.find({}).sort( { _id:1 } ).toArray(function(e, r) {
 					if (e != null) {
 						trace(e);
 						return;
@@ -260,7 +260,7 @@ class Main {
 		}
 		mongodb.collection('roominfo', function(e, database) {
 			if(e == null) {
-				database.save(roomInfo);
+				untyped database.save(roomInfo);
 			}
 		});
 	}
@@ -268,7 +268,7 @@ class Main {
 	public static function saveToken(token: TokenObject) {
 		mongodb.collection('tokens', function(e, database) {
 			if(e == null) {
-				database.save(token);
+				untyped database.save(token);
 			}
 		});
 	}
