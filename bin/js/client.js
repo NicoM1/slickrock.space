@@ -479,7 +479,7 @@ Main.prototype = {
 	}
 	,_getAuth: function(data) {
 		this._addMessage("please enter the following to authenticate.");
-		this._addMessage("#http://dummyimage.com/400x600/202020/ecf0f1/&amp;text=" + data + " 200#",null,null,false,false);
+		this._addMessage("#http://dummyimage.com/400x128/202020/ecf0f1/&amp;text=" + data + " 200#",null,null,false,false);
 	}
 	,_loop: function() {
 		var _g = this;
@@ -945,30 +945,13 @@ Main.prototype = {
 		}
 		this.lastIndex = parsed.lastID;
 		if(parsed.firstID != null) this.firstIndex = parsed.firstID; else this.firstIndex = this.firstIndex;
-		var _g6 = 0;
-		var _g13 = window.document.getElementsByClassName("imgmessage");
-		while(_g6 < _g13.length) {
-			var i1 = _g13[_g6];
-			++_g6;
-			var image = i1;
-			i1.onclick = (function(f1,a1) {
-				return function() {
-					f1(a1);
-				};
-			})($bind(this,this._openInNewTab),image.src);
-			i1.onload = (function(f2,a11,a2) {
-				return function() {
-					f2(a11,a2);
-				};
-			})($bind(this,this._tryScroll),false,i1);
-		}
 		if(this.first) {
 			if(!this._checkVisited() && parsed.messages.system != null) {
-				var _g7 = 0;
-				var _g14 = parsed.messages.system.split("\n");
-				while(_g7 < _g14.length) {
-					var m = _g14[_g7];
-					++_g7;
+				var _g6 = 0;
+				var _g13 = parsed.messages.system.split("\n");
+				while(_g6 < _g13.length) {
+					var m = _g13[_g6];
+					++_g6;
 					this._addMessage(m);
 				}
 			}
@@ -1068,6 +1051,23 @@ Main.prototype = {
 			window.document.body.scrollTop += offset | 0;
 			messageItem.classList.add("non-anim");
 			if(name != null) name.classList.add("non-anim");
+		}
+		var _g = 0;
+		var _g1 = window.document.getElementsByClassName("imgmessage");
+		while(_g < _g1.length) {
+			var i = _g1[_g];
+			++_g;
+			var image = i;
+			i.onclick = (function(f1,a1) {
+				return function() {
+					f1(a1);
+				};
+			})($bind(this,this._openInNewTab),image.src);
+			i.onload = (function(f2,a11,a2) {
+				return function() {
+					f2(a11,a2);
+				};
+			})($bind(this,this._tryScroll),false,i);
 		}
 		return messageItem;
 	}

@@ -384,7 +384,7 @@ class Main
 
 	function _getAuth(data: String) {
 		_addMessage('please enter the following to authenticate.');
-		_addMessage('#http://dummyimage.com/400x600/202020/ecf0f1/&amp;text=$data 200#', false, false);
+		_addMessage('#http://dummyimage.com/400x128/202020/ecf0f1/&amp;text=$data 200#', false, false);
 	}
 
 	function _loop() {
@@ -1062,12 +1062,6 @@ class Main
 		lastIndex = parsed.lastID;
 		firstIndex = parsed.firstID != null? parsed.firstID : firstIndex;
 
-		for (i in Browser.document.getElementsByClassName('imgmessage')) {
-			var image: ImageElement = cast i;
-			i.onclick = _openInNewTab.bind(image.src);
-			i.onload = _tryScroll.bind(false, cast i);
-		}
-
 		if (first) {
 			if(!_checkVisited() && parsed.messages.system != null) {
 				for(m in parsed.messages.system.split('\n')) {
@@ -1212,6 +1206,12 @@ class Main
 			if(name != null) {
 				name.classList.add('non-anim');
 			}
+		}
+
+		for (i in Browser.document.getElementsByClassName('imgmessage')) {
+			var image: ImageElement = cast i;
+			i.onclick = _openInNewTab.bind(image.src);
+			i.onload = _tryScroll.bind(false, cast i);
 		}
 
 		return messageItem;
