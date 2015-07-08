@@ -642,7 +642,7 @@ RouteHandler.prototype = {
 		var $it0 = Main.userCounts.keys();
 		while( $it0.hasNext() ) {
 			var r = $it0.next();
-			if(HxOverrides.indexOf(Main.hiddenRooms,r,0) == -1) continue;
+			if(HxOverrides.indexOf(Main.hiddenRooms,r,0) != -1) continue;
 			var count = Main.userCounts.get(r);
 			var _g = 0;
 			while(_g < count.length) {

@@ -431,7 +431,7 @@ class RouteHandler implements abe.IRoute {
 		var toRemove: Array<{id: String, timestamp: Date}> = [];
 
 		for (r in Main.userCounts.keys()) {
-			if(Main.hiddenRooms.indexOf(r) == -1) continue;
+			if(Main.hiddenRooms.indexOf(r) != -1) continue;
 			var count = Main.userCounts[r];
 			for (u in count) {
 				if ((Date.now().getTime() - u.timestamp.getTime()) > oneWeek) {
