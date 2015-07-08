@@ -1099,7 +1099,7 @@ class Main
 	function _atBottom(img: ImageElement = null): Bool {
 		var offset: Float = 0;
 		if (img != null) {
-			offset = img.height;
+			offset = new JQuery(img).outerHeight();
 		}
 		if (Browser.document.body.scrollTop + Browser.window.innerHeight + offset > Browser.document.body.scrollHeight - 100) {
 			return true;

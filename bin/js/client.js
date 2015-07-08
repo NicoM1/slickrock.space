@@ -988,7 +988,7 @@ Main.prototype = {
 	}
 	,_atBottom: function(img) {
 		var offset = 0;
-		if(img != null) offset = img.height;
+		if(img != null) offset = $(img).outerHeight();
 		if(window.document.body.scrollTop + window.innerHeight + offset > window.document.body.scrollHeight - 100) return true;
 		return false;
 	}
