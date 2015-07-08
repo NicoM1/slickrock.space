@@ -385,7 +385,6 @@ class Main
 	function _getAuth(data: String) {
 		_addMessage('please enter the following to authenticate.');
 		_addMessage('#http://dummyimage.com/400x128/202020/ecf0f1/&amp;text=$data 200#', false, false);
-		_tryScroll(true);
 	}
 
 	function _loop() {
@@ -1092,7 +1091,7 @@ class Main
 
 	function _tryScroll(force: Bool = false, img: ImageElement = null) {
 		if (force || _atBottom(img)) {
-			Browser.window.scrollTo(0, Browser.document.body.scrollHeight);
+			Browser.window.scrollTo(0, new JQuery(Browser.document).height());
 			initialScroll = false;
 		}
 	}
