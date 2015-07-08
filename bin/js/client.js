@@ -982,7 +982,7 @@ Main.prototype = {
 	,_tryScroll: function(force,img) {
 		if(force == null) force = false;
 		if(force || this._atBottom(img)) {
-			window.scrollTo(0,$(window.document).height());
+			window.document.body.scrollTop = Std["int"]($(window.document).height());
 			this.initialScroll = false;
 		}
 	}
@@ -1481,6 +1481,9 @@ Std.instance = function(value,c) {
 };
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
+};
+Std["int"] = function(x) {
+	return x | 0;
 };
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);

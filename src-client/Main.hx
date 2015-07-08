@@ -1091,7 +1091,7 @@ class Main
 
 	function _tryScroll(force: Bool = false, img: ImageElement = null) {
 		if (force || _atBottom(img)) {
-			Browser.window.scrollTo(0, new JQuery(Browser.document).height());
+			Browser.document.body.scrollTop = Std.int(new JQuery(Browser.document).height());
 			initialScroll = false;
 		}
 	}
