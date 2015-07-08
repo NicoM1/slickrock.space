@@ -960,7 +960,7 @@ Main.prototype = {
 				return function() {
 					f2(a11,a2);
 				};
-			})($bind(this,this._tryScroll),false,i1);
+			})($bind(this,this._tryScroll),true,i1);
 		}
 		if(this.first) {
 			if(!this._checkVisited() && parsed.messages.system != null) {
