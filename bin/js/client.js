@@ -479,7 +479,7 @@ Main.prototype = {
 	}
 	,_getAuth: function(data) {
 		this._addMessage("please enter the following to authenticate.");
-		this._addMessage("#http://dummyimage.com/400x128/202020/ecf0f1/&amp;text=" + data + " 200#",null,null,false,false);
+		this._addMessage("#http://dummyimage.com/400x600/202020/ecf0f1/&amp;text=" + data + " 200#",null,null,false,false);
 	}
 	,_loop: function() {
 		var _g = this;
@@ -960,7 +960,7 @@ Main.prototype = {
 				return function() {
 					f2(a11,a2);
 				};
-			})($bind(this,this._tryScroll),true,i1);
+			})($bind(this,this._tryScroll),false,i1);
 		}
 		if(this.first) {
 			if(!this._checkVisited() && parsed.messages.system != null) {
