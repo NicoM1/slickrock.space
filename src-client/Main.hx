@@ -1065,12 +1065,7 @@ class Main
 		for (i in Browser.document.getElementsByClassName('imgmessage')) {
 			var image: ImageElement = cast i;
 			i.onclick = _openInNewTab.bind(image.src);
-			if(!first) {
-				i.onload = _tryScroll.bind(false, cast i);
-			}
-			else {
-				i.onload = _tryScroll.bind(true);
-			}
+			i.onload = _tryScroll.bind(false, cast i);
 		}
 
 		if (first) {
@@ -1106,7 +1101,7 @@ class Main
 		if (img != null) {
 			offset = img.height;
 		}
-		if (Browser.document.body.scrollTop + Browser.window.innerHeight > Browser.document.body.scrollHeight - 100) {
+		if (Browser.document.body.scrollTop + Browser.window.innerHeight + offset > Browser.document.body.scrollHeight - 100) {
 			return true;
 		}
 		return false;
