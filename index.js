@@ -642,6 +642,7 @@ RouteHandler.prototype = {
 		var $it0 = Main.userCounts.keys();
 		while( $it0.hasNext() ) {
 			var r = $it0.next();
+			if(HxOverrides.indexOf(Main.hiddenRooms,r,0) == -1) continue;
 			var count = Main.userCounts.get(r);
 			var _g = 0;
 			while(_g < count.length) {
@@ -6351,6 +6352,7 @@ if(typeof(scope.performance.now) == "undefined") {
 DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 Main.textDB = "";
 Main.userCounts = new haxe_ds_StringMap();
+Main.hiddenRooms = ["haxe","cfa_teamchat"];
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
 abe_core_ArgumentsFilter.globalFilters = (function() {
 	var filters = [];

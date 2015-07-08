@@ -50,6 +50,11 @@ class Main {
 	var irc: Dynamic;
 	static var ircClient: Dynamic;
 
+	public static var hiddenRooms = [
+		'haxe',
+		'cfa_teamchat'
+	];
+
 	function new() {
 		animalWords = Fs.readFileSync('bin/animals.txt', { encoding: 'utf8' } ).split('\n');
 		adjectives = Fs.readFileSync('bin/adjectives.txt', { encoding: 'utf8' }).split('\n');
@@ -426,6 +431,7 @@ class RouteHandler implements abe.IRoute {
 		var toRemove: Array<{id: String, timestamp: Date}> = [];
 
 		for (r in Main.userCounts.keys()) {
+			if(Main.hiddenRooms.indexOf(r) == -1) continue;
 			var count = Main.userCounts[r];
 			for (u in count) {
 				if ((Date.now().getTime() - u.timestamp.getTime()) > oneWeek) {
