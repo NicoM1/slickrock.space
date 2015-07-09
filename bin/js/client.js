@@ -887,6 +887,7 @@ Main.prototype = {
 			haxe_Log.trace(this.v,{ fileName : "Main.hx", lineNumber : 1009, className : "Main", methodName : "_parseMessages"});
 			if(this.v != parsed.messages.v) window.location.reload(true);
 		} else this.v = parsed.messages.v;
+		haxe_Log.trace("test",{ fileName : "Main.hx", lineNumber : 1018, className : "Main", methodName : "_parseMessages"});
 		var _g1 = 0;
 		var _g = parsed.messages.messages.length;
 		while(_g1 < _g) {

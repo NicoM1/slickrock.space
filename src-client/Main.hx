@@ -1015,7 +1015,7 @@ class Main
 			v = parsed.messages.v;
 		}
 
-		//trace('test');
+		trace('test');
 
 		for (i in 0...parsed.messages.messages.length) {
 			var ii = i;
