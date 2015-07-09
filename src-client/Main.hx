@@ -1006,6 +1006,7 @@ class Main
 		var parsed: MessageData = Json.parse(data);
 
 		if(!first) {
+			trace(v);
 			if(v != parsed.messages.v) {
 				Browser.window.location.reload(true);
 			}
@@ -1014,7 +1015,7 @@ class Main
 			v = parsed.messages.v;
 		}
 
-		trace('test');
+		//trace('test');
 
 		for (i in 0...parsed.messages.messages.length) {
 			var ii = i;
