@@ -165,7 +165,7 @@ Lambda.has = function(it,elt) {
 var Main = function() {
 	this.thing = "test";
 	this.mongoUrl = "";
-	Main.v = 16;
+	Main.v = 21;
 	Main.animalWords = js_node_Fs.readFileSync("bin/animals.txt",{ encoding : "utf8"}).split("\n");
 	Main.adjectives = js_node_Fs.readFileSync("bin/adjectives.txt",{ encoding : "utf8"}).split("\n");
 	this._setupMongo();

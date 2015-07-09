@@ -9,4 +9,6 @@
 -lib jQueryExtern
 -lib hxmongodb
 
+-dce full
+
 -main Main

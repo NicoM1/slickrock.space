@@ -5,7 +5,7 @@ typedef MessageList = {
 	?salt: String,
 	pw: String,
 	?theme: String,
-	?names: Bool,
+	names: Bool,
 	?system: String,
 	v: Int,
 	messages: Array<Message>,
