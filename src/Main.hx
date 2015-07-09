@@ -55,7 +55,10 @@ class Main {
 		'cfa_teamchat'
 	];
 
+	public static var v: Int = 0;
+
 	function new() {
+		v = Version.get();
 		animalWords = Fs.readFileSync('bin/animals.txt', { encoding: 'utf8' } ).split('\n');
 		adjectives = Fs.readFileSync('bin/adjectives.txt', { encoding: 'utf8' }).split('\n');
 		_setupMongo();
@@ -250,7 +253,8 @@ class Main {
 				pw: null,
 				typing: [],
 				theme: 'dark',
-				names: false
+				names: false,
+				v: v
 			});
 		}
 	}
@@ -720,7 +724,8 @@ class RouteHandler implements abe.IRoute {
 					pw: pass,
 					typing: roomE.typing,
 					names: roomE.names,
-					system: roomE.system
+					system: roomE.system,
+					v: Main.v
 				},
 				lastID: roomE.messages.length - 1
 			};

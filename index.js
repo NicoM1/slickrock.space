@@ -165,6 +165,7 @@ Lambda.has = function(it,elt) {
 var Main = function() {
 	this.thing = "test";
 	this.mongoUrl = "";
+	Main.v = 13;
 	Main.animalWords = js_node_Fs.readFileSync("bin/animals.txt",{ encoding : "utf8"}).split("\n");
 	Main.adjectives = js_node_Fs.readFileSync("bin/adjectives.txt",{ encoding : "utf8"}).split("\n");
 	this._setupMongo();
@@ -458,7 +459,7 @@ Main.saveMessage = function(msg) {
 };
 Main.ensureCreated = function(room) {
 	if(!Main.rooms.exists(room)) {
-		var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark", names : false};
+		var value = { messages : [], lock : null, pw : null, typing : [], theme : "dark", names : false, v : Main.v};
 		Main.rooms.set(room,value);
 	}
 };
@@ -878,7 +879,7 @@ RouteHandler.prototype = {
 			var roomE1 = Main.rooms.get(room);
 			var pass = null;
 			if(roomE1.pw != null) pass = "true";
-			var messages = { messages : { messages : [], lock : null, pw : pass, typing : roomE1.typing, names : roomE1.names, system : roomE1.system}, lastID : roomE1.messages.length - 1};
+			var messages = { messages : { messages : [], lock : null, pw : pass, typing : roomE1.typing, names : roomE1.names, system : roomE1.system, v : Main.v}, lastID : roomE1.messages.length - 1};
 			var start = 0;
 			var end = roomE1.messages.length;
 			if(firstID != null) {
@@ -1471,6 +1472,8 @@ Type.enumParameters = function(e) {
 Type.enumIndex = function(e) {
 	return e[1];
 };
+var Version = function() { };
+Version.__name__ = ["Version"];
 var abe_App = function(options) {
 	if(null != options) options = options; else options = { };
 	this.express = express_Express();
@@ -6353,6 +6356,7 @@ DateTools.DAYS_OF_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 Main.textDB = "";
 Main.userCounts = new haxe_ds_StringMap();
 Main.hiddenRooms = ["haxe","cfa_teamchat"];
+Main.v = 0;
 abe_core_filters_DateFilter.TIME_PATTERN = new EReg("$\\d+^","");
 abe_core_ArgumentsFilter.globalFilters = (function() {
 	var filters = [];

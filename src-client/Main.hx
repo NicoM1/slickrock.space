@@ -101,6 +101,8 @@ class Main
 
 	var systemMessage: String = '';
 
+	var v: Int = 0;
+
 	function new() {
 		room = untyped window.room;
 		var theme = 'dark';
@@ -167,7 +169,6 @@ class Main
 			postHttp.onError = function(error) {
 				trace(error);
 				requestInProgress = false;
-				//chatbox.value = lastMessage;
 			}
 
 			Browser.document.title = '/$room.';
@@ -186,16 +187,7 @@ class Main
 
 			Browser.document.body.onscroll = _tryGetOldMessages;
 
-			/*messages.addEventListener('mousewheel', _tryGetOldMessages);
-			messages.addEventListener('DOMMouseScroll', _tryGetOldMessages);
-			messages.ontouchmove = _tryGetOldMessages;
-			Browser.document.onkeydown = _testScrolling;*/
-
 			_setupHelpbox();
-
-			if(ios) {
-				chatbox.style.position = 'static';
-			}
 
 			chatbox.onclick = function() {
 				_getNotificationPermission();
@@ -1012,6 +1004,15 @@ class Main
 		}
 
 		var parsed: MessageData = Json.parse(data);
+
+		if(!first) {
+			if(v != parsed.messages.v) {
+				Browser.window.location.reload(true);
+			}
+		}
+		else {
+			v = parsed.messages.v;
+		}
 
 		for (i in 0...parsed.messages.messages.length) {
 			var ii = i;
