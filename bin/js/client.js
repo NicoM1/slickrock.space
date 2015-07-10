@@ -276,7 +276,7 @@ Main.prototype = {
 		} else this._addMessage("",null,"embedded chatrooms are unreliable in iOS, please view this chat directly on <a target=\"_blank\" href=\"http://slickrock.io/" + this.room + "\">slickrock.io/" + this.room + "</a>.");
 	}
 	,_tryExpandImages: function(e,img) {
-		if(e.altKey || this.mouseDown) {
+		if(e.altKey) {
 			var orig = Std.parseInt(img.style.width);
 			img.style.width = Std.string((orig != null?orig:500) + e.movementX) + "px";
 		}
