@@ -105,6 +105,8 @@ class Main
 
 	var lastMouseX: Float = 0;
 
+	var mouseDown: Bool = false;
+
 	function new() {
 		room = untyped window.room;
 		var theme = 'dark';
@@ -188,6 +190,9 @@ class Main
 			};
 
 			Browser.document.body.onscroll = _tryGetOldMessages;
+
+			Browser.document.body.onmousedown = function() mouseDown = true;
+			Browser.document.body.onmouseup = function() mouseDown = false;
 
 			_setupHelpbox();
 
@@ -283,7 +288,7 @@ class Main
 	}
 
 	function _tryExpandImages(e: MouseEvent, img: ImageElement) {
-		if(e.altKey) {
+		if(e.altKey || mouseDown) {
 			var orig = Std.parseInt(img.style.width);
 
 			img.style.width = Std.string((orig != null? orig: 500) + e.movementX) + 'px';
