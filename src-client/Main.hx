@@ -284,7 +284,9 @@ class Main
 
 	function _tryExpandImages(e: MouseEvent, img: ImageElement) {
 		if(e.altKey) {
-			img.style.width = Std.string(Std.parseInt(img.style.width) + e.movementX) + 'px';
+			var orig = Std.parseInt(img.style.width);
+
+			img.style.width = Std.string(orig != null? orig: 0 + e.movementX) + 'px';
 		}
 	}
 
