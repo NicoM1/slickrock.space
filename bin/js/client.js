@@ -1009,13 +1009,13 @@ Main.prototype = {
 			var _g = chunks.length;
 			switch(_g) {
 			case 1:
-				imgTag = "<img src=\"" + chunks[0] + "\" width=\"800\" class=\"imgmessage\"></img>";
+				imgTag = "<img src=\"" + chunks[0] + "\" style=\"width:800px\" class=\"imgmessage\"></img>";
 				break;
 			case 2:
-				imgTag = "<img src=\"" + chunks[0] + "\" width=\"" + chunks[1] + "\" class=\"imgmessage\"></img>";
+				imgTag = "<img src=\"" + chunks[0] + "\" style=\"width:" + chunks[1] + "px\" class=\"imgmessage\"></img>";
 				break;
 			case 3:
-				imgTag = "<img src=\"" + chunks[0] + "\" width=\"" + chunks[1] + "\" height=\"" + chunks[2] + "\" class=\"imgmessage\"></img>";
+				imgTag = "<img src=\"" + chunks[0] + "\" style=\"width:" + chunks[1] + "px\" height=\"" + chunks[2] + "\" class=\"imgmessage\"></img>";
 				break;
 			default:
 				return "";
