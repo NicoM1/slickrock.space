@@ -863,11 +863,11 @@ Main.prototype = {
 		messageItem = _this1.createElement("div");
 		messageItem.classList.add("messageitem");
 		messageItem.setAttribute("data-objectid",_id);
-		if(_id != null) messageItem.onclick = (function(f,id1) {
+		if(_id != null) messageItem.onclick = (function(f,id1,a1) {
 			return function(e) {
-				f(e,id1);
+				f(e,id1,a1);
 			};
-		})($bind(this,this._tryDeleteMessage),_id);
+		})($bind(this,this._tryDeleteMessage),_id,msg);
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		var offset = 0;
 		if(!hist) message.appendChild(messageItem); else {
@@ -917,14 +917,14 @@ Main.prototype = {
 			var i = _g1[_g];
 			++_g;
 			var image = i;
-			i.onclick = (function(f1,a1) {
+			i.onclick = (function(f1,a11) {
 				return function() {
-					f1(a1);
+					f1(a11);
 				};
 			})($bind(this,this._openInNewTab),image.src);
-			i.onload = (function(f2,a11,a2) {
+			i.onload = (function(f2,a12,a2) {
 				return function() {
-					f2(a11,a2);
+					f2(a12,a2);
 				};
 			})($bind(this,this._tryScroll),false,i);
 		}
@@ -956,14 +956,14 @@ Main.prototype = {
 			}
 		}
 	}
-	,_tryDeleteMessage: function(e,id) {
+	,_tryDeleteMessage: function(e,id,text) {
 		var _g = this;
 		if(e.ctrlKey && e.shiftKey && e.altKey) this._request(this.basePath + ("api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + id),function(d) {
 			if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 		},function(e1) {
 			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1255, className : "Main", methodName : "_tryDeleteMessage"});
 			_g._addMessage("failed to connect to api, couldn't delete message.");
-		});
+		}); else this.chatbox.value = "\"'" + text + "'\"";
 	}
 	,_parseMessage: function(raw,safe) {
 		if(safe == null) safe = true;
@@ -1059,7 +1059,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1386, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1389, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {

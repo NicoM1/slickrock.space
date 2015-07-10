@@ -1144,7 +1144,7 @@ class Main
 		messageItem.setAttribute('data-objectid', _id);
 
 		if(_id != null) {
-			messageItem.onclick = _tryDeleteMessage.bind(_, _id);
+			messageItem.onclick = _tryDeleteMessage.bind(_, _id, msg);
 		}
 
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
@@ -1240,7 +1240,7 @@ class Main
 		}
 	}
 
-	function _tryDeleteMessage(e: MouseEvent, id: String) {
+	function _tryDeleteMessage(e: MouseEvent, id: String, text: String) {
 		if(e.ctrlKey && e.shiftKey && e.altKey) {
 			_request(basePath + 'api/deleteMessage/$room/$adminPassword/$id',
 				function(d) {
@@ -1256,6 +1256,9 @@ class Main
 					_addMessage('failed to connect to api, couldn\'t delete message.');
 				}
 			);
+		}
+		else {
+			chatbox.value = '"\'$text\'"';
 		}
 	}
 
