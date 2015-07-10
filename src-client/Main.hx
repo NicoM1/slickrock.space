@@ -1104,6 +1104,7 @@ class Main
 	}
 
 	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false, ?_id: String, ?names: Bool = false): DivElement {
+		var orig = msg;
 		msg = _parseMessage(msg, safe);
 
 		var showName: Bool = false;
@@ -1144,7 +1145,7 @@ class Main
 		messageItem.setAttribute('data-objectid', _id);
 
 		if(_id != null) {
-			messageItem.onclick = _tryDeleteMessage.bind(_, _id, msg);
+			messageItem.onclick = _tryDeleteMessage.bind(_, _id, orig);
 		}
 
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
