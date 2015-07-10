@@ -883,6 +883,7 @@ Main.prototype = {
 				this.messages.insertBefore(message,this.messages.children[0]);
 				message.appendChild(this._makeSpan(true,id));
 				if(showName) {
+					haxe_Log.trace(id,{ fileName : "Main.hx", lineNumber : 1176, className : "Main", methodName : "_addMessage"});
 					name = this._makeName(id);
 					message.appendChild(name);
 					message.insertBefore(messageItem,message.children[2]);
@@ -959,7 +960,7 @@ Main.prototype = {
 		if(e.ctrlKey && e.shiftKey && e.altKey) this._request(this.basePath + ("api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + id),function(d) {
 			if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 		},function(e1) {
-			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1253, className : "Main", methodName : "_tryDeleteMessage"});
+			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1254, className : "Main", methodName : "_tryDeleteMessage"});
 			_g._addMessage("failed to connect to api, couldn't delete message.");
 		});
 	}
@@ -1057,7 +1058,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1384, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1385, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
@@ -1158,7 +1159,7 @@ Main.prototype = {
 		name = _this.createElement("div");
 		var _this1 = window.document;
 		name = _this1.createElement("div");
-		name.innerText = id + ": ";
+		name.innerHTML = id + ": ";
 		name.classList.add("messageitem");
 		name.style.color = this._generateColorFromID(id);
 		return name;

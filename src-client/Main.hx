@@ -1173,6 +1173,7 @@ class Main
 				messages.insertBefore(message, messages.children[0]);
 				message.appendChild(_makeSpan(true, id));
 				if(showName) {
+					trace(id);
 					name = cast _makeName(id);
 					message.appendChild(name);
 					message.insertBefore(messageItem, message.children[2]);
@@ -1515,7 +1516,7 @@ class Main
 	function _makeName(id: String): Element {
 		var name = Browser.document.createDivElement();
 		name = Browser.document.createDivElement();
-		name.innerText = id+': ';
+		name.innerHTML = id+': ';
 		name.classList.add('messageitem');
 		name.style.color = _generateColorFromID(id);
 		return name;
