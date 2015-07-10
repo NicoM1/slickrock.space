@@ -1016,7 +1016,7 @@ Main.prototype = {
 		}
 		while(this.quoteMD.match(parsed)) {
 			var text2 = this.quoteMD.matched(1);
-			var emTag1 = "<em style=\"color:#" + this._generateColorFromID(id) + ";\">" + text2 + "</em>";
+			var emTag1 = "<em style=\"color:" + this._generateColorFromID(id) + ";\">" + text2 + "</em>";
 			parsed = this.quoteMD.replace(parsed,emTag1);
 		}
 		while(this.codeBB.match(parsed)) {

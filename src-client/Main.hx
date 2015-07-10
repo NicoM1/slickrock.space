@@ -1326,7 +1326,7 @@ class Main
 		}
 		while (quoteMD.match(parsed)) {
 			var text = quoteMD.matched(1);
-			var emTag = '<em style="color:#${_generateColorFromID(id)};">$text</em>';
+			var emTag = '<em style="color:${_generateColorFromID(id)};">$text</em>';
 			parsed = quoteMD.replace(parsed, emTag);
 		}
 		while (codeBB.match(parsed)) {
