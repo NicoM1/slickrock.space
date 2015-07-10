@@ -822,7 +822,7 @@ Main.prototype = {
 	,_tryScroll: function(force,img) {
 		if(force == null) force = false;
 		if(force || this._atBottom(img)) {
-			window.document.body.scrollTop = Std["int"]($(window.document).height());
+			$(window.document).scrollTop(Std["int"]($(window.document).height()));
 			this.initialScroll = false;
 		}
 	}
