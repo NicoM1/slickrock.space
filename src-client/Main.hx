@@ -1105,7 +1105,7 @@ class Main
 
 	function _addMessage(msg: String, ?id: String, ?customHTML: String, ?hist: Bool = false, ?safe: Bool = true, ?first: Bool = false, ?_id: String, ?names: Bool = false): DivElement {
 		var orig = msg;
-		msg = _parseMessage(msg, safe);
+		msg = _parseMessage(msg, safe, id);
 
 		var showName: Bool = false;
 
@@ -1264,13 +1264,14 @@ class Main
 	}
 
 	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
-	var italicBB: EReg = ~/(?:\[i\]|\*|~)(.*?)(?:\[\/i\]|\*|~)/i;
+	var italicBB: EReg = ~/(?:\[i\]|\*)(.*?)(?:\[\/i\]|\*)/i;
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
+	var quoteMD: EReg =  ~/(?:~)(.*?)(?:~)/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;
 	var sitelink: EReg = ~/ \/[^\s]+?( |$)/i;
 
-	function _parseMessage(raw: String, safe: Bool = true): String {
+	function _parseMessage(raw: String, safe: Bool = true, ?id: String): String {
 		var parsed: String = raw.replace('\n', ' ');
 
 		if(safe) {
@@ -1281,6 +1282,7 @@ class Main
 			parsed = parsed.replace('\\#', '&num;');
 			parsed = parsed.replace('\\^', '&Hat;');
 			parsed = parsed.replace('\\`', '&grave;');
+			parsed = parsed.replace('\\~', '&tilde;');
 			parsed = parsed.replace('\\\\n', '&bsol;n');
 			parsed = parsed.replace('\\\\t', '&bsol;t');
 
@@ -1321,6 +1323,11 @@ class Main
 			var text = italicBB.matched(1);
 			var emTag = '<em>$text</em>';
 			parsed = italicBB.replace(parsed, emTag);
+		}
+		while (quoteMD.match(parsed)) {
+			var text = quoteMD.matched(1);
+			var emTag = '<em style="color:#${_generateColorFromID(id)};">$text</em>';
+			parsed = quoteMD.replace(parsed, emTag);
 		}
 		while (codeBB.match(parsed)) {
 			var text = codeBB.matched(1);

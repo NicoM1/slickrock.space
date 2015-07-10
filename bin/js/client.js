@@ -92,9 +92,10 @@ _$List_ListIterator.prototype = {
 var Main = function() {
 	this.selectedElem = null;
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
+	this.quoteMD = new EReg("(?:~)(.*?)(?:~)","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
-	this.italicBB = new EReg("(?:\\[i\\]|\\*|~)(.*?)(?:\\[/i\\]|\\*|~)","i");
+	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
 	this.embedTemplate = "<iframe src=\"[SRC]\" width=\"[WIDTH]\" height=\"[HEIGHT]\" style=\"border-color: #333333; border-style: solid;\"></iframe>";
 	this.counter = 0;
@@ -839,7 +840,7 @@ Main.prototype = {
 		if(safe == null) safe = true;
 		if(hist == null) hist = false;
 		var orig = msg;
-		msg = this._parseMessage(msg,safe);
+		msg = this._parseMessage(msg,safe,id);
 		var showName = false;
 		if(names && id != null) showName = true;
 		var message;
@@ -966,7 +967,7 @@ Main.prototype = {
 			_g._addMessage("failed to connect to api, couldn't delete message.");
 		}); else this.chatbox.value = "~" + text + "~";
 	}
-	,_parseMessage: function(raw,safe) {
+	,_parseMessage: function(raw,safe,id) {
 		if(safe == null) safe = true;
 		var parsed = StringTools.replace(raw,"\n"," ");
 		if(safe) {
@@ -977,6 +978,7 @@ Main.prototype = {
 			parsed = StringTools.replace(parsed,"\\#","&num;");
 			parsed = StringTools.replace(parsed,"\\^","&Hat;");
 			parsed = StringTools.replace(parsed,"\\`","&grave;");
+			parsed = StringTools.replace(parsed,"\\~","&tilde;");
 			parsed = StringTools.replace(parsed,"\\\\n","&bsol;n");
 			parsed = StringTools.replace(parsed,"\\\\t","&bsol;t");
 			parsed = StringTools.replace(parsed,"\\n","<br/>");
@@ -1012,14 +1014,19 @@ Main.prototype = {
 			var emTag = "<em>" + text1 + "</em>";
 			parsed = this.italicBB.replace(parsed,emTag);
 		}
+		while(this.quoteMD.match(parsed)) {
+			var text2 = this.quoteMD.matched(1);
+			var emTag1 = "<em style=\"color:#" + this._generateColorFromID(id) + ";\">" + text2 + "</em>";
+			parsed = this.quoteMD.replace(parsed,emTag1);
+		}
 		while(this.codeBB.match(parsed)) {
-			var text2 = this.codeBB.matched(1);
-			var preTag = "<pre>" + text2 + "</pre>";
+			var text3 = this.codeBB.matched(1);
+			var preTag = "<pre>" + text3 + "</pre>";
 			parsed = this.codeBB.replace(parsed,preTag);
 		}
 		while(this.headerMD.match(parsed)) {
-			var text3 = this.headerMD.matched(1);
-			var preTag1 = "<h1>" + text3 + "</h1>";
+			var text4 = this.headerMD.matched(1);
+			var preTag1 = "<h1>" + text4 + "</h1>";
 			parsed = this.headerMD.replace(parsed,preTag1);
 		}
 		return parsed;
@@ -1060,7 +1067,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1390, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1397, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
