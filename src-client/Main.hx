@@ -1259,7 +1259,7 @@ class Main
 			);
 		}
 		else {
-			chatbox.value = '~$text~';
+			//chatbox.value = '~$text~';
 		}
 	}
 

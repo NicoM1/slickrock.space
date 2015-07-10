@@ -964,7 +964,8 @@ Main.prototype = {
 		},function(e1) {
 			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1256, className : "Main", methodName : "_tryDeleteMessage"});
 			_g._addMessage("failed to connect to api, couldn't delete message.");
-		}); else this.chatbox.value = "~" + text + "~";
+		}); else {
+		}
 	}
 	,_parseMessage: function(raw,safe,id) {
 		if(safe == null) safe = true;
