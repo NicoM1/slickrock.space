@@ -1324,11 +1324,11 @@ class Main
 			var emTag = '<em>$text</em>';
 			parsed = italicBB.replace(parsed, emTag);
 		}
-		while (quoteMD.match(parsed)) {
+		/*while (quoteMD.match(parsed)) {
 			var text = quoteMD.matched(1);
 			var emTag = '<em style="color:${_generateColorFromID(id)};">$text</em>';
 			parsed = quoteMD.replace(parsed, emTag);
-		}
+		}*/
 		while (codeBB.match(parsed)) {
 			var text = codeBB.matched(1);
 			var preTag = '<pre>$text</pre>';

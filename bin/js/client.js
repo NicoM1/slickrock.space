@@ -92,7 +92,6 @@ _$List_ListIterator.prototype = {
 var Main = function() {
 	this.selectedElem = null;
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
-	this.quoteMD = new EReg("(?:~)(.*?)(?:~)","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
@@ -1014,19 +1013,14 @@ Main.prototype = {
 			var emTag = "<em>" + text1 + "</em>";
 			parsed = this.italicBB.replace(parsed,emTag);
 		}
-		while(this.quoteMD.match(parsed)) {
-			var text2 = this.quoteMD.matched(1);
-			var emTag1 = "<em style=\"color:" + this._generateColorFromID(id) + ";\">" + text2 + "</em>";
-			parsed = this.quoteMD.replace(parsed,emTag1);
-		}
 		while(this.codeBB.match(parsed)) {
-			var text3 = this.codeBB.matched(1);
-			var preTag = "<pre>" + text3 + "</pre>";
+			var text2 = this.codeBB.matched(1);
+			var preTag = "<pre>" + text2 + "</pre>";
 			parsed = this.codeBB.replace(parsed,preTag);
 		}
 		while(this.headerMD.match(parsed)) {
-			var text4 = this.headerMD.matched(1);
-			var preTag1 = "<h1>" + text4 + "</h1>";
+			var text3 = this.headerMD.matched(1);
+			var preTag1 = "<h1>" + text3 + "</h1>";
 			parsed = this.headerMD.replace(parsed,preTag1);
 		}
 		return parsed;
