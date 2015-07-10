@@ -394,7 +394,7 @@ Main.prototype = {
 	}
 	,_getNotificationPermission: function(force) {
 		if(force == null) force = false;
-		if(Notification == null) return;
+		if(typeof(Notification) == "undefined") return;
 		if(force || Notification.permission == "default") {
 			var ua = window.navigator.userAgent;
 			if(!new EReg("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile","i").match(ua)) Notification.requestPermission(function(permission) {

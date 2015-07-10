@@ -441,7 +441,7 @@ class Main
 
 	//{ notifications
 	function _getNotificationPermission(force: Bool = false ) {
-		if(Notification == null) return;
+		if(untyped __typeof__(Notification) == 'undefined') return;
 		if (force || Notification.permission == NotificationPermission.DEFAULT_) {
 			var ua = Browser.window.navigator.userAgent;
 			if (!~/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile/i.match(ua)) {
