@@ -1259,12 +1259,12 @@ class Main
 			);
 		}
 		else {
-			chatbox.value = '"\'$text\'"';
+			chatbox.value = '~$text~';
 		}
 	}
 
 	var imgBB: EReg = ~/(?:\[img\]|#)(.*?)(?:\[\/img\]|#)/i;
-	var italicBB: EReg = ~/(?:\[i\]|\*|"')(.*?)(?:\[\/i\]|\*|'")/i;
+	var italicBB: EReg = ~/(?:\[i\]|\*|~)(.*?)(?:\[\/i\]|\*|~)/i;
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;

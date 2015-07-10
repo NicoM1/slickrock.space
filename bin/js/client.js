@@ -94,7 +94,7 @@ var Main = function() {
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
-	this.italicBB = new EReg("(?:\\[i\\]|\\*|\"')(.*?)(?:\\[/i\\]|\\*|'\")","i");
+	this.italicBB = new EReg("(?:\\[i\\]|\\*|~)(.*?)(?:\\[/i\\]|\\*|~)","i");
 	this.imgBB = new EReg("(?:\\[img\\]|#)(.*?)(?:\\[/img\\]|#)","i");
 	this.embedTemplate = "<iframe src=\"[SRC]\" width=\"[WIDTH]\" height=\"[HEIGHT]\" style=\"border-color: #333333; border-style: solid;\"></iframe>";
 	this.counter = 0;
@@ -964,7 +964,7 @@ Main.prototype = {
 		},function(e1) {
 			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1256, className : "Main", methodName : "_tryDeleteMessage"});
 			_g._addMessage("failed to connect to api, couldn't delete message.");
-		}); else this.chatbox.value = "\"'" + text + "'\"";
+		}); else this.chatbox.value = "~" + text + "~";
 	}
 	,_parseMessage: function(raw,safe) {
 		if(safe == null) safe = true;
