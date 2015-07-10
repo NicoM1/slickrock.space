@@ -103,6 +103,8 @@ class Main
 
 	var v: Int = 0;
 
+	var lastMouseX: Float = 0;
+
 	function new() {
 		room = untyped window.room;
 		var theme = 'dark';
@@ -277,6 +279,12 @@ class Main
 		}
 		else {
 			_addMessage('', null, 'embedded chatrooms are unreliable in iOS, please view this chat directly on <a target="_blank" href="http://slickrock.io/$room">slickrock.io/$room</a>.');
+		}
+	}
+
+	function _tryExpandImages(e: MouseEvent, img: ImageElement) {
+		if(e.altKey) {
+			img.style.width = Std.string(Std.parseInt(img.style.width) + e.movementX) + 'px';
 		}
 	}
 
@@ -1216,6 +1224,7 @@ class Main
 			var image: ImageElement = cast i;
 			i.onclick = _openInNewTab.bind(image.src);
 			i.onload = _tryScroll.bind(false, cast i);
+			i.onmousemove = _tryExpandImages.bind(_, cast i);
 		}
 
 		return messageItem;
