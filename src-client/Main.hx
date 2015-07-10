@@ -1096,7 +1096,7 @@ class Main
 		if (img != null) {
 			offset = new JQuery(img).outerHeight();
 		}
-		if (Browser.document.body.scrollTop + Browser.window.innerHeight + offset > Browser.document.body.scrollHeight - 100) {
+		if (new JQuery(Browser.document).scrollTop() + Browser.window.innerHeight + offset > Browser.document.body.scrollHeight - 100) {
 			return true;
 		}
 		return false;
