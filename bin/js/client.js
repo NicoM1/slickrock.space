@@ -271,7 +271,7 @@ Main.prototype = {
 	,_tryExpandImages: function(e,img) {
 		if(e.altKey) {
 			var orig = Std.parseInt(img.style.width);
-			img.style.width = Std.string(orig != null?orig:500 + e.movementX) + "px";
+			img.style.width = Std.string((orig != null?orig:500) + e.movementX) + "px";
 		}
 	}
 	,_tryGetOldMessages: function(args) {
