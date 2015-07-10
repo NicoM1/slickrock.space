@@ -451,6 +451,7 @@ class Main
 	}
 
 	function _sendNotification(text: String) {
+		if(untyped __typeof__(Notification) == 'undefined') return;
 		if (Notification.permission == NotificationPermission.GRANTED) {
 			var options: NotificationOptions = { };
 			options.body = 'slickrock.io/$room';
