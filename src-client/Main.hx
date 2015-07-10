@@ -1319,7 +1319,7 @@ class Main
 			var imgTag: String;
 			switch(chunks.length) {
 				case 1:
-					imgTag = '<img src="${chunks[0]}" class="imgmessage"></img>';
+					imgTag = '<img src="${chunks[0]}" width="800" class="imgmessage"></img>';
 				case 2:
 					imgTag = '<img src="${chunks[0]}" width="${chunks[1]}" class="imgmessage"></img>';
 				case 3:
