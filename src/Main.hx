@@ -73,8 +73,8 @@ class Main {
 		app.http(port != null? Std.parseInt(port) : 9998);
 
 		app.router.serve('/bin', './bin');
-		app.error(ErrorHandling.handle);
 		app.use((cast ErrorHandling.handle : express.Middleware));
+		app.error(ErrorHandling.handle);
 	}
 
 	function _setupMongo() {

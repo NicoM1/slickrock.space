@@ -165,7 +165,7 @@ Lambda.has = function(it,elt) {
 var Main = function() {
 	this.thing = "test";
 	this.mongoUrl = "";
-	Main.v = 21;
+	Main.v = 24;
 	Main.animalWords = js_node_Fs.readFileSync("bin/animals.txt",{ encoding : "utf8"}).split("\n");
 	Main.adjectives = js_node_Fs.readFileSync("bin/adjectives.txt",{ encoding : "utf8"}).split("\n");
 	this._setupMongo();
@@ -313,8 +313,8 @@ var Main = function() {
 	port = this1.PORT;
 	app.http(port != null?Std.parseInt(port):9998);
 	app.router.serve("/bin","./bin");
-	app.error(ErrorHandling.handle);
 	app["use"](null,ErrorHandling.handle);
+	app.error(ErrorHandling.handle);
 };
 Main.__name__ = ["Main"];
 Main.clearTyping = function(room,id) {
