@@ -92,7 +92,7 @@ _$List_ListIterator.prototype = {
 var Main = function() {
 	this.selectedElem = null;
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
-	this.quoteMD = new EReg("(?:~)(.*?)(?:~)([^\\s]*?)","i");
+	this.quoteMD = new EReg("(?:~)(.*?)(?:~)(\\S*?)","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
@@ -1039,7 +1039,7 @@ Main.prototype = {
 			var _g1 = id1 != null;
 			switch(_g1) {
 			case false:
-				quoteTag = "<em style=\"color:" + this._generateColorFromID(id1) + ";\">" + text2 + "</em>";
+				quoteTag = "<em>" + text2 + "</em>";
 				break;
 			case true:
 				quoteTag = "<em style=\"color:" + this._generateColorFromID(id1) + ";\">" + text2 + "</em>";
