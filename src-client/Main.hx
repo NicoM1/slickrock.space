@@ -83,6 +83,7 @@ class Main
 	var canSendTypingNotification: Bool = true;
 
 	var notification: Notification;
+	var canNotify: Bool = true;
 	var numNotifications: Int = 0;
 
 	var commands: Map<String, Array<String> -> Void> = new Map();
@@ -456,7 +457,10 @@ class Main
 
 	//{ notifications
 	function _getNotificationPermission(force: Bool = false ) {
-		if(untyped __typeof__(Notification) == 'undefined') return;
+		if(untyped __typeof__(Notification) == 'undefined') {
+			canNotify = false;
+			return;
+		}
 		if (force || Notification.permission == NotificationPermission.DEFAULT_) {
 			var ua = Browser.window.navigator.userAgent;
 			if (!~/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile/i.match(ua)) {
@@ -466,7 +470,7 @@ class Main
 	}
 
 	function _sendNotification(text: String) {
-		if(untyped __typeof__(Notification) == 'undefined') return;
+		if(!canNotify) return;
 		if (Notification.permission == NotificationPermission.GRANTED) {
 			var options: NotificationOptions = { };
 			options.body = 'slickrock.io/$room';
