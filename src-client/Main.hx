@@ -1283,7 +1283,7 @@ class Main
 	var italicBB: EReg = ~/(?:\[i\]|\*)(.*?)(?:\[\/i\]|\*)/i;
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
-	var quoteMD: EReg =  ~/(?:~)(.*?)(?:~)(.*?)(?: ))/i;
+	var quoteMD: EReg =  ~/(?:~)(.*?)(?:~)(.*?)(?: )/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;
 	var sitelink: EReg = ~/ \/[^\s]+?( |$)/i;
 
