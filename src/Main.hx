@@ -73,7 +73,11 @@ class Main {
 		app.http(port != null? Std.parseInt(port) : 9998);
 
 		app.router.serve('/bin', './bin');
-		app.use((cast ErrorHandling.handle : express.Middleware));
+		app.router.use(function(req: Request, res: Response, next: Next) {
+			var err = new express.Error('not found');
+			err.status = 404;
+			next.error(err);
+		});
 		app.error(ErrorHandling.handle);
 	}
 
@@ -774,6 +778,7 @@ class ErrorHandling {
 		trace(err);
 		Util.serveHtml('bin/404.html', function(e, d) {
 			if(e == null) {
+				res.setHeader('Access-Control-Allow-Origin', '*');
 				res.status(404).send(d);
 			}
 		});
