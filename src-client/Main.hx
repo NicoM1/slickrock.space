@@ -1274,8 +1274,8 @@ class Main
 				}
 			);
 		}
-		else {
-			//chatbox.value = '~$text~';
+		else if(e.altKey) {
+			chatbox.value = '~$text $id~';
 		}
 	}
 
@@ -1316,16 +1316,15 @@ class Main
 			var imgPath = imgBB.matched(1);
 			var chunks = imgPath.split(' ');
 
-			var imgTag: String;
-			switch(chunks.length) {
+			var imgTag = switch(chunks.length) {
 				case 1:
-					imgTag = '<img src="${chunks[0]}" style="width:800px" class="imgmessage"></img>';
+					'<img src="${chunks[0]}" style="width:800px" class="imgmessage"></img>';
 				case 2:
-					imgTag = '<img src="${chunks[0]}" style="width:${chunks[1]}px" class="imgmessage"></img>';
+					'<img src="${chunks[0]}" style="width:${chunks[1]}px" class="imgmessage"></img>';
 				case 3:
-					imgTag = '<img src="${chunks[0]}" style="width:${chunks[1]}px" height="${chunks[2]}" class="imgmessage"></img>';
+					'<img src="${chunks[0]}" style="width:${chunks[1]}px" height="${chunks[2]}" class="imgmessage"></img>';
 				default:
-					return '';
+					'';
 			}
 
 			parsed = imgBB.replace(parsed, imgTag);
@@ -1340,11 +1339,19 @@ class Main
 			var emTag = '<em>$text</em>';
 			parsed = italicBB.replace(parsed, emTag);
 		}
-		/*while (quoteMD.match(parsed)) {
+		while (quoteMD.match(parsed)) {
 			var text = quoteMD.matched(1);
-			var emTag = '<em style="color:${_generateColorFromID(id)};">$text</em>';
-			parsed = quoteMD.replace(parsed, emTag);
-		}*/
+			var chunks = text.split(' ');
+			var quoteTag = switch(chunks.length) {
+				case 1:
+					'<em style="color:${_generateColorFromID(id)};">$text</em>';
+				case 2:
+					'<em style="color:${_generateColorFromID(chunks[1])};">$text</em>';
+				default:
+					'';
+			}
+			parsed = quoteMD.replace(parsed, quoteTag);
+		}
 		while (codeBB.match(parsed)) {
 			var text = codeBB.matched(1);
 			var preTag = '<pre>$text</pre>';

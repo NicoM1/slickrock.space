@@ -92,6 +92,7 @@ _$List_ListIterator.prototype = {
 var Main = function() {
 	this.selectedElem = null;
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
+	this.quoteMD = new EReg("(?:~)(.*?)(?:~)","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
@@ -982,8 +983,7 @@ Main.prototype = {
 		},function(e1) {
 			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1272, className : "Main", methodName : "_tryDeleteMessage"});
 			_g._addMessage("failed to connect to api, couldn't delete message.");
-		}); else {
-		}
+		}); else if(e.altKey) this.chatbox.value = "~" + text + " " + id + "~";
 	}
 	,_parseMessage: function(raw,safe,id) {
 		if(safe == null) safe = true;
@@ -1018,7 +1018,7 @@ Main.prototype = {
 				imgTag = "<img src=\"" + chunks[0] + "\" style=\"width:" + chunks[1] + "px\" height=\"" + chunks[2] + "\" class=\"imgmessage\"></img>";
 				break;
 			default:
-				return "";
+				imgTag = "";
 			}
 			parsed = this.imgBB.replace(parsed,imgTag);
 		}
@@ -1032,14 +1032,31 @@ Main.prototype = {
 			var emTag = "<em>" + text1 + "</em>";
 			parsed = this.italicBB.replace(parsed,emTag);
 		}
+		while(this.quoteMD.match(parsed)) {
+			var text2 = this.quoteMD.matched(1);
+			var chunks1 = text2.split(" ");
+			var quoteTag;
+			var _g1 = chunks1.length;
+			switch(_g1) {
+			case 1:
+				quoteTag = "<em style=\"color:" + this._generateColorFromID(id) + ";\">" + text2 + "</em>";
+				break;
+			case 2:
+				quoteTag = "<em style=\"color:" + this._generateColorFromID(chunks1[1]) + ";\">" + text2 + "</em>";
+				break;
+			default:
+				quoteTag = "";
+			}
+			parsed = this.quoteMD.replace(parsed,quoteTag);
+		}
 		while(this.codeBB.match(parsed)) {
-			var text2 = this.codeBB.matched(1);
-			var preTag = "<pre>" + text2 + "</pre>";
+			var text3 = this.codeBB.matched(1);
+			var preTag = "<pre>" + text3 + "</pre>";
 			parsed = this.codeBB.replace(parsed,preTag);
 		}
 		while(this.headerMD.match(parsed)) {
-			var text3 = this.headerMD.matched(1);
-			var preTag1 = "<h1>" + text3 + "</h1>";
+			var text4 = this.headerMD.matched(1);
+			var preTag1 = "<h1>" + text4 + "</h1>";
 			parsed = this.headerMD.replace(parsed,preTag1);
 		}
 		return parsed;
@@ -1080,7 +1097,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1413, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1420, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
