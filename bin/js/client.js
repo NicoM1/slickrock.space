@@ -878,11 +878,11 @@ Main.prototype = {
 		messageItem = _this1.createElement("div");
 		messageItem.classList.add("messageitem");
 		messageItem.setAttribute("data-objectid",_id);
-		if(_id != null) messageItem.onclick = (function(f,id1,a1) {
+		if(_id != null) messageItem.onclick = (function(f,id1,a1,a2) {
 			return function(e) {
-				f(e,id1,a1);
+				f(e,id1,a1,a2);
 			};
-		})($bind(this,this._tryDeleteMessage),_id,orig);
+		})($bind(this,this._tryDeleteMessage),_id,orig,id);
 		if(customHTML == null) messageItem.innerHTML = msg; else messageItem.innerHTML = customHTML;
 		var offset = 0;
 		if(!hist) message.appendChild(messageItem); else {
@@ -937,9 +937,9 @@ Main.prototype = {
 					f1(a11);
 				};
 			})($bind(this,this._openInNewTab),image.src);
-			i.onload = (function(f2,a12,a2) {
+			i.onload = (function(f2,a12,a21) {
 				return function() {
-					f2(a12,a2);
+					f2(a12,a21);
 				};
 			})($bind(this,this._tryScroll),false,i);
 			i.onmousemove = (function(f3,a13) {
@@ -976,14 +976,14 @@ Main.prototype = {
 			}
 		}
 	}
-	,_tryDeleteMessage: function(e,id,text) {
+	,_tryDeleteMessage: function(e,id,text,publicID) {
 		var _g = this;
 		if(e.ctrlKey && e.shiftKey && e.altKey) this._request(this.basePath + ("api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + id),function(d) {
 			if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 		},function(e1) {
 			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1272, className : "Main", methodName : "_tryDeleteMessage"});
 			_g._addMessage("failed to connect to api, couldn't delete message.");
-		}); else if(e.altKey) this.chatbox.value = "~" + text + " " + id + "~";
+		}); else if(e.altKey) this.chatbox.value = "~" + text + "~" + publicID;
 	}
 	,_parseMessage: function(raw,safe,id) {
 		if(safe == null) safe = true;

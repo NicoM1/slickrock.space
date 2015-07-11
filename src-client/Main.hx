@@ -1160,7 +1160,7 @@ class Main
 		messageItem.setAttribute('data-objectid', _id);
 
 		if(_id != null) {
-			messageItem.onclick = _tryDeleteMessage.bind(_, _id, orig);
+			messageItem.onclick = _tryDeleteMessage.bind(_, _id, orig, id);
 		}
 
 		messageItem.innerHTML = customHTML==null? msg : customHTML;
@@ -1257,7 +1257,7 @@ class Main
 		}
 	}
 
-	function _tryDeleteMessage(e: MouseEvent, id: String, text: String) {
+	function _tryDeleteMessage(e: MouseEvent, id: String, text: String, publicID: String) {
 		if(e.ctrlKey && e.shiftKey && e.altKey) {
 			_request(basePath + 'api/deleteMessage/$room/$adminPassword/$id',
 				function(d) {
@@ -1275,7 +1275,7 @@ class Main
 			);
 		}
 		else if(e.altKey) {
-			chatbox.value = '~$text $id~';
+			chatbox.value = '~$text~$publicID';
 		}
 	}
 
