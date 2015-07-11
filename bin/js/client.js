@@ -92,7 +92,7 @@ _$List_ListIterator.prototype = {
 var Main = function() {
 	this.selectedElem = null;
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
-	this.quoteMD = new EReg("(?:~)(.*?)(?:~)","i");
+	this.quoteMD = new EReg("(?:~)(.*?)(?:~)(.*?)(?: ))","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
 	this.boldBB = new EReg("(?:\\[b\\]|\\*\\*)(.*?)(?:\\[/b\\]|\\*\\*)","i");
 	this.italicBB = new EReg("(?:\\[i\\]|\\*)(.*?)(?:\\[/i\\]|\\*)","i");
@@ -1034,18 +1034,16 @@ Main.prototype = {
 		}
 		while(this.quoteMD.match(parsed)) {
 			var text2 = this.quoteMD.matched(1);
-			var chunks1 = text2.split(" ");
+			var id1 = this.quoteMD.matched(2);
 			var quoteTag;
-			var _g1 = chunks1.length;
+			var _g1 = id1 != null;
 			switch(_g1) {
-			case 1:
-				quoteTag = "<em style=\"color:" + this._generateColorFromID(id) + ";\">" + text2 + "</em>";
+			case false:
+				quoteTag = "<em style=\"color:" + this._generateColorFromID(id1) + ";\">" + text2 + "</em>";
 				break;
-			case 2:
-				quoteTag = "<em style=\"color:" + this._generateColorFromID(chunks1[1]) + ";\">" + text2 + "</em>";
+			case true:
+				quoteTag = "<em style=\"color:" + this._generateColorFromID(id1) + ";\">" + text2 + "</em>";
 				break;
-			default:
-				quoteTag = "";
 			}
 			parsed = this.quoteMD.replace(parsed,quoteTag);
 		}
@@ -1097,7 +1095,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1420, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1418, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {

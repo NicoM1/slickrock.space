@@ -1283,7 +1283,7 @@ class Main
 	var italicBB: EReg = ~/(?:\[i\]|\*)(.*?)(?:\[\/i\]|\*)/i;
 	var boldBB: EReg = ~/(?:\[b\]|\*\*)(.*?)(?:\[\/b\]|\*\*)/i;
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
-	var quoteMD: EReg =  ~/(?:~)(.*?)(?:~)/i;
+	var quoteMD: EReg =  ~/(?:~)(.*?)(?:~)(.*?)(?: ))/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;
 	var sitelink: EReg = ~/ \/[^\s]+?( |$)/i;
 
@@ -1341,14 +1341,12 @@ class Main
 		}
 		while (quoteMD.match(parsed)) {
 			var text = quoteMD.matched(1);
-			var chunks = text.split(' ');
-			var quoteTag = switch(chunks.length) {
-				case 1:
+			var id = quoteMD.matched(2);
+			var quoteTag = switch(id != null) {
+				case false:
 					'<em style="color:${_generateColorFromID(id)};">$text</em>';
-				case 2:
-					'<em style="color:${_generateColorFromID(chunks[1])};">$text</em>';
-				default:
-					'';
+				case true:
+					'<em style="color:${_generateColorFromID(id)};">$text</em>';
 			}
 			parsed = quoteMD.replace(parsed, quoteTag);
 		}
