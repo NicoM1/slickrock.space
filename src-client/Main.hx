@@ -1048,7 +1048,9 @@ class Main
 					f.href = 'bin/img/favicon.ico';
 				}
 				messageSound.play();
-				_sendNotification(message.innerText != null? message.innerText : message.textContent);
+				if(i == 0) {
+					_sendNotification(message.innerText != null? message.innerText : message.textContent);
+				}
 			}
 		}
 
