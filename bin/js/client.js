@@ -591,7 +591,7 @@ Main.prototype = {
 		this._addMessage("note: due to issues with Apple Webkit, embedded chats will not work properly on iOS. instead, your users will be greeted with a similar expanation, and a direct link to your chatroom.");
 	}
 	,_miscHelp: function(_) {
-		this._addMessage("*the following are little tricks that aren't really commands, but are likely even more useful.");
+		this._addMessage("*the following are little tricks that aren't really commands, but are likely even more useful*.");
 		this._addMessage("holding **Alt** and moving the mouse over an image will resize it (try it, its handy).");
 		this._addMessage("**Shift-Ctrl-Alt-Click** will delete a single message if you are a room admin.");
 	}

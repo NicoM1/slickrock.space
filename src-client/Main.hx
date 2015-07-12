@@ -801,7 +801,7 @@ class Main
 	}
 
 	function _miscHelp(_) {
-		_addMessage('*the following are little tricks that aren\'t really commands, but are likely even more useful.');
+		_addMessage('*the following are little tricks that aren\'t really commands, but are likely even more useful*.');
 		_addMessage('holding **Alt** and moving the mouse over an image will resize it (try it, its handy).');
 		_addMessage('**Shift-Ctrl-Alt-Click** will delete a single message if you are a room admin.');
 	}
