@@ -1178,6 +1178,8 @@ class Main
 
 		messageItem.setAttribute('data-objectid', _id);
 
+		messageItem.title = _dateFromObjectId(_id).toString();
+
 		if(_id != null) {
 			messageItem.onclick = _tryDeleteMessage.bind(_, _id, orig, id);
 		}
@@ -1254,6 +1256,10 @@ class Main
 		}
 
 		return messageItem;
+	}
+
+	function _dateFromObjectId(objectId) {
+		return Date.fromTime(Std.parseInt(objectId.substring(0, 8)) * 1000);
 	}
 
 	function _setTheme(theme: String) {

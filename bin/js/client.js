@@ -34,6 +34,14 @@ EReg.prototype = {
 };
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
+HxOverrides.dateStr = function(date) {
+	var m = date.getMonth() + 1;
+	var d = date.getDate();
+	var h = date.getHours();
+	var mi = date.getMinutes();
+	var s = date.getSeconds();
+	return date.getFullYear() + "-" + (m < 10?"0" + m:"" + m) + "-" + (d < 10?"0" + d:"" + d) + " " + (h < 10?"0" + h:"" + h) + ":" + (mi < 10?"0" + mi:"" + mi) + ":" + (s < 10?"0" + s:"" + s);
+};
 HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
 	if(x != x) return undefined;
@@ -890,6 +898,8 @@ Main.prototype = {
 		messageItem = _this1.createElement("div");
 		messageItem.classList.add("messageitem");
 		messageItem.setAttribute("data-objectid",_id);
+		var _this2 = this._dateFromObjectId(_id);
+		messageItem.title = HxOverrides.dateStr(_this2);
 		if(_id != null) messageItem.onclick = (function(f,id1,a1,a2) {
 			return function(e) {
 				f(e,id1,a1,a2);
@@ -904,14 +914,14 @@ Main.prototype = {
 				if(showName) message.insertBefore(messageItem,message.children[2]); else message.insertBefore(messageItem,message.children[1]);
 				offset = $(messageItem).outerHeight(true);
 			} else {
-				var _this2 = window.document;
-				message = _this2.createElement("div");
+				var _this3 = window.document;
+				message = _this3.createElement("div");
 				message.classList.add("messageblock");
 				message.setAttribute("data-id",id);
 				this.messages.insertBefore(message,this.messages.children[0]);
 				message.appendChild(this._makeSpan(true,id));
 				if(showName) {
-					haxe_Log.trace(id,{ fileName : "Main.hx", lineNumber : 1212, className : "Main", methodName : "_addMessage"});
+					haxe_Log.trace(id,{ fileName : "Main.hx", lineNumber : 1214, className : "Main", methodName : "_addMessage"});
 					name = this._makeName(id);
 					message.appendChild(name);
 					message.insertBefore(messageItem,message.children[2]);
@@ -962,6 +972,12 @@ Main.prototype = {
 		}
 		return messageItem;
 	}
+	,_dateFromObjectId: function(objectId) {
+		var t = Std.parseInt(objectId.substring(0,8)) * 1000;
+		var d = new Date();
+		d.setTime(t);
+		return d;
+	}
 	,_setTheme: function(theme) {
 		switch(theme) {
 		case "light":
@@ -993,7 +1009,7 @@ Main.prototype = {
 		if(e.ctrlKey && e.shiftKey && e.altKey) this._request(this.basePath + ("api/deleteMessage/" + this.room + "/" + this.adminPassword + "/" + id),function(d) {
 			if(d == "deleted") _g._addMessage("message deleted."); else _g._addMessage("you are not authorized to moderate " + _g.room + ".");
 		},function(e1) {
-			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1291, className : "Main", methodName : "_tryDeleteMessage"});
+			haxe_Log.trace(e1,{ fileName : "Main.hx", lineNumber : 1297, className : "Main", methodName : "_tryDeleteMessage"});
 			_g._addMessage("failed to connect to api, couldn't delete message.");
 		}); else if(e.altKey) this.chatbox.value = "~" + text + "~" + publicID;
 	}
@@ -1107,7 +1123,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1437, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1443, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
