@@ -1178,7 +1178,9 @@ class Main
 
 		messageItem.setAttribute('data-objectid', _id);
 
-		messageItem.title = _dateFromObjectId(_id).toString();
+		if(_id != null) {
+			messageItem.title = _dateFromObjectId(_id).toString();
+		}
 
 		if(_id != null) {
 			messageItem.onclick = _tryDeleteMessage.bind(_, _id, orig, id);
