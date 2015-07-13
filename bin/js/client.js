@@ -890,7 +890,6 @@ Main.prototype = {
 		messageItem = _this1.createElement("div");
 		messageItem.classList.add("messageitem");
 		messageItem.setAttribute("data-objectid",_id);
-		messageItem.title = new js_node_mongodb_ObjectID(_id).getTimestamp();
 		if(_id != null) messageItem.onclick = (function(f,id1,a1,a2) {
 			return function(e) {
 				f(e,id1,a1,a2);
@@ -1684,7 +1683,6 @@ js_Cookie.exists = function(name) {
 js_Cookie.remove = function(name,path,domain) {
 	js_Cookie.set(name,"",-10,path,domain);
 };
-var js_node_mongodb_ObjectID = require("mongodb").ObjectID;
 var thx_Floats = function() { };
 thx_Floats.__name__ = true;
 thx_Floats.interpolate = function(f,a,b) {
