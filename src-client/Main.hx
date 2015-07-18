@@ -1179,7 +1179,7 @@ class Main
 		messageItem.setAttribute('data-objectid', _id);
 
 		if(_id != null) {
-			messageItem.title = _dateFromObjectId(_id).toString();
+			//messageItem.title = _dateFromObjectId(_id).toString();
 		}
 
 		if(_id != null) {

@@ -34,14 +34,6 @@ EReg.prototype = {
 };
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
-HxOverrides.dateStr = function(date) {
-	var m = date.getMonth() + 1;
-	var d = date.getDate();
-	var h = date.getHours();
-	var mi = date.getMinutes();
-	var s = date.getSeconds();
-	return date.getFullYear() + "-" + (m < 10?"0" + m:"" + m) + "-" + (d < 10?"0" + d:"" + d) + " " + (h < 10?"0" + h:"" + h) + ":" + (mi < 10?"0" + mi:"" + mi) + ":" + (s < 10?"0" + s:"" + s);
-};
 HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
 	if(x != x) return undefined;
@@ -899,8 +891,6 @@ Main.prototype = {
 		messageItem.classList.add("messageitem");
 		messageItem.setAttribute("data-objectid",_id);
 		if(_id != null) {
-			var _this2 = this._dateFromObjectId(_id);
-			messageItem.title = HxOverrides.dateStr(_this2);
 		}
 		if(_id != null) messageItem.onclick = (function(f,id1,a1,a2) {
 			return function(e) {
@@ -916,8 +906,8 @@ Main.prototype = {
 				if(showName) message.insertBefore(messageItem,message.children[2]); else message.insertBefore(messageItem,message.children[1]);
 				offset = $(messageItem).outerHeight(true);
 			} else {
-				var _this3 = window.document;
-				message = _this3.createElement("div");
+				var _this2 = window.document;
+				message = _this2.createElement("div");
 				message.classList.add("messageblock");
 				message.setAttribute("data-id",id);
 				this.messages.insertBefore(message,this.messages.children[0]);
@@ -973,12 +963,6 @@ Main.prototype = {
 			})($bind(this,this._tryExpandImages),i);
 		}
 		return messageItem;
-	}
-	,_dateFromObjectId: function(objectId) {
-		var t = parseInt(objectId.substring(0, 8), 16) * 1000;
-		var d = new Date();
-		d.setTime(t);
-		return d;
 	}
 	,_setTheme: function(theme) {
 		switch(theme) {
