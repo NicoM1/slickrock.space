@@ -165,7 +165,7 @@ Lambda.has = function(it,elt) {
 var Main = function() {
 	this.thing = "test";
 	this.mongoUrl = "";
-	Main.v = 34;
+	Main.v = 36;
 	Main.animalWords = js_node_Fs.readFileSync("bin/animals.txt",{ encoding : "utf8"}).split("\n");
 	Main.adjectives = js_node_Fs.readFileSync("bin/adjectives.txt",{ encoding : "utf8"}).split("\n");
 	this._setupMongo();
@@ -469,14 +469,6 @@ Main.ensureCreated = function(room) {
 };
 Main.roomInfo = function(roomInfo) {
 	var roomE = Main.rooms.get(roomInfo._id);
-	var _g = 0;
-	var _g1 = Reflect.fields(roomInfo);
-	while(_g < _g1.length) {
-		var f = _g1[_g];
-		++_g;
-		var field = Reflect.field(roomInfo,f);
-		if(field == null) Reflect.setField(roomInfo,f,Reflect.field(roomE,f));
-	}
 	Main.mongodb.collection("roominfo",function(e,database) {
 		if(e == null) database.save(roomInfo);
 	});
@@ -621,7 +613,7 @@ RouteHandler.prototype = {
 					if(Main.userCounts.get(room)[i].id == privateID) index = i;
 				}
 				if(index == -1) Main.userCounts.get(room).push({ id : privateID, timestamp : new Date()}); else Main.userCounts.get(room)[index].timestamp = new Date();
-				Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme, names : roomE.names});
+				Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme, names : roomE.names, system : roomE.system});
 			}
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("success");
@@ -663,7 +655,7 @@ RouteHandler.prototype = {
 				HxOverrides.remove(_this,u1);
 			}
 			var roomE = Main.rooms.get(r);
-			Main.roomInfo({ _id : r, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(r), theme : roomE.theme, names : roomE.names});
+			Main.roomInfo({ _id : r, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(r), theme : roomE.theme, names : roomE.names, system : roomE.system});
 			toRemove = [];
 			if(top10.length > 0) {
 				lowest = top10[0].count;
@@ -745,7 +737,7 @@ RouteHandler.prototype = {
 			return;
 		} else if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 			roomE.lock = haxe_crypto_Sha1.encode(roomE.salt + password);
-			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme, names : roomE.names});
+			Main.roomInfo({ _id : room, lock : roomE.lock, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme, names : roomE.names, system : roomE.system});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("locked");
 			return;
@@ -788,7 +780,7 @@ RouteHandler.prototype = {
 		if(roomE.lock != null) {
 			if(roomE.pw == haxe_crypto_Sha1.encode(roomE.salt + privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo({ _id : room, lock : null, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme, names : roomE.names});
+				Main.roomInfo({ _id : room, lock : null, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), theme : roomE.theme, names : roomE.names, system : roomE.system});
 				response.setHeader("Access-Control-Allow-Origin","*");
 				response.send("unlocked");
 				return;
@@ -821,7 +813,7 @@ RouteHandler.prototype = {
 		if(roomE.pw == null && roomE.messages.length == 0 || haxe_crypto_Sha1.encode(roomE.salt + oldAdmin) == roomE.pw) {
 			if(roomE.salt == null) roomE.salt = this.getSalt();
 			roomE.pw = haxe_crypto_Sha1.encode(roomE.salt + newAdmin);
-			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), lock : roomE.lock, theme : roomE.theme});
+			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), lock : roomE.lock, theme : roomE.theme, names : roomE.names, system : roomE.system});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("claimed");
 			return;
@@ -834,7 +826,7 @@ RouteHandler.prototype = {
 		var roomE = Main.rooms.get(room);
 		if(haxe_crypto_Sha1.encode(roomE.salt + privatePass) == roomE.pw) {
 			roomE.theme = theme;
-			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), lock : roomE.lock, theme : roomE.theme});
+			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), lock : roomE.lock, theme : roomE.theme, names : roomE.names, system : roomE.system});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("themed");
 			return;
@@ -847,7 +839,7 @@ RouteHandler.prototype = {
 		var roomE = Main.rooms.get(room);
 		if(haxe_crypto_Sha1.encode(roomE.salt + adminPassword) == roomE.pw) {
 			roomE.system = systemMessage;
-			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), lock : roomE.lock, theme : roomE.theme, system : systemMessage});
+			Main.roomInfo({ _id : room, pw : roomE.pw, salt : roomE.salt, users : Main.userCounts.get(room), lock : roomE.lock, theme : roomE.theme, names : roomE.names, system : systemMessage});
 			response.setHeader("Access-Control-Allow-Origin","*");
 			response.send("set");
 			return;

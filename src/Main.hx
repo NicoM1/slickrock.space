@@ -266,12 +266,12 @@ class Main {
 	public static function roomInfo(roomInfo: RoomInfo) {
 		var roomE = rooms[roomInfo._id];
 
-		for(f in Reflect.fields(roomInfo)) {
+		/*for(f in Reflect.fields(roomInfo)) {
 			var field = Reflect.field(roomInfo, f);
 			if(field == null) {
 				Reflect.setField(roomInfo, f, Reflect.field(roomE, f));
 			}
-		}
+		}*/
 		mongodb.collection('roominfo', function(e, database) {
 			if(e == null) {
 				untyped database.save(roomInfo);
@@ -406,7 +406,7 @@ class RouteHandler implements abe.IRoute {
 				else {
 					Main.userCounts[room][index].timestamp = Date.now();
 				}
-				Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme, names: roomE.names } );
+				Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme, names: roomE.names, system: roomE.system } );
 			}
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('success');
@@ -450,7 +450,7 @@ class RouteHandler implements abe.IRoute {
 				Main.userCounts[r].remove(u);
 			}
 			var roomE = Main.rooms[r];
-			Main.roomInfo( { _id: r, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[r], theme: roomE.theme, names: roomE.names } );
+			Main.roomInfo( { _id: r, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[r], theme: roomE.theme, names: roomE.names, system: roomE.system } );
 			toRemove = [];
 			if(top10.length > 0) {
 				lowest = top10[0].count;
@@ -550,7 +550,7 @@ class RouteHandler implements abe.IRoute {
 		}
 		else if (roomE.pw == Sha1.encode(roomE.salt + privatePass)) {
 			roomE.lock = Sha1.encode(roomE.salt+password);
-			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme, names: roomE.names } );
+			Main.roomInfo( { _id: room, lock: roomE.lock, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme, names: roomE.names, system: roomE.system } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('locked');
 			return;
@@ -600,7 +600,7 @@ class RouteHandler implements abe.IRoute {
 		if(roomE.lock != null) {
 			if (roomE.pw == Sha1.encode(roomE.salt+privatePass)) {
 				roomE.lock = null;
-				Main.roomInfo( { _id: room, lock: null, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme, names: roomE.names  } );
+				Main.roomInfo( { _id: room, lock: null, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], theme: roomE.theme, names: roomE.names, system: roomE.system  } );
 				response.setHeader('Access-Control-Allow-Origin', '*');
 				response.send('unlocked');
 				return;
@@ -642,7 +642,7 @@ class RouteHandler implements abe.IRoute {
 				roomE.salt = getSalt();
 			}
 			roomE.pw = Sha1.encode(roomE.salt + newAdmin);
-			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], lock: roomE.lock, theme: roomE.theme  } );
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], lock: roomE.lock, theme: roomE.theme, names: roomE.names, system: roomE.system  } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('claimed');
 			return;
@@ -657,7 +657,7 @@ class RouteHandler implements abe.IRoute {
 		var roomE = Main.rooms.get(room);
 		if (Sha1.encode(roomE.salt + privatePass) == roomE.pw) {
 			roomE.theme = theme;
-			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], lock: roomE.lock, theme: roomE.theme  } );
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], lock: roomE.lock, theme: roomE.theme, names: roomE.names, system: roomE.system  } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('themed');
 			return;
@@ -672,7 +672,7 @@ class RouteHandler implements abe.IRoute {
 		var roomE = Main.rooms.get(room);
 		if (Sha1.encode(roomE.salt + adminPassword) == roomE.pw) {
 			roomE.system = systemMessage;
-			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], lock: roomE.lock, theme: roomE.theme, system: systemMessage  } );
+			Main.roomInfo( { _id: room, pw: roomE.pw, salt: roomE.salt, users: Main.userCounts[room], lock: roomE.lock, theme: roomE.theme, names: roomE.names, system: systemMessage  } );
 			response.setHeader('Access-Control-Allow-Origin', '*');
 			response.send('set');
 			return;
