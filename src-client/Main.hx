@@ -538,7 +538,7 @@ class Main
 			method: _mute
 		},
 		'demuffle' => {
-			identifiers: '<strong>/muffle</strong>',
+			identifiers: '<strong>/demuffle</strong>',
 			description: '(un)mute notification popups and sounds.',
 			method: _unMute
 		},

@@ -455,7 +455,7 @@ Main.prototype = {
 		_g.set("oneself",{ identifiers : "<strong>/oneself</strong>", description : "print your current ID.", method : $bind(this,this._printID)});
 		_g.set("impersonate",{ identifiers : "<strong>/impersonate</strong> <em>ID</em>", description : "set your ID explicitly, allows you to have all your devices share ID, or steal someone else's;).", method : $bind(this,this._setIDCommand), requiresArgs : true});
 		_g.set("muffle",{ identifiers : "<strong>/muffle</strong>", description : "mute notification popups and sounds.", method : $bind(this,this._mute)});
-		_g.set("demuffle",{ identifiers : "<strong>/muffle</strong>", description : "(un)mute notification popups and sounds.", method : $bind(this,this._unMute)});
+		_g.set("demuffle",{ identifiers : "<strong>/demuffle</strong>", description : "(un)mute notification popups and sounds.", method : $bind(this,this._unMute)});
 		_g.set("existent",{ identifiers : "<strong>/existent</strong>", description : "print the chat room you are currently in.", method : $bind(this,this._printRoom)});
 		_g.set("survey",{ identifiers : "<strong>/survey</strong> <em>ROOM</em>", description : "move to a different chat room.", method : $bind(this,this._changeRoom), requiresArgs : true});
 		_g.set("claim",{ identifiers : "<strong>/claim</strong> <em>ADMIN_PASSWORD</em>", description : "attempt to take ownership of the current room.", method : $bind(this,this._claimRoom), requiresArgs : true});
