@@ -91,7 +91,7 @@ _$List_ListIterator.prototype = {
 };
 var Main = function() {
 	this.selectedElem = null;
-	this.sitelink = new EReg("@([^\\s]+)","i");
+	this.sitelink = new EReg("(@[^\\s]+)","i");
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
 	this.quoteMD = new EReg("(?:~)(.*?)(?:~)(\\S*)","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
@@ -1019,7 +1019,7 @@ Main.prototype = {
 		}
 		while(this.sitelink.match(parsed)) {
 			var link;
-			var _this = this.sitelink.matched(0);
+			var _this = this.sitelink.matched(1);
 			link = HxOverrides.substr(_this,1,null);
 			link = "&sol;" + link;
 			parsed = this.sitelink.replace(parsed," <a href=\".." + link + ">" + link + "</a>");
