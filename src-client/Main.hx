@@ -1316,6 +1316,12 @@ class Main
 	function _parseMessage(raw: String, safe: Bool = true, ?id: String): String {
 		var parsed: String = raw.replace('\n', ' ');
 
+		while (sitelink.match(parsed)) {
+			var link = sitelink.matched(0).substr(1);
+			link = '&sol;' + link;
+			parsed = sitelink.replace(parsed, ' <a href="..$link>$link</a>');
+		}
+
 		if(safe) {
 			parsed = parsed.htmlEscape();
 			parsed = parsed.replace('\"', '&quot;');
@@ -1330,12 +1336,6 @@ class Main
 
 			parsed = parsed.replace('\\n', '<br/>');
 			parsed = parsed.replace('\\t', '&nbsp;&nbsp;&nbsp;');
-		}
-
-		while (sitelink.match(parsed)) {
-			var link = sitelink.matched(0).substr(1);
-			link = '&sol;' + link;
-			parsed = sitelink.replace(parsed, ' <a href="..$link>$link</a>');
 		}
 
 		while (imgBB.match(parsed)) {

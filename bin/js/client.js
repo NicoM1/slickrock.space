@@ -1003,6 +1003,13 @@ Main.prototype = {
 	,_parseMessage: function(raw,safe,id) {
 		if(safe == null) safe = true;
 		var parsed = StringTools.replace(raw,"\n"," ");
+		while(this.sitelink.match(parsed)) {
+			var link;
+			var _this = this.sitelink.matched(0);
+			link = HxOverrides.substr(_this,1,null);
+			link = "&sol;" + link;
+			parsed = this.sitelink.replace(parsed," <a href=\".." + link + ">" + link + "</a>");
+		}
 		if(safe) {
 			parsed = StringTools.htmlEscape(parsed);
 			parsed = StringTools.replace(parsed,"\"","&quot;");
@@ -1016,13 +1023,6 @@ Main.prototype = {
 			parsed = StringTools.replace(parsed,"\\\\t","&bsol;t");
 			parsed = StringTools.replace(parsed,"\\n","<br/>");
 			parsed = StringTools.replace(parsed,"\\t","&nbsp;&nbsp;&nbsp;");
-		}
-		while(this.sitelink.match(parsed)) {
-			var link;
-			var _this = this.sitelink.matched(0);
-			link = HxOverrides.substr(_this,1,null);
-			link = "&sol;" + link;
-			parsed = this.sitelink.replace(parsed," <a href=\".." + link + ">" + link + "</a>");
 		}
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
