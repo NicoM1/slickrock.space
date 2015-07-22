@@ -1024,7 +1024,7 @@ Main.prototype = {
 			parsed = StringTools.replace(parsed,"\\~","&tilde;");
 			parsed = StringTools.replace(parsed,"\\\\n","&bsol;n");
 			parsed = StringTools.replace(parsed,"\\\\t","&bsol;t");
-			parsed = StringTools.replace(parsed,"/","&sol");
+			parsed = StringTools.replace(parsed,"/","&sol;");
 			parsed = StringTools.replace(parsed,"\\n","<br/>");
 			parsed = StringTools.replace(parsed,"\\t","&nbsp;&nbsp;&nbsp;");
 		}
