@@ -5,7 +5,6 @@
 
 -lib thx.core
 -lib thx.color
--lib thx.math
 -lib jQueryExtern
 -lib hxmongodb
 

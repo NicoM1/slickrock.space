@@ -27,7 +27,6 @@ import js.node.mongodb.ObjectID;
 
 import thx.color.Rgb;
 import thx.color.Hsl;
-import thx.math.random.PseudoRandom;
 
 using StringTools;
 
@@ -107,6 +106,8 @@ class Main
 	var lastMouseX: Float = 0;
 
 	var mouseDown: Bool = false;
+
+	var muted: Bool = false;
 
 	function new() {
 		room = untyped window.room;
@@ -470,23 +471,25 @@ class Main
 	}
 
 	function _sendNotification(text: String) {
-		if(!canNotify) return;
-		if (Notification.permission == NotificationPermission.GRANTED) {
-			var options: NotificationOptions = { };
-			options.body = 'slickrock.io/$room';
-			options.icon = 'http://slickrock.io/bin/img/notification.png';
-			if (notification == null) {
-				numNotifications = 1;
-				notification = new Notification(text, options);
+		if(!muted) {
+			if(!canNotify) return;
+			if (Notification.permission == NotificationPermission.GRANTED) {
+				var options: NotificationOptions = { };
+				options.body = 'slickrock.io/$room';
+				options.icon = 'http://slickrock.io/bin/img/notification.png';
+				if (notification == null) {
+					numNotifications = 1;
+					notification = new Notification(text, options);
+				}
+				else {
+					_clearNotifications();
+					numNotifications++;
+					notification = new Notification('$numNotifications new messages.', options);
+				}
+				notification.onclick = function(){
+					Browser.window.top.focus();
+				};
 			}
-			else {
-				_clearNotifications();
-				numNotifications++;
-				notification = new Notification('$numNotifications new messages.', options);
-			}
-			notification.onclick = function(){
-				Browser.window.top.focus();
-			};
 		}
 	}
 
@@ -503,6 +506,11 @@ class Main
 
 	function _buildCommands() {
 		commandInfos = [
+		'etiquette' => {
+			identifiers: '<strong>/etiquette</strong>',
+			description: 'display guidelines for site usage, I recommend reading these before destroying this website, thank you.',
+			method: _rules
+		},
 		'disordered' => {
 			identifiers: '<strong>/disordered</strong>',
 			description: 'miscellaneous help, things you should learn but have nowhere else to live.',
@@ -523,6 +531,16 @@ class Main
 			description: 'set your ID explicitly, allows you to have all your devices share ID, or steal someone else\'s;).',
 			method: _setIDCommand,
 			requiresArgs: true
+		},
+		'muffle' => {
+			identifiers: '<strong>/muffle</strong>',
+			description: 'mute notification popups and sounds.',
+			method: _mute
+		},
+		'demuffle' => {
+			identifiers: '<strong>/muffle</strong>',
+			description: '(un)mute notification popups and sounds.',
+			method: _unMute
 		},
 		'existent' => {
 			identifiers: '<strong>/existent</strong>',
@@ -589,11 +607,6 @@ class Main
 			identifiers: '<strong>/legal</strong>',
 			description: 'display legal notes.',
 			method: _legal
-		},
-		'etiquette' => {
-			identifiers: '<strong>/etiquette</strong>',
-			description: 'display guidelines for site usage, I recommend reading these before destroying this website, thank you.',
-			method: _rules
 		},
 		'commendation' => {
 			identifiers: '<strong>/commendation</strong>',
@@ -990,6 +1003,16 @@ class Main
 	function _donate(_) {
 		_openInNewTab('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=nico%2emay99%40gmail%2ecom&lc=CA&item_name=slickrock%2eio&currency_code=CAD&bn=PP%2dDonationsBF%3a%26text%3ddonate%2e%3aNonHosted');
 	}
+
+	function _mute(_) {
+		muted = true;
+		_addMessage('muted.');
+	}
+
+	function _unMute(_) {
+		muted = false;
+		_addMessage('unmuted.');
+	}
 	//}
 
 	//{ messages
@@ -1060,7 +1083,9 @@ class Main
 				for (f in favicons) {
 					f.href = 'bin/img/favicon.ico';
 				}
-				messageSound.play();
+				if(!muted) {
+					messageSound.play();
+				}
 				if(i == 0) {
 					_sendNotification(message.innerText != null? message.innerText : message.textContent);
 				}
