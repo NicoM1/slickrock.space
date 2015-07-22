@@ -91,7 +91,7 @@ _$List_ListIterator.prototype = {
 };
 var Main = function() {
 	this.selectedElem = null;
-	this.sitelink = new EReg("@([^\\s]+)","i");
+	this.sitelink = new EReg("/([^\\s]+)","i");
 	this.headerMD = new EReg("\\^(.*?)\\^","i");
 	this.quoteMD = new EReg("(?:~)(.*?)(?:~)(\\S*)","i");
 	this.codeBB = new EReg("(?:\\[code\\]|`)(.*?)(?:\\[/code\\]|`)","i");
@@ -1019,9 +1019,10 @@ Main.prototype = {
 		}
 		while(this.sitelink.match(parsed)) {
 			var link = this.sitelink.matched(1);
-			link = "/" + link;
-			parsed = this.sitelink.replace(parsed,"<a href=\".." + link + "\">" + link + "</a>");
+			link = "%2F" + link;
+			parsed = this.sitelink.replace(parsed,"<a href=\".." + link + "\">" + link + "<%2Fa>");
 		}
+		parsed = StringTools.replace(parsed,"%2F","/");
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
 			var chunks = imgPath.split(" ");
@@ -1115,7 +1116,7 @@ Main.prototype = {
 				var replacement = "/" + command + " ";
 				if(this.chatbox.value.indexOf(command) == -1) {
 					if(this.chatbox.value.charAt(this.chatbox.value.length - 1) == " " || code != null && (code == 13 || code == 9)) {
-						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1444, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
+						haxe_Log.trace(this.chatbox.value,{ fileName : "Main.hx", lineNumber : 1445, className : "Main", methodName : "_checkKeyPress", customParams : [replacement]});
 						this.chatbox.value = replacement;
 						this._filterHelp();
 						if((code == 13 || code == 9) && this.commandInfos.get(command).requiresArgs == true) {
