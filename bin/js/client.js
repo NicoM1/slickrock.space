@@ -1031,7 +1031,7 @@ Main.prototype = {
 		while(this.sitelink.match(parsed)) {
 			var link = this.sitelink.matched(1);
 			link = "/" + link;
-			parsed = this.sitelink.replace(parsed," <a href=\".." + link + "\">" + link + "</a>");
+			parsed = this.sitelink.replace(parsed," <a href=\".." + link + "\">" + link + "</a> ");
 		}
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
