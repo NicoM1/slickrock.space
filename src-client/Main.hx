@@ -291,7 +291,6 @@ class Main
 
 	function _tryExpandImages(e: MouseEvent, img: ImageElement) {
 		if(e.altKey) {
-
 			img.width += e.movementX;
 		}
 	}
