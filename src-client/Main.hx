@@ -1311,16 +1311,10 @@ class Main
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	var quoteMD: EReg =  ~/(?:~)(.*?)(?:~)(\S*)/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;
-	var sitelink: EReg = ~/>[^\s]+/i;
+	var sitelink: EReg = ~/\/([^\s]+)/i;
 
 	function _parseMessage(raw: String, safe: Bool = true, ?id: String): String {
 		var parsed: String = raw.replace('\n', ' ');
-
-		while (sitelink.match(parsed)) {
-			var link = sitelink.matched(0).substr(1);
-			link = '&sol;' + link;
-			parsed = sitelink.replace(parsed, ' <a href="..$link>$link</a>');
-		}
 
 		if(safe) {
 			parsed = parsed.htmlEscape();
@@ -1336,6 +1330,12 @@ class Main
 
 			parsed = parsed.replace('\\n', '<br/>');
 			parsed = parsed.replace('\\t', '&nbsp;&nbsp;&nbsp;');
+		}
+
+		while (sitelink.match(parsed)) {
+			var link = sitelink.matched(0).substr(1);
+			link = '&sol;' + link;
+			parsed = sitelink.replace(parsed, ' <a href="..$link>$link</a>');
 		}
 
 		while (imgBB.match(parsed)) {
