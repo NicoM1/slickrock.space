@@ -1022,7 +1022,7 @@ Main.prototype = {
 			var _this = this.sitelink.matched(0);
 			link = HxOverrides.substr(_this,1,null);
 			link = "&sol;" + link;
-			parsed = this.sitelink.replace(parsed," <a href=\"..link>" + link + "</a>");
+			parsed = this.sitelink.replace(parsed," <a href=\".." + link + ">" + link + "</a>");
 		}
 		while(this.imgBB.match(parsed)) {
 			var imgPath = this.imgBB.matched(1);
