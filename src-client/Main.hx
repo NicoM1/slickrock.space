@@ -1368,11 +1368,11 @@ class Main
 
 			var imgTag = switch(chunks.length) {
 				case 1:
-					'<img src="${chunks[0]}" style="width:800px" class="imgmessage"></img>';
+					'<img src="${chunks[0]}" class="imgmessage"></img>';
 				case 2:
-					'<img src="${chunks[0]}" style="width:${chunks[1]}px" class="imgmessage"></img>';
+					'<img src="${chunks[0]}" width="${chunks[1]}" class="imgmessage"></img>';
 				case 3:
-					'<img src="${chunks[0]}" style="width:${chunks[1]}px" height="${chunks[2]}" class="imgmessage"></img>';
+					'<img src="${chunks[0]}" width="${chunks[1]}" height="${chunks[2]}" class="imgmessage"></img>';
 				default:
 					'';
 			}
