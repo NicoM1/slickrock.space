@@ -1335,7 +1335,7 @@ class Main
 	var codeBB: EReg = ~/(?:\[code\]|`)(.*?)(?:\[\/code\]|`)/i;
 	var quoteMD: EReg =  ~/(?:~)(.*?)(?:~)(\S*)/i;
 	var headerMD: EReg = ~/\^(.*?)\^/i;
-	var sitelink: EReg = ~/&sol;([^\s]+)/i;
+	var sitelink: EReg = ~/ &sol;([^\s]+) (?: |$)/i;
 
 	function _parseMessage(raw: String, safe: Bool = true, ?id: String): String {
 		var parsed: String = raw.replace('\n', ' ');
