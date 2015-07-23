@@ -727,7 +727,7 @@ class Main
 					_setAdminPassword(newPassword);
 					_addMessage('you may consider ***/fasten***-ing it at any time.');
 					_addMessage('just a reminder, slickrock.io is supported only by voluntary donations, should you be able to, a small donation could go a long way to keeping the site running smoothly and improving.');
-					_addMessage('typing /bestow will open a paypal donation page.');
+					_addMessage('typing ***/bestow*** will open a paypal donation page.');
 				}
 				else {
 					_addMessage('you are not authorized to claim $room.');

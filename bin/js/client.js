@@ -534,7 +534,7 @@ Main.prototype = {
 				_g._setAdminPassword(newPassword);
 				_g._addMessage("you may consider ***/fasten***-ing it at any time.");
 				_g._addMessage("just a reminder, slickrock.io is supported only by voluntary donations, should you be able to, a small donation could go a long way to keeping the site running smoothly and improving.");
-				_g._addMessage("typing /bestow will open a paypal donation page.");
+				_g._addMessage("typing ***/bestow*** will open a paypal donation page.");
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		},function(e) {
 			haxe_Log.trace(e,{ fileName : "Main.hx", lineNumber : 737, className : "Main", methodName : "_claimRoom"});
