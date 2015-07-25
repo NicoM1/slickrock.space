@@ -1348,7 +1348,7 @@ class Main
 			parsed = parsed.replace('\\#', '&num;');
 			parsed = parsed.replace('\\^', '&Hat;');
 			parsed = parsed.replace('\\`', '&grave;');
-			parsed = parsed.replace('\\~', '&tilde;');
+			parsed = parsed.replace('\\~', '⁓');
 			parsed = parsed.replace('\\\\n', '&bsol;n');
 			parsed = parsed.replace('\\\\t', '&bsol;t');
 			parsed = parsed.replace('/', '&sol;');
