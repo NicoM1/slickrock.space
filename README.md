@@ -1,4 +1,4 @@
-This is the (probably crap) code of the now dead slickrock.io.
+This is the code of the now dead slickrock.io.
 
 (server is actually still live at http://aqueous-basin.heroku.com/ and should remain so, but the userbase is dead anyway)
 
