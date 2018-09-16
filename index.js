@@ -628,7 +628,7 @@ RouteHandler.prototype = {
 	}
 	,makeRandomRoom: function(request,response,next) {
 		response.setHeader("Access-Control-Allow-Origin","*");
-		response.redirect("http://slickrock.io/" + Main.getUserID());
+		response.redirect("http://slickrock.space/" + Main.getUserID());
 	}
 	,oneWeek: null
 	,getTopRooms: function(request,response,next) {
@@ -694,7 +694,7 @@ RouteHandler.prototype = {
 		}
 		var rand = new Random(new Date().getTime());
 		var room = openRooms[rand["int"](openRooms.length,null)];
-		response.redirect("http://slickrock.io/" + room);
+		response.redirect("http://slickrock.space/" + room);
 	}
 	,alphanumeric: null
 	,getToken: function(privateID,request,response,next) {
