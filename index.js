@@ -169,7 +169,7 @@ var Main = function() {
 	Main.animalWords = js_node_Fs.readFileSync("bin/animals.txt",{ encoding : "utf8"}).split("\n");
 	Main.adjectives = js_node_Fs.readFileSync("bin/adjectives.txt",{ encoding : "utf8"}).split("\n");
 	this._setupMongo();
-	this._setupIRC();
+	//this._setupIRC();
 	Main.rooms = new haxe_ds_StringMap();
 	Main.typingTimers = new haxe_ds_StringMap();
 	Main.tokens = new haxe_ds_StringMap();
