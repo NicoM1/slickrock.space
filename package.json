@@ -13,7 +13,7 @@
     "irc": "^0.3.11"
   },
   "engines": {
-    "node": "0.12.2"
+    "node": "2.4.0"
   },
   "repository": {
     "type": "git",
