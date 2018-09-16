@@ -92,10 +92,10 @@
 			room.addClass('room');
 
 			room.html(
-				'<a class="btn-peek pull-right hidden-xs" href="//chat.slickrock.io/'+val.room+'">go to room <i class="fa fa-angle-right"></i></a>'+
+				'<a class="btn-peek pull-right hidden-xs" href="//slickrock.space/'+val.room+'">go to room <i class="fa fa-angle-right"></i></a>'+
 				'<span class="thin">#'+(key+1)+'</span>'+
 				'&nbsp;&nbsp;'+
-				'<a class="room-title truncate" data-toggle="tooltip" data-placement="top" title="/'+val.room+'" href="//chat.slickrock.io/'+val.room+'">/'+
+				'<a class="room-title truncate" data-toggle="tooltip" data-placement="top" title="/'+val.room+'" href="//slickrock.space/'+val.room+'">/'+
 					val.room+
 				'</a>'+
 				'&nbsp;&nbsp;'+
@@ -135,7 +135,7 @@
 		}
 
 		$(document).on('ready', function(){
-			var top_rooms_url = "http://chat.slickrock.io/api/getTopRooms";
+			var top_rooms_url = "http://slickrock.space/api/getTopRooms";
 			$.getJSON(top_rooms_url, function(data) {
 				placeRooms(data);
 			});
