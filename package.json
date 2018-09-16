@@ -9,8 +9,7 @@
   "dependencies": {
     "express": "4.9.x",
     "mongodb": "2.0.33",
-    "qs": "^2.4.2",
-    "irc": "0.3.11"
+    "qs": "^2.4.2"
   },
   "engines": {
     "node": "0.12.2"
