@@ -266,7 +266,7 @@ Main.prototype = {
 				var _this = window.document;
 				maximize = _this.createElement("button");
 				maximize.onclick = function() {
-					window.top.location.href = "http://slickrock.io/" + _g.room;
+					window.top.location.href = "http://slickrock.space/" + _g.room;
 					maximize.classList.add("faa-passing","animated","faa-fast");
 				};
 				maximize.classList.add("fa","fa-angle-double-right","floatingbutton");
@@ -423,8 +423,8 @@ Main.prototype = {
 			if(!this.canNotify) return;
 			if(Notification.permission == "granted") {
 				var options = { };
-				options.body = "slickrock.io/" + this.room;
-				options.icon = "http://slickrock.io/bin/img/notification.png";
+				options.body = "slickrock.space/" + this.room;
+				options.icon = "http://slickrock.space/bin/img/notification.png";
 				if(this.notification == null) {
 					this.numNotifications = 1;
 					this.notification = new Notification(text,options);
@@ -533,7 +533,7 @@ Main.prototype = {
 				_g._addMessage("" + _g.room + " claimed.");
 				_g._setAdminPassword(newPassword);
 				_g._addMessage("you may consider ***/fasten***-ing it at any time.");
-				_g._addMessage("just a reminder, slickrock.io is supported only by voluntary donations, should you be able to, a small donation could go a long way to keeping the site running smoothly and improving.");
+				_g._addMessage("just a reminder, slickrock.space is supported only by voluntary donations, should you be able to, a small donation could go a long way to keeping the site running smoothly and improving.");
 				_g._addMessage("typing ***/bestow*** will open a paypal donation page.");
 			} else _g._addMessage("you are not authorized to claim " + _g.room + ".");
 		},function(e) {
@@ -710,17 +710,17 @@ Main.prototype = {
 		});
 	}
 	,_legal: function(_) {
-		this._addMessage("slickrock.io is (c) 2015 Nico May.");
+		this._addMessage("slickrock.space is (c) 2015 Nico May.");
 		this._addMessage("wordlists used with permission from gfycat.com");
 	}
 	,_credits: function(_) {
 		this._addMessage("Homepage design and general awesomeness: **Lorenzo Maieru** *(@LorenzoMaieru)*.");
 		this._addMessage("Assorted help and testing: **Mark Kowalsky** *(@dimensive)*, **Isaac Bickel** *(@gamesbybeta)*, **Alex Lanzetta** *(@Zanzlanz)*.");
 		this._addMessage("Additional images: **Nathan Wentworth** *(@nathanwentworth)*.");
-		this._addMessage("slickrock.io is crafted in **Haxe**, the backend is helped by the **Abe** library *(github.com/abedev/abe)*.");
+		this._addMessage("slickrock.space is crafted in **Haxe**, the backend is helped by the **Abe** library *(github.com/abedev/abe)*.");
 	}
 	,_rules: function(_) {
-		this._addMessage("slickrock.io is not meant to allow people to say or show horrible things.");
+		this._addMessage("slickrock.space is not meant to allow people to say or show horrible things.");
 		this._addMessage("should your intention in coming to this site be to say or show inappropriate things, please go somewhere else, there are plenty of well established dirty corners of the internet, this doesn't need to become one.");
 		this._addMessage("rooms, especially public ones, displaying content deemed unacceptable, under my own personal judgment, will be removed.");
 		this._addMessage("should the content of these rooms warrant it, your IP address will be reported to the proper authorities, you have been warned.");
