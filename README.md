@@ -1,4 +1,4 @@
-This is the code of the slickrock.space
+This is the code of slickrock.space
 
 It was a way for me to learn web development, and turned into some form of experimental anonymous chat website, mainly built for embedding in other websites.
 
