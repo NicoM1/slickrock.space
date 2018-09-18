@@ -1,8 +1,6 @@
-This is the code of the now dead slickrock.io.
+This is the code of the slickrock.space
 
-(server is actually still live at http://aqueous-basin.heroku.com/ and should remain so, but the userbase is dead anyway)
-
-It was a way for me to learn web development, and turned into some form of expirimental anonymous chat website, mainly built for embedding in other websites.
+It was a way for me to learn web development, and turned into some form of experimental anonymous chat website, mainly built for embedding in other websites.
 
 This code is MIT licensed, apart from the wordlists, which I used with permission from gfycat, please ask them if you intend to use the wordlists.
 
